@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    
+    <link rel="stylesheet" href="../static/pages/css/ace.min.css" id="main-ace-style" />
+    <link rel="stylesheet" href="../static/pages/css/index.css">
+    <link rel="stylesheet" href="../static/pages/css/management.css">
+    <link rel="stylesheet" href="../static/pages/css/student.css">
+    <link rel="stylesheet" href="../static/pages/css/madal.css">
+    <link rel="stylesheet" href="../static/pages/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/pages/css/font-awesome.min.css" />
+
+    <script src="../static/pages/js/jquery.min.js"></script>
+    <script src="../static/pages/js/bootstrap.min.js"> </script>
+    <script src="../static/pages/js/ace.min.js"> </script>
+    <script src="../static/pages/js/ace-elements.min.js"></script>
+    <script src="../static/pages/laydate/laydate.js"></script>
+
+    
+
+</head>
+<body>
+<div id="navbar" class="eduNav">
+    <div class="navbar-header pull-left">
+        <a href="index.html" class="navbar-brand">
+            <small>
+                <img src="../static/pages/img/logo.png" alt="">
+            </small>
+        </a>
+    </div>
+    <div class="pull-right eduName">
+        <span>万某 [管理员]</span> 
+        <span>机构中心</span>
+        <span>退出</span>   
+    </div>
+</div>  
+<div class="main-container" id="main-container">
+    <div id="sidebar" class="sidebar responsive">
+        <ul class="nav nav-list" style="top: 0px;">
+            <li class="">
+                <a href="index.html"><span class="menu-text"> 工作台 </span></a>
+                <b class="arrow"></b>
+            </li>
+            <li class="">
+                <a href="management.html"><span class="menu-text"> 办理中心 </span></a>
+                <b class="arrow"></b>
+            </li>
+            <li class="active open">
+                <a href="#" class="dropdown-toggle">
+                    <span class="menu-text">教务中心</span>
+                    <b class="arrow fa fa-angle-down"></b>
+                </a>
+                <b class="arrow"></b>
+                <ul class="submenu">
+                    <li class="">
+                        <a href="student.html"><i class="menu-icon fa fa-caret-right"></i>学员</a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li class="">
+                        <a href="classes.html"><i class="menu-icon fa fa-caret-right"></i>班级</a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li class="active">
+                        <a href="oneToOne.html">
+                        <i class="menu-icon fa fa-caret-right"></i>一对一</a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li class="">
+                        <a href="courseArray.html"><i class="menu-icon fa fa-caret-right"></i>排课</a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li class="">
+                        <a href="lessonTable.html"><i class="menu-icon fa fa-caret-right"></i>课程表</a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li class="">
+                        <a href="attendClass.html"><i class="menu-icon fa fa-caret-right"></i>记上课</a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li class="">
+                        <a href="course.html"><i class="menu-icon fa fa-caret-right"></i>课程</a>
+                        <b class="arrow"></b>
+                    </li>
+                </ul>
+            </li>
+            <li class="hsub">
+                <a href="#" class="dropdown-toggle">
+                    <span class="menu-text"> 内部管理 </span>
+                    <b class="arrow fa fa-angle-down"></b>
+                </a>
+                <b class="arrow"></b>
+                <ul class="submenu">
+                    <li class="">
+                        <a href="organization.html"><i class="menu-icon fa fa-caret-right"></i>组织架构</a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li class="">
+                        <a href="newStudent.html"><i class="menu-icon fa fa-caret-right"></i>员工信息</a>
+                        <b class="arrow"></b>
+                    </li>
+                </ul>
+            </li>      
+        </ul>
+    </div>
+    <div class="main-content">
+        <div class="breadcrumbs" id="breadcrumbs">
+            <img src="../static/pages/img/line1.png">
+            <span>一对一学员</span>
+            <img src="../static/pages/img/line.png">
+        </div> 
+        <div class="tabbable">
+            <ul class="nav nav-tabs" id="myTab">
+                <li class="active">
+                    <a data-toggle="tab" href="#studentList">一对一学员</a>
+                </li>
+                <li>
+                    <a data-toggle="tab" href="#divideList">待处理学员</a>
+                </li>
+            </ul>
+            <div class="tab-content student">
+                <!-- 一对一学员 -->
+                <div id="studentList" class="tab-pane fade in active oneToOne"> 
+                    <div class="screen">
+                        <div class="screenTop">  
+                            <select class="selectName">
+                                <option value="AZ">学员姓名</option>
+                                <option value="AL">手机尾号</option>
+                                <option value="AK">微信号</option>
+                            </select>
+                            <div class="nav-search" id="nav-search">
+                                <form class="form-search">
+                                    <span class="input-icon">
+                                        <input type="text" placeholder="请输入姓名、支持拼音缩写" class="nav-search-input" id="nav-search-input" autocomplete="off">
+                                        <i class="ace-icon fa fa-search nav-search-icon"></i>
+                                    </span>
+                                </form>
+                            </div>
+                            <div class="btn-group">
+                                <button class="btn btn-down">
+                                    筛选
+                                    <i>1</i>
+                                    <span class="ace-icon fa fa-caret-down icon-on-right"></span>
+                                </button>
+                                <div class="dropdown-menu">
+                                    <div class="screenData">
+                                        <select>
+                                            <option value="">报读校区</option>
+                                            <option value="y">青山校区</option>
+                                            <option value="n">科源校区</option>
+                                            <option value="n">坤元校区</option>
+                                        </select> 
+                                        <select>
+                                            <option value="">教师</option>
+                                            <option value="y">111</option>
+                                            <option value="n">1111</option>
+                                        </select>            
+                                    </div>
+                                    <div class="screenData">
+                                        <select>
+                                            <option value="">报读校区</option>
+                                            <option value="y">青山校区</option>
+                                            <option value="n">科源校区</option>
+                                            <option value="n">坤元校区</option>
+                                        </select> 
+                                        <select>
+                                            <option value="">课时状态</option>
+                                            <option value="y">在读</option>
+                                            <option value="n">转出</option>
+                                            <option value="y">退费</option>
+                                            <option value="n">停课</option>
+                                            <option value="n">结课</option>
+                                            <option value="n">转课</option>
+                                        </select>            
+                                    </div>     
+                                </div>
+                            </div>                                
+                        </div>
+                    </div>
+                    <div class="orderCon">
+                        <div class="export">
+                            <div class="oneInput">
+                                <div class="form-group">
+                                    <input type="checkbox">
+                                    显示已用/剩余学费
+                                </div>
+                                <div class="form-group">
+                                    <input type="checkbox">
+                                    显示停、转、退、结学员
+                                </div>
+                                <div class="form-group">
+                                    <select name="" id="">
+                                        <option value="">自定义显示项</option>
+                                        <option value="">111</option>
+                                        <option value="">222</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                        </div> 
+                        <div class="result">
+                            当前结果：共计<span>111</span>条记录，<span>111</span>名在读学员
+                        </div>
+                        <div class="orderTable">
+                            <table class="table table-hover">
+                                <tr>
+                                    <th>
+                                        <input type="checkbox" id="sel_1" onchange="selectAll()">
+                                    </th>
+                                    <th>学员姓名                                     
+                                    </th>
+                                    <th>联系电话</th>
+                                    <th>教师</th>
+                                    <th>学员状态</th>
+                                    <th>课程</th>
+                                    <th>开课日期</th>
+                                    <th>上课时间</th>
+                                    <th>已用课时</th>
+                                    <th>操作</th>
+                                </tr>
+                                <tr id="choose">
+                                    <td><input type="checkbox"></td>
+                                    <td><img src="../static/pages/img/boy.png">张三</td>
+                                    <td>18958777777</td>
+                                    <td>张三</td>
+                                    <td>
+                                        <span class="circle"></span>
+                                        在读
+                                    </td>
+                                    <td>珠心算</td>
+                                    <td>2018-05-20</td>
+                                    <td>
+                                        <span>每周日15:30-17:00</span>
+                                        <span>每周日15:30-17:00</span>
+                                    </td>
+                                    <td>75.00</td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <p data-toggle="dropdown" class="down">
+                                                <span class="glyphicon glyphicon-menu-down"></span>
+                                            </p>
+                                            <ul class="dropdown-menu dropdown-default">
+                                                <li>
+                                                    <a href="#modal-table" role="button"  data-toggle="modal">排课</a>
+                                                </li>
+            
+                                                <li>
+                                                    <a href="#modal-table1" role="button"  data-toggle="modal">结课</a>
+                                                </li>
+                                                <li>
+                                                    <a href="classDetail.html" target="_blank">记上课</a>
+                                                </li>
+                                                <li>
+                                                    <a href="lessonTableOne.html" target="_blank">课程表</a>
+                                                </li>
+                                                <li>
+                                                    <a href="classRecord.html" target="_blank">上课记录</a>
+                                                </li>
+                                                <li>
+                                                    <a href="oneEdit.html" target="_blank">编辑</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        
+                                    </td>
+                                </tr>
+                                <tr id="choose">
+                                    <td><input type="checkbox"></td>
+                                    <td><img src="../static/pages/img/boy.png">张三</td>
+                                    <td>18958777777</td>
+                                    <td>张三</td>
+                                    <td>
+                                        <span class="circle"></span>
+                                        在读
+                                    </td>
+                                    <td>珠心算</td>
+                                    <td>2018-05-20</td>
+                                    <td>
+                                        <span>每周日15:30-17:00</span>
+                                        <span>每周日15:30-17:00</span>
+                                    </td>
+                                    <td>75.00</td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <p data-toggle="dropdown" class="down">
+                                                <span class="glyphicon glyphicon-menu-down"></span>
+                                            </p>
+                                            <ul class="dropdown-menu dropdown-default">
+                                                <li>
+                                                    <a href="#">排课</a>
+                                                </li>
+            
+                                                <li>
+                                                    <a href="">结课</a>
+                                                </li>
+                                                <li>
+                                                    <a href="">记上课</a>
+                                                </li>
+                                                <li>
+                                                    <a href="">课程表</a>
+                                                </li>
+                                                <li>
+                                                    <a href="">上课记录</a>
+                                                </li>
+                                                <li>
+                                                    <a href="">编辑</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        
+                                    </td>
+                                </tr>
+                            </table>
+                            <div class="orderPage">
+                                <div class="page">
+                                    单页显示：
+                                    <select>
+                                        <option>20条/页</option>
+                                        <option>50条/页</option>
+                                        <option>100条/页</option>
+                                    </select>
+                                </div>
+                                <ul class="pagination">
+                                    <li class="disabled">
+                                        <a href="#">首页</a>
+                                    </li>
+                                    <li class="disabled">
+                                        <a href="#">
+                                            <i class="ace-icon fa fa-angle-double-left"></i>
+                                        </a>
+                                    </li>  
+                                    <li class="active">
+                                        <a href="#">1</a>
+                                    </li>
+            
+                                    <li>
+                                        <a href="#">2</a>
+                                    </li>
+            
+                                    <li>
+                                        <a href="#">3</a>
+                                    </li>
+            
+                                    <li>
+                                        <a href="#">4</a>
+                                    </li>
+            
+                                    <li>
+                                        <a href="#">5</a>
+                                    </li>
+            
+                                    <li>
+                                        <a href="#">
+                                            <i class="ace-icon fa fa-angle-double-right"></i>
+                                        </a>
+                                    </li>
+                                    <li class="">
+                                        <a href="#">尾页</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>    
+                    </div>
+                </div>
+                <!-- 待处理学员 -->
+                <div id="divideList" class="tab-pane fade handleClass">
+                    <div class="screen">
+                        <div class="screenTop">  
+                            <select class="selectName">
+                                <option value="AZ">学员姓名</option>
+                                <option value="AL">手机尾号</option>
+                                <option value="AK">微信号</option>
+                            </select>
+                            <div class="nav-search" id="nav-search">
+                                <form class="form-search">
+                                    <span class="input-icon">
+                                        <input type="text" placeholder="请输入姓名、支持拼音缩写" class="nav-search-input" id="nav-search-input" autocomplete="off">
+                                        <i class="ace-icon fa fa-search nav-search-icon"></i>
+                                    </span>
+                                </form>
+                            </div>
+                            <div class="btn-group">
+                                <button class="btn btn-down">
+                                    筛选
+                                    <i>1</i>
+                                    <span class="ace-icon fa fa-caret-down icon-on-right"></span>
+                                </button>
+                                <div class="dropdown-menu">
+                                    <div class="screenData">
+                                        <select>
+                                            <option value="">报读校区</option>
+                                            <option value="y">青山校区</option>
+                                            <option value="n">科源校区</option>
+                                            <option value="n">坤元校区</option>
+                                        </select> 
+                                        <select>
+                                            <option value="">教师</option>
+                                            <option value="y">111</option>
+                                            <option value="n">1111</option>
+                                        </select>            
+                                    </div>
+                                    <div class="screenData">
+                                        <select>
+                                            <option value="">报读校区</option>
+                                            <option value="y">青山校区</option>
+                                            <option value="n">科源校区</option>
+                                            <option value="n">坤元校区</option>
+                                        </select> 
+                                        <select>
+                                            <option value="">课时状态</option>
+                                            <option value="y">在读</option>
+                                            <option value="n">转出</option>
+                                            <option value="y">退费</option>
+                                            <option value="n">停课</option>
+                                            <option value="n">结课</option>
+                                            <option value="n">转课</option>
+                                        </select>            
+                                    </div>     
+                                </div>
+                            </div>                                
+                        </div>
+                    </div>
+                    <div class="orderCon">
+                        <div class="export">
+                            <div class="oneInput">
+                                <div class="form-group">
+                                    <input type="checkbox">
+                                    显示已用/剩余学费
+                                </div>
+                                <div class="form-group">
+                                    <input type="checkbox">
+                                    显示停、转、退、结学员
+                                </div>
+                                <div class="form-group">
+                                    <select name="" id="">
+                                        <option value="">自定义显示项</option>
+                                        <option value="">111</option>
+                                        <option value="">222</option>
+                                    </select>
+                                </div>
+                            </div>   
+                        </div> 
+                        <div class="result">
+                            当前结果：学员共计<span>111</span>名，报读课程数总计：<span>111</span>条
+                        </div>
+                        <div class="orderTable">
+                            <table class="table table-hover">
+                                <tr>
+                                    <th>
+                                        <input type="checkbox" id="sel_3" onchange="chooseAll()">
+                                    </th>
+                                    <th>学员姓名</th>
+                                    <th>联系方式</th>
+                                    <th>学员状态</th>
+                                    <th>课程</th>
+                                    <th>开课日期</th>
+                                    <th>上课时间</th>
+                                    <th>校区</th>
+                                    <th>操作</th>                               
+                                </tr>
+                                <tr id="choose">
+                                    <td><input type="checkbox"></td>
+                                    <td><img src="../static/pages/img/boy.png">张三</td>
+                                    <td>18958777777</td>
+                                    <td><span class="circle"></span>在读</td>
+                                    <td>识字1</td>
+                                    <td>2018-10-10</td>
+                                    <td>2018-10-10</td>
+                                    <td>科源分校</td>
+                                    <td><a href="#modal-table2" role="button"  data-toggle="modal" style="border:0;">分配教师</a></td>
+                                </tr>
+                            </table>
+                            <div class="orderPage">
+                                <div class="page">
+                                    单页显示：
+                                    <select>
+                                        <option>20条/页</option>
+                                        <option>50条/页</option>
+                                        <option>100条/页</option>
+                                    </select>
+                                </div>
+                                <ul class="pagination">
+                                    <li class="disabled">
+                                        <a href="#">首页</a>
+                                    </li>
+                                    <li class="disabled">
+                                        <a href="#">
+                                            <i class="ace-icon fa fa-angle-double-left"></i>
+                                        </a>
+                                    </li>  
+                                    <li class="active">
+                                        <a href="#">1</a>
+                                    </li>
+            
+                                    <li>
+                                        <a href="#">2</a>
+                                    </li>
+            
+                                    <li>
+                                        <a href="#">3</a>
+                                    </li>
+            
+                                    <li>
+                                        <a href="#">4</a>
+                                    </li>
+            
+                                    <li>
+                                        <a href="#">5</a>
+                                    </li>
+            
+                                    <li>
+                                        <a href="#">
+                                            <i class="ace-icon fa fa-angle-double-right"></i>
+                                        </a>
+                                    </li>
+                                    <li class="">
+                                        <a href="#">尾页</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>    
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        
+    </div>
+
+    <!-- 排课弹窗 -->
+    <div id="modal-table" class="modal fade in pk" tabindex="-1" aria-hidden="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header no-padding">
+                    <div class="table-header">新建日程</div>
+                </div>
+                    <div class="modal-body no-padding">
+                        <h4>按班级</h4>
+                        <div class="grounInline">
+                            <div class="form-group">
+                                <label><i>*</i>班级/一对一</label>
+                                <select name="" id="">
+                                    <option value="">张三珠心算一对一</option>
+                                    <option value="">张三珠心算一对一</option>
+                                    <option value="">张三珠心算一对一</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label><i>*</i>排课日程方式</label>
+                                <input name="form-field-radio" type="radio" class="ace"><span class="lbl">单次</span>
+                                <input name="form-field-radio" type="radio" class="ace"><span class="lbl">重复</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label><i>*</i>上课日期</label>
+                            <input class="laydate-icon" id="demo">
+                        </div>
+                        <div class="form-group">
+                            <label><i>*</i>上课时段</label>
+                            <select name="" id="">
+                                <option value="">选择时段</option>
+                                <option value="">111</option>
+                                <option value="">www</option>
+                            </select>
+                            <span>自定义时间</span>
+                        </div>
+                        <div class="grounInline">
+                            <div class="form-group">
+                                <label><i>*</i>教师</label>
+                                <select name="" id="">
+                                    <option value="">请选择教师</option>
+                                    <option value="">111</option>
+                                    <option value="">www</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>助教</label>
+                                <select name="" id="">
+                                    <option value="">请选择助教</option>
+                                    <option value="">111</option>
+                                    <option value="">www</option>
+                                </select>
+                            </div>  
+                        </div>
+                        <div class="grounInline">
+                            <div class="form-group">
+                                <label><i>*</i>教室</label>
+                                <select name="" id="">
+                                    <option value="">请选择教室</option>
+                                    <option value="">111</option>
+                                    <option value="">www</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>科目</label>
+                                <select name="" id="">
+                                    <option value="">请选择科目</option>
+                                    <option value="">111</option>
+                                    <option value="">www</option>
+                                </select>
+                            </div>  
+                        </div>
+                        <div class="form-group">
+                            <label for="">上课主题</label>
+                            <input type="text">
+                        </div>
+                    </div>
+                
+    
+                <div class="modal-footer no-margin-top">
+                    <button class="btn pull-left" data-dismiss="modal">
+                        取消
+                    </button>
+                    <button class="btn pull-right" data-dismiss="modal">
+                        保存
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 结课弹窗 -->
+    <div id="modal-table1" class="modal fade in jk" tabindex="-1" aria-hidden="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header no-padding">
+                    <div class="table-header">结课</div>
+                </div>
+                    <div class="modal-body no-padding">
+                        <div class="sure">
+                            <img src="../static/pages/img/jk.png">
+                            <p>确定要将学员在一对一班级中结课吗？</p>
+                        </div>
+                        <div class="form-group">
+                            <input type="checkbox">
+                            <span>同时将学员的课程结课</span>
+                        </div>
+                        <p class="jkInfo"><span></span>课程结课后，学员的剩余学费将自动转成学校学费消耗收入，并且无法还原</p>
+                    </div>
+                
+
+                <div class="modal-footer no-margin-top">
+                    <button class="btn pull-left" data-dismiss="modal">
+                        取消
+                    </button>
+                    <button class="btn pull-right" data-dismiss="modal">
+                        保存
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 分配教师 -->
+    <div id="modal-table2" class="modal fade in allot" tabindex="-1" aria-hidden="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header no-padding">
+                    <div class="table-header">分配教师</div>
+                </div>
+                <div class="search">
+                    <span class="input-icon">
+                        <input type="text" placeholder="请输入姓名或手机号搜索" class="nav-search-input" id="nav-search-input" autocomplete="off">
+                        <i class="ace-icon fa fa-search nav-search-icon"></i>
+                    </span>
+                </div>
+                <div class="modal-body no-padding">
+                    <table class="table table-striped  table-hover no-margin-bottom no-border-top">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>姓名</th>
+                                <th>手机号码</th>
+                            </tr>
+                        </thead>
+                        <tbody style="display: none;">
+                            <tr class="none">
+                                <td>
+                                    <img src="../static/pages/img/none.png">
+                                    <span>很抱歉，这里什么都没有</span> 
+                                </td>   
+                            </tr>
+                        </tbody>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <input type="checkbox">
+                                </td>
+                                <td><img src="../static/pages/img/boy.png">张三</td>
+                                <td>15874747474</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="checkbox">
+                                </td>
+                                <td><img src="../static/pages/img/boy.png">张三</td>
+                                <td>15874747474</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="checkbox">
+                                </td>
+                                <td><img src="../static/pages/img/boy.png">张三</td>
+                                <td>15874747474</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="checkbox">
+                                </td>
+                                <td><img src="../static/pages/img/boy.png">张三</td>
+                                <td>15874747474</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="checkbox">
+                                </td>
+                                <td><img src="../static/pages/img/boy.png">张三</td>
+                                <td>15874747474</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="checkbox">
+                                </td>
+                                <td><img src="../static/pages/img/boy.png">张三</td>
+                                <td>15874747474</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="checkbox">
+                                </td>
+                                <td><img src="../static/pages/img/boy.png">张三</td>
+                                <td>15874747474</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="chooseTea">
+                    <p>已选教师<span>0</span>个</p>
+                    <input type="text">
+                </div>
+                <div class="teacherLes">
+                    <span style="margin: 4px 24px 0 0;">每次上课</span>
+                    <div class="form-group">
+                        <label>学员</label>
+                        <input type="text" value="1">课时
+                    </div>
+                    <div class="form-group">
+                        <label>教师</label>
+                        <input type="text" value="1">课时
+                    </div>
+                </div>
+                <div class="modal-footer no-margin-top">
+                    <button class="btn pull-left" data-dismiss="modal">
+                        取消
+                    </button>
+                    <button class="btn pull-right" data-dismiss="modal">
+                        保存
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 
+<script>
+!function(){
+laydate({elem: '#demo'});//绑定元素
+}();
+
+$(".btn-down").click(function(){
+  $(this).siblings(".dropdown-menu").toggle();
+});
+$(".tag .close").click(function(){
+  $(this).parent(".tag").hide();
+});
+
+function chooseAll1(){
+    var isCheck=$("#sel_1").is(':checked');  //获得全选复选框是否选中
+    $("#choose input[type='checkbox']").each(function() {  
+        this.checked = isCheck;       //循环赋值给每个复选框是否选中
+    });  
+};
+
+</script> 
+</body>
+</html>

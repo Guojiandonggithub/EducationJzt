@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    
+    <link rel="stylesheet" href="../static/pages/css/ace.min.css" id="main-ace-style" />
+    <link rel="stylesheet" href="../static/pages/css/index.css">
+    <link rel="stylesheet" href="../static/pages/css/enroll.css">
+    <link rel="stylesheet" href="../static/pages/css/newStudent.css">
+    <link rel="stylesheet" href="../static/pages/css/madal.css">
+    <link rel="stylesheet" href="../static/pages/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/pages/css/font-awesome.min.css" />
+
+    <script src="../static/pages/js/jquery.min.js"></script>
+    <script src="../static/pages/js/bootstrap.min.js"> </script>
+    <script src="../static/pages/js/ace.min.js"> </script>
+    <script src="../static/pages/js/ace-elements.min.js"></script>
+    <script src="../static/pages/laydate/laydate.js"></script>
+
+</head>
+<body>
+<div id="navbar" class="eduNav">
+    <div class="navbar-header pull-left">
+        <a href="index.html" class="navbar-brand">
+            <small>
+                <img src="../static/pages/img/logo.png" alt="">
+            </small>
+        </a>
+    </div>
+    <div class="pull-right eduName">
+        <span>万某 [管理员]</span> 
+        <span>机构中心</span>
+        <span>退出</span>   
+    </div>
+</div>  
+<div class="main-container" id="main-container">
+    <div id="sidebar" class="sidebar responsive">
+        <ul class="nav nav-list" style="top: 0px;">
+            <li class="">
+                <a href="index.html"><span class="menu-text"> 工作台 </span></a>
+                <b class="arrow"></b>
+            </li>
+            <li class="">
+                <a href="management.html"><span class="menu-text"> 办理中心 </span></a>
+                <b class="arrow"></b>
+            </li>
+            <li class="">
+                <a href="#" class="dropdown-toggle">
+                    <span class="menu-text">教务中心</span>
+                    <b class="arrow fa fa-angle-down"></b>
+                </a>
+                <b class="arrow"></b>
+                <ul class="submenu">
+                    <li class="">
+                        <a href="student.html"><i class="menu-icon fa fa-caret-right"></i>学员</a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li class="">
+                        <a href="classes.html"><i class="menu-icon fa fa-caret-right"></i>班级</a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li class="">
+                        <a href="oneToOne.html">
+                        <i class="menu-icon fa fa-caret-right"></i>一对一</a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li class="">
+                        <a href="courseArray.html"><i class="menu-icon fa fa-caret-right"></i>排课</a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li class="">
+                        <a href="lessonTable.html"><i class="menu-icon fa fa-caret-right"></i>课程表</a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li class="">
+                        <a href="attendClass.html"><i class="menu-icon fa fa-caret-right"></i>记上课</a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li class="">
+                        <a href="course.html"><i class="menu-icon fa fa-caret-right"></i>课程</a>
+                        <b class="arrow"></b>
+                    </li>
+                </ul>
+            </li>
+            <li class="active open">
+                <a href="#" class="dropdown-toggle">
+                    <span class="menu-text"> 内部管理 </span>
+                    <b class="arrow fa fa-angle-down"></b>
+                </a>
+                <b class="arrow"></b>
+                <ul class="submenu">
+                    <li class="">
+                        <a href="organization.html"><i class="menu-icon fa fa-caret-right"></i>组织架构</a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li class="active">
+                        <a href="newStudent.html"><i class="menu-icon fa fa-caret-right"></i>员工信息</a>
+                        <b class="arrow"></b>
+                    </li>
+                </ul>
+            </li>      
+        </ul>
+    </div>
+    <div class="main-content">
+        <div class="breadcrumbs" id="breadcrumbs">
+            <img src="../static/pages/img/line1.png">
+            <span>员工信息</span>
+            <img src="../static/pages/img/line.png">
+        </div>     
+        <div class="enrollCon">
+            <div class="uploadHead">
+                <div class="con4">
+                    <canvas id="cvs" width="150" height="150" style="border:1px solid #ccc;"></canvas>
+                    <span class="btn upload">上传头像<input type="file" class="upload_pic" id="upload" /></span>
+                </div>
+            </div>
+            <div class="stopClass newClass employee">  
+                <div class="form-group">
+                    <label for=""><span>*</span>姓名</label>
+                    <input type="text" placeholder="">
+                </div> 
+                <div class="form-group">
+                    <label for=""><span>*</span>手机号码</label>
+                    <input type="text" placeholder="">
+                </div>  
+                <div class="form-group" style="display:block; margin-top:20px !important;">
+                    <label><span>*</span>性别</label>
+                    <input name="form-field-radio" type="radio" class="ace"><span class="lbl">男</span>
+                    <input name="form-field-radio" type="radio" class="ace"><span class="lbl">女</span>
+                </div>
+                <div class="form-group">
+                    <label><span>*</span>所属部门</label>
+                    <select name="" id="">
+                        <option value="">正式员工</option>
+                        <option value="">面试区</option>
+                        <option value="">333</option>
+                    </select>
+                </div>
+                <div class="form-group" style="display:block; margin-top:20px !important;">
+                    <label><span>*</span>是否为上课教师</label>
+                    <input name="form-field-radio" type="radio" class="ace"><span class="lbl">是</span>
+                    <input name="form-field-radio" type="radio" class="ace"><span class="lbl">否</span>
+                    <span>设置上课教师，便于设置班级和排课时选择教师。</span>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <a href="#faq-1-1" data-parent="#faq-list-1" data-toggle="collapse" class="accordion-toggle collapsed">
+                    <i class="ace-icon fa fa-chevron-left pull-right" data-icon-hide="ace-icon fa fa-chevron-down" data-icon-show="ace-icon fa fa-chevron-left"></i>
+
+                    <i class="ace-icon fa fa-user bigger-130"></i>
+                    &nbsp;填写更多人事信息
+                </a>
+            </div>
+            <div class="panel-collapse collapse" id="faq-1-1">
+                <div class="panel-body">
+                    <ul class="normal-ul" id="hrInfo" style="display: block;">
+                        <li>
+                            <label class="normal-label">身份证</label>
+                            <input type="text" class="normal-input" id="txtIdNumber"></li>
+                        <li>
+                            <label class="normal-label">生日</label>
+                            <input class="laydate-icon" id="demo" style="width:356px; height:30px;"> 
+                        </li>
+                        <li><label class="normal-label">英文名</label> <input type="text" class="normal-input" id="txtEName"></li>
+                        <li><label class="normal-label">邮箱</label> <input type="text" class="normal-input" id="txtEmail"></li>
+                        <li><label class="normal-label">籍贯</label> <input type="text" class="normal-input" id="txtOrigin">  </li>
+                        <li><label class="normal-label">民族</label><input type="text" class="normal-input" id="txtNationality" size="11" maxlength="5">   </li>
+                        <li>
+                            <label class="normal-label">政治</label>
+                            <select name="" id="" class="normal-input">
+                                <option value="">群众</option>
+                                <option value="">团员</option>
+                                <option value="">预备党员</option>
+                                <option value="">党员</option>
+                            </select>
+                        </li>
+                        <li>
+                            <label class="normal-label">婚姻</label>
+                            <select name="" id="" class="normal-input">
+                                <option value="">未婚</option>
+                                <option value="">已婚未育</option>
+                                <option value="">已婚已育</option>
+                            </select>
+                        </li>
+                        <li><label class="normal-label">院校</label> <input type="text" class="normal-input" id="txtAcademy">  </li>
+                        <li><label class="normal-label">专业</label> <input type="text" class="normal-input" id="txtMajor">  </li>
+                        <li><label class="normal-label">学历</label> <input type="text" class="normal-input" id="txtDegree">  </li>
+                        <li><label class="normal-label">培训经历</label> <input type="text" class="normal-input" id="txtTrainExp">  </li>
+                        <li><label class="normal-label">其他</label> <input type="text" class="normal-input Other-input" id="txtOtherInfo">  </li>                    
+                        <li><label class="normal-label">标记</label> <input type="text" class="normal-input" id="txtMarker">  </li>
+                        <li>
+                            <label class="normal-label">合同日期</label>
+                            <ul style="display: inline-block;">
+                                <li class="inline laydate-icon" id="start" style="width:150px; height:30px; margin-right:10px;"></li>
+                                <li class="inline laydate-icon" id="end" style="width:150px; height:30px;"></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <label class="normal-label">劳动合同</label>
+                            <select name="" id="" class="normal-input">
+                                <option value="">未签</option>
+                                <option value="">已签</option>
+                            </select>
+                        </li>
+                        <li>
+                            <label class="normal-label">劳动关系</label>
+                            <select name="" id="" class="normal-input">
+                                <option value="">全职</option>
+                                <option value="">兼职</option>
+                                <option value="">合作</option>
+                            </select>                            
+                        </li>
+                        <li>
+                            <label class="normal-label">转正日期</label>
+                            <input class="laydate-icon" id="demo1" style="width:356px; height:30px;">
+                        </li>
+                        <li><label class="normal-label">工资卡</label> <input type="text" class="normal-input" placeholder="开户行" id="txtBankBranch">  <input type="text" placeholder="卡号" class="normal-input" id="txtBankAccount">  </li>
+                        <li>
+                            <label class="normal-label">社保</label>
+                            <select name="" id="" class="normal-input">
+                                <option value="">未办理</option>
+                                <option value="">已办理</option>
+                            </select>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="breadcrumbs" id="breadcrumbs">
+            <img src="../static/pages/img/line1.png">
+            <span>机构账号</span>
+            <img src="../static/pages/img/line.png">
+        </div> 
+        <div class="enrollCon">
+            <div class="none">
+                <img src="../static/pages/img/fk.png">
+                <p>该员工还没有登录系统的账号</p>
+                <button class="create">创建账号</button>
+            </div>
+            <div class="agency-account" style="display:none;">
+                <div class="form-group">
+                    <label><span>*</span>登录系统</label>
+                    <input name="form-field-radio" type="radio" class="ace"><span class="lbl">允许</span>
+                    <input name="form-field-radio" type="radio" class="ace"><span class="lbl">禁止</span>
+                </div>  
+                <div>
+                    <div class="form-group">
+                        <label><span>*</span>登录名</label>
+                        <input type="text">
+                    </div> 
+                    <div class="form-group">
+                        <label><span>*</span>密码</label>
+                        <input type="password">
+                    </div> 
+                </div>
+                <div class="">
+                    <label><span>*</span>登录日期</label>
+                    <p><input type="checkbox">周一</p>
+                    <p><input type="checkbox">周二</p>
+                    <p><input type="checkbox">周三</p>
+                    <p><input type="checkbox">周四</p>
+                    <p><input type="checkbox">周五</p>
+                    <p><input type="checkbox">周六</p>
+                    <p><input type="checkbox">周日</p>
+                </div>  
+                <div class="">
+                    <label><span>*</span>管辖校区</label>
+                    <p><input type="checkbox">全部校区</p>
+                    <p><input type="checkbox">青山分校</p>
+                    <p><input type="checkbox">111</p>
+                    <p><input type="checkbox">222</p>
+                    <p><input type="checkbox">33</p>
+                    <p><input type="checkbox">33</p>
+                </div>
+            </div>
+        </div>
+    
+
+        <div class="enrollCon" style="margin-top:30px;">
+            <button class="save">保存</button>
+        </div>
+    </div>
+
+</div> 
+
+<script>
+!function(){
+laydate({elem:'#demo'});//绑定元素
+}();
+
+!function(){
+laydate({elem:'#demo1'});//绑定元素
+}();
+
+$(".create").click(function(){
+    $(this).parent(".none").hide();
+    $(".agency-account").show(500)
+});
+//日期范围限制
+var start = {
+    elem: '#start',
+    format: 'YYYY-MM-DD',
+    min: laydate.now(), //设定最小日期为当前日期
+    max: '2099-06-16', //最大日期
+    istime: true,
+    istoday: false,
+    choose: function(datas){
+         end.min = datas; //开始日选好后，重置结束日的最小日期
+         end.start = datas //将结束日的初始值设定为开始日
+    }
+};
+var end = {
+    elem: '#end',
+    format: 'YYYY-MM-DD',
+    min: laydate.now(),
+    max: '2099-06-16',
+    istime: true,
+    istoday: false,
+    choose: function(datas){
+        start.max = datas; //结束日选好后，充值开始日的最大日期
+    }
+};
+laydate(start);
+laydate(end);
+
+
+//获取上传按钮
+var input1 = document.getElementById("upload"); 
+    
+if(typeof FileReader==='undefined'){ 
+        
+        input1.setAttribute('disabled','disabled'); 
+}else{ 
+        input1.addEventListener('change',readFile,false); 
+        
+}
+function readFile(){ 
+    var file = this.files[0];//获取上传文件列表中第一个文件
+    if(!/image\/\w+/.test(file.type)){
+    //图片文件的type值为image/png或image/jpg
+        alert("文件必须为图片！");
+        return false; 
+    } 
+    // console.log(file);
+    var reader = new FileReader();//实例一个文件对象
+    reader.readAsDataURL(file);//把上传的文件转换成url
+    //当文件读取成功便可以调取上传的接口
+    reader.onload = function(e){ 
+        var image = new Image();
+        // 设置src属性 
+        image.src = e.target.result;
+        var max=200;
+        // 绑定load事件处理器，加载完成后执行，避免同步问题
+        image.onload = function(){ 
+            // 获取 canvas DOM 对象 
+            var canvas = document.getElementById("cvs"); 
+            // 如果高度超标 宽度等比例缩放 *= 
+            /*if(image.height > max) {
+                image.width *= max / image.height; 
+                image.height = max;
+            } */
+            // 获取 canvas的 2d 环境对象, 
+            var ctx = canvas.getContext("2d"); 
+            // canvas清屏 
+            ctx.clearRect(0, 0, canvas.width, canvas.height); 
+            // 重置canvas宽高
+            /*canvas.width = image.width;
+            canvas.height = image.height;
+            if (canvas.width>max) {canvas.width = max;}*/
+            // 将图像绘制到canvas上
+            // ctx.drawImage(image, 0, 0, image.width, image.height);
+            ctx.drawImage(image, 0, 0, 200, 200);
+            // 注意，此时image没有加入到dom之中
+        };  
+    }
+};
+</script>
+</body>
+</html>

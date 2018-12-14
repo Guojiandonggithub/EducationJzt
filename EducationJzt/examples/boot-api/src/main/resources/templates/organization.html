@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    
+    <link rel="stylesheet" href="../static/pages/css/ace.min.css" id="main-ace-style" />
+    <link rel="stylesheet" href="../static/pages/css/index.css">
+    <link rel="stylesheet" href="../static/pages/css/management.css">
+    <link rel="stylesheet" href="../static/pages/css/student.css">
+    <link rel="stylesheet" href="../static/pages/css/madal.css">
+    <link rel="stylesheet" href="../static/pages/css/Inmanagement.css">
+    <link rel="stylesheet" href="../static/pages/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/pages/css/font-awesome.min.css" />
+
+    <script src="../static/pages/js/jquery.min.js"></script>
+    <script src="../static/pages/js/bootstrap.min.js"> </script>
+    <script src="../static/pages/js/ace-elements.min.js"></script>
+    <script src="../static/pages/js/ace.min.js"> </script>
+ 
+    
+
+</head>
+<body>
+<div id="navbar" class="eduNav">
+    <div class="navbar-header pull-left">
+        <a href="index.html" class="navbar-brand">
+            <small>
+                <img src="../static/pages/img/logo.png" alt="">
+            </small>
+        </a>
+    </div>
+    <div class="pull-right eduName">
+        <span>万某 [管理员]</span> 
+        <span>机构中心</span>
+        <span>退出</span>   
+    </div>
+</div>  
+<div class="main-container" id="main-container">
+    <div id="sidebar" class="sidebar responsive">
+        <ul class="nav nav-list" style="top: 0px;">
+            <li class="">
+                <a href="index.html"><span class="menu-text"> 工作台 </span></a>
+                <b class="arrow"></b>
+            </li>
+            <li class="">
+                <a href="management.html"><span class="menu-text"> 办理中心 </span></a>
+                <b class="arrow"></b>
+            </li>
+            <li class="">
+                <a href="#" class="dropdown-toggle">
+                    <span class="menu-text">教务中心</span>
+                    <b class="arrow fa fa-angle-down"></b>
+                </a>
+                <b class="arrow"></b>
+                <ul class="submenu">
+                    <li class="">
+                        <a href="student.html"><i class="menu-icon fa fa-caret-right"></i>学员</a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li class="">
+                        <a href="classes.html"><i class="menu-icon fa fa-caret-right"></i>班级</a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li class="">
+                        <a href="oneToOne.html">
+                        <i class="menu-icon fa fa-caret-right"></i>一对一</a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li class="">
+                        <a href="courseArray.html"><i class="menu-icon fa fa-caret-right"></i>排课</a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li class="">
+                        <a href="lessonTable.html"><i class="menu-icon fa fa-caret-right"></i>课程表</a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li class="">
+                        <a href="attendClass.html"><i class="menu-icon fa fa-caret-right"></i>记上课</a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li class="">
+                        <a href="course.html"><i class="menu-icon fa fa-caret-right"></i>课程</a>
+                        <b class="arrow"></b>
+                    </li>
+                </ul>
+            </li>
+            <li class="active open">
+                <a href="#" class="dropdown-toggle">
+                    <span class="menu-text"> 内部管理 </span>
+                    <b class="arrow fa fa-angle-down"></b>
+                </a>
+                <b class="arrow"></b>
+                <ul class="submenu">
+                    <li class="active">
+                        <a href="organization.html"><i class="menu-icon fa fa-caret-right"></i>组织架构</a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li class="">
+                        <a href="newStudent.html"><i class="menu-icon fa fa-caret-right"></i>员工信息</a>
+                        <b class="arrow"></b>
+                    </li>
+                </ul>
+            </li>      
+        </ul>
+    </div>
+    <div class="main-content">
+        <div class="breadcrumbs" id="breadcrumbs">
+            <img src="../static/pages/img/line1.png">
+            <span>组织架构</span>
+            <img src="../static/pages/img/line.png">
+        </div> 
+        <div class="tabbable">
+            <div class="tab-content student classes">
+                <!-- 学员列表 -->
+                <div  class="tab-pane fade in active"> 
+                    <div class="screen">
+                        <a href="#modal-table" role="button"  data-toggle="modal"><button class="stdEnroll">新建</button></a> 
+                    </div>
+                    <div class="orderCon">
+                        <div class="orderTable">
+                            <div class="tableTitle">
+                                <div>
+                                    <span class="name">名称</span>
+                                    <span class="type">校区类型</span>
+                                    <span class="tel1">电话1</span>
+                                    <span class="tel2">电话2</span>
+                                    <span class="address">地址</span>
+                                    <span class="operate" style="right: 89px;">操作</span>
+                                </div>
+                            </div>
+                            <div class="info-list">
+                                <ol>
+                                    <li>
+                                        <div data-handle="" class="tree-handle">
+                                            <span class="tree-titleWrap">
+                                                <span class="tree-title">
+                                                    <span class="tree-title"></span>
+                                                    <i class="glyphicon glyphicon-triangle-bottom"></i>
+                                                    <span>科源分校</span>
+                                                </span>
+                                            </span>
+                                            <span class="cols-80">直营</span>
+                                            <span title="0472-5208800" class="cols-120">0472-5208800</span>
+                                            <span title="0472-5208801" class="cols-120">0472-5208801</span>
+                                            <span title="昆区市府西路科源大厦西门四楼" class="cols-240">昆区市府西路科源大厦西门四楼</span>
+                                            <span class="tree-fr">
+                                                <span class="tree-btn-wrap">
+                                                    <a href="javascript:;">添加子集</a>
+                                                    <div class="ivu-tooltip">
+                                                        <div class="ivu-tooltip-rel"></div>
+                                                    </div>
+                                                </span>
+                                                <span class="tree-btn-wrap guidebtn2">
+                                                    <a href="#modal-table" role="button"  data-toggle="modal">编辑</a>
+                                                    <div class="ivu-tooltip">
+                                                        <div class="ivu-tooltip-rel"></div>
+                                                    </div>
+                                                </span>
+                                                <span class="tree-btn-wrap">
+                                                    <a href="javascript:;">删除</a>
+                                                    <div class="ivu-tooltip">
+                                                        <div class="ivu-tooltip-rel"></div>
+                                                    </div>
+                                                </span>
+                                            </span>
+                                        </div>
+                                        <ol>
+                                            <li>
+                                                <div data-handle="" class="tree-handle">
+                                                    <span class="tree-titleWrap">
+                                                        <span class="vue-tree-title">
+                                                            <span class="vue-tree-title"></span>
+                                                            <i class="xb-icon xb-icon-tag-xbschool"></i>
+                                                            <span>科源分校</span>
+                                                        </span>
+                                                    </span>
+                                                    <span class="cols-80">直营</span>
+                                                    <span title="0472-5208800" class="cols-120">0472-5208800</span>
+                                                    <span title="0472-5208801" class="cols-120">0472-5208801</span>
+                                                    <span title="昆区市府西路科源大厦西门四楼" class="cols-240">昆区市府西路科源大厦西门四楼</span>
+                                                    <span class="tree-fr">
+                                                        <span class="tree-btn-wrap">
+                                                            <a href="javascript:;">添加子集</a>
+                                                            <div class="ivu-tooltip">
+                                                                <div class="ivu-tooltip-rel"></div>
+                                                            </div>
+                                                        </span>
+                                                        <span class="tree-btn-wrap guidebtn2">
+                                                            <a href="#modal-table" role="button"  data-toggle="modal">编辑</a>
+                                                            <div class="ivu-tooltip">
+                                                                <div class="ivu-tooltip-rel"></div>
+                                                            </div>
+                                                        </span>
+                                                        <span class="tree-btn-wrap">
+                                                            <a href="javascript:;">删除</a>
+                                                            <div class="ivu-tooltip">
+                                                                <div class="ivu-tooltip-rel"></div>
+                                                            </div>
+                                                        </span>
+                                                    </span>
+                                                </div>
+                                            </li>       
+                                        </ol>
+                                    </li>
+                                    <li>
+                                        <div data-handle="" class="tree-handle">
+                                            <span class="tree-titleWrap">
+                                                <span class="vue-tree-title">
+                                                    <span class="vue-tree-title"></span>
+                                                    <i class="xb-icon xb-icon-tag-xbschool"></i>
+                                                    <span>科源分校</span>
+                                                </span>
+                                            </span>
+                                            <span class="cols-80">直营</span>
+                                            <span title="0472-5208800" class="cols-120">0472-5208800</span>
+                                            <span title="0472-5208801" class="cols-120">0472-5208801</span>
+                                            <span title="昆区市府西路科源大厦西门四楼" class="cols-240">昆区市府西路科源大厦西门四楼</span>
+                                            <span class="tree-fr">
+                                                <span class="tree-btn-wrap">
+                                                    <a href="javascript:;">添加子集</a>
+                                                    <div class="ivu-tooltip">
+                                                        <div class="ivu-tooltip-rel"></div>
+                                                    </div>
+                                                </span>
+                                                <span class="tree-btn-wrap guidebtn2">
+                                                    <a href="#modal-table" role="button"  data-toggle="modal">编辑</a>
+                                                    <div class="ivu-tooltip">
+                                                        <div class="ivu-tooltip-rel"></div>
+                                                    </div>
+                                                </span>
+                                                <span class="tree-btn-wrap">
+                                                    <a href="javascript:;">删除</a>
+                                                    <div class="ivu-tooltip">
+                                                        <div class="ivu-tooltip-rel"></div>
+                                                    </div>
+                                                </span>
+                                            </span>
+                                        </div>
+                                    </li>
+                                </ol>
+                            </div>
+
+
+
+
+
+
+                            <div class="orderPage" style="margin-top:30px;">
+                                <div class="page">
+                                    单页显示：
+                                    <select>
+                                        <option>20条/页</option>
+                                        <option>50条/页</option>
+                                        <option>100条/页</option>
+                                    </select>
+                                </div>
+                                <ul class="pagination">
+                                    <li class="disabled">
+                                        <a href="#">首页</a>
+                                    </li>
+                                    <li class="disabled">
+                                        <a href="#">
+                                            <i class="ace-icon fa fa-angle-double-left"></i>
+                                        </a>
+                                    </li>  
+                                    <li class="active">
+                                        <a href="#">1</a>
+                                    </li>
+            
+                                    <li>
+                                        <a href="#">2</a>
+                                    </li>
+            
+                                    <li>
+                                        <a href="#">3</a>
+                                    </li>
+            
+                                    <li>
+                                        <a href="#">4</a>
+                                    </li>
+            
+                                    <li>
+                                        <a href="#">5</a>
+                                    </li>
+            
+                                    <li>
+                                        <a href="#">
+                                            <i class="ace-icon fa fa-angle-double-right"></i>
+                                        </a>
+                                    </li>
+                                    <li class="">
+                                        <a href="#">尾页</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>    
+                    </div>
+                </div>                
+            </div>
+        </div>
+
+
+        
+    </div>
+
+    <!-- 新建/编辑 -->
+    <div id="modal-table" class="modal fade in pk" tabindex="-1" aria-hidden="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header no-padding">
+                    <div class="table-header">新建/编辑</div>
+                </div>
+                    <div class="modal-body no-padding" style="padding: 20px 0 !important;">
+                        <div class="form-group">
+                            <label><i>*</i>上级</label>
+                            <input type="text" value="sehfjksfhbksdjfbh">
+                        </div>
+                        <div class="form-group">
+                            <label><i>*</i>类型</label>
+                            <input name="form-field-radio" type="radio" class="ace"><span class="lbl">校区</span>
+                            <input name="form-field-radio" type="radio" class="ace"><span class="lbl">校区</span>
+                        </div>
+                        <div class="form-group">
+                            <label><i>*</i>名称</label>
+                            <input type="text" value="科源分校">
+                        </div>
+                        <div class="form-group">
+                            <label><i>*</i>电话1</label>
+                            <input type="text" value="15000000000">
+                        </div>
+                        <div class="form-group">
+                            <label><i>*</i>电话2</label>
+                            <input type="text" value="15000000000">
+                        </div>
+                        <div class="form-group">
+                            <label><i>*</i>地址</label>
+                            <textarea name="" id="" cols="50" rows="1"></textarea>
+                        </div>
+                        <div class="grounInline">
+                            <div class="form-group">
+                                <label><i>*</i>校区排序</label>
+                                <input type="text" value="2">
+                            </div>
+                            <div class="form-group">
+                                <label><i>*</i>校区类型</label>
+                                <select name="" id="">
+                                    <option value="">直营</option>
+                                    <option value="">合作</option>
+                                    <option value="">加盟</option>
+                                    <option value="">代理</option>
+                                </select>
+                            </div>  
+                        </div>
+                    </div>
+                
+    
+                <div class="modal-footer no-margin-top">
+                    <button class="btn pull-left" data-dismiss="modal">
+                        取消
+                    </button>
+                    <button class="btn pull-right" data-dismiss="modal">
+                        保存
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div> 
+<script>
+!function(){
+laydate({elem: '#demo'});//绑定元素
+}();
+
+$(".down").click(function(){
+  $(this).siblings(".dropdown-menu").toggle();
+});
+$(".tag .close").click(function(){
+  $(this).parent(".tag").hide();
+});
+function selectAll(){
+    var isCheck=$("#sel_1").is(':checked');  //获得全选复选框是否选中
+    $("#choose input[type='checkbox']").each(function() {  
+        this.checked = isCheck;       //循环赋值给每个复选框是否选中
+    });
+
+    var isCheck=$("#sel_2").is(':checked');  //获得全选复选框是否选中
+    $(".checkList input[type='checkbox']").each(function() {  
+        this.checked = isCheck;       //循环赋值给每个复选框是否选中
+    });    
+};
+
+
+</script> 
+</body>
+</html>

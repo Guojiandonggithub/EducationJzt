@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    
+    <link rel="stylesheet" href="../static/pages/css/ace.min.css" id="main-ace-style" />
+    <link rel="stylesheet" href="../static/pages/css/index.css">
+    <link rel="stylesheet" href="../static/pages/css/classEdit.css">
+    <link rel="stylesheet" href="../static/pages/css/dropzone.css">
+    <link rel="stylesheet" href="../static/pages/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/pages/css/font-awesome.min.css" />
+
+    <script src="../static/pages/js/jquery.min.js"></script>
+    <script src="../static/pages/js/bootstrap.min.js"> </script>
+    <script src="../static/pages/js/ace.min.js"> </script>
+    <script src="../static/pages/js/ace-elements.min.js"></script>
+    <script src="../static/pages/laydate/laydate.js"></script>
+    <script src="../static/pages/js/dropzone.min.js"></script>
+
+    
+
+</head>
+<body>
+<div id="navbar" class="eduNav">
+    <div class="navbar-header pull-left">
+        <a href="index.html" class="navbar-brand">
+            <small>
+                <img src="../static/pages/img/logo.png" alt="">
+            </small>
+        </a>
+    </div>
+    <div class="pull-right eduName">
+        <span>万某 [管理员]</span> 
+        <span>机构中心</span>
+        <span>退出</span>   
+    </div>
+</div>  
+<div class="main-container" id="main-container">
+    <div id="sidebar" class="sidebar responsive">
+        <ul class="nav nav-list" style="top: 0px;">
+            <li class="">
+                <a href="index.html"><span class="menu-text"> 工作台 </span></a>
+                <b class="arrow"></b>
+            </li>
+            <li class="">
+                <a href="management.html"><span class="menu-text"> 办理中心 </span></a>
+                <b class="arrow"></b>
+            </li>
+            <li class="active open">
+                <a href="#" class="dropdown-toggle">
+                    <span class="menu-text">教务中心</span>
+                    <b class="arrow fa fa-angle-down"></b>
+                </a>
+                <b class="arrow"></b>
+                <ul class="submenu">
+                    <li class="">
+                        <a href="student.html"><i class="menu-icon fa fa-caret-right"></i>学员</a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li class="">
+                        <a href="classes.html"><i class="menu-icon fa fa-caret-right"></i>班级</a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li class="">
+                        <a href="oneToOne.html">
+                        <i class="menu-icon fa fa-caret-right"></i>一对一</a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li class="">
+                        <a href="courseArray.html"><i class="menu-icon fa fa-caret-right"></i>排课</a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li class="">
+                        <a href="lessonTable.html"><i class="menu-icon fa fa-caret-right"></i>课程表</a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li class="active">
+                        <a href="attendClass.html"><i class="menu-icon fa fa-caret-right"></i>记上课</a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li class="">
+                        <a href="course.html"><i class="menu-icon fa fa-caret-right"></i>课程</a>
+                        <b class="arrow"></b>
+                    </li>
+                </ul>
+            </li>
+            <li class="hsub">
+                <a href="#" class="dropdown-toggle">
+                    <span class="menu-text"> 内部管理 </span>
+                    <b class="arrow fa fa-angle-down"></b>
+                </a>
+                <b class="arrow"></b>
+                <ul class="submenu">
+                    <li class="">
+                        <a href="organization.html"><i class="menu-icon fa fa-caret-right"></i>组织架构</a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li class="">
+                        <a href="newStudent.html"><i class="menu-icon fa fa-caret-right"></i>员工信息</a>
+                        <b class="arrow"></b>
+                    </li>
+                </ul>
+            </li>      
+        </ul>
+    </div>
+    <div class="main-content">
+        <div class="classInfo">
+            <div class="info1">
+                <p><img src="../static/pages/img/ban.png">昆区分校识字1张三10班</p>
+                <p><span>校区：</span></span>昆区分校</p>  
+                <p><span>课程：</span></span>识字1</p> 
+            </div>
+            <div class="info2">
+                <div class="form-group">
+                    <label>上课日期</label>
+                    <input class="laydate-icon" id="demo" >
+                </div>
+                <div class="form-group">
+                    <label>教师课时</label>
+                    <input type="text" value="1">
+                </div>
+                <div class="form-group">
+                    <label>教师</label>
+                    <input type="text" value="张三">
+                </div>
+                <div class="form-group">
+                    <label>助教</label>
+                    <input type="text" value="">
+                </div>
+                <div class="form-group">
+                    <label>科目</label>
+                    <select name="" id="">
+                        <option value="">请选择科目</option>
+                        <option value="">111</option>
+                        <option value="">222</option>
+                    </select>
+                </div>
+            </div> 
+        </div>
+        <div class="classCon">
+            <p class="people">班级应到人数<span>10</span>人，实到人数<span>0</span>人</p>
+            <div class="operate">
+                <div class="form-group">
+                    <label>批量操作</label>
+                    <input name="form-field-radio" type="radio" class="ace"><span class="lbl">上课</span>
+                    <input name="form-field-radio" type="radio" class="ace"><span class="lbl">请假</span>
+                    <input name="form-field-radio" type="radio" class="ace"><span class="lbl">旷课</span>
+                </div>  
+                <div class="form-group">
+                    <label>扣除课时</label>
+                    <input type="text">
+                    <span>可填小数，如0.5</span>
+                </div>  
+            </div>
+            <div class="infoList alert">
+                <div class="headPic">
+                    <img src="../static/pages/img/classgirl.png">
+                    <span>在读</span>
+                    <p>张三</p>
+                </div>
+                <div class="infoMid">
+                    <div class="infoForm">
+                        <div class="form-group">
+                            <input name="form-field-radio" type="radio" class="ace"><span class="lbl">上课</span>
+                            <input name="form-field-radio" type="radio" class="ace"><span class="lbl">请假</span>
+                            <input name="form-field-radio" type="radio" class="ace"><span class="lbl">旷课</span>
+                            <input name="form-field-radio" type="radio" class="ace"><span class="lbl">补课</span>
+                        </div>   
+                        <div class="form-group">
+                            <label>扣除课时</label>
+                            <input type="text">   
+                        </div>
+                        <p>剩余<span>190</span>课时，以请假<span>0</span>次</p>
+                    </div>
+                    <div class="star">
+                        <p>
+                            <label>纪律专注</label>
+                            <span class="glyphicon glyphicon-star"></span>
+                            <span class="glyphicon glyphicon-star"></span>
+                            <span class="glyphicon glyphicon-star"></span>
+                            <span class="glyphicon glyphicon-star"></span>
+                            <span class="glyphicon glyphicon-star"></span>
+                        </p>
+                        <p>
+                            <label>活跃参与</label>
+                            <span class="glyphicon glyphicon-star"></span>
+                            <span class="glyphicon glyphicon-star"></span>
+                            <span class="glyphicon glyphicon-star"></span>
+                            <span class="glyphicon glyphicon-star"></span>
+                            <span class="glyphicon glyphicon-star"></span>
+                        </p>
+                    </div>
+                    <div class="msg">
+                        <label>教师留言</label>   
+                        <textarea></textarea> 
+                    </div>  
+                </div>
+                <div class="upload">
+                    <p>添加图片 上传的图片不可超过10m</p>
+                    <form action="api/dropzone" class="dropzone white dz-clickable">
+                        <div class="dz-message dz-clickable" ui-jp="dropzone" ui-options="{ url: 'api/dropzone' }">
+                            <h4 class="m-t-lg m-b-md">+</h4>
+                        </div>
+                    </form>
+                </div>
+                <button type="button" class="close" data-dismiss="alert">
+                    <i class="ace-icon fa fa-times"></i>
+                </button>
+            </div>
+            <div class="infoList alert">
+                <div class="headPic">
+                    <img src="../static/pages/img/classboy.png">
+                    <span>在读</span>
+                    <p>张三</p>
+                </div>
+                <div class="infoMid">
+                    <div class="infoForm">
+                        <div class="form-group">
+                            <input name="form-field-radio" type="radio" class="ace"><span class="lbl">上课</span>
+                            <input name="form-field-radio" type="radio" class="ace"><span class="lbl">请假</span>
+                            <input name="form-field-radio" type="radio" class="ace"><span class="lbl">旷课</span>
+                            <input name="form-field-radio" type="radio" class="ace"><span class="lbl">补课</span>
+                        </div>   
+                        <div class="form-group">
+                            <label>扣除课时</label>
+                            <input type="text">   
+                        </div>
+                        <p>剩余<span>190</span>课时，以请假<span>0</span>次</p>
+                    </div>
+                    <div class="star">
+                        <p>
+                            <label>纪律专注</label>
+                            <span class="glyphicon glyphicon-star"></span>
+                            <span class="glyphicon glyphicon-star"></span>
+                            <span class="glyphicon glyphicon-star"></span>
+                            <span class="glyphicon glyphicon-star"></span>
+                            <span class="glyphicon glyphicon-star"></span>
+                        </p>
+                        <p>
+                            <label>活跃参与</label>
+                            <span class="glyphicon glyphicon-star"></span>
+                            <span class="glyphicon glyphicon-star"></span>
+                            <span class="glyphicon glyphicon-star"></span>
+                            <span class="glyphicon glyphicon-star"></span>
+                            <span class="glyphicon glyphicon-star"></span>
+                        </p>
+                    </div>
+                    <div class="msg">
+                        <label>教师留言</label>   
+                        <textarea></textarea> 
+                    </div>  
+                </div>
+                <div class="upload">
+                    <p>添加图片 上传的图片不可超过10m</p>
+                    <form action="api/dropzone" class="dropzone white dz-clickable">
+                        <div class="dz-message dz-clickable" ui-jp="dropzone" ui-options="{ url: 'api/dropzone' }">
+                            <h4 class="m-t-lg m-b-md">+</h4>
+                        </div>
+                    </form>
+                </div>
+                <button type="button" class="close" data-dismiss="alert">
+                    <i class="ace-icon fa fa-times"></i>
+                </button>
+            </div>
+        </div>
+        <div class="classInfo classContent">
+            <div class="form-group">
+                <label style="margin-top:20px;">上课内容</label>
+                <textarea name="" id="" cols="80" rows="2"></textarea>
+            </div> 
+            <div class="form-group">
+                <label>备注</label>
+                <textarea name="" id="" cols="80" rows="1"></textarea>
+            </div>  
+            <div class="form-group">
+                <label style="margin-top:20px;">添加图片</label>
+                <form action="api/dropzone" class="dropzone white dz-clickable">
+                    <div class="dz-message dz-clickable" ui-jp="dropzone" ui-options="{ url: 'api/dropzone' }">
+                        <h4 class="m-t-lg m-b-md">+</h4>
+                    </div>
+                </form>
+                <p>添加图片 上传的图片不可超过10m</p>
+            </div> 
+            <div class="found" >
+                <div class="form-group">
+                    <label>创建人</label>
+                    <input type="text">
+                </div> 
+                <div class="form-group">
+                    <label>创建时间</label>
+                    <input class="laydate-icon" id="demo1">
+                </div> 
+            </div> 
+        </div>
+        <div class="classInfo">
+            <button class="save">保存</button>
+        </div>
+
+        
+    </div>
+
+</div> 
+<script>
+!function(){
+laydate({elem: '#demo'});//绑定元素
+}();
+!function(){
+laydate({elem: '#demo1'});//绑定元素
+}();
+$(".btn-down").click(function(){
+  $(this).siblings(".dropdown-menu").toggle();
+});
+$(".tag .close").click(function(){
+  $(this).parent(".tag").hide();
+});
+
+
+</script> 
+</body>
+</html>

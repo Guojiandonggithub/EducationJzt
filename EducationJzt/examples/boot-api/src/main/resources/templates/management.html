@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    
+    <link rel="stylesheet" href="../static/pages/css/ace.min.css" id="main-ace-style" />
+    <link rel="stylesheet" href="../static/pages/css/index.css">
+    <link rel="stylesheet" href="../static/pages/css/management.css">
+    <link rel="stylesheet" href="../static/pages/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/pages/css/font-awesome.min.css" />
+
+    <script src="../static/pages/js/jquery.min.js"></script>
+    <script src="../static/pages/js/bootstrap.min.js"> </script>
+    <script src="../static/pages/js/ace.min.js"> </script>
+    <script src="../static/pages/js/ace-elements.min.js"></script>
+    <script src="../static/pages/laydate/laydate.js"></script>
+
+    
+
+</head>
+<body>
+<div id="navbar" class="eduNav">
+    <div class="navbar-header pull-left">
+        <a href="index.html" class="navbar-brand">
+            <small>
+                <img src="../static/pages/img/logo.png" alt="">
+            </small>
+        </a>
+    </div>
+    <div class="pull-right eduName">
+        <span>万某 [管理员]</span> 
+        <span>机构中心</span>
+        <span>退出</span>   
+    </div>
+</div>  
+<div class="main-container" id="main-container">
+    <div id="sidebar" class="sidebar responsive">
+        <ul class="nav nav-list" style="top: 0px;">
+            <li class="">
+                <a href="index.html"><span class="menu-text"> 工作台 </span></a>
+                <b class="arrow"></b>
+            </li>
+            <li class="active">
+                <a href="management.html"><span class="menu-text"> 办理中心 </span></a>
+                <b class="arrow"></b>
+            </li>
+            <li class="">
+                <a href="#" class="dropdown-toggle">
+                    <span class="menu-text">教务中心</span>
+                    <b class="arrow fa fa-angle-down"></b>
+                </a>
+                <b class="arrow"></b>
+                <ul class="submenu">
+                    <li class="">
+                        <a href="student.html"><i class="menu-icon fa fa-caret-right"></i>学员</a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li class="">
+                        <a href="classes.html"><i class="menu-icon fa fa-caret-right"></i>班级</a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li class="">
+                        <a href="oneToOne.html">
+                        <i class="menu-icon fa fa-caret-right"></i>一对一</a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li class="">
+                        <a href="courseArray.html"><i class="menu-icon fa fa-caret-right"></i>排课</a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li class="">
+                        <a href="lessonTable.html"><i class="menu-icon fa fa-caret-right"></i>课程表</a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li class="">
+                        <a href="attendClass.html"><i class="menu-icon fa fa-caret-right"></i>记上课</a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li class="">
+                        <a href="course.html"><i class="menu-icon fa fa-caret-right"></i>课程</a>
+                        <b class="arrow"></b>
+                    </li>
+                </ul>
+            </li>
+            <li class="hsub">
+                <a href="#" class="dropdown-toggle">
+                    <span class="menu-text"> 内部管理 </span>
+                    <b class="arrow fa fa-angle-down"></b>
+                </a>
+                <b class="arrow"></b>
+                <ul class="submenu">
+                    <li class="">
+                        <a href="organization.html"><i class="menu-icon fa fa-caret-right"></i>组织架构</a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li class="">
+                        <a href="newStudent.html"><i class="menu-icon fa fa-caret-right"></i>员工信息</a>
+                        <b class="arrow"></b>
+                    </li>
+                </ul>
+            </li>      
+        </ul>
+    </div>
+    <div class="main-content">
+        <div class="breadcrumbs" id="breadcrumbs">
+            <img src="../static/pages/img/line1.png">
+            <span>办理中心</span>
+            <img src="../static/pages/img/line.png">
+        </div> 
+        <div class="managementIcon">
+            <ul>
+                <li>
+                    <a href="enroll.html" target="_blank">
+                        <span><img src="../static/pages/img/bf.png"></span>
+                        <p>报名/续费</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="subsidy.html" target="_blank">
+                        <span><img src="../static/pages/img/bf.png"></span>
+                        <p>补费</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="stopClass.html" target="_blank">
+                        <span><img src="../static/pages/img/tk.png"></span>
+                        <p>停课</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="repeat.html" target="_blank">
+                        <span><img src="../static/pages/img/fk.png"></span>
+                        <p>复课</p>
+                    </a>
+                </li>                
+            </ul>
+        </div> 
+        <div class="screen">
+            <div class="screenTop">
+                <select class="selectName">
+                    <option value="AZ">学员姓名</option>
+                    <option value="AL">订单号</option>
+                    <option value="AK">学院名称</option>
+                </select>
+                <div class="nav-search" id="nav-search">
+                    <form class="form-search">
+                        <span class="input-icon">
+                            <input type="text" placeholder="请输入姓名、支持拼音缩写" class="nav-search-input" id="nav-search-input" autocomplete="off">
+                            <i class="ace-icon fa fa-search nav-search-icon"></i>
+                        </span>
+                    </form>
+                </div>
+                <div class="btn-group">
+                    <button class="btn btn-down">
+                        筛选
+                        <i>1</i>
+                        <span class="ace-icon fa fa-caret-down icon-on-right"></span>
+                    </button>
+                    <div class="dropdown-menu">
+                        <div class="screenData">
+                            <input class="laydate-icon" id="demo" placeholder="经办日期">
+                            <select>
+                                <option value="">是否欠费</option>
+                                <option value="y">是</option>
+                                <option value="n">否</option>
+                            </select>            
+                        </div>
+                        <div class="screenCourse">
+                            <input type="text" placeholder="课程">
+                            <select>
+                                <option value="">教材杂费</option>
+                                <option value="y">111</option>
+                                <option value="n">222</option>
+                            </select>
+                        </div>
+                        <div class="screenCourse">
+                                <select>
+                                    <option value="">订单类型</option>
+                                    <option value="y">111</option>
+                                    <option value="n">222</option>
+                                </select>
+                                <input type="text" placeholder="订单标签">
+                                <input type="text" placeholder="经办人">
+                                <input type="text" placeholder="经办校区">
+                                <select>
+                                    <option value="">已完成</option>
+                                    <option value="y">111</option>
+                                    <option value="n">222</option>
+                                </select>
+                                <select>
+                                    <option value="">销售员</option>
+                                    <option value="y">111</option>
+                                    <option value="n">222</option>
+                                </select>
+                            </div>     
+                    </div>
+                </div>
+
+
+
+            </div>
+            <div class="screenBot tags">
+                订单状况：
+                <span class="tag">已完成<button type="button" class="close">×</button></span>
+                <span class="tag">已完成<button type="button" class="close">×</button></span>
+            </div>
+        </div>
+        <div class="orderCon">
+            <div class="export">
+                <button type="button" class="btn btn-primary">导出当前结果</button>
+            </div> 
+            <div class="result">
+                当前结果：总计<span>111</span>条记录，应收款项总计：<span>111</span>元，实收总计：<span>111</span>元 | 学员账户变动总计：<span>111</span>元 | 欠费总计：<span>111</span>元 | 积分总计：<span>11</span>分
+            </div>
+            <div class="orderTable">
+                <table class="table table-hover">
+                    <tr>
+                        <th>订单号</th>
+                        <th>学员姓名</th>
+                        <th>订单类型</th>
+                        <th>交易内容</th>
+                        <th>应收</th>
+                        <th>实收</th>
+                        <th>学员账户</th>
+                        <th>欠费</th>
+                        <th>销售员</th>
+                        <th>经办人</th>
+                        <th>经办校区</th>
+                        <th>日期</th>
+                        <th>状态</th>
+                        <th>操作</th>
+                      </tr>
+                      <tr>
+                        <td>11180</td>
+                        <td>张三</td>
+                        <td>报名</td>
+                        <td class="orderTxt">珠心算2511/期*1=2511元</td>
+                        <td>+2511</td>
+                        <td>+2511</td>
+                        <td>+0.00</td>
+                        <td>0.00</td>
+                        <td>李四</td>
+                        <td>张五</td>
+                        <td>昆山分校</td>
+                        <td>2018-10-20</td>
+                        <td><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></td>
+                        <td>
+                            <div class="btn-group">
+                                <p data-toggle="dropdown" class="down">
+                                    操作
+                                    <span class="ace-icon fa fa-caret-down icon-on-right"></span>
+                                </p>
+                                <ul class="dropdown-menu dropdown-default">
+                                    <li>
+                                        <a href="#">确认到款</a>
+                                    </li>
+
+                                    <li>
+                                        <a href="managementEdit.html">编辑</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>11180</td>
+                        <td>张三</td>
+                        <td>报名</td>
+                        <td class="orderTxt">珠心算2511/期*1=2511元</td>
+                        <td>+2511</td>
+                        <td>+2511</td>
+                        <td>+0.00</td>
+                        <td>0.00</td>
+                        <td>李四</td>
+                        <td>张五</td>
+                        <td>昆山分校</td>
+                        <td>2018-10-20</td>
+                        <td><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></td>
+                        <td>
+                            <div class="btn-group">
+                                <p data-toggle="dropdown" class="down">
+                                    操作
+                                    <span class="ace-icon fa fa-caret-down icon-on-right"></span>
+                                </p>
+                                <ul class="dropdown-menu dropdown-default">
+                                    <li>
+                                        <a href="#">确认到款</a>
+                                    </li>
+
+                                    <li>
+                                        <a href="managementEdit.html">编辑</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>11180</td>
+                        <td>张三</td>
+                        <td>报名</td>
+                        <td class="orderTxt">珠心算2511/期*1=2511元</td>
+                        <td>+2511</td>
+                        <td>+2511</td>
+                        <td>+0.00</td>
+                        <td>0.00</td>
+                        <td>李四</td>
+                        <td>张五</td>
+                        <td>昆山分校</td>
+                        <td>2018-10-20</td>
+                        <td><span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span></td>
+                        <td>
+                            <div class="btn-group">
+                                <p data-toggle="dropdown" class="down">
+                                    操作
+                                    <span class="ace-icon fa fa-caret-down icon-on-right"></span>
+                                </p>
+                                <ul class="dropdown-menu dropdown-default">
+                                    <li>
+                                        <a href="#">确认到款</a>
+                                    </li>
+
+                                    <li>
+                                        <a href="managementEdit.html">编辑</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                      </tr>
+                </table>
+                <div class="orderPage">
+                    <div class="page">
+                        单页显示：
+                        <select>
+                            <option>20条/页</option>
+                            <option>50条/页</option>
+                            <option>100条/页</option>
+                        </select>
+                    </div>
+                    <ul class="pagination">
+                        <li class="disabled">
+                            <a href="#">首页</a>
+                        </li>
+                        <li class="disabled">
+                            <a href="#">
+                                <i class="ace-icon fa fa-angle-double-left"></i>
+                            </a>
+                        </li>  
+                        <li class="active">
+                            <a href="#">1</a>
+                        </li>
+
+                        <li>
+                            <a href="#">2</a>
+                        </li>
+
+                        <li>
+                            <a href="#">3</a>
+                        </li>
+
+                        <li>
+                            <a href="#">4</a>
+                        </li>
+
+                        <li>
+                            <a href="#">5</a>
+                        </li>
+
+                        <li>
+                            <a href="#">
+                                <i class="ace-icon fa fa-angle-double-right"></i>
+                            </a>
+                        </li>
+                        <li class="">
+                            <a href="#">尾页</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div> 
+
+<script>
+!function(){
+laydate({elem: '#demo'});//绑定元素
+}();
+
+$(".btn-down").click(function(){
+  $(this).siblings(".dropdown-menu").toggle();
+});
+$(".tag .close").click(function(){
+  $(this).parent(".tag").hide();
+});
+
+</script> 
+</body>
+</html>

@@ -1,0 +1,103 @@
+#calendar {
+    width: 100%;
+}
+
+.fc-header-center .fc-button {
+    margin: -3px 10px 0 10px;
+}
+
+.fc-header {
+    margin-top: 30px;
+}
+
+.fc-header-left {
+    text-align: left !important;
+}
+
+#calendar {
+    position: relative;
+}
+
+.classStyle {
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+.classStyle span {
+    width: 12px;
+    height: 12px;
+    display: inline-block;
+    margin-right: 6px;
+}
+
+.classStyle p {
+    margin-right: 8px;
+    display: inline-block;
+}
+
+.classStyle .state1 span {
+    background: #3967a3;
+}
+
+.classStyle .state2 span {
+    background: #6aa8f1;
+}
+
+.classStyle .state3 span {
+    background: #33a299;
+}
+
+.classStyle .state4 span {
+    background: #fc8038;
+}
+
+.fc-event {
+    background: #33a299;
+}
+#calendarRoom .fc-content,#calendarTeacher .fc-content{
+    display: none;
+}
+#calendarRoom .fc-header-left,#calendarRoom .fc-header-right,
+#calendarTeacher .fc-header-left,#calendarTeacher .fc-header-right{
+    display: none;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

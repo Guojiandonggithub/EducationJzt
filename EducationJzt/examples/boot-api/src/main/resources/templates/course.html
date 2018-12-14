@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    
+    <link rel="stylesheet" href="../static/pages/css/ace.min.css" id="main-ace-style" />
+    <link rel="stylesheet" href="../static/pages/css/index.css">
+    <link rel="stylesheet" href="../static/pages/css/management.css">
+    <link rel="stylesheet" href="../static/pages/css/student.css">
+    <link rel="stylesheet" href="../static/pages/css/madal.css">
+    <link rel="stylesheet" href="../static/pages/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/pages/css/font-awesome.min.css" />
+
+    <script src="../static/pages/js/jquery.min.js"></script>
+    <script src="../static/pages/js/bootstrap.min.js"> </script>
+    <script src="../static/pages/js/ace.min.js"> </script>
+    <script src="../static/pages/js/ace-elements.min.js"></script>
+    <script src="../static/pages/laydate/laydate.js"></script>
+
+    
+
+</head>
+<body>
+<div id="navbar" class="eduNav">
+    <div class="navbar-header pull-left">
+        <a href="index.html" class="navbar-brand">
+            <small>
+                <img src="../static/pages/img/logo.png" alt="">
+            </small>
+        </a>
+    </div>
+    <div class="pull-right eduName">
+        <span>万某 [管理员]</span> 
+        <span>机构中心</span>
+        <span>退出</span>   
+    </div>
+</div>  
+<div class="main-container" id="main-container">
+    <div id="sidebar" class="sidebar responsive">
+        <ul class="nav nav-list" style="top: 0px;">
+            <li class="">
+                <a href="index.html"><span class="menu-text"> 工作台 </span></a>
+                <b class="arrow"></b>
+            </li>
+            <li class="">
+                <a href="management.html"><span class="menu-text"> 办理中心 </span></a>
+                <b class="arrow"></b>
+            </li>
+            <li class="active open">
+                <a href="#" class="dropdown-toggle">
+                    <span class="menu-text">教务中心</span>
+                    <b class="arrow fa fa-angle-down"></b>
+                </a>
+                <b class="arrow"></b>
+                <ul class="submenu">
+                    <li class="">
+                        <a href="student.html"><i class="menu-icon fa fa-caret-right"></i>学员</a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li class="">
+                        <a href="classes.html"><i class="menu-icon fa fa-caret-right"></i>班级</a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li class="">
+                        <a href="oneToOne.html">
+                        <i class="menu-icon fa fa-caret-right"></i>一对一</a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li class="">
+                        <a href="courseArray.html"><i class="menu-icon fa fa-caret-right"></i>排课</a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li class="">
+                        <a href="lessonTable.html"><i class="menu-icon fa fa-caret-right"></i>课程表</a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li class="">
+                        <a href="attendClass.html"><i class="menu-icon fa fa-caret-right"></i>记上课</a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li class="active">
+                        <a href="course.html"><i class="menu-icon fa fa-caret-right"></i>课程</a>
+                        <b class="arrow"></b>
+                    </li>
+                </ul>
+            </li>
+            <li class="hsub">
+                <a href="#" class="dropdown-toggle">
+                    <span class="menu-text"> 内部管理 </span>
+                    <b class="arrow fa fa-angle-down"></b>
+                </a>
+                <b class="arrow"></b>
+                <ul class="submenu">
+                    <li class="">
+                        <a href="organization.html"><i class="menu-icon fa fa-caret-right"></i>组织架构</a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li class="">
+                        <a href="newStudent.html"><i class="menu-icon fa fa-caret-right"></i>员工信息</a>
+                        <b class="arrow"></b>
+                    </li>
+                </ul>
+            </li>      
+        </ul>
+    </div>
+    <div class="main-content">      
+        <div class="tabbable">
+            <ul class="nav nav-tabs" id="myTab">
+                <li class="active">
+                    <a data-toggle="tab" href="#studentList" class="studentList">课程列表</a>
+                </li>
+                <li>
+                    <a data-toggle="tab" href="#divideList" class="divideList">课程类别</a>
+                </li>
+                <li>
+                    <a data-toggle="tab" href="#expiryStu" class="expiryStu">科目设置</a>
+                </li>
+            </ul>
+            <!-- 上课列表 -->
+            <div id="studentList" class="tab-pane fade in active student course">
+                <!-- 学员列表 -->
+                <div > 
+                    <div class="screen">
+                        <a class="stdEnroll" href="newLesson.html" target="_blank">新建课程</a>
+                        <div class="screenTop">  
+                            <select class="selectName">
+                                <option value="AZ">学员姓名</option>
+                                <option value="AL">手机尾号</option>
+                                <option value="AK">微信号</option>
+                            </select>
+                            <div class="nav-search" id="nav-search">
+                                <form class="form-search">
+                                    <span class="input-icon">
+                                        <input type="text" placeholder="请输入姓名、支持拼音缩写" class="nav-search-input" id="nav-search-input" autocomplete="off">
+                                        <i class="ace-icon fa fa-search nav-search-icon"></i>
+                                    </span>
+                                </form>
+                            </div>
+                            <div class="btn-group">
+                                <button class="btn btn-down">
+                                    筛选
+                                    <i>1</i>
+                                    <span class="ace-icon fa fa-caret-down icon-on-right"></span>
+                                </button>
+                                <div class="dropdown-menu">
+                                    <div class="screenData">
+                                        <select>
+                                            <option value="">报读校区</option>
+                                            <option value="y">青山校区</option>
+                                            <option value="n">科源校区</option>
+                                            <option value="n">坤元校区</option>
+                                        </select> 
+                                        <select>
+                                            <option value="">教师</option>
+                                            <option value="y">111</option>
+                                            <option value="n">1111</option>
+                                        </select>            
+                                    </div>
+                                    <div class="screenData">
+                                        <select>
+                                            <option value="">报读校区</option>
+                                            <option value="y">青山校区</option>
+                                            <option value="n">科源校区</option>
+                                            <option value="n">坤元校区</option>
+                                        </select> 
+                                        <select>
+                                            <option value="">课时状态</option>
+                                            <option value="y">在读</option>
+                                            <option value="n">转出</option>
+                                            <option value="y">退费</option>
+                                            <option value="n">停课</option>
+                                            <option value="n">结课</option>
+                                            <option value="n">转课</option>
+                                        </select>            
+                                    </div>     
+                                </div>
+                            </div>                                
+                        </div>
+                        <div class="screenBot tags">
+                            课程状况：
+                            <span class="tag">正常<button type="button" class="close">×</button></span>
+                            <p>清空筛选</p>
+                        </div>
+                    </div>
+                    <div class="orderCon">
+                        <div class="export">
+                            <button type="button" class="btn btn-primary">批量下载</button>
+                            <button type="button" class="btn btn-primary">批量删除</button>
+                        </div> 
+                        <div class="result">
+                            当前结果：共计<span>15</span>个课程，<span>13</span>个课程正在开课/班
+                        </div>
+                        <div class="orderTable">
+                            <table class="table table-hover">
+                                <tr>
+                                    <th>
+                                        <input type="checkbox" id="sel_1" onchange="selectAll()">
+                                    </th>
+                                    <th>课程名称
+                                        <div class="sort">
+                                            <span class="glyphicon glyphicon-triangle-top"></span>
+                                            <span class="glyphicon glyphicon-triangle-bottom"></span>
+                                        </div>                                       
+                                    </th>
+                                    <th>类型</th>
+                                    <th>状态</th>
+                                    <th>课程类别</th>
+                                    <th>科目</th>
+                                    <th>学费</th>
+                                    <th>学年</th>
+                                    <th>年级</th>
+                                    <th>开班/课数</th>
+                                    <th>开课校区数</th>
+                                    <th>学费标准</th>
+                                    <th>教材(元)</th>
+                                    <th>杂费(元)</th>
+                                    <th>备注</th>
+                                    <th>创建日期
+                                        <div class="sort">
+                                            <span class="glyphicon glyphicon-triangle-top"></span>
+                                            <span class="glyphicon glyphicon-triangle-bottom"></span>
+                                        </div>                                       
+                                    </th>
+                                    <th>操作</th>
+                                    <th>
+                                        <span href="#modal-table"  data-toggle="modal" class="glyphicon glyphicon-option-vertical" aria-hidden="true"></span>
+                                    </th>
+                                </tr>
+                                <tr id="choose">
+                                    <td><input type="checkbox"></td>
+                                    <td>口才2</td>
+                                    <td>一对一</td>
+                                    <td class="state"><span>正常</span></td>
+                                    <td>潜能班</td>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <td>0</td>
+                                    <td>全部</td>
+                                    <td>192元/课时</td>
+                                    <td>40</td>
+                                    <td>40</td>
+                                    <td>备注内容</td>
+                                    <td>2018-10-10</td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <p data-toggle="dropdown" class="down" aria-expanded="false">
+                                                操作
+                                                <span class="ace-icon fa fa-caret-down icon-on-right"></span>
+                                            </p>
+                                            <ul class="dropdown-menu dropdown-default">
+                                                <li>
+                                                    <a href="courseEdit.html" target="_blank">编辑</a>
+                                                </li>
+            
+                                                <li>
+                                                    <a href="">复制</a>
+                                                </li>
+                                                <li>
+                                                    <a href="">删除</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr id="choose">
+                                    <td><input type="checkbox"></td>
+                                    <td>口才2</td>
+                                    <td>一对一</td>
+                                    <td class="state"><span>正常</span></td>
+                                    <td>潜能班</td>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <td>0</td>
+                                    <td>全部</td>
+                                    <td>192元/课时</td>
+                                    <td>40</td>
+                                    <td>40</td>
+                                    <td>备注内容</td>
+                                    <td>2018-10-10</td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <p data-toggle="dropdown" class="down" aria-expanded="false">
+                                                操作
+                                                <span class="ace-icon fa fa-caret-down icon-on-right"></span>
+                                            </p>
+                                            <ul class="dropdown-menu dropdown-default">
+                                                <li>
+                                                    <a href="courseEdit.html" target="_blank">编辑</a>
+                                                </li>
+            
+                                                <li>
+                                                    <a href="">复制</a>
+                                                </li>
+                                                <li>
+                                                    <a href="">删除</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr id="choose">
+                                    <td><input type="checkbox"></td>
+                                    <td>口才2</td>
+                                    <td>一对一</td>
+                                    <td class="state"><span>正常</span></td>
+                                    <td>潜能班</td>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <td>0</td>
+                                    <td>全部</td>
+                                    <td>192元/课时</td>
+                                    <td>40</td>
+                                    <td>40</td>
+                                    <td>备注内容</td>
+                                    <td>2018-10-10</td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <p data-toggle="dropdown" class="down" aria-expanded="false">
+                                                操作
+                                                <span class="ace-icon fa fa-caret-down icon-on-right"></span>
+                                            </p>
+                                            <ul class="dropdown-menu dropdown-default">
+                                                <li>
+                                                    <a href="courseEdit.html" target="_blank">编辑</a>
+                                                </li>
+            
+                                                <li>
+                                                    <a href="">复制</a>
+                                                </li>
+                                                <li>
+                                                    <a href="">删除</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                            </table>
+                            <div class="orderPage">
+                                <div class="page">
+                                    单页显示：
+                                    <select>
+                                        <option>20条/页</option>
+                                        <option>50条/页</option>
+                                        <option>100条/页</option>
+                                    </select>
+                                </div>
+                                <ul class="pagination">
+                                    <li class="disabled">
+                                        <a href="#">首页</a>
+                                    </li>
+                                    <li class="disabled">
+                                        <a href="#">
+                                            <i class="ace-icon fa fa-angle-double-left"></i>
+                                        </a>
+                                    </li>  
+                                    <li class="active">
+                                        <a href="#">1</a>
+                                    </li>
+            
+                                    <li>
+                                        <a href="#">2</a>
+                                    </li>
+            
+                                    <li>
+                                        <a href="#">3</a>
+                                    </li>
+            
+                                    <li>
+                                        <a href="#">4</a>
+                                    </li>
+            
+                                    <li>
+                                        <a href="#">5</a>
+                                    </li>
+            
+                                    <li>
+                                        <a href="#">
+                                            <i class="ace-icon fa fa-angle-double-right"></i>
+                                        </a>
+                                    </li>
+                                    <li class="">
+                                        <a href="#">尾页</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>    
+                    </div>
+                </div>
+            </div>
+            <!-- 上课列表 -->
+            <div id="divideList" class="tab-pane fade student course">
+                <div> 
+                    <div class="screen" style="height:84px;">
+                        <a class="stdEnroll" href="#modal-table1"  data-toggle="modal">新建课程类别</a>
+                    </div>
+                    <div class="orderCon">
+                        <div class="orderTable">
+                            <table class="table table-hover">
+                                <tr>
+                                    <th>序号</th>
+                                    <th>课程类别</th>
+                                    <th>操作</th>
+                                </tr>
+                                <tr id="choose">
+                                    <td>1</td>
+                                    <td>拼音</td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <p data-toggle="dropdown" class="down" aria-expanded="false">
+                                                更多
+                                                <span class="ace-icon fa fa-caret-down icon-on-right"></span>
+                                            </p>
+                                            <ul class="dropdown-menu dropdown-default">
+                                                <li>
+                                                    <a href="#modal-table1"  data-toggle="modal">编辑</a>
+                                                </li>
+                                                <li>
+                                                    <a href="">删除</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr id="choose">
+                                    <td>1</td>
+                                    <td>拼音</td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <p data-toggle="dropdown" class="down" aria-expanded="false">
+                                                更多
+                                                <span class="ace-icon fa fa-caret-down icon-on-right"></span>
+                                            </p>
+                                            <ul class="dropdown-menu dropdown-default">
+                                                <li>
+                                                    <a href="#modal-table1"  data-toggle="modal">编辑</a>
+                                                </li>
+                                                <li>
+                                                    <a href="">删除</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                            <div class="orderPage">
+                                <div class="page">
+                                    单页显示：
+                                    <select>
+                                        <option>20条/页</option>
+                                        <option>50条/页</option>
+                                        <option>100条/页</option>
+                                    </select>
+                                </div>
+                                <ul class="pagination">
+                                    <li class="disabled">
+                                        <a href="#">首页</a>
+                                    </li>
+                                    <li class="disabled">
+                                        <a href="#">
+                                            <i class="ace-icon fa fa-angle-double-left"></i>
+                                        </a>
+                                    </li>  
+                                    <li class="active">
+                                        <a href="#">1</a>
+                                    </li>
+            
+                                    <li>
+                                        <a href="#">2</a>
+                                    </li>
+            
+                                    <li>
+                                        <a href="#">3</a>
+                                    </li>
+            
+                                    <li>
+                                        <a href="#">4</a>
+                                    </li>
+            
+                                    <li>
+                                        <a href="#">5</a>
+                                    </li>
+            
+                                    <li>
+                                        <a href="#">
+                                            <i class="ace-icon fa fa-angle-double-right"></i>
+                                        </a>
+                                    </li>
+                                    <li class="">
+                                        <a href="#">尾页</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>    
+                    </div>
+                </div>
+            </div>
+            <!-- 科目设置 -->
+            <div id="expiryStu" class="tab-pane fade student course">
+                <!-- 学员列表 -->
+                <div> 
+                    <div class="screen" style="height:84px;">
+                        <a class="stdEnroll" href="#modal-table2"  data-toggle="modal">新建科目</a>
+                    </div>
+                    <div class="orderCon">
+                        <div class="orderTable">
+                            <table class="table table-hover">
+                                <tr>
+                                    <th>科目名称</th>
+                                    <th>状态</th>
+                                    <th>操作</th>
+                                </tr>
+                                <tr id="choose">
+                                    <td>物理</td>
+                                    <td>正常</td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <p data-toggle="dropdown" class="down" aria-expanded="false">
+                                                更多
+                                                <span class="ace-icon fa fa-caret-down icon-on-right"></span>
+                                            </p>
+                                            <ul class="dropdown-menu dropdown-default">
+                                                <li>
+                                                    <a href="#modal-table2"  data-toggle="modal">编辑</a>
+                                                </li>
+                                                <li>
+                                                    <a href="">删除</a>
+                                                </li>
+                                                <li>
+                                                    <a href="">停用</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr id="choose">
+                                    <td>物理</td>
+                                    <td>下架</td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <p data-toggle="dropdown" class="down" aria-expanded="false">
+                                                更多
+                                                <span class="ace-icon fa fa-caret-down icon-on-right"></span>
+                                            </p>
+                                            <ul class="dropdown-menu dropdown-default">
+                                                <li>
+                                                    <a href="#modal-table2"  data-toggle="modal">编辑</a>
+                                                </li>
+                                                <li>
+                                                    <a href="">删除</a>
+                                                </li>
+                                                <li>
+                                                    <a href="">启用</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                            <div class="orderPage">
+                                <div class="page">
+                                    单页显示：
+                                    <select>
+                                        <option>20条/页</option>
+                                        <option>50条/页</option>
+                                        <option>100条/页</option>
+                                    </select>
+                                </div>
+                                <ul class="pagination">
+                                    <li class="disabled">
+                                        <a href="#">首页</a>
+                                    </li>
+                                    <li class="disabled">
+                                        <a href="#">
+                                            <i class="ace-icon fa fa-angle-double-left"></i>
+                                        </a>
+                                    </li>  
+                                    <li class="active">
+                                        <a href="#">1</a>
+                                    </li>
+            
+                                    <li>
+                                        <a href="#">2</a>
+                                    </li>
+            
+                                    <li>
+                                        <a href="#">3</a>
+                                    </li>
+            
+                                    <li>
+                                        <a href="#">4</a>
+                                    </li>
+            
+                                    <li>
+                                        <a href="#">5</a>
+                                    </li>
+            
+                                    <li>
+                                        <a href="#">
+                                            <i class="ace-icon fa fa-angle-double-right"></i>
+                                        </a>
+                                    </li>
+                                    <li class="">
+                                        <a href="#">尾页</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>    
+                    </div>
+                </div>
+            </div>
+        </div>        
+    </div>
+
+    <!-- 自定义选项弹窗 -->
+    <div id="modal-table" class="modal fade in" tabindex="-1" aria-hidden="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header no-padding">
+                    <div class="table-header">自定义选项</div>
+                </div>
+                    <div class="modal-body no-padding">
+                        <div class="checkAll">
+                            <input type="checkbox" id="sel_2" onchange="selectAll()">全选
+                        </div>
+                        <div class="checkList">
+                            <span><input type="checkbox">渠道</span>
+                            <span><input type="checkbox">欠费</span>
+                            <span><input type="checkbox">积分</span>
+                            <span><input type="checkbox">微信号</span>
+                            <span><input type="checkbox">生日</span>
+                            <span><input type="checkbox">年龄</span>
+                            <span><input type="checkbox">公立学校</span>
+                            <span><input type="checkbox">公立校班级</span>
+                            <span><input type="checkbox">居住区域</span>
+                            <span><input type="checkbox">其他信息</span>
+                            <span><input type="checkbox">课程状态</span>
+                            <span><input type="checkbox">上课校区</span>
+                            <span><input type="checkbox">课时有校区</span>
+                        </div>   
+                    </div>
+                
+    
+                <div class="modal-footer no-margin-top">
+                    <button class="btn pull-left" data-dismiss="modal">
+                        取消
+                    </button>
+                    <button class="btn pull-right" data-dismiss="modal">
+                        确定
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 新建课程类别 -->
+    <div id="modal-table1" class="modal fade in" tabindex="-1" aria-hidden="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header no-padding">
+                    <div class="table-header">新建课程类别</div>
+                </div>
+                    <div class="modal-body" style="padding:15px !important">
+                        <div class="form-group" style="display: inline;">
+                            <label for="">序号</label>
+                            <input type="text" value="8">
+                        </div>  
+                        <div class="form-group" style="display: inline; margin-left:20px;">
+                            <label for="">类别名称</label>
+                            <input type="text" placeholder="请输入课程类别">
+                        </div>  
+                    </div>        
+                <div class="modal-footer no-margin-top">
+                    <button class="btn pull-left" data-dismiss="modal">
+                        取消
+                    </button>
+                    <button class="btn pull-right" data-dismiss="modal">
+                        确定
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 新建科目 -->
+    <div id="modal-table2" class="modal fade in" tabindex="-1" aria-hidden="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header no-padding">
+                    <div class="table-header">新建科目</div>
+                </div>
+                    <div class="modal-body" style="padding:15px !important">  
+                        <div class="form-group" style="display: inline; margin-left:20px;">
+                            <label for="">科目名称</label>
+                            <input type="text" placeholder="请填写科目名称">
+                        </div>  
+                    </div>        
+                <div class="modal-footer no-margin-top">
+                    <button class="btn pull-left" data-dismiss="modal">
+                        取消
+                    </button>
+                    <button class="btn pull-right" data-dismiss="modal">
+                        确定
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 
+<script>
+!function(){
+laydate({elem: '#demo'});//绑定元素
+}();
+
+$(".btn-down").click(function(){
+  $(this).siblings(".dropdown-menu").toggle();
+});
+$(".tag .close").click(function(){
+  $(this).parent(".tag").hide();
+});
+function selectAll(){
+    var isCheck=$("#sel_1").is(':checked');  //获得全选复选框是否选中
+    $("#choose input[type='checkbox']").each(function() {  
+        this.checked = isCheck;       //循环赋值给每个复选框是否选中
+    });
+
+    var isCheck=$("#sel_2").is(':checked');  //获得全选复选框是否选中
+    $(".checkList input[type='checkbox']").each(function() {  
+        this.checked = isCheck;       //循环赋值给每个复选框是否选中
+    });    
+};
+$(".studentList").click(function () {
+    $("#studentList").show();
+    $("#divideList").hide();
+    $("#expiryStu").hide();
+});
+$(".divideList").click(function () {
+    $("#divideList").show();
+    $("#studentList").hide();
+    $("#expiryStu").hide();
+});
+$(".expiryStu").click(function () {
+    $("#expiryStu").show();
+    $("#divideList").hide();
+    $("#studentList").hide();
+});
+</script> 
+</body>
+</html>

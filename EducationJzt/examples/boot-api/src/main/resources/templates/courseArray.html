@@ -1,0 +1,1442 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <link rel="stylesheet" href="../static/pages/css/ace.min.css" id="main-ace-style" />
+    <link rel="stylesheet" href="../static/pages/css/index.css">
+    <link rel="stylesheet" href="../static/pages/css/management.css">
+    <link rel="stylesheet" href="../static/pages/css/student.css">
+    <link rel="stylesheet" href="../static/pages/css/madal.css">
+    <link rel="stylesheet" href="../static/pages/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/pages/css/font-awesome.min.css" />
+
+    <link rel="stylesheet" href="../static/pages/css/fullcalendar.css">
+    <link rel="stylesheet" href="../static/pages/css/lessonTable.css">
+    <link rel="stylesheet" href="../static/pages/css/syllabus.css">
+
+
+    <script src="../static/pages/js/jquery.min.js"></script>
+    <script src="../static/pages/js/bootstrap.min.js"> </script>
+    <script src="../static/pages/js/ace.min.js"> </script>
+    <script src="../static/pages/js/ace-elements.min.js"></script>
+    <script src="../static/pages/laydate/laydate.js"></script>
+    <script src="../static/pages/js/fullcalendar.min.js"></script>
+    <script src="../static/pages/js/jquery-ui-1.10.2.custom.min.js"></script>
+
+</head>
+
+<body>
+    <div id="navbar" class="eduNav">
+        <div class="navbar-header pull-left">
+            <a href="index.html" class="navbar-brand">
+                <small>
+                    <img src="../static/pages/img/logo.png" alt="">
+                </small>
+            </a>
+        </div>
+        <div class="pull-right eduName">
+            <span>万某 [管理员]</span>
+            <span>机构中心</span>
+            <span>退出</span>
+        </div>
+    </div>
+    <div class="main-container" id="main-container">
+        <div id="sidebar" class="sidebar responsive">
+            <ul class="nav nav-list" style="top: 0px;">
+                <li class="">
+                    <a href="index.html"><span class="menu-text"> 工作台 </span></a>
+                    <b class="arrow"></b>
+                </li>
+                <li class="">
+                    <a href="management.html"><span class="menu-text"> 办理中心 </span></a>
+                    <b class="arrow"></b>
+                </li>
+                <li class="active open">
+                    <a href="#" class="dropdown-toggle">
+                        <span class="menu-text">教务中心</span>
+                        <b class="arrow fa fa-angle-down"></b>
+                    </a>
+                    <b class="arrow"></b>
+                    <ul class="submenu">
+                        <li class="">
+                            <a href="student.html"><i class="menu-icon fa fa-caret-right"></i>学员</a>
+                            <b class="arrow"></b>
+                        </li>
+                        <li class="">
+                            <a href="classes.html"><i class="menu-icon fa fa-caret-right"></i>班级</a>
+                            <b class="arrow"></b>
+                        </li>
+                        <li class="">
+                            <a href="oneToOne.html">
+                            <i class="menu-icon fa fa-caret-right"></i>一对一</a>
+                            <b class="arrow"></b>
+                        </li>
+                        <li class="active">
+                            <a href="courseArray.html"><i class="menu-icon fa fa-caret-right"></i>排课</a>
+                            <b class="arrow"></b>
+                        </li>
+                        <li class="">
+                            <a href="lessonTable.html"><i class="menu-icon fa fa-caret-right"></i>课程表</a>
+                            <b class="arrow"></b>
+                        </li>
+                        <li class="">
+                            <a href="attendClass.html"><i class="menu-icon fa fa-caret-right"></i>记上课</a>
+                            <b class="arrow"></b>
+                        </li>
+                        <li class="">
+                            <a href="course.html"><i class="menu-icon fa fa-caret-right"></i>课程</a>
+                            <b class="arrow"></b>
+                        </li>
+                    </ul>
+                </li>
+                <li class="hsub">
+                    <a href="#" class="dropdown-toggle">
+                        <span class="menu-text"> 内部管理 </span>
+                        <b class="arrow fa fa-angle-down"></b>
+                    </a>
+                    <b class="arrow"></b>
+                    <ul class="submenu">
+                        <li class="">
+                            <a href="organization.html"><i class="menu-icon fa fa-caret-right"></i>组织架构</a>
+                            <b class="arrow"></b>
+                        </li>
+                        <li class="">
+                            <a href="newStudent.html"><i class="menu-icon fa fa-caret-right"></i>员工信息</a>
+                            <b class="arrow"></b>
+                        </li>
+                    </ul>
+                </li>      
+            </ul>
+        </div>
+        <div class="main-content">
+            <div class="breadcrumbs" id="breadcrumbs">
+                <img src="../static/pages/img/line1.png">
+                <span>排课</span>
+                <img src="../static/pages/img/line.png">
+            </div>
+            <div class="tabbable">
+                <ul class="nav nav-tabs" id="myTab">
+                    <li class="active">
+                        <a data-toggle="tab" href="#array">排课</a>
+                    </li>
+                    <li>
+                        <a data-toggle="tab" href="#schedule">日程列表</a>
+                    </li>
+                    <li>
+                        <a data-toggle="tab" href="#conflict">日程冲突</a>
+                    </li>
+                </ul>
+                <div class="tab-content student">
+                    <!-- 排课 -->
+                    <div id="array" class="tab-pane fade in active">
+                        <ul class="nav nav-tabs arrayBtn" style="border-bottom: 1px solid #ccc;">
+                            <li class="active">
+                                <a data-toggle="tab" href="#calendarTime" class="calendarTime">时间课表视图</a>
+                            </li>
+                            <li>
+                                <a data-toggle="tab" href="#calendarRoom" class="calendarRoom">班级课表视图</a>
+                            </li>
+                            <li>
+                                <a data-toggle="tab" href="#calendarTeacher" class="calendarTeacher">教师课表视图</a>
+                            </li>
+                        </ul>
+
+                        <div class="tab-pane fade in active" id="calendarTime">
+                            <div class="arrayForm">
+                                <div class="" style="display: flex;">
+                                    <div class="checkAll">
+                                        <label>校区选择：</label>
+                                        <input type="checkbox" id="sel_2" onchange="selectAll2()">全部
+                                    </div>
+                                    <div class="checkList">
+                                        <span><input type="checkbox">青山分校</span>
+                                        <span><input type="checkbox">科源分校</span>
+                                        <span><input type="checkbox">昆区分校</span>
+                                        <span><input type="checkbox">东胜分校</span>
+                                    </div>   
+                                </div>
+                                <p>
+                                    <label>查看范围：</label>全部
+                                </p>
+                                <div class="form-group">
+                                    <select name="" id="">
+                                        <option value="">按班级</option>
+                                        <option value="">111</option>
+                                        <option value="">222</option>
+                                        <option value="">333</option>
+                                    </select>
+                                    <select name="" id="">
+                                        <option value="">按教师</option>
+                                        <option value="">111</option>
+                                        <option value="">222</option>
+                                        <option value="">333</option>
+                                    </select>
+                                    <select name="" id="">
+                                        <option value="">按教室</option>
+                                        <option value="">111</option>
+                                        <option value="">222</option>
+                                        <option value="">333</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div id="calendar">
+                                <div class="classStyle">
+                                    <p class="state1"><span></span>已记上课</p>
+                                    <p class="state2"><span></span>我的日程</p>
+                                    <p class="state3"><span></span>正常日程</p>
+                                    <p class="state4"><span></span>冲突日程</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade in" id="calendarRoom" style="display:none;">
+                                <div class="arrayForm">
+                                    <div class="" style="display: flex;">
+                                        <div class="checkAll">
+                                            <label>校区选择：</label>
+                                            <input type="checkbox" id="sel_1" onchange="selectAll()">全部
+                                        </div>
+                                        <div class="checkList">
+                                            <span><input type="checkbox">青山分校</span>
+                                            <span><input type="checkbox">科源分校</span>
+                                            <span><input type="checkbox">昆区分校</span>
+                                            <span><input type="checkbox">东胜分校</span>
+                                        </div>   
+                                    </div>
+                                    <p>
+                                        <label>查看范围：</label>全部
+                                    </p>
+                                    <div class="form-group">
+                                        <select name="" id="">
+                                            <option value="">按班级</option>
+                                            <option value="">111</option>
+                                            <option value="">222</option>
+                                            <option value="">333</option>
+                                        </select>
+                                        <select name="" id="">
+                                            <option value="">按教师</option>
+                                            <option value="">111</option>
+                                            <option value="">222</option>
+                                            <option value="">333</option>
+                                        </select>
+                                        <select name="" id="">
+                                            <option value="">按教室</option>
+                                            <option value="">111</option>
+                                            <option value="">222</option>
+                                            <option value="">333</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            <div id="calendar">
+                                <div class="classStyle">
+                                    <p class="state1"><span></span>已记上课</p>
+                                    <p class="state2"><span></span>我的日程</p>
+                                    <p class="state3"><span></span>正常日程</p>
+                                    <p class="state4"><span></span>冲突日程</p>
+                                </div>
+                            </div>
+
+
+
+                            <table class="table table-hover table-bordered syllabus">
+                                <tr>
+                                    <th style="width:150px !important;">班级名称</th>
+                                    <th>周一 10-29</th>
+                                    <th>周二 10-30</th>
+                                    <th>周三 10-31</th>
+                                    <th>周四 11-01</th>
+                                    <th>周五 11-02</th>
+                                    <th>周六 11-03</th>
+                                    <th>周日 11-04</th>
+                                </tr>
+                                <tr>
+                                    <td>张三——珠心算(1对1)</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>张三——珠心算(1对1)</td>
+                                    <td></td>
+                                    <td rowspan="1">
+                                        <div class="rows2 skList">
+                                            <span>17:00 张三——珠心算(1对1)</span>
+                                        </div>
+                                        <div class="rows2 infoShow">
+                                            <span>开始：2018-10-29 08:00</span>
+                                            <span>结束：2018-10-29 17:00</span>
+                                            <span>教室：5号教室</span>
+                                            <span>班课/一对一：青山分校2018届4班</span>
+                                            <span>教师：汪大东</span>
+                                            <span>助教：张三</span>
+                                        </div>
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>张三——珠心算(1对1)</td>
+                                    <td></td>
+                                    <td>
+                                        
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>
+                                        <div class="rows2 ctList">
+                                            <span>17:00 张三——珠心算(1对1)</span>
+                                        </div>
+                                        <div class="rows2 infoShow">
+                                            <span>开始：2018-10-29 08:00</span>
+                                            <span>结束：2018-10-29 17:00</span>
+                                            <span>教室：5号教室</span>
+                                            <span>班课/一对一：青山分校2018届4班</span>
+                                            <span>教师：汪大东</span>
+                                            <span>助教：张三</span>
+                                        </div>
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>张三——珠心算(1对1)</td>
+                                    <td></td>
+                                    <td rowspan="1">
+                                        <div class="rows2 skList">
+                                            <span>17:00 张三——珠心算(1对1)</span>
+                                        </div>
+                                        <div class="rows2 infoShow">
+                                            <span>开始：2018-10-29 08:00</span>
+                                            <span>结束：2018-10-29 17:00</span>
+                                            <span>教室：5号教室</span>
+                                            <span>班课/一对一：青山分校2018届4班</span>
+                                            <span>教师：汪大东</span>
+                                            <span>助教：张三</span>
+                                        </div>
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </table>
+
+
+
+
+
+                        </div>
+                        
+
+                        <div class="tab-pane fade in" id="calendarTeacher" style="display:none;">
+                                <div class="arrayForm">
+                                    <div class="" style="display: flex;">
+                                        <div class="checkAll">
+                                            <label>校区选择：</label>
+                                            <input type="checkbox" id="sel_3" onchange="selectAll3()">全部
+                                        </div>
+                                        <div class="checkList">
+                                            <span><input type="checkbox">青山分校</span>
+                                            <span><input type="checkbox">科源分校</span>
+                                            <span><input type="checkbox">昆区分校</span>
+                                            <span><input type="checkbox">东胜分校</span>
+                                        </div>   
+                                    </div>
+                                    <p>
+                                        <label>查看范围：</label>全部
+                                    </p>
+                                    <div class="form-group">
+                                        <select name="" id="">
+                                            <option value="">按班级</option>
+                                            <option value="">111</option>
+                                            <option value="">222</option>
+                                            <option value="">333</option>
+                                        </select>
+                                        <select name="" id="">
+                                            <option value="">按教师</option>
+                                            <option value="">111</option>
+                                            <option value="">222</option>
+                                            <option value="">333</option>
+                                        </select>
+                                        <select name="" id="">
+                                            <option value="">按教室</option>
+                                            <option value="">111</option>
+                                            <option value="">222</option>
+                                            <option value="">333</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            <div id="calendar">
+                                <div class="classStyle">
+                                    <p class="state1"><span></span>已记上课</p>
+                                    <p class="state2"><span></span>我的日程</p>
+                                    <p class="state3"><span></span>正常日程</p>
+                                    <p class="state4"><span></span>冲突日程</p>
+                                </div>
+                            </div>
+
+                            <table class="table table-hover table-bordered syllabus">
+                                <tr>
+                                    <th style="width:150px !important;">教师名称</th>
+                                    <th>周一 10-29</th>
+                                    <th>周二 10-30</th>
+                                    <th>周三 10-31</th>
+                                    <th>周四 11-01</th>
+                                    <th>周五 11-02</th>
+                                    <th>周六 11-03</th>
+                                    <th>周日 11-04</th>
+                                </tr>
+                                <tr>
+                                    <td>张三</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>张三</td>
+                                    <td></td>
+                                    <td rowspan="1">
+                                        <div class="rows2 skList">
+                                            <span>17:00 张三——珠心算(1对1)</span>
+                                        </div>
+                                        <div class="rows2 infoShow">
+                                            <span>开始：2018-10-29 08:00</span>
+                                            <span>结束：2018-10-29 17:00</span>
+                                            <span>教室：5号教室</span>
+                                            <span>班课/一对一：青山分校2018届4班</span>
+                                            <span>教师：汪大东</span>
+                                            <span>助教：张三</span>
+                                        </div>
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>张三</td>
+                                    <td></td>
+                                    <td>
+                                        
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>
+                                        <div class="rows2 ctList">
+                                            <span>17:00 张三——珠心算(1对1)</span>
+                                        </div>
+                                        <div class="rows2 infoShow">
+                                            <span>开始：2018-10-29 08:00</span>
+                                            <span>结束：2018-10-29 17:00</span>
+                                            <span>教室：5号教室</span>
+                                            <span>班课/一对一：青山分校2018届4班</span>
+                                            <span>教师：汪大东</span>
+                                            <span>助教：张三</span>
+                                        </div>
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>张三</td>
+                                    <td></td>
+                                    <td rowspan="1">
+                                        <div class="rows2 skList">
+                                            <span>17:00 张三——珠心算(1对1)</span>
+                                        </div>
+                                        <div class="rows2 infoShow">
+                                            <span>开始：2018-10-29 08:00</span>
+                                            <span>结束：2018-10-29 17:00</span>
+                                            <span>教室：5号教室</span>
+                                            <span>班课/一对一：青山分校2018届4班</span>
+                                            <span>教师：汪大东</span>
+                                            <span>助教：张三</span>
+                                        </div>
+                                    </td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </table>
+
+                        </div>
+
+
+                        
+                    </div>
+                    <!-- 日程列表 -->
+                    <div id="schedule" class="tab-pane fade">
+                        <div class="screen">
+                            <a class="stdEnroll" href="#modal-table" role="button" data-toggle="modal">新建日程</a>
+                            <div class="screenTop">
+                                <select class="selectName">
+                                    <option value="AZ">学员姓名</option>
+                                    <option value="AL">手机尾号</option>
+                                    <option value="AK">微信号</option>
+                                </select>
+                                <div class="nav-search" id="nav-search">
+                                    <form class="form-search">
+                                        <span class="input-icon">
+                                            <input type="text" placeholder="请输入姓名、支持拼音缩写" class="nav-search-input" id="nav-search-input"
+                                                autocomplete="off">
+                                            <i class="ace-icon fa fa-search nav-search-icon"></i>
+                                        </span>
+                                    </form>
+                                </div>
+                                <div class="btn-group">
+                                    <button class="btn btn-down">
+                                        筛选
+                                        <i>1</i>
+                                        <span class="ace-icon fa fa-caret-down icon-on-right"></span>
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <div class="screenData">
+                                            <select>
+                                                <option value="">报读校区</option>
+                                                <option value="y">青山校区</option>
+                                                <option value="n">科源校区</option>
+                                                <option value="n">坤元校区</option>
+                                            </select>
+                                            <select>
+                                                <option value="">教师</option>
+                                                <option value="y">111</option>
+                                                <option value="n">1111</option>
+                                            </select>
+                                        </div>
+                                        <div class="screenData">
+                                            <select>
+                                                <option value="">报读校区</option>
+                                                <option value="y">青山校区</option>
+                                                <option value="n">科源校区</option>
+                                                <option value="n">坤元校区</option>
+                                            </select>
+                                            <select>
+                                                <option value="">课时状态</option>
+                                                <option value="y">在读</option>
+                                                <option value="n">转出</option>
+                                                <option value="y">退费</option>
+                                                <option value="n">停课</option>
+                                                <option value="n">结课</option>
+                                                <option value="n">转课</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="screenBot tags">
+                                上课日期：
+                                <span class="tag">开始时间18:00-结束时间19:00<button type="button" class="close">×</button></span>
+                                <p>清空筛选</p>
+                            </div>
+                        </div>
+                        <div class="orderCon">
+                            <div class="export">
+                                <button type="button" class="btn btn-primary">批量删除</button>
+                            </div>
+                            <div class="result">
+                                当前结果：共计<span>111</span>条排课
+                            </div>
+                            <div class="orderTable">
+                                <table class="table table-hover">
+                                    <tr>
+                                        <th>
+                                            <input type="checkbox" id="sel_3" onchange="chooseAll()">
+                                        </th>
+                                        <th>上课日期</th>
+                                        <th>时间段</th>
+                                        <th>班级/一对一</th>
+                                        <th>教师</th>
+                                        <th>教室</th>
+                                        <th>科目</th>
+                                        <th>记上课状态</th>
+                                        <th>实到/应到</th>
+                                        <th>操作</th>
+                                    </tr>
+                                    <tr id="choose">
+                                        <td><input type="checkbox"></td>
+                                        <td>2018-11-06(周二)</td>
+                                        <td>16:30-18:00</td>
+                                        <td><img src="../static/pages/img/1v1.png">张三珠心算2(1对1)</td>
+                                        <td>李四</td>
+                                        <td>科7-1教室</td>
+                                        <td></td>
+                                        <td>/</td>
+                                        <td>/</td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <p data-toggle="dropdown" class="down">
+                                                    操作
+                                                    <span class="ace-icon fa fa-caret-down icon-on-right"></span>
+                                                </p>
+                                                <ul class="dropdown-menu dropdown-default">
+                                                    <li>
+                                                        <a href="">编辑</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr id="choose">
+                                        <td><input type="checkbox"></td>
+                                        <td>2018-11-06(周二)</td>
+                                        <td>16:30-18:00</td>
+                                        <td><img src="../static/pages/img/ban.png">张三珠心算2(1对1)</td>
+                                        <td>李四</td>
+                                        <td>科7-1教室</td>
+                                        <td></td>
+                                        <td>/</td>
+                                        <td>/</td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <p data-toggle="dropdown" class="down">
+                                                    操作
+                                                    <span class="ace-icon fa fa-caret-down icon-on-right"></span>
+                                                </p>
+                                                <ul class="dropdown-menu dropdown-default">
+                                                    <li>
+                                                        <a href="">编辑</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <div class="orderPage">
+                                    <div class="page">
+                                        单页显示：
+                                        <select>
+                                            <option>20条/页</option>
+                                            <option>50条/页</option>
+                                            <option>100条/页</option>
+                                        </select>
+                                    </div>
+                                    <ul class="pagination">
+                                        <li class="disabled">
+                                            <a href="#">首页</a>
+                                        </li>
+                                        <li class="disabled">
+                                            <a href="#">
+                                                <i class="ace-icon fa fa-angle-double-left"></i>
+                                            </a>
+                                        </li>
+                                        <li class="active">
+                                            <a href="#">1</a>
+                                        </li>
+
+                                        <li>
+                                            <a href="#">2</a>
+                                        </li>
+
+                                        <li>
+                                            <a href="#">3</a>
+                                        </li>
+
+                                        <li>
+                                            <a href="#">4</a>
+                                        </li>
+
+                                        <li>
+                                            <a href="#">5</a>
+                                        </li>
+
+                                        <li>
+                                            <a href="#">
+                                                <i class="ace-icon fa fa-angle-double-right"></i>
+                                            </a>
+                                        </li>
+                                        <li class="">
+                                            <a href="#">尾页</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 日程冲突 -->
+                    <div id="conflict" class="tab-pane fade conflict">
+                        <div class="screen">
+                            <div class="conflicDate" style="margin-top: 24px !important;">
+                                <span class="glyphicon glyphicon-menu-left"></span>
+                                <p>2018/10/28 - 2018/11/28</p>
+                                <span class="glyphicon glyphicon-menu-right"></span>
+                            </div>
+                            <div class="screenTop">
+                                <div class="form-group">
+                                    <select class="selectName">
+                                        <option value="AZ">班级/一对一</option>
+                                        <option value="AL">111</option>
+                                        <option value="AK">222</option>
+                                        <option value="AK">333</option>
+                                        <option value="AK">444</option>
+                                    </select>
+                                </div>
+                                <div class="nav-search" id="nav-search">
+                                    <form class="form-search">
+                                        <span class="input-icon">
+                                            <input type="text" placeholder="请输入姓名、支持拼音缩写" class="nav-search-input" id="nav-search-input"
+                                                autocomplete="off">
+                                            <i class="ace-icon fa fa-search nav-search-icon"></i>
+                                        </span>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="orderCon">
+                            <div class="orderTable">
+                                <table class="table table-hover">
+                                    <tr>
+                                        <th>上课时间</th>
+                                        <th>班级/一对一</th>
+                                        <th>课程</th>
+                                        <th>教师</th>
+                                        <th>教室</th>
+                                        <th>操作</th>
+                                    </tr>
+                                    <tr id="choose">
+                                        <td>2018-10-11 08:00-17:00</td>
+                                        <td>张三珠心算(1对1)</td>
+                                        <td>珠心算</td>
+                                        <td>张三</td>
+                                        <td>科1号教室</td>
+                                        <td>
+                                            <a href="#modal-table1" role="button" data-toggle="modal"><img src="../static/pages/img/edit.png">编辑</a>
+                                            <a href="" data-toggle="modal" data-target="#myModal"><img src="../static/pages/img/del.png">删除</a>
+
+                                        </td>
+                                    </tr>
+                                </table>
+                                <!-- 删除弹窗 -->
+                                <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                                        aria-hidden="true">&times;</span></button>
+                                                <h4 class="modal-title" id="myModalLabel">请确认是否删除</h4>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                                                <button type="button" class="btn btn-primary">好</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="orderPage">
+                                    <div class="page">
+                                        单页显示：
+                                        <select>
+                                            <option>20条/页</option>
+                                            <option>50条/页</option>
+                                            <option>100条/页</option>
+                                        </select>
+                                    </div>
+                                    <ul class="pagination">
+                                        <li class="disabled">
+                                            <a href="#">首页</a>
+                                        </li>
+                                        <li class="disabled">
+                                            <a href="#">
+                                                <i class="ace-icon fa fa-angle-double-left"></i>
+                                            </a>
+                                        </li>
+                                        <li class="active">
+                                            <a href="#">1</a>
+                                        </li>
+
+                                        <li>
+                                            <a href="#">2</a>
+                                        </li>
+
+                                        <li>
+                                            <a href="#">3</a>
+                                        </li>
+
+                                        <li>
+                                            <a href="#">4</a>
+                                        </li>
+
+                                        <li>
+                                            <a href="#">5</a>
+                                        </li>
+
+                                        <li>
+                                            <a href="#">
+                                                <i class="ace-icon fa fa-angle-double-right"></i>
+                                            </a>
+                                        </li>
+                                        <li class="">
+                                            <a href="#">尾页</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+
+        </div>
+
+        <!-- 新建日程弹窗 -->
+        <div id="modal-table" class="modal fade in pk" tabindex="-1" aria-hidden="false">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header no-padding">
+                        <div class="table-header">新建日程</div>
+                    </div>
+                    <div class="modal-body no-padding">
+                        <ul class="nav nav-tabs" id="myTab" style="margin-bottom: 20px !important;">
+                            <li class="active">
+                                <a data-toggle="tab" href="#classl" class="classl">按班级</a>
+                            </li>
+                            <li>
+                                <a data-toggle="tab" href="#teacherl" class="teacherl">按教师</a>
+                            </li>
+                            <li>
+                                <a data-toggle="tab" href="#rooml" class="rooml">按教室</a>
+                            </li>
+                        </ul>
+                        <div id="classl" class="tab-pane fade in active">
+                            <div class="grounInline">
+                                <div class="form-group">
+                                    <label><i>*</i>班级/一对一</label>
+                                    <select name="" id="">
+                                        <option value="">张三珠心算一对一</option>
+                                        <option value="">张三珠心算一对一</option>
+                                        <option value="">张三珠心算一对一</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label><i>*</i>排课日程方式</label>
+                                    <input name="form-field-radio" type="radio" class="ace"><span class="lbl">单次</span>
+                                    <input name="form-field-radio" type="radio" class="ace"><span class="lbl">重复</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label><i>*</i>上课日期</label>
+                                <input class="laydate-icon" id="demo">
+                            </div>
+                            <div class="form-group">
+                                <label><i>*</i>上课时段</label>
+                                <select name="" id="">
+                                    <option value="">选择时段</option>
+                                    <option value="">111</option>
+                                    <option value="">www</option>
+                                </select>
+                                <span>自定义时间</span>
+                            </div>
+                            <div class="grounInline">
+                                <div class="form-group">
+                                    <label><i>*</i>教师</label>
+                                    <select name="" id="">
+                                        <option value="">请选择教师</option>
+                                        <option value="">111</option>
+                                        <option value="">www</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>助教</label>
+                                    <select name="" id="">
+                                        <option value="">请选择助教</option>
+                                        <option value="">111</option>
+                                        <option value="">www</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="grounInline">
+                                <div class="form-group">
+                                    <label><i>*</i>教室</label>
+                                    <select name="" id="">
+                                        <option value="">请选择教室</option>
+                                        <option value="">111</option>
+                                        <option value="">www</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>科目</label>
+                                    <select name="" id="">
+                                        <option value="">请选择科目</option>
+                                        <option value="">111</option>
+                                        <option value="">www</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="">上课主题</label>
+                                <input type="text">
+                            </div>
+                        </div>
+                        <div id="teacherl" class="tab-pane fade in" style="display:none;">
+                            <div class="grounInline">
+                                <div class="form-group">
+                                    <label><i>*</i>班级/一对一</label>
+                                    <select name="" id="">
+                                        <option value="">张三珠心算一对一</option>
+                                        <option value="">张三珠心算一对一</option>
+                                        <option value="">张三珠心算一对一</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label><i>*</i>排课日程方式</label>
+                                    <input name="form-field-radio" type="radio" class="ace"><span class="lbl">单次</span>
+                                    <input name="form-field-radio" type="radio" class="ace"><span class="lbl">重复</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label><i>*</i>上课日期</label>
+                                <input class="laydate-icon" id="demo">
+                            </div>
+                            <div class="form-group">
+                                <label><i>*</i>上课时段</label>
+                                <select name="" id="">
+                                    <option value="">选择时段</option>
+                                    <option value="">111</option>
+                                    <option value="">www</option>
+                                </select>
+                                <span>自定义时间</span>
+                            </div>
+                            <div class="grounInline">
+                                <div class="form-group">
+                                    <label><i>*</i>教师</label>
+                                    <select name="" id="">
+                                        <option value="">请选择教师</option>
+                                        <option value="">111</option>
+                                        <option value="">www</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>助教</label>
+                                    <select name="" id="">
+                                        <option value="">请选择助教</option>
+                                        <option value="">111</option>
+                                        <option value="">www</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="grounInline">
+                                <div class="form-group">
+                                    <label><i>*</i>教室</label>
+                                    <select name="" id="">
+                                        <option value="">请选择教室</option>
+                                        <option value="">111</option>
+                                        <option value="">www</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>科目</label>
+                                    <select name="" id="">
+                                        <option value="">请选择科目</option>
+                                        <option value="">111</option>
+                                        <option value="">www</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="">上课主题</label>
+                                <input type="text">
+                            </div>
+                        </div>
+                        <div id="rooml" class="tab-pane fade in" style="display:none;">
+                            <div class="grounInline">
+                                <div class="form-group">
+                                    <label><i>*</i>班级/一对一</label>
+                                    <select name="" id="">
+                                        <option value="">张三珠心算一对一</option>
+                                        <option value="">张三珠心算一对一</option>
+                                        <option value="">张三珠心算一对一</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label><i>*</i>排课日程方式</label>
+                                    <input name="form-field-radio" type="radio" class="ace"><span class="lbl">单次</span>
+                                    <input name="form-field-radio" type="radio" class="ace"><span class="lbl">重复</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label><i>*</i>上课日期</label>
+                                <input class="laydate-icon" id="demo">
+                            </div>
+                            <div class="form-group">
+                                <label><i>*</i>上课时段</label>
+                                <select name="" id="">
+                                    <option value="">选择时段</option>
+                                    <option value="">111</option>
+                                    <option value="">www</option>
+                                </select>
+                                <span>自定义时间</span>
+                            </div>
+                            <div class="grounInline">
+                                <div class="form-group">
+                                    <label><i>*</i>教师</label>
+                                    <select name="" id="">
+                                        <option value="">请选择教师</option>
+                                        <option value="">111</option>
+                                        <option value="">www</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>助教</label>
+                                    <select name="" id="">
+                                        <option value="">请选择助教</option>
+                                        <option value="">111</option>
+                                        <option value="">www</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="grounInline">
+                                <div class="form-group">
+                                    <label><i>*</i>教室</label>
+                                    <select name="" id="">
+                                        <option value="">请选择教室</option>
+                                        <option value="">111</option>
+                                        <option value="">www</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>科目</label>
+                                    <select name="" id="">
+                                        <option value="">请选择科目</option>
+                                        <option value="">111</option>
+                                        <option value="">www</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="">上课主题</label>
+                                <input type="text">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer no-margin-top">
+                        <button class="btn pull-left" data-dismiss="modal">
+                            取消
+                        </button>
+                        <button class="btn pull-right" data-dismiss="modal">
+                            保存
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 编辑日程弹窗 -->
+        <div id="modal-table2" class="modal fade in pk" tabindex="-1" aria-hidden="false" style="display:none;">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header no-padding">
+                        <div class="table-header">课程表</div>
+                    </div>
+                    <div class="modal-body no-padding" style="padding:20px 30px !important;">
+                        <p><span>上课时间：</span>2018-11-10 15:30-16:30</p>
+                        <p><span>班级：</span><a href="manageClass.html" target="_blank">青山分校技能班</a></p>
+                        <p><span>教师：</span>张三</p>
+                        <p><span>助教：</span>李四</p>
+                        <p><span>教室</span>1111</p>
+                        <p><span>科目：</span>电风扇的广泛地</p>
+                        <p><span>上课内容：</span>青山分校技能班</p>
+                    </div>
+                    <div class="modal-footer no-margin-top" style="display: flex; justify-content: space-between;">
+                        <button class="btn" data-dismiss="modal">
+                            取消
+                        </button>
+                        <button class="btn " data-dismiss="modal">
+                            编辑单次
+                        </button>
+                        <button class="btn " data-dismiss="modal">
+                            重复编辑
+                        </button>
+                        <button class="btn " data-dismiss="modal">
+                            删除
+                        </button>
+                        <a href="classEdit.html" target="_blank" style="display: inline-block;width: 80px;height: 30px; line-height:30px;
+                        background:#5597e5;  border: 1px solid #b9bec4;border-radius: 4px;color: #fff !important;">记上课</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 冲突编辑 -->
+        <div id="modal-table1" class="modal fade in conflictEdit" tabindex="-1" aria-hidden="false">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header no-padding">
+                        <div class="table-header">冲突编辑</div>
+                    </div>
+                    <div class="modal-body no-padding">
+                        <div class="form-group">
+                            <label>班级/一对一</label>
+                            <input type="text" value="科源分校识字1张三">
+                        </div>
+                        <div class="form-group">
+                            <label>课程</label>
+                            <input type="text" value="识字1">
+                        </div>
+                        <div class="">
+                            <div class="form-group" style="display: inline-block;">
+                                <label>上课时间</label>
+                                <input class="laydate-icon" id="demo1" style="width:140px;">
+                            </div>
+                            <select name="" id="">
+                                <option value="">08</option>
+                                <option value="">07</option>
+                            </select>
+                            <i>:</i>
+                            <select name="" id="">
+                                <option value="">08</option>
+                                <option value="">07</option>
+                            </select>
+                            <span>到</span>
+                            <select name="" id="">
+                                <option value="">08</option>
+                                <option value="">07</option>
+                            </select>
+                            <i>:</i>
+                            <select name="" id="">
+                                <option value="">08</option>
+                                <option value="">07</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>教师</label>
+                            <select name="" id="" style="width:360px;">
+                                <option value="">张三</option>
+                                <option value="">张三</option>
+                                <option value="">张三</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>教室</label>
+                            <select name="" id="" style="width:360px;">
+                                <option value="">科3号教室</option>
+                                <option value="">222</option>
+                                <option value="">333</option>
+                            </select>
+                        </div>
+                    </div>
+
+
+                    <div class="modal-footer no-margin-top">
+                        <button class="btn pull-left" data-dismiss="modal">
+                            取消
+                        </button>
+                        <button class="btn pull-right" data-dismiss="modal">
+                            确定
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        ! function () {
+            laydate({
+                elem: '#demo'
+            }); //绑定元素
+            laydate({
+                elem: '#demo1'
+            }); //绑定元素
+        }();
+
+
+        // $(".fc-widget-content").click(function () {
+        //     $("#modal-table").show();
+            
+        // });
+
+
+
+        $(".calendarTime").click(function () {
+            $("#calendarTime").show();
+            $("#calendarRoom").hide();
+            $("#calendarTeacher").hide();
+        });
+        $(".calendarRoom").click(function () {
+            $("#calendarRoom").show();
+            $("#calendarTime").hide();
+            $("#calendarTeacher").hide();
+        });
+        $(".calendarTeacher").click(function () {
+            $("#calendarTeacher").show();
+            $("#calendarTime").hide();
+            $("#calendarRoom").hide();
+        });
+
+        $(".btn-down").click(function () {
+            $(this).siblings(".dropdown-menu").toggle();
+        });
+        $(".tag .close").click(function () {
+            $(this).parent(".tag").hide();
+        });
+        $(".classl").click(function () {
+            $("#classl").show().siblings("#teacherl,#rooml").hide();
+        });
+        $(".teacherl").click(function () {
+            $("#teacherl").show().siblings("#classl,#rooml").hide();
+        });
+        $(".rooml").click(function () {
+            $("#rooml").show().siblings("#classl,#teacherl").hide();
+        });
+
+        function selectAll() {
+            var isCheck = $("#sel_1").is(':checked'); //获得全选复选框是否选中
+            $(".checkList input[type='checkbox']").each(function () {
+                this.checked = isCheck; //循环赋值给每个复选框是否选中
+            });
+        };
+        function selectAll2() {
+            var isCheck = $("#sel_2").is(':checked'); //获得全选复选框是否选中
+            $(".checkList input[type='checkbox']").each(function () {
+                this.checked = isCheck; //循环赋值给每个复选框是否选中
+            });
+        };
+        function selectAll3() {
+            var isCheck = $("#sel_3").is(':checked'); //获得全选复选框是否选中
+            $(".checkList input[type='checkbox']").each(function () {
+                this.checked = isCheck; //循环赋值给每个复选框是否选中
+            });
+        };
+
+        function chooseAll() {
+            var isCheck = $("#sel_3").is(':checked'); //获得全选复选框是否选中
+            $("#choose input[type='checkbox']").each(function () {
+                this.checked = isCheck; //循环赋值给每个复选框是否选中
+            });
+        };
+
+        $(".skList").hover(function () {
+            $(this).siblings(".infoShow").toggle(300);
+        });
+        $(".ctList").hover(function () {
+            $(this).siblings(".infoShow").toggle(300);
+        });
+
+
+        $(function () {
+
+            var date = new Date();
+            var d = date.getDate();
+            var m = date.getMonth();
+            var y = date.getFullYear();
+
+            $('#calendarTime #calendar').fullCalendar({
+                header: {
+                    right: '',
+                    center: 'prev,title,next,today',
+                    left: 'agendaDay,agendaWeek,month'
+                },
+                defaultView:'agendaWeek',
+                firstDay: 1,
+                editable: true,
+                timeFormat: 'H:mm',
+                axisFormat: 'H:mm',
+                events: [{
+                        title: '科源校区诶诶我惹人\r\n张三\n5号教室',
+                        start: new Date(y, m, 1),
+                        backgroundColor: '#33a299;'
+                    },
+                    {
+                        title: '科源校区诶诶我惹人\r\n张三\n5号教室',
+                        start: new Date(y, m, d - 5),
+                        end: new Date(y, m, d - 2),
+                        backgroundColor: '#6aa8f1;'
+
+                    },
+                    {
+                        title: '科源校区诶诶我惹人\r\n张三\n5号教室',
+                        start: new Date(y, m, d - 5),
+                        end: new Date(y, m, d - 2),
+                        backgroundColor: '#6aa8f1;'
+
+                    },
+                    {
+                        title: '科源校区诶诶我惹人\r\n张三\n5号教室',
+                        start: new Date(y, m, 28),
+                        end: new Date(y, m, 29),
+                        backgroundColor: '#fc8038'
+                    },
+                    {
+                        title: '科源校区诶诶我惹人\r\n张三\n5号教室',
+                        start: new Date(y, m, d + 1, 19, 0),
+                        end: new Date(y, m, d + 1, 22, 30),
+                        backgroundColor: '#3967a3;'
+                    },
+                    {
+                        title: '科源校区诶诶我惹人\r\n张三\n5号教室',
+                        start: new Date(y, m, 28),
+                        end: new Date(y, m, 29),
+                        backgroundColor: '#fc8038'
+                    },
+                    {
+                        title: '科源校区诶诶我惹人\r\n张三\n5号教室',
+                        start: new Date(y, m, d + 1, 19, 0),
+                        end: new Date(y, m, d + 1, 22, 30),
+                        backgroundColor: '#3967a3;'
+                    },
+                ],
+
+            });
+        });
+
+
+        $(function () {
+
+        var date = new Date();
+        var d = date.getDate();
+        var m = date.getMonth();
+        var y = date.getFullYear();
+
+        $('#calendarRoom #calendar').fullCalendar({
+            header: {
+                center: 'prev,title,next,today',
+            },
+            
+            defaultView:'agendaWeek',
+
+
+            firstDay: 1,
+            editable: true,
+            timeFormat: 'H:mm',
+            axisFormat: 'H:mm',
+            events: [{
+                    title: '科源校区诶诶我惹人\r\n张三\n5号教室',
+                    start: new Date(y, m, 1),
+                    backgroundColor: '#33a299;'
+                },
+                {
+                    title: '科源校区诶诶我惹人\r\n张三\n5号教室',
+                    start: new Date(y, m, d - 5),
+                    end: new Date(y, m, d - 2),
+                    backgroundColor: '#6aa8f1;'
+
+                },
+                {
+                    title: '科源校区诶诶我惹人\r\n张三\n5号教室',
+                    start: new Date(y, m, d - 5),
+                    end: new Date(y, m, d - 2),
+                    backgroundColor: '#6aa8f1;'
+
+                },
+                {
+                    title: '科源校区诶诶我惹人\r\n张三\n5号教室',
+                    start: new Date(y, m, 28),
+                    end: new Date(y, m, 29),
+                    backgroundColor: '#fc8038'
+                },
+                {
+                    title: '科源校区诶诶我惹人\r\n张三\n5号教室',
+                    start: new Date(y, m, d + 1, 19, 0),
+                    end: new Date(y, m, d + 1, 22, 30),
+                    backgroundColor: '#3967a3;'
+                },
+                {
+                    title: '科源校区诶诶我惹人\r\n张三\n5号教室',
+                    start: new Date(y, m, 28),
+                    end: new Date(y, m, 29),
+                    backgroundColor: '#fc8038'
+                },
+                {
+                    title: '科源校区诶诶我惹人\r\n张三\n5号教室',
+                    start: new Date(y, m, d + 1, 19, 0),
+                    end: new Date(y, m, d + 1, 22, 30),
+                    backgroundColor: '#3967a3;'
+                },
+            ],
+
+        });
+        });
+
+
+
+        $(function () {
+
+        var date = new Date();
+        var d = date.getDate();
+        var m = date.getMonth();
+        var y = date.getFullYear();
+
+        $('#calendarTeacher #calendar').fullCalendar({
+            header: {
+                center: 'prev,title,next,today',
+            },
+            
+            defaultView:'agendaWeek',
+
+
+            firstDay: 1,
+            editable: true,
+            timeFormat: 'H:mm',
+            axisFormat: 'H:mm',
+            events: [{
+                    title: '科源校区诶诶我惹人\r\n张三\n5号教室',
+                    start: new Date(y, m, 1),
+                    backgroundColor: '#33a299;'
+                },
+                {
+                    title: '科源校区诶诶我惹人\r\n张三\n5号教室',
+                    start: new Date(y, m, d - 5),
+                    end: new Date(y, m, d - 2),
+                    backgroundColor: '#6aa8f1;'
+
+                },
+                {
+                    title: '科源校区诶诶我惹人\r\n张三\n5号教室',
+                    start: new Date(y, m, d - 5),
+                    end: new Date(y, m, d - 2),
+                    backgroundColor: '#6aa8f1;'
+
+                },
+                {
+                    title: '科源校区诶诶我惹人\r\n张三\n5号教室',
+                    start: new Date(y, m, 28),
+                    end: new Date(y, m, 29),
+                    backgroundColor: '#fc8038'
+                },
+                {
+                    title: '科源校区诶诶我惹人\r\n张三\n5号教室',
+                    start: new Date(y, m, d + 1, 19, 0),
+                    end: new Date(y, m, d + 1, 22, 30),
+                    backgroundColor: '#3967a3;'
+                },
+                {
+                    title: '科源校区诶诶我惹人\r\n张三\n5号教室',
+                    start: new Date(y, m, 28),
+                    end: new Date(y, m, 29),
+                    backgroundColor: '#fc8038'
+                },
+                {
+                    title: '科源校区诶诶我惹人\r\n张三\n5号教室',
+                    start: new Date(y, m, d + 1, 19, 0),
+                    end: new Date(y, m, d + 1, 22, 30),
+                    backgroundColor: '#3967a3;'
+                },
+            ],
+
+        });
+        });
+    </script>
+</body>
+
+</html>

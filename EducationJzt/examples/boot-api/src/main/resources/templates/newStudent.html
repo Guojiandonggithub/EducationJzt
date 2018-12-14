@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    
+    <link rel="stylesheet" href="../static/pages/css/ace.min.css" id="main-ace-style" />
+    <link rel="stylesheet" href="../static/pages/css/index.css">
+    <link rel="stylesheet" href="../static/pages/css/management.css">
+    <link rel="stylesheet" href="../static/pages/css/student.css">
+    <link rel="stylesheet" href="../static/pages/css/newStudent.css">
+    <link rel="stylesheet" href="../static/pages/css/madal.css">
+    <link rel="stylesheet" href="../static/pages/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/pages/css/font-awesome.min.css" />
+
+    <script src="../static/pages/js/jquery.min.js"></script>
+    <script src="../static/pages/js/bootstrap.min.js"> </script>
+    <script src="../static/pages/js/ace.min.js"> </script>
+    <script src="../static/pages/js/ace-elements.min.js"></script>
+    <script src="../static/pages/laydate/laydate.js"></script>
+
+    
+
+</head>
+<body>
+<div id="navbar" class="eduNav">
+    <div class="navbar-header pull-left">
+        <a href="index.html" class="navbar-brand">
+            <small>
+                <img src="../static/pages/img/logo.png" alt="">
+            </small>
+        </a>
+    </div>
+    <div class="pull-right eduName">
+        <span>万某 [管理员]</span> 
+        <span>机构中心</span>
+        <span>退出</span>   
+    </div>
+</div>  
+<div class="main-container" id="main-container">
+    <div id="sidebar" class="sidebar responsive">
+        <ul class="nav nav-list" style="top: 0px;">
+            <li class="">
+                <a href="index.html"><span class="menu-text"> 工作台 </span></a>
+                <b class="arrow"></b>
+            </li>
+            <li class="">
+                <a href="management.html"><span class="menu-text"> 办理中心 </span></a>
+                <b class="arrow"></b>
+            </li>
+            <li class="">
+                <a href="#" class="dropdown-toggle">
+                    <span class="menu-text">教务中心</span>
+                    <b class="arrow fa fa-angle-down"></b>
+                </a>
+                <b class="arrow"></b>
+                <ul class="submenu">
+                    <li class="">
+                        <a href="student.html"><i class="menu-icon fa fa-caret-right"></i>学员</a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li class="">
+                        <a href="classes.html"><i class="menu-icon fa fa-caret-right"></i>班级</a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li class="">
+                        <a href="oneToOne.html">
+                        <i class="menu-icon fa fa-caret-right"></i>一对一</a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li class="">
+                        <a href="courseArray.html"><i class="menu-icon fa fa-caret-right"></i>排课</a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li class="">
+                        <a href="lessonTable.html"><i class="menu-icon fa fa-caret-right"></i>课程表</a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li class="">
+                        <a href="attendClass.html"><i class="menu-icon fa fa-caret-right"></i>记上课</a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li class="">
+                        <a href="course.html"><i class="menu-icon fa fa-caret-right"></i>课程</a>
+                        <b class="arrow"></b>
+                    </li>
+                </ul>
+            </li>
+            <li class="active open">
+                <a href="#" class="dropdown-toggle">
+                    <span class="menu-text"> 内部管理 </span>
+                    <b class="arrow fa fa-angle-down"></b>
+                </a>
+                <b class="arrow"></b>
+                <ul class="submenu">
+                    <li class="">
+                        <a href="organization.html"><i class="menu-icon fa fa-caret-right"></i>组织架构</a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li class="active">
+                        <a href="newStudent.html"><i class="menu-icon fa fa-caret-right"></i>员工信息</a>
+                        <b class="arrow"></b>
+                    </li>
+                </ul>
+            </li>      
+        </ul>
+    </div>
+    <div class="main-content">
+        <div class="breadcrumbs" id="breadcrumbs">
+            <img src="../static/pages/img/line1.png">
+            <span>员工管理</span>
+            <img src="../static/pages/img/line.png">
+        </div> 
+        <div class="tabbable">
+            <div class="tab-content student course">
+                <!-- 学员列表 -->
+                <div id="studentList" class="tab-pane fade in active"> 
+                    <div class="screen">
+                        <a class="stdEnroll" href="employee.html" target="_blank">新建员工</a>
+                        <div class="screenTop">  
+                            <select class="selectName">
+                                <option value="AZ">员工姓名</option>
+                                <option value="AL">员工手机号</option>
+                            </select>
+                            <div class="nav-search" id="nav-search">
+                                <form class="form-search">
+                                    <span class="input-icon">
+                                        <input type="text" placeholder="请输入姓名、支持拼音缩写" class="nav-search-input" id="nav-search-input" autocomplete="off">
+                                        <i class="ace-icon fa fa-search nav-search-icon"></i>
+                                    </span>
+                                </form>
+                            </div>
+                            <div class="form-group" style="display: inline;">
+                                <button>搜索</button>
+                            </div>                               
+                        </div>
+                        <div class="screenBot tags">
+                            <span class="tag">所属部门：青山分校<button type="button" class="close">×</button></span>
+                            <p>清空筛选</p>
+                        </div>
+                    </div>
+                    <div class="control-position">
+                        <div class="control-group">
+                            <label class="control-label">所属部门</label>
+                            <div class="checkbox">
+                                <label>
+                                    <input name="form-field-checkbox" type="checkbox" class="ace">
+                                    <span class="lbl">未指定所属部门</span>
+                                </label>
+                            </div>
+                            <div class="checkbox">
+                                <label>
+                                    <input name="form-field-checkbox" type="checkbox" class="ace">
+                                    <span class="lbl">青山分校</span>
+                                </label>
+                            </div>
+                            <div class="checkbox">
+                                <label>
+                                    <input name="form-field-checkbox" type="checkbox" class="ace">
+                                    <span class="lbl">科源分校</span>
+                                </label>
+                            </div>
+                            <div class="checkbox">
+                                <label>
+                                    <input name="form-field-checkbox" type="checkbox" class="ace">
+                                    <span class="lbl">昆山分校</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">是否教师</label>
+                            <div class="checkbox">
+                                <label>
+                                    <input name="form-field-checkbox" type="checkbox" class="ace">
+                                    <span class="lbl">是</span>
+                                </label>
+                            </div>
+                            <div class="checkbox">
+                                <label>
+                                    <input name="form-field-checkbox" type="checkbox" class="ace">
+                                    <span class="lbl">否</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">管辖校区</label>
+                            <div class="checkbox">
+                                <label>
+                                    <input name="form-field-checkbox" type="checkbox" class="ace">
+                                    <span class="lbl">全部校区</span>
+                                </label>
+                            </div>
+                            <div class="checkbox">
+                                <label>
+                                    <input name="form-field-checkbox" type="checkbox" class="ace">
+                                    <span class="lbl">青山分校</span>
+                                </label>
+                            </div>
+                            <div class="checkbox">
+                                <label>
+                                    <input name="form-field-checkbox" type="checkbox" class="ace">
+                                    <span class="lbl">科源分校</span>
+                                </label>
+                            </div>
+                            <div class="checkbox">
+                                <label>
+                                    <input name="form-field-checkbox" type="checkbox" class="ace">
+                                    <span class="lbl">昆区分校</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="orderCon">
+                        <div class="export">
+                            <button type="button" class="btn btn-primary">导出当前结果</button>
+                            <button type="button" class="btn btn-primary">批量调整所属部门</button>
+                        </div> 
+                        <div class="result">
+                            当前结果：共计<span>15</span>人
+                        </div>
+                        <div class="orderTable">
+                            <table class="table table-hover">
+                                <tr>
+                                    <th>
+                                        <input type="checkbox" id="sel_1" onchange="selectAll()">
+                                    </th>
+                                    <th>姓名</th>
+                                    <th>手机号</th>
+                                    <th>所属部门</th>
+                                    <th>是否教师</th>
+                                    <th>机构账号</th>
+                                    <th>操作</th>
+                                </tr>
+                                <tr id="choose">
+                                    <td><input type="checkbox"></td>
+                                    <td>张三</td>
+                                    <td>1500****000(未激活)</td>
+                                    <td>青山分校</td>
+                                    <td>是</td>
+                                    <td>15847278368（ 教师  ）</td>
+                                    <td>
+                                        <a href="employee.html" target="_blank"><img src="../static/pages/img/edit.png">编辑</a>
+                                        <a href=""><img src="../static/pages/img/del.png">删除</a>
+                                    </td>
+                                </tr>
+                                <tr id="choose">
+                                    <td><input type="checkbox"></td>
+                                    <td>张三</td>
+                                    <td>1500****000(未激活)</td>
+                                    <td>青山分校</td>
+                                    <td>是</td>
+                                    <td>15847278368（ 教师  ）</td>
+                                    <td>
+                                        <a href="employee.html" target="_blank"><img src="../static/pages/img/edit.png">编辑</a>
+                                        <a href=""><img src="../static/pages/img/del.png">删除</a>
+                                    </td>
+                                </tr>
+                            </table>
+                            <div class="orderPage">
+                                <div class="page">
+                                    单页显示：
+                                    <select>
+                                        <option>20条/页</option>
+                                        <option>50条/页</option>
+                                        <option>100条/页</option>
+                                    </select>
+                                </div>
+                                <ul class="pagination">
+                                    <li class="disabled">
+                                        <a href="#">首页</a>
+                                    </li>
+                                    <li class="disabled">
+                                        <a href="#">
+                                            <i class="ace-icon fa fa-angle-double-left"></i>
+                                        </a>
+                                    </li>  
+                                    <li class="active">
+                                        <a href="#">1</a>
+                                    </li>
+            
+                                    <li>
+                                        <a href="#">2</a>
+                                    </li>
+            
+                                    <li>
+                                        <a href="#">3</a>
+                                    </li>
+            
+                                    <li>
+                                        <a href="#">4</a>
+                                    </li>
+            
+                                    <li>
+                                        <a href="#">5</a>
+                                    </li>
+            
+                                    <li>
+                                        <a href="#">
+                                            <i class="ace-icon fa fa-angle-double-right"></i>
+                                        </a>
+                                    </li>
+                                    <li class="">
+                                        <a href="#">尾页</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>    
+                    </div>
+                </div>
+            </div>
+        </div>        
+    </div>
+
+</div> 
+<script>
+!function(){
+laydate({elem: '#demo'});//绑定元素
+}();
+
+$(".btn-down").click(function(){
+  $(this).siblings(".dropdown-menu").toggle();
+});
+$(".tag .close").click(function(){
+  $(this).parent(".tag").hide();
+});
+function selectAll(){
+    var isCheck=$("#sel_1").is(':checked');  //获得全选复选框是否选中
+    $("#choose input[type='checkbox']").each(function() {  
+        this.checked = isCheck;       //循环赋值给每个复选框是否选中
+    });
+   
+};
+
+</script> 
+</body>
+</html>

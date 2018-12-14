@@ -1,0 +1,60 @@
+body{
+    padding:0;
+    margin:0;
+}
+.login{
+    position: relative;
+}
+.login .txt{
+    width: 1000px;
+    position: absolute;
+    left: 50%;
+    margin-left: -500px;
+    top: 5%;
+    text-align: center;
+    color:#fff;
+    letter-spacing:8px;
+}
+.loginbg{
+    width:100%;
+}
+.loginBox{
+    width:300px;
+    height:268px;
+    border:6px solid #d5dafc;
+    background:#fff;
+    position: absolute;
+    top:20%;
+    right:8%;
+    padding:20px;
+}
+.loginBox input{
+    width:100%;
+    border:0;
+    border-bottom:1px solid #ccc;
+    line-height:40px;
+    font-size:14px;
+    margin-top:30px;
+}
+.loginBox button{
+    width:100%;
+    background:#d2d6ee;
+    color:#fff;
+    border:0;
+    height:46px;
+    line-height:46px;
+    margin-top:30px;
+    font-size:16px;
+}
+.loginBox a{
+    float:right;
+    color:#888;
+    text-decoration: none;
+    margin-top:30px;
+}
+
+
+
+
+
+

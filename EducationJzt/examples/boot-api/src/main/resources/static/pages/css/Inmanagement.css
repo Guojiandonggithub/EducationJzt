@@ -1,0 +1,104 @@
+.tableTitle {
+    background: #fff;
+    margin: 0;
+    position: relative;
+    border-bottom:2px solid #55a7fb;
+    padding-bottom:10px;
+}
+.tableTitle span{
+    display: inline-block;
+    font-size: 14px;
+    color: rgba(48,64,79,1);
+    box-sizing: border-box;
+    height: 20px;
+    padding-left: 10px;
+    text-align: center;
+}
+.tableTitle .name {
+    width: 300px;
+    padding-left:48x;
+    text-align: left;
+}
+.tableTitle .isSchool, .tableTitle .sort, .tableTitle .type {
+    width: 100px;
+}
+.tableTitle .tel1, .tableTitle .tel2 {
+    width: 150px;
+}
+.tableTitle .address {
+    min-width: 200px;
+}
+.tableTitle .operate {
+    width: 90px;
+    position: absolute;
+    top: 0;
+}
+.tree-handle{
+    position: relative;
+    padding: 0 20px 0 20px;
+    font-size: 14px;
+    font-size: 14px;
+    color: #30404F;
+    line-height: 50px;
+    height: 40px;
+    border-bottom:1px solid #ccc;
+}
+.tree-titleWrap {
+    width: 260px;
+    letter-spacing: -3px;
+    display: inline-block;
+    height: 40px;
+    vertical-align: top;
+    text-align: left !important;
+}
+.tree-titleWrap i{
+    margin-right:10px;
+    font-size:12px;
+}
+.cols-80 {
+    display: inline-block;
+    width: 100px;
+    overflow: hidden;
+    padding-left: 10px;
+}
+.cols-120 {
+    display: inline-block;
+    overflow: hidden;
+    padding-left: 10px;
+    width: 150px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.cols-240 {
+    display: inline-block;
+    overflow: hidden;
+    padding-left: 10px;
+}
+.tree-fr {
+    position: absolute;
+    right: 20px;
+    top: 0;
+}
+.tree-fr a{
+    color:#55a7fb;
+}
+.tree-btn-wrap {
+    margin-left: 16px;
+}
+.ivu-tooltip {
+    display: inline-block;
+}
+.info-list li{
+    
+    height:auto;
+}
+.info-list span{
+    text-align: center;
+}
+
+
+
+
+
+
+

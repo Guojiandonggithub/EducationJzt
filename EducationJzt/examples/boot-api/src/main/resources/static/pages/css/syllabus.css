@@ -1,0 +1,108 @@
+.datelist>li.active>a,
+.datelist>li.active>a:focus,
+.datelist>li.active>a:hover {
+    background: #c5c5c5 !important;
+    color: #555 !important;
+    margin-top: 2px;
+    border: 1px solid #bfbfbf !important;
+}
+
+.datelist li a {
+    padding: 6px !important;
+    background: #f4f4f4 !important;
+    border: 1px solid #bfbfbf !important;
+    color: #555 !important;
+}
+
+.datelist {
+    margin: 0 0 0 15px !important;
+}
+
+.classStyle {
+    display: flex;
+    margin-top: 10px;
+}
+
+.classStyle span {
+    width: 12px;
+    height: 12px;
+    display: inline-block;
+    margin-right: 6px;
+}
+
+.classStyle p {
+    margin-right: 15px;
+}
+
+.classStyle .state1 span {
+    background: #3967a3;
+}
+
+.classStyle .state2 span {
+    background: #6aa8f1;
+}
+
+.classStyle .state3 span {
+    background: #33a299;
+}
+
+.classStyle .state4 span {
+    background: #fc8038;
+}
+
+.syllabus {
+    margin-top: 20px;
+    background: #eff0f2;
+}
+
+.syllabus tr td {
+    height: 22px;
+    line-height: 22px !important;
+    font-size: 12px;
+    padding: 0 !important;
+    text-align: center;
+}
+
+.syllabus tr th {
+    width: 13%;
+    text-align: center;
+}
+
+.conflicDate {
+    margin-top: 0 !important;
+}
+
+.syllabus td .rows2 {
+    background: #66b8b2;
+    color: #fff;
+    text-align: left;
+    padding:0 5px;
+    margin: 5px;
+    height: 22px;
+    font-size: 12px;
+    overflow: hidden;
+}
+
+.syllabus td .infoShow {
+    height: auto;
+    display: none;
+    position: absolute;
+    background: #6dcdc6;
+    width:200px;
+}
+
+.syllabus td .ctList {
+    background: #fea06c;
+}
+
+#month td {
+    height: 200px;
+}
+
+#month .syllabus tr th {
+    width: 14.5%;
+}
+
+#month .syllabus td .rows2 {
+    padding: 0;
+}

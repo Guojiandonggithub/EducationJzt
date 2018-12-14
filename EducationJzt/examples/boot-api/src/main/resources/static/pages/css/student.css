@@ -1,0 +1,599 @@
+.tabbable .nav {
+    margin-top:34px;
+    border-bottom:0;
+}
+.tabbable .nav li a{
+    padding:10px 20px;
+    background:#e2ecf7;
+    border:1px solid #bfbfbf;
+   color:#666;
+}
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover{
+    background:#55a7fb !important;
+    border:0 !important;
+    color:#fff !important; 
+    border:1px solid #55a7fb !important;
+}
+.tags .tag .close {
+    top:-5px;
+}
+.tab-content{
+    border:0;
+    padding:0;
+}
+.student .screen{
+    margin-top:0;
+}
+.student .screen .stdEnroll{
+    width:96px;
+    height:30px;
+    background:#55a7fb;
+    border-radius: 4px;
+    border:0;
+    color:#fff;
+    margin-top:26px;
+    display: inline-block;
+    text-align: center;
+    line-height: 30px;
+}
+.student .screenData{
+    display: flex;
+}
+.student .screenData select{
+    margin: 0 4px;
+}
+.student .export button{
+    padding: 5px 15px;
+    background: #fff !important;
+    color: #666 !important;
+    border: 1px solid #777;
+    margin-bottom: 20px;
+}
+.student .table td img{
+    margin-right:8px !important;
+}
+.student .table td a{
+    padding: 3px 8px;
+    font-size: 12px;
+    border: 1px solid #ccc;
+    color: #666;
+    border-radius: 2px;
+    margin-left: 5px;
+}
+.student .table th .glyphicon-option-vertical{
+    color:#9fccf3;
+    cursor: pointer;
+}
+.checkAll{
+    font-weight:bold;
+    display:flex;
+    border-bottom:1px solid #ccc;
+    padding-bottom:8px;
+}
+.checkAll input{
+    margin-right:8px !important;
+}
+.checkList span{
+    width:130px;
+    display:inline-block;
+    margin-top:8px;
+}
+.checkList span input{
+    margin-right:6px;
+}
+.modal-footer{
+    border-top:0 !important;
+    background:none;
+}
+.screenBot p{
+    float:right;
+    color:#55a7fb;
+    cursor: pointer;
+}
+.table th .sort{
+    float:right;
+    margin-left: -6px;
+}
+.table th .sort span{
+    display: block;
+    font-size:6px;
+    color:#888;
+}
+.table th .sort span.glyphicon-triangle-bottom{
+    margin-top:-4px;
+}
+/* 学员分班列表 */
+.student .divideList .orderTable tr td span{
+    display:block;
+}
+/* 到期学员 */
+.expiryStu .screen label{
+    font-weight:normal;
+    font-size:12px;
+}
+.expiryStu .screen .form-group{
+    float:left;
+    margin-right:10px;
+}
+.expiryStu .screen .form-group input{
+    width:60px;
+    height:30px;
+    border-radius: 4px !important;
+}
+.expiryStu .screen .form-group button{
+    background: none;
+    height: 30px;
+    border-radius: 4px;
+}
+.expiryStu .screen .batch{
+    width:100px;
+    height:30px;
+    background:#fff;
+    border-radius: 4px;
+}
+.expiryStu .export .form-group{
+    float:right;
+    margin-right:15px;
+}
+.student .expiryStu .orderTable tr td span{
+    display:block;
+}
+.student .table .renew a{
+    border:0;
+    color:#4685d5;
+}
+/* 课程欠费学员 */
+.arrearList .screen .arrearInfo{
+    display: inline-block;
+    margin-top: 30px;
+    background:#eff8ff;
+    padding: 5px 15px;
+}
+
+/* 班级列表 */
+.classes .screen{
+    height: 82px;
+}
+.classes .export .form-group {
+    float: right;
+    margin-right: 15px;
+}
+.classes .orderTable tr .classTime span {
+    display: block;
+}
+.classes .orderTable tr td .recruit{
+    padding: 5px 20px;
+    border-radius: 23px;
+    background: #e8f8ed;
+    color: #29b39a;
+    display: inline-block;
+}
+.classes .table .classDel a{
+    border:0;
+}
+.classes .table .prog{
+    position: relative;
+}
+.classes .table .prog span{
+    position: absolute;
+    right: -13px;
+    top: 8px;
+}
+.progress.progress-small {
+    height: 10px;
+    width:80%;
+    margin-top: 5px;
+}
+.classes .screen .stdEnroll{
+    display: inline-block;
+    line-height:30px;
+    text-align: center;
+}
+/* 班级管理 */
+.manage{
+    padding: 20px;
+    background: #fff;
+    border-radius: 6px;
+    overflow: hidden;
+}
+.manage h3{
+    font-size:18px;
+    margin:0 0 20px 0;
+    border-bottom:1px solid #ccc;
+    padding-bottom:15px;
+}
+.manage h3 span{
+    font-size:14px;
+    padding:5px 10px;
+    background:#6aa8f1;
+    color:#fff;
+    margin-left:10px;
+}
+.manage .stuInfo{
+    border-bottom:1px solid #ccc;
+}
+.manage .stuInfo p{
+    display: inline-block;
+    margin-right:50px;
+    
+}
+.manage .stuInfo p span{
+    color:#8c9eb2
+}
+.manage .stuNum{
+    margin-top:20px;
+}
+.manageClass .screen{
+    height: 80px;
+}
+.manageClass .orderCon{
+    margin-top:0;
+}
+.manageClass .resultCla{
+    background:#eaf9ff;
+    border-top:1px solid #a9cffc;
+    border-bottom:1px solid #a9cffc;
+    padding:10px;
+}
+.manageClass .table  a {
+    border: 0 !important;
+}
+.manageClass .manaCla{
+    float:right;
+    margin-right:16px;
+}
+.manageClass .manaCla .form-group{
+    display: inline-block;
+    margin-left:20px;
+}
+.manageClass .manaCla .form-group .add{
+    background:#f7fbfe;
+    border:1px dashed #4584d4;
+    color:#8eb6ea;
+}
+
+/* 课程页面 */
+.course .table .state span{
+    padding: 5px 17px;
+    background: #5ebf70;
+    color: #fff;
+    border-radius: 16px;
+}
+.course .table td a{
+    border:0;
+}
+.course .open>.dropdown-menu{
+    min-width:100px !important;
+}
+
+/* 记上课页面 */
+.attendClass .attendBtn{
+    text-align: center;
+}
+.attendClass .attendBtn {
+    padding:20px ;
+    border-bottom:1px solid #ccc;
+}
+.attendClass .attendBtn span{
+    padding:10px 20px;
+    border-radius: 30px;
+    margin:0 20px;
+}
+.attendClass .attendBtn span:nth-of-type(1){
+    background:#f0f1f6;
+    color:#999;
+}
+.attendClass .attendBtn span:nth-of-type(2){
+    border:1px solid #55a7fb;
+    color:#55a7fb;
+}
+.attendClass .table td a{
+    border:0;
+}
+.divideList .attendBtn{
+    width: 100%;
+    padding: 20px;
+    background: #fff;
+    display: flex;
+    justify-content: center;
+    margin-top: 0;
+    border:0;
+}
+.divideList .attendBtn li{
+    margin:0 20px;
+}
+.divideList .attendBtn li a{
+    border-radius: 30px !important;
+    background:#f0f1f6 !important;
+    color:#999 !important;
+    border:0 !important;
+}
+.divideList .attendBtn li.active a{
+    padding:10px 20px;
+    margin:0 20px;
+    border:1px solid #55a7fb !important;
+    color:#55a7fb !important;
+    background:#fff !important;
+}
+.classjl .screen{
+    margin-top:-23px;
+}
+.classjl .export .form-group{
+    float:right;
+    margin-right:20px;
+}
+.classjl .orderCon{
+    margin-top:-26px;
+}
+.classjl .modal-body h4{
+    text-align: center;
+    background: #e9ecf1;
+    padding: 10px 0;
+    font-size: 16px;
+    border-radius: 6px;
+}
+.classjl .modal-body .mustHead{
+    position: relative;
+    text-align: center;
+    width: 140px;
+    display: inline-block;
+}
+.classjl .modal-body .mustHead span{
+    display: block;
+}
+.classjl .modal-body .mustHead i{
+    padding: 3px 16px;
+    background: #5ebf70;
+    color: #fff;
+    font-style: normal;
+    border-radius: 10px;
+    font-size: 12px;
+    position: absolute;
+    top: 0;
+    right: -3px;
+}
+.classjl .modal-body .mustHead p{
+    color:#bcc1c5;
+}
+.classjl .modal-body .mustHead p b{
+    color:#666;
+}
+.classjl .modal-body .not .mustHead i{
+    background:#fdb336;
+}
+
+.studentAbo .table tr .statesk span{
+    padding: 2px 14px;
+    background: #5ebf70;
+    display: inline-block !important;
+    border-radius: 10px;
+    color: #fff;
+}
+.studentAbo .table tr .stateqj span{
+    background: #f66867;
+}
+.studentAbo .table tr .statebk span{
+    background: #51b3fc;
+}
+/* 补课 */
+.lesson .table tr .state span{
+    display: inline-block !important;
+    padding: 2px 14px;
+    background: #fdf8e5;
+    color:#fdaf40;
+    border-radius: 10px;
+}
+.lesson .modal-body{
+    display: flex;
+    margin-top:20px;
+}
+.lesson .modal-body .headLesson{
+    width:100px;
+    text-align: center;
+}
+.lesson .modal-body .headLesson span{
+    display: block;
+}
+.lesson .modal-body .form-group .lbl{
+    margin-right:15px;
+}
+.lesson .modal-body .form-group input{
+    width:70px;
+    height:30px;
+    border-radius: 4px;
+}
+.lesson .modal-body .form-group label{
+    font-weight: normal;
+}
+
+/* 一对一页面 */
+.oneToOne .screen,.handleClass .screen{
+    height:78px;
+}
+.oneToOne .export,.handleClass .export{
+    overflow:hidden;
+}
+.oneToOne .export .oneInput,.handleClass .export .oneInput{
+    float:right;
+}
+.oneToOne .export .oneInput .form-group,.handleClass .export .oneInput .form-group{
+    display: inline-block;
+    margin-right:20px;
+}
+.oneToOne .circle,.handleClass .circle{
+    width:8px;
+    height:8px;
+    border-radius: 50%;
+    background:#5eb243;
+    display: inline-block;
+}
+.oneToOne .orderCon .open>.dropdown-menu{
+    min-width:60px !important;
+    text-align: center;
+}
+.oneToOne .table td a{
+    border:0;
+}
+/* 排课弹窗 */
+.pk .modal-body h4{
+    border-bottom:1px solid #ccc;
+    padding-bottom:10px;
+}
+.pk .modal-body label{
+    width:100px;
+    text-align: right;
+    font-weight: normal;
+    margin-right:15px;
+}
+.pk .modal-body label i{
+    color:#fd4a26;
+    margin-right:6px;
+}
+.pk .modal-body .grounInline .form-group{
+    display: inline-block;
+    margin-right: 18px;
+}
+.pk .modal-body .grounInline .form-group select,.pk .modal-body .form-group input{
+    width:220px;
+    height:30px;
+    border-radius: 6px;
+}
+/* 结课弹窗 */
+.jk .sure{
+    text-align: center;
+}
+.jk .sure p{
+    margin-top:10px;
+}
+.jk .jkInfo span{
+    width:8px;
+    height:8px;
+    border-radius: 50%;
+    background:#5eb243;
+    display: inline-block;
+    margin-right:10px;
+}
+
+/* 分配教师弹窗 */
+.allot .search{
+    padding:20px ;
+    text-align: center;
+}
+.allot .modal-body{
+    height:270px;
+    overflow-y: auto
+}
+.allot .chooseTea{
+    padding: 15px;
+}
+.allot .chooseTea p span{
+    color:#5597e5;
+}
+.allot .chooseTea input{
+    width:100%;
+}
+.allot .teacherLes{
+    padding:15px;
+    display: flex;
+}
+.allot .teacherLes label{
+    font-weight: normal;
+    margin-right:10px;
+}
+.allot .teacherLes input{
+    width:120px;
+    height:30px;
+    border-radius: 4px !important;
+    margin-right:10px;
+}
+/* 日程冲突页面 */
+.conflict .screen{
+    height:80px;
+}
+.conflict .screenTop .form-group{
+    display: inline-block;
+}
+.conflict .table td a{
+    border:0;
+}
+.conflictEdit .form-group{
+    margin:30px 0 0 0;
+}
+.conflictEdit .form-group label{
+    width:84px;
+    font-weight: normal;
+    text-align: right;
+    margin-right:10px;
+} 
+.conflictEdit .form-group input{
+    width:360px;
+    height:30px;
+    border-radius: 6px;
+}
+.conflicDate{
+    float:left;
+    margin-top: 25px;
+}
+.conflicDate p{
+    display:inline-block;
+}
+.conflicDate span{
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    color: #55a7fb;
+    cursor: pointer;
+}
+
+.arrayBtn{
+    width: 100%;
+    padding: 20px;
+    background: #fff;
+    display: flex;
+    justify-content: center;
+    margin-top: 0;
+    border:0;
+}
+.arrayBtn li{
+    margin:0 20px;
+}
+.arrayBtn li a{
+    border-radius: 30px !important;
+    background:#f0f1f6 !important;
+    color:#999 !important;
+    border:0 !important;
+}
+.arrayBtn>li.active>a, .arrayBtn>li.active>a:focus, .arrayBtn>li.active>a:hover{
+    padding:10px 20px;
+    margin:0 20px;
+    border:1px solid #55a7fb !important;
+    color:#55a7fb !important;
+    background:#fff !important;
+    border-radius: 30px !important;
+}
+.arrayForm{
+    background:#fff;
+    padding:20px;
+}
+.arrayForm label{
+    font-weight:normal;
+}
+.arrayForm .checkAll{
+    margin-top:9px;
+    font-weight:normal;
+    margin-right:20px;
+    border:0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    
+    <link rel="stylesheet" href="../static/pages/css/ace.min.css" id="main-ace-style" />
+    <link rel="stylesheet" href="../static/pages/css/index.css">
+    <link rel="stylesheet" href="../static/pages/css/enroll.css">
+    <link rel="stylesheet" href="../static/pages/css/madal.css">
+    <link rel="stylesheet" href="../static/pages/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/pages/css/font-awesome.min.css" />
+
+    <script src="../static/pages/js/jquery.min.js"></script>
+    <script src="../static/pages/js/bootstrap.min.js"> </script>
+    <script src="../static/pages/js/ace.min.js"> </script>
+    <script src="../static/pages/js/ace-elements.min.js"></script>
+    <script src="../static/pages/laydate/laydate.js"></script>
+
+</head>
+<body>
+<div id="navbar" class="eduNav">
+    <div class="navbar-header pull-left">
+        <a href="index.html" class="navbar-brand">
+            <small>
+                <img src="../static/pages/img/logo.png" alt="">
+            </small>
+        </a>
+    </div>
+    <div class="pull-right eduName">
+        <span>万某 [管理员]</span> 
+        <span>机构中心</span>
+        <span>退出</span>   
+    </div>
+</div>  
+<div class="main-container" id="main-container">
+    <div id="sidebar" class="sidebar responsive">
+        <ul class="nav nav-list" style="top: 0px;">
+            <li class="">
+                <a href="index.html"><span class="menu-text"> 工作台 </span></a>
+                <b class="arrow"></b>
+            </li>
+            <li class="">
+                <a href="management.html"><span class="menu-text"> 办理中心 </span></a>
+                <b class="arrow"></b>
+            </li>
+            <li class="active open">
+                <a href="#" class="dropdown-toggle">
+                    <span class="menu-text">教务中心</span>
+                    <b class="arrow fa fa-angle-down"></b>
+                </a>
+                <b class="arrow"></b>
+                <ul class="submenu">
+                    <li class="">
+                        <a href="student.html"><i class="menu-icon fa fa-caret-right"></i>学员</a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li class="">
+                        <a href="classes.html"><i class="menu-icon fa fa-caret-right"></i>班级</a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li class="">
+                        <a href="oneToOne.html">
+                        <i class="menu-icon fa fa-caret-right"></i>一对一</a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li class="">
+                        <a href="courseArray.html"><i class="menu-icon fa fa-caret-right"></i>排课</a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li class="">
+                        <a href="lessonTable.html"><i class="menu-icon fa fa-caret-right"></i>课程表</a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li class="">
+                        <a href="attendClass.html"><i class="menu-icon fa fa-caret-right"></i>记上课</a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li class="active">
+                        <a href="course.html"><i class="menu-icon fa fa-caret-right"></i>课程</a>
+                        <b class="arrow"></b>
+                    </li>
+                </ul>
+            </li>
+            <li class="hsub">
+                <a href="#" class="dropdown-toggle">
+                    <span class="menu-text"> 内部管理 </span>
+                    <b class="arrow fa fa-angle-down"></b>
+                </a>
+                <b class="arrow"></b>
+                <ul class="submenu">
+                    <li class="">
+                        <a href="organization.html"><i class="menu-icon fa fa-caret-right"></i>组织架构</a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li class="">
+                        <a href="newStudent.html"><i class="menu-icon fa fa-caret-right"></i>员工信息</a>
+                        <b class="arrow"></b>
+                    </li>
+                </ul>
+            </li>      
+        </ul>
+    </div>
+    <div class="main-content courseEdit">       
+        <div class="enrollCon">
+            <h2>基本信息</h2>
+            <div class="stopClass">
+                <div class="form-group">
+                    <label><span>*</span>课程类别</label>
+                    <select name="" id="22">
+                        <option value="">111</option>
+                        <option value="">222</option>
+                        <option value="">333</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>科目</label>
+                    <select name="" id="11">
+                        <option value="">请选择</option>
+                        <option value="">222</option>
+                        <option value="">333</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for=""><span>*</span>课程名称</label>
+                    <input type="text" value="潜能班2019届">
+                </div>
+                <div class="form-group">
+                    <label><span>*</span>类型</label>
+                    <i>班课</i>
+                </div>
+                <div class="form-group">
+                    <label><span>*</span>状态</label>
+                    <input name="form-field-radio" type="radio" class="ace"><i class="lbl">正常</i>
+                    <input name="form-field-radio" type="radio" class="ace"><i class="lbl">下架</i>
+                </div>
+                <div class="form-group">
+                    <label for="">备注</label>
+                    <input type="text" placeholder="请输入备注" class="remark">
+                </div>
+            </div>
+        </div>
+        <div class="enrollCon">
+            <h2>收费标准</h2>
+            <div class="stopClass">
+                <div class="form-group">
+                    <label><span>*</span>收费模式</label>
+                    <span>按时间</span>
+                </div>
+                <div class="form-group">
+                    <label><span>*</span>学费标准</label>
+                    <input type="text" value="10500" style="text-align: right;">
+                    <select name="" id="" style="width: 80px !important;">
+                        <option value="">元/季</option>
+                        <option value="">222</option>
+                        <option value="">333</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label><span>*</span>状态</label>
+                    <input name="form-field-radio" type="radio" class="ace"><i class="lbl">正常</i>
+                    <input name="form-field-radio" type="radio" class="ace"><i class="lbl">下架</i>
+                </div>
+            </div>
+        </div>
+        <div class="enrollCon">
+            <h2>教材杂费</h2>
+            <p class="moneyAll">教材杂费总计：0元</p>
+            <table class="table table-striped  table-hover no-margin-bottom no-border-top">
+                <thead>
+                    <tr>
+                        <th>教材/杂费名称</th>
+                        <th>数量</th>
+                        <th>单价</th>
+                        <th>合计</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody style="display: none;">
+                    <tr class="none">
+                        <td>
+                            <img src="../static/pages/img/none.png">
+                            <span>很抱歉，这里什么都没有</span> 
+                        </td>   
+                    </tr>
+                </tbody>
+                <tbody>
+                    <tr>
+                        <td>名称时代峻峰iOS法伤发</td>
+                        <td>1</td>
+                        <td>100.00</td>
+                        <td>100.00</td>
+                        <td>
+                            <div class="btn-group">
+                                <p data-toggle="dropdown" class="down" aria-expanded="false">
+                                    操作
+                                    <span class="ace-icon fa fa-caret-down icon-on-right"></span>
+                                </p>
+                                <ul class="dropdown-menu dropdown-default">
+                                    <li>
+                                        <a href="courseEdit.html" target="_blank">编辑</a>
+                                    </li>
+
+                                    <li>
+                                        <a href="">复制</a>
+                                    </li>
+                                    <li>
+                                        <a href="">删除</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="enrollCon">
+            <button class="save">保存</button>
+        </div>
+    </div>
+
+
+</div> 
+
+<script>
+!function(){
+laydate({elem: '#demo'});//绑定元素
+}();
+
+
+</script> 
+</body>
+</html>

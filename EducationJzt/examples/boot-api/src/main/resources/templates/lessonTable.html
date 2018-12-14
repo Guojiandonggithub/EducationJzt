@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <link rel="stylesheet" href="../static/pages/css/ace.min.css" id="main-ace-style" />
+    <link rel="stylesheet" href="../static/pages/css/index.css">
+    <link rel="stylesheet" href="../static/pages/css/management.css">
+    <link rel="stylesheet" href="../static/pages/css/fullcalendar.css">
+    <link rel="stylesheet" href="../static/pages/css/lessonTable.css">
+    <link rel="stylesheet" href="../static/pages/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/pages/css/font-awesome.min.css" />
+
+    <script src="../static/pages/js/jquery-1.9.1.min.js"></script>
+    <script src="../static/pages/js/bootstrap.min.js"> </script>
+    <script src="../static/pages/js/ace.min.js"> </script>
+    <script src="../static/pages/js/ace-elements.min.js"></script>
+    <script src="../static/pages/laydate/laydate.js"></script>
+    <script src="../static/pages/js/fullcalendar.min.js"></script>
+    <script src="../static/pages/js/jquery-ui-1.10.2.custom.min.js"></script>
+
+
+</head>
+
+<body>
+    <div id="navbar" class="eduNav">
+        <div class="navbar-header pull-left">
+            <a href="index.html" class="navbar-brand">
+                <small>
+                    <img src="../static/pages/img/logo.png" alt="">
+                </small>
+            </a>
+        </div>
+        <div class="pull-right eduName">
+            <span>万某 [管理员]</span>
+            <span>机构中心</span>
+            <span>退出</span>
+        </div>
+    </div>
+    <div class="main-container" id="main-container">
+        <div id="sidebar" class="sidebar responsive">
+            <ul class="nav nav-list" style="top: 0px;">
+                <li class="">
+                    <a href="index.html"><span class="menu-text"> 工作台 </span></a>
+                    <b class="arrow"></b>
+                </li>
+                <li class="">
+                    <a href="management.html"><span class="menu-text"> 办理中心 </span></a>
+                    <b class="arrow"></b>
+                </li>
+                <li class="active open">
+                    <a href="#" class="dropdown-toggle">
+                        <span class="menu-text">教务中心</span>
+                        <b class="arrow fa fa-angle-down"></b>
+                    </a>
+                    <b class="arrow"></b>
+                    <ul class="submenu">
+                        <li class="">
+                            <a href="student.html"><i class="menu-icon fa fa-caret-right"></i>学员</a>
+                            <b class="arrow"></b>
+                        </li>
+                        <li class="">
+                            <a href="classes.html"><i class="menu-icon fa fa-caret-right"></i>班级</a>
+                            <b class="arrow"></b>
+                        </li>
+                        <li class="">
+                            <a href="oneToOne.html">
+                            <i class="menu-icon fa fa-caret-right"></i>一对一</a>
+                            <b class="arrow"></b>
+                        </li>
+                        <li class="">
+                            <a href="courseArray.html"><i class="menu-icon fa fa-caret-right"></i>排课</a>
+                            <b class="arrow"></b>
+                        </li>
+                        <li class="active">
+                            <a href="lessonTable.html"><i class="menu-icon fa fa-caret-right"></i>课程表</a>
+                            <b class="arrow"></b>
+                        </li>
+                        <li class="">
+                            <a href="attendClass.html"><i class="menu-icon fa fa-caret-right"></i>记上课</a>
+                            <b class="arrow"></b>
+                        </li>
+                        <li class="">
+                            <a href="course.html"><i class="menu-icon fa fa-caret-right"></i>课程</a>
+                            <b class="arrow"></b>
+                        </li>
+                    </ul>
+                </li>
+                <li class="hsub">
+                    <a href="#" class="dropdown-toggle">
+                        <span class="menu-text"> 内部管理 </span>
+                        <b class="arrow fa fa-angle-down"></b>
+                    </a>
+                    <b class="arrow"></b>
+                    <ul class="submenu">
+                        <li class="">
+                            <a href="organization.html"><i class="menu-icon fa fa-caret-right"></i>组织架构</a>
+                            <b class="arrow"></b>
+                        </li>
+                        <li class="">
+                            <a href="newStudent.html"><i class="menu-icon fa fa-caret-right"></i>员工信息</a>
+                            <b class="arrow"></b>
+                        </li>
+                    </ul>
+                </li>      
+            </ul>
+        </div>
+        <div class="main-content">
+            <div class="breadcrumbs" id="breadcrumbs">
+                <img src="../static/pages/img/line1.png">
+                <span>课程表</span>
+                <img src="../static/pages/img/line.png">
+            </div>
+            <div class="screen" style="height:80px;">
+                <div class="screenTop">
+                    <select class="selectName">
+                        <option value="AZ">教师姓名</option>
+                        <option value="AL">111</option>
+                        <option value="AK">222</option>
+                    </select>
+                    <div class="nav-search" id="nav-search">
+                        <form class="form-search">
+                            <span class="input-icon">
+                                <input type="text" placeholder="请输入姓名、支持拼音缩写" class="nav-search-input" id="nav-search-input"
+                                    autocomplete="off">
+                                <i class="ace-icon fa fa-search nav-search-icon"></i>
+                            </span>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="orderCon">
+                <div class="export">
+                    <button type="button" class="btn btn-primary">导出课表</button>
+                </div>
+                <div class="orderTable">
+
+                    <div id="calendar">
+                        <div class="classStyle">
+                            <p class="state1"><span></span>已记上课</p>
+                            <p class="state2"><span></span>我的日程</p>
+                            <p class="state3"><span></span>正常日程</p>
+                            <p class="state4"><span></span>冲突日程</p>
+                        </div>
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    </div>
+    </div>
+    </div>
+
+    <!-- <script>
+        ! function () {
+            laydate({
+                elem: '#demo'
+            }); //绑定元素
+        }();
+
+        $(".btn-down").click(function () {
+            $(this).siblings(".dropdown-menu").toggle();
+        });
+        $(".tag .close").click(function () {
+            $(this).parent(".tag").hide();
+        });
+    </script> -->
+
+    <script type="text/javascript">
+        $(function () {
+
+            var date = new Date();
+            var d = date.getDate();
+            var m = date.getMonth();
+            var y = date.getFullYear();
+
+            $('#calendar').fullCalendar({
+                header: {
+                    right: '',
+                    center: 'prev,title,next,today',
+                    left: 'agendaDay,agendaWeek,month'
+                },
+
+                firstDay: 1,
+                editable: true,
+                timeFormat: 'H:mm',
+                axisFormat: 'H:mm',
+                events: [{
+                        title: '科源校区诶诶我惹人\r\n张三\n5号教室',
+                        start: new Date(y, m, 1),
+                        backgroundColor: '#33a299;'
+                    },
+                    {
+                        title: '科源校区诶诶我惹人\r\n张三\n5号教室',
+                        start: new Date(y, m, d - 5),
+                        end: new Date(y, m, d - 2),
+                        backgroundColor: '#6aa8f1;'
+
+                    },
+                    {
+                        title: '科源校区诶诶我惹人\r\n张三\n5号教室',
+                        start: new Date(y, m, d - 5),
+                        end: new Date(y, m, d - 2),
+                        backgroundColor: '#6aa8f1;'
+
+                    },
+                    {
+                        title: '科源校区诶诶我惹人\r\n张三\n5号教室',
+                        start: new Date(y, m, 28),
+                        end: new Date(y, m, 29),
+                        backgroundColor: '#fc8038'
+                    },
+                    {
+                        title: '科源校区诶诶我惹人\r\n张三\n5号教室',
+                        start: new Date(y, m, d + 1, 19, 0),
+                        end: new Date(y, m, d + 1, 22, 30),
+                        backgroundColor: '#3967a3;'
+                    },
+                    {
+                        title: '科源校区诶诶我惹人\r\n张三\n5号教室',
+                        start: new Date(y, m, 28),
+                        end: new Date(y, m, 29),
+                        backgroundColor: '#fc8038'
+                    },
+                    {
+                        title: '科源校区诶诶我惹人\r\n张三\n5号教室',
+                        start: new Date(y, m, d + 1, 19, 0),
+                        end: new Date(y, m, d + 1, 22, 30),
+                        backgroundColor: '#3967a3;'
+                    },
+                ],
+
+            });
+
+        });
+    </script>
+
+</body>
+
+</html>
