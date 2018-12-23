@@ -31,14 +31,16 @@
                 type: 'get',
                 dataType: 'text',
                 url: basePath + '/accounts/login',
-                data: {userName:$("#userName").val(),password:$("#userName").val()},
+                data: {userName:$("#userName").val(),password:$("#password").val()},
                 cache: false,
                 async: true,
                 success: function (data) {
                     var data = eval('(' + data + ')');
                     $('#idUser').text(data.data);
                     $('#idMsg').text(data.msg);
-                    window.location.href= basePath + '/accounts/index';
+                    if(data.msg=="登录成功"){
+                        window.location.href= basePath + '/forward/index';
+                    }
                 }
             });
         }

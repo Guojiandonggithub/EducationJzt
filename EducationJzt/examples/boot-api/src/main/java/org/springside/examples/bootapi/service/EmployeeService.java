@@ -9,10 +9,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.actuate.metrics.CounterService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springside.examples.bootapi.ToolUtils.common.modules.persistence.DynamicSpecifications;
+import org.springside.examples.bootapi.ToolUtils.common.modules.persistence.SearchFilter;
 import org.springside.examples.bootapi.domain.SysEmployee;
+import org.springside.examples.bootapi.domain.SysEmployeeSub;
 import org.springside.examples.bootapi.repository.EmployeeDao;
+import org.springside.examples.bootapi.repository.EmployeeSubDao;
 import org.springside.examples.bootapi.service.exception.ErrorCode;
 import org.springside.examples.bootapi.service.exception.ServiceException;
 import org.springside.modules.utils.misc.IdGenerator;
@@ -20,6 +25,7 @@ import org.springside.modules.utils.text.EncodeUtil;
 import org.springside.modules.utils.text.HashUtil;
 
 import javax.annotation.PostConstruct;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -37,6 +43,9 @@ public class EmployeeService {
 	// codehale metrics
 	@Autowired
 	private CounterService counterService;
+
+	@Autowired
+	private EmployeeSubDao employeeSubDao;
 
 	// guava cache
 	private Cache<String, SysEmployee> loginUsers;
@@ -88,14 +97,48 @@ public class EmployeeService {
 	}
 
 	@Transactional
-	public SysEmployee register(SysEmployee SysEmployee) {
-		SysEmployee.password = hashPassword(SysEmployee.password);
-		return employeeDao.save(SysEmployee);
+	public SysEmployee register(SysEmployee sysEmployee) {
+		SysEmployee sysEmployees = employeeDao.findByUserName(sysEmployee.userName);
+		if(null!=sysEmployees){
+			if(!sysEmployees.password.equals(sysEmployee.password)){
+				sysEmployee.password = hashPassword(sysEmployee.password);
+			}
+		}else{
+			sysEmployee.password = hashPassword(sysEmployee.password);
+		}
+		return employeeDao.save(sysEmployee);
 	}
 
 	@Transactional
-	public Page<SysEmployee>  getAccountList(Pageable pageable) {
-		return employeeDao.findAll(pageable);
+	public SysEmployeeSub registerSub(SysEmployeeSub sysEmployeeSub) {
+		return employeeSubDao.save(sysEmployeeSub);
+	}
+
+	@Transactional
+	public Page<SysEmployee>  getAccountList(Pageable pageable,Map<String, Object> searchParams) {
+		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
+		Specification<SysEmployee> spec = DynamicSpecifications.bySearchFilter(
+				filters.values(), SysEmployee.class);
+		return employeeDao.findAll(spec,pageable);
+	}
+
+	@Transactional
+	public SysEmployee getSysEmployee(String id) {
+		return employeeDao.findOne(id);
+	}
+
+	@Transactional
+	public SysEmployeeSub getSysEmployeeSub(String id) {
+		return employeeSubDao.findByUserId(id);
+	}
+
+	@Transactional
+	public void delete(String id) {
+		employeeDao.delete(id);
+		SysEmployeeSub sysEmployeeSub = employeeSubDao.findByUserId(id);
+		if(null!=sysEmployeeSub){
+			employeeSubDao.delete(sysEmployeeSub);
+		}
 	}
 
 	protected static String hashPassword(String password) {

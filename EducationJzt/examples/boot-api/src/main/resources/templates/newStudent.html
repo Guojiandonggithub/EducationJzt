@@ -1,18 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
     <title>Document</title>
     
     <link rel="stylesheet" href="../static/pages/css/ace.min.css" id="main-ace-style" />
-    <link rel="stylesheet" href="../static/pages/css/index.css">
-    <link rel="stylesheet" href="../static/pages/css/management.css">
-    <link rel="stylesheet" href="../static/pages/css/student.css">
-    <link rel="stylesheet" href="../static/pages/css/newStudent.css">
-    <link rel="stylesheet" href="../static/pages/css/madal.css">
-    <link rel="stylesheet" href="../static/pages/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/pages/css/index.css"/>
+    <link rel="stylesheet" href="../static/pages/css/management.css"/>
+    <link rel="stylesheet" href="../static/pages/css/student.css"/>
+    <link rel="stylesheet" href="../static/pages/css/newStudent.css"/>
+    <link rel="stylesheet" href="../static/pages/css/madal.css"/>
+    <link rel="stylesheet" href="../static/pages/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="../static/pages/css/font-awesome.min.css" />
 
     <script src="../static/pages/js/jquery.min.js"></script>
@@ -43,11 +43,11 @@
     <div id="sidebar" class="sidebar responsive">
         <ul class="nav nav-list" style="top: 0px;">
             <li class="">
-                <a href="index.html"><span class="menu-text"> 工作台 </span></a>
+                <a href="/forward/index"><span class="menu-text"> 工作台 </span></a>
                 <b class="arrow"></b>
             </li>
             <li class="">
-                <a href="management.html"><span class="menu-text"> 办理中心 </span></a>
+                <a href="/forward/management"><span class="menu-text"> 办理中心 </span></a>
                 <b class="arrow"></b>
             </li>
             <li class="">
@@ -58,32 +58,32 @@
                 <b class="arrow"></b>
                 <ul class="submenu">
                     <li class="">
-                        <a href="student.html"><i class="menu-icon fa fa-caret-right"></i>学员</a>
+                        <a href="/forward/student"><i class="menu-icon fa fa-caret-right"></i>学员</a>
                         <b class="arrow"></b>
                     </li>
                     <li class="">
-                        <a href="classes.html"><i class="menu-icon fa fa-caret-right"></i>班级</a>
+                        <a href="/student/getXbClassroomList"><i class="menu-icon fa fa-caret-right"></i>班级</a>
                         <b class="arrow"></b>
                     </li>
                     <li class="">
-                        <a href="oneToOne.html">
+                        <a href="/forward/oneToOne">
                         <i class="menu-icon fa fa-caret-right"></i>一对一</a>
                         <b class="arrow"></b>
                     </li>
                     <li class="">
-                        <a href="courseArray.html"><i class="menu-icon fa fa-caret-right"></i>排课</a>
+                        <a href="/forward/courseArray"><i class="menu-icon fa fa-caret-right"></i>排课</a>
                         <b class="arrow"></b>
                     </li>
                     <li class="">
-                        <a href="lessonTable.html"><i class="menu-icon fa fa-caret-right"></i>课程表</a>
+                        <a href="/forward/lessonTable"><i class="menu-icon fa fa-caret-right"></i>课程表</a>
                         <b class="arrow"></b>
                     </li>
                     <li class="">
-                        <a href="attendClass.html"><i class="menu-icon fa fa-caret-right"></i>记上课</a>
+                        <a href="/forward/attendClass"><i class="menu-icon fa fa-caret-right"></i>记上课</a>
                         <b class="arrow"></b>
                     </li>
                     <li class="">
-                        <a href="course.html"><i class="menu-icon fa fa-caret-right"></i>课程</a>
+                        <a href="/forward/course"><i class="menu-icon fa fa-caret-right"></i>课程</a>
                         <b class="arrow"></b>
                     </li>
                 </ul>
@@ -96,11 +96,11 @@
                 <b class="arrow"></b>
                 <ul class="submenu">
                     <li class="">
-                        <a href="organization.html"><i class="menu-icon fa fa-caret-right"></i>组织架构</a>
+                        <a href="/accounts/getOrgansList"><i class="menu-icon fa fa-caret-right"></i>组织架构</a>
                         <b class="arrow"></b>
                     </li>
                     <li class="active">
-                        <a href="newStudent.html"><i class="menu-icon fa fa-caret-right"></i>员工信息</a>
+                        <a href="/accounts/getEmployeeList"><i class="menu-icon fa fa-caret-right"></i>员工信息</a>
                         <b class="arrow"></b>
                     </li>
                 </ul>
@@ -112,213 +112,184 @@
             <img src="../static/pages/img/line1.png">
             <span>员工管理</span>
             <img src="../static/pages/img/line.png">
-        </div> 
-        <div class="tabbable">
-            <div class="tab-content student course">
-                <!-- 学员列表 -->
-                <div id="studentList" class="tab-pane fade in active"> 
-                    <div class="screen">
-                        <a class="stdEnroll" href="employee.html" target="_blank">新建员工</a>
-                        <div class="screenTop">  
-                            <select class="selectName">
-                                <option value="AZ">员工姓名</option>
-                                <option value="AL">员工手机号</option>
-                            </select>
-                            <div class="nav-search" id="nav-search">
-                                <form class="form-search">
-                                    <span class="input-icon">
-                                        <input type="text" placeholder="请输入姓名、支持拼音缩写" class="nav-search-input" id="nav-search-input" autocomplete="off">
-                                        <i class="ace-icon fa fa-search nav-search-icon"></i>
-                                    </span>
-                                </form>
-                            </div>
-                            <div class="form-group" style="display: inline;">
-                                <button>搜索</button>
-                            </div>                               
-                        </div>
-                        <div class="screenBot tags">
-                            <span class="tag">所属部门：青山分校<button type="button" class="close">×</button></span>
-                            <p>清空筛选</p>
-                        </div>
-                    </div>
-                    <div class="control-position">
-                        <div class="control-group">
-                            <label class="control-label">所属部门</label>
-                            <div class="checkbox">
-                                <label>
-                                    <input name="form-field-checkbox" type="checkbox" class="ace">
-                                    <span class="lbl">未指定所属部门</span>
-                                </label>
-                            </div>
-                            <div class="checkbox">
-                                <label>
-                                    <input name="form-field-checkbox" type="checkbox" class="ace">
-                                    <span class="lbl">青山分校</span>
-                                </label>
-                            </div>
-                            <div class="checkbox">
-                                <label>
-                                    <input name="form-field-checkbox" type="checkbox" class="ace">
-                                    <span class="lbl">科源分校</span>
-                                </label>
-                            </div>
-                            <div class="checkbox">
-                                <label>
-                                    <input name="form-field-checkbox" type="checkbox" class="ace">
-                                    <span class="lbl">昆山分校</span>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="control-group">
-                            <label class="control-label">是否教师</label>
-                            <div class="checkbox">
-                                <label>
-                                    <input name="form-field-checkbox" type="checkbox" class="ace">
-                                    <span class="lbl">是</span>
-                                </label>
-                            </div>
-                            <div class="checkbox">
-                                <label>
-                                    <input name="form-field-checkbox" type="checkbox" class="ace">
-                                    <span class="lbl">否</span>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="control-group">
-                            <label class="control-label">管辖校区</label>
-                            <div class="checkbox">
-                                <label>
-                                    <input name="form-field-checkbox" type="checkbox" class="ace">
-                                    <span class="lbl">全部校区</span>
-                                </label>
-                            </div>
-                            <div class="checkbox">
-                                <label>
-                                    <input name="form-field-checkbox" type="checkbox" class="ace">
-                                    <span class="lbl">青山分校</span>
-                                </label>
-                            </div>
-                            <div class="checkbox">
-                                <label>
-                                    <input name="form-field-checkbox" type="checkbox" class="ace">
-                                    <span class="lbl">科源分校</span>
-                                </label>
-                            </div>
-                            <div class="checkbox">
-                                <label>
-                                    <input name="form-field-checkbox" type="checkbox" class="ace">
-                                    <span class="lbl">昆区分校</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="orderCon">
-                        <div class="export">
-                            <button type="button" class="btn btn-primary">导出当前结果</button>
-                            <button type="button" class="btn btn-primary">批量调整所属部门</button>
-                        </div> 
-                        <div class="result">
-                            当前结果：共计<span>15</span>人
-                        </div>
-                        <div class="orderTable">
-                            <table class="table table-hover">
-                                <tr>
-                                    <th>
-                                        <input type="checkbox" id="sel_1" onchange="selectAll()">
-                                    </th>
-                                    <th>姓名</th>
-                                    <th>手机号</th>
-                                    <th>所属部门</th>
-                                    <th>是否教师</th>
-                                    <th>机构账号</th>
-                                    <th>操作</th>
-                                </tr>
-                                <tr id="choose">
-                                    <td><input type="checkbox"></td>
-                                    <td>张三</td>
-                                    <td>1500****000(未激活)</td>
-                                    <td>青山分校</td>
-                                    <td>是</td>
-                                    <td>15847278368（ 教师  ）</td>
-                                    <td>
-                                        <a href="employee.html" target="_blank"><img src="../static/pages/img/edit.png">编辑</a>
-                                        <a href=""><img src="../static/pages/img/del.png">删除</a>
-                                    </td>
-                                </tr>
-                                <tr id="choose">
-                                    <td><input type="checkbox"></td>
-                                    <td>张三</td>
-                                    <td>1500****000(未激活)</td>
-                                    <td>青山分校</td>
-                                    <td>是</td>
-                                    <td>15847278368（ 教师  ）</td>
-                                    <td>
-                                        <a href="employee.html" target="_blank"><img src="../static/pages/img/edit.png">编辑</a>
-                                        <a href=""><img src="../static/pages/img/del.png">删除</a>
-                                    </td>
-                                </tr>
-                            </table>
-                            <div class="orderPage">
-                                <div class="page">
-                                    单页显示：
-                                    <select>
-                                        <option>20条/页</option>
-                                        <option>50条/页</option>
-                                        <option>100条/页</option>
-                                    </select>
+        </div>
+        <form id="searchform">
+            <div class="tabbable">
+                <div class="tab-content student course">
+                    <!-- 学员列表 -->
+                    <div id="studentList" class="tab-pane fade in active">
+                        <div class="screen">
+                            <a class="stdEnroll" href="/forward/employee">新建员工</a>
+                            <div class="screenTop">
+                                <select class="selectName" name="type">
+                                    <option th:selected="${type eq 'AZ'}" value="AZ">员工姓名</option>
+                                    <option th:selected="${type eq 'AL'}" value="AL">员工手机号</option>
+                                </select>
+                                <div class="nav-search" id="nav-search">
+                                    <form class="form-search">
+                                        <span class="input-icon">
+                                            <input type="text" placeholder="请输入姓名或者手机号" class="nav-search-input" name="nameormobile" th:value="${nameormobile}" autocomplete="off">
+                                            <i class="ace-icon fa fa-search nav-search-icon"></i>
+                                        </span>
+                                    </form>
                                 </div>
-                                <ul class="pagination">
-                                    <li class="disabled">
-                                        <a href="#">首页</a>
-                                    </li>
-                                    <li class="disabled">
-                                        <a href="#">
-                                            <i class="ace-icon fa fa-angle-double-left"></i>
-                                        </a>
-                                    </li>  
-                                    <li class="active">
-                                        <a href="#">1</a>
-                                    </li>
-            
-                                    <li>
-                                        <a href="#">2</a>
-                                    </li>
-            
-                                    <li>
-                                        <a href="#">3</a>
-                                    </li>
-            
-                                    <li>
-                                        <a href="#">4</a>
-                                    </li>
-            
-                                    <li>
-                                        <a href="#">5</a>
-                                    </li>
-            
-                                    <li>
-                                        <a href="#">
-                                            <i class="ace-icon fa fa-angle-double-right"></i>
-                                        </a>
-                                    </li>
-                                    <li class="">
-                                        <a href="#">尾页</a>
-                                    </li>
-                                </ul>
+                                <div class="form-group" style="display: inline;">
+                                    <button type="button" th:onclick="'javascript:getOrgansListPage(\'\')'">搜索</button>
+                                </div>
                             </div>
-                        </div>    
+                            <div class="screenBot tags">
+                                <!--<span class="tag">所属部门：青山分校<button type="button" class="close">×</button></span>
+                                <p>清空筛选</p>-->
+                            </div>
+                        </div>
+                        <div class="control-position">
+                            <!--<div class="control-group">
+                                <label class="control-label">所属部门</label>
+                                <div class="checkbox">
+                                    <label>
+                                        <input name="form-field-checkbox" type="checkbox" class="ace">
+                                        <span class="lbl">未指定所属部门</span>
+                                    </label>
+                                </div>
+                                <div class="checkbox">
+                                    <label>
+                                        <input name="form-field-checkbox" type="checkbox" class="ace">
+                                        <span class="lbl">青山分校</span>
+                                    </label>
+                                </div>
+                                <div class="checkbox">
+                                    <label>
+                                        <input name="form-field-checkbox" type="checkbox" class="ace">
+                                        <span class="lbl">科源分校</span>
+                                    </label>
+                                </div>
+                                <div class="checkbox">
+                                    <label>
+                                        <input name="form-field-checkbox" type="checkbox" class="ace">
+                                        <span class="lbl">昆山分校</span>
+                                    </label>
+                                </div>
+                            </div>-->
+                            <div class="control-group">
+                                    <label class="control-label">是否教师</label>
+                                    <div class="checkbox">
+                                        <input  th:attr ="checked=${isAttendClass == '2'?true:false}" name="isAttendClass" value="2" type="radio" class="ace"  th:onclick="'javascript:getOrgansListPage(\'\')'">
+                                        <span class="lbl">全部</span>
+                                        <label>
+                                            <input  th:attr ="checked=${isAttendClass == '0'?true:false}" name="isAttendClass" value="0" type="radio" class="ace"  th:onclick="'javascript:getOrgansListPage(\'\')'">
+                                            <span class="lbl">是</span>
+                                        </label>
+                                </div>
+                                <div class="checkbox">
+                                    <label>
+                                        <input th:attr ="checked=${isAttendClass == '1'?true:false}" name="isAttendClass" value="1" type="radio" class="ace" th:onclick="'javascript:getOrgansListPage(\'\')'">
+                                        <span class="lbl">否</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">管辖校区</label>
+                                <input  th:attr ="checked=${organId == '0'?true:false}" name="organId" type="radio" th:value="0" class="ace" th:onclick="'javascript:getOrgansListPage(\'\')'">
+                                <span class="lbl" th:text="全部校区"></span>
+                                <div class="checkbox" th:each="orgs:${organsList}">
+                                    <label>
+                                        <input th:attr ="checked=${organId == orgs.id?true:false}" name="organId" type="radio" th:value="${orgs.id}" class="ace" th:onclick="'javascript:getOrgansListPage(\'\')'">
+                                        <span class="lbl" th:text="${orgs.organName}"></span>
+                                    </label>
+                                </div>
+                        </div>
+
+                        <div class="orderCon">
+                            <!--<div class="export">
+                                <button type="button" class="btn btn-primary">导出当前结果</button>
+                                <button type="button" class="btn btn-primary">批量调整所属部门</button>
+                            </div> -->
+                            <div class="result">
+                                当前结果：共计<span>15</span>人
+                            </div>
+                            <div class="orderTable">
+                                <table class="table table-hover">
+                                    <tr>
+                                        <th>
+                                            <input type="checkbox" id="sel_1" onchange="selectAll()">
+                                        </th>
+                                        <th>姓名</th>
+                                        <th>手机号</th>
+                                        <th>所属校区</th>
+                                        <th>是否教师</th>
+                                        <!--<th>机构账号</th>-->
+                                        <th>操作</th>
+                                    </tr>
+                                    <tr id="choose" th:each="employee,employeeStat:${employeePage.content}">
+                                        <td><input type="checkbox"></td>
+                                        <td th:text="${employee.employeeName}"></td>
+                                        <td th:text="${employee.mobilePhone}"></td>
+                                        <td th:text="${employee.sysOrgans.organName}"></td>
+                                        <td th:if="${employee.isAttendClass eq 0}">
+                                            是
+                                        </td>
+                                        <td th:if="${employee.isAttendClass eq 1}">
+                                            否
+                                        </td>
+                                        <!--<td>15847278368（ 教师  ）</td>-->
+                                        <td>
+                                            <a th:href="@{/accounts/getEmployee(id=${employee.id})}"><img src="../static/pages/img/edit.png">编辑</a>
+                                            <a href="#" th:onclick="'javascript:deleteEmployee(\''+${employee.id}+'\')'"><img src="../static/pages/img/del.png">删除</a>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <div class="orderPage" style="margin-top:30px;">
+                                    <div class="page">
+                                        单页显示：
+                                        <select id="size" name="size" onchange="getOrgansListPage('');">
+                                            <option value="20">20条/页</option>
+                                            <option value="5">5条/页</option>
+                                            <option value="10">10条/页</option>
+                                            <option value="15">15条/页</option>
+                                        </select>
+                                        <input type="hidden" id="currentzise" th:value="${currentzise}"/>
+                                    </div>
+                                    <ul class="pagination" th:if="${employeePage.getTotalPages() gt 0}" >
+                                        <li class="disabled">
+                                            <a href="#" th:onclick="'javascript:getOrgansListPage(\''+0+'\')'">首页</a>
+                                        </li>
+                                        <li class="disabled" th:if="${employeePage.getNumber()-1} ge 0">
+                                            <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${employeePage.getNumber()-1}+'\')'">
+                                                <i class="ace-icon fa fa-angle-double-left"></i>
+                                            </a>
+                                        </li>
+                                        <li class="active" th:each="i:${#numbers.sequence(1,employeePage.getTotalPages())}">
+                                            <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${i}+'\')'" th:text="${i}"></a>
+                                        </li>
+                                        <li th:if="${employeePage.getTotalPages()} ge ${employeePage.getNumber()+2} ">
+                                            <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${employeePage.getNumber()+2}+'\')'">
+                                                <i class="ace-icon fa fa-angle-double-right"></i>
+                                            </a>
+                                        </li>
+                                        <!-- <li class="">
+                                             <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${currentnumber}+'\')'">尾页</a>
+                                         </li>-->
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>        
-    </div>
-
+        </div>
+    </form>
 </div> 
 <script>
 !function(){
 laydate({elem: '#demo'});//绑定元素
 }();
+
+$(function(){
+    var a = $("#currentzise").val();
+    if(a!=20){
+        $("#size").val(a);
+    }
+});
 
 $(".btn-down").click(function(){
   $(this).siblings(".dropdown-menu").toggle();
@@ -333,6 +304,58 @@ function selectAll(){
     });
    
 };
+</script>
+<script type="text/javascript" th:inline="javascript">
+    var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/;
+function deleteEmployee(id){
+    if(confirm("确定要删除该用户吗？")){
+        $.ajax({
+            url: basePath + '/accounts/delete/employee/'+id,
+            type: 'get',
+            dataType: 'json',
+            contentType: 'application/json',
+            async: true,
+            success: function(data) {
+                var status = data.status;
+                var msg = data.msg;
+                alert("删除成功！");
+                window.location.href = basePath + '/accounts/getEmployeeList';
+            },
+            error:function(){
+                console.log("回调失败")
+            }
+        });
+    }
+}
+
+function getOrgansListPage(page){
+    var data= serializeObject("#searchform");
+    var size = $('#size option:selected').val();//选中的值
+    if(page){
+        page = page -1;
+    }
+    //var organId=$('input:radio[name="organId"]:checked').val();
+    //var isAttendClass=$('input:radio[name="isAttendClass"]:checked').val();
+    window.location.href = basePath + '/accounts/getEmployeeList?page='+page+'&size='+size+'&data='+JSON.stringify(data);
+}
+
+    function serializeObject(form)
+    {
+        var o = {};
+        var a = $(form).serializeArray();
+        alert(a);
+        $.each(a, function() {
+            if (o[this.name]) {
+                if (!o[this.name].push) {
+                    o[this.name] = [o[this.name]];
+                }
+                o[this.name].push(this.value || '');
+            } else {
+                o[this.name] = this.value || '';
+            }
+        });
+        return o;
+    };
 
 </script> 
 </body>

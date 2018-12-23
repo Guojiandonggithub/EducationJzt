@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.w3.org/1999/xhtml">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+    <title>欢迎登录</title>
+    <head>
+        <link rel="stylesheet" href="../static/pages/css/ace.min.css" id="main-ace-style" />
+        <link rel="stylesheet" href="../static/pages/css/index.css">
+        <link rel="stylesheet" href="../static/pages/css/management.css">
+        <link rel="stylesheet" href="../static/pages/css/student.css">
+        <link rel="stylesheet" href="../static/pages/css/madal.css">
+        <link rel="stylesheet" href="../static/pages/css/bootstrap.min.css">
+        <link rel="stylesheet" href="../static/pages/css/font-awesome.min.css" />
+
+        <link rel="stylesheet" href="../static/pages/css/fullcalendar.css">
+        <link rel="stylesheet" href="../static/pages/css/lessonTable.css">
+        <link rel="stylesheet" href="../static/pages/css/syllabus.css">
+
+
+        <script src="../static/pages/js/jquery.min.js"></script>
+        <script src="../static/pages/js/bootstrap.min.js"> </script>
+        <script src="../static/pages/js/ace.min.js"> </script>
+        <script src="../static/pages/js/ace-elements.min.js"></script>
+        <script src="../static/pages/laydate/laydate.js"></script>
+        <script src="../static/pages/js/fullcalendar.min.js"></script>
+        <script src="../static/pages/js/jquery-ui-1.10.2.custom.min.js"></script>
+
+    </head>
+
+    <body>
+        <div id="navbar" class="eduNav">
+            <div class="navbar-header pull-left">
+                <a href="index.html" class="navbar-brand">
+                    <small>
+                        <img src="../static/pages/img/logo.png" alt=""/>
+                    </small>
+                </a>
+            </div>
+            <div class="pull-right eduName">
+                <span>万某 [管理员]</span>
+                <span>机构中心</span>
+                <span>退出</span>
+            </div>
+        </div>
+        <div class="main-container" id="main-container">
+            <div id="sidebar" class="sidebar responsive">
+                <ul class="nav nav-list" style="top: 0px;">
+                    <li class="">
+                        <a href="index.html"><span class="menu-text"> 工作台 </span></a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li class="">
+                        <a href="management.html"><span class="menu-text"> 办理中心 </span></a>
+                        <b class="arrow"></b>
+                    </li>
+                    <li class="active open">
+                        <a href="#" class="dropdown-toggle">
+                            <span class="menu-text">教务中心</span>
+                            <b class="arrow fa fa-angle-down"></b>
+                        </a>
+                        <b class="arrow"></b>
+                        <ul class="submenu">
+                            <li class="">
+                                <a href="student.html"><i class="menu-icon fa fa-caret-right"></i>学员</a>
+                                <b class="arrow"></b>
+                            </li>
+                            <li class="">
+                                <a href="classes.html"><i class="menu-icon fa fa-caret-right"></i>班级</a>
+                                <b class="arrow"></b>
+                            </li>
+                            <li class="">
+                                <a href="oneToOne.html">
+                                    <i class="menu-icon fa fa-caret-right"></i>一对一</a>
+                                <b class="arrow"></b>
+                            </li>
+                            <li class="">
+                                <a href="courseArray.html"><i class="menu-icon fa fa-caret-right"></i>排课</a>
+                                <b class="arrow"></b>
+                            </li>
+                            <li class="">
+                                <a href="lessonTable.html"><i class="menu-icon fa fa-caret-right"></i>课程表</a>
+                                <b class="arrow"></b>
+                            </li>
+                            <li class="active">
+                                <a href="attendClass.html"><i class="menu-icon fa fa-caret-right"></i>记上课</a>
+                                <b class="arrow"></b>
+                            </li>
+                            <li class="">
+                                <a href="course.html"><i class="menu-icon fa fa-caret-right"></i>课程</a>
+                                <b class="arrow"></b>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="hsub">
+                        <a href="#" class="dropdown-toggle">
+                            <span class="menu-text"> 内部管理 </span>
+                            <b class="arrow fa fa-angle-down"></b>
+                        </a>
+                        <b class="arrow"></b>
+                        <ul class="submenu">
+                            <li class="">
+                                <a href="organization.html"><i class="menu-icon fa fa-caret-right"></i>组织架构</a>
+                                <b class="arrow"></b>
+                            </li>
+                            <li class="">
+                                <a href="newStudent.html"><i class="menu-icon fa fa-caret-right"></i>员工信息</a>
+                                <b class="arrow"></b>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div layout:fragment="content"></div>
+        </div>
+    </body>
+</html>

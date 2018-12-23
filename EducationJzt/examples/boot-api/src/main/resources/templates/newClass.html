@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -34,16 +34,17 @@
         <span>机构中心</span>
         <span>退出</span>   
     </div>
-</div>  
+</div>
+<form id="classform">
 <div class="main-container" id="main-container">
     <div id="sidebar" class="sidebar responsive">
         <ul class="nav nav-list" style="top: 0px;">
             <li class="">
-                <a href="index.html"><span class="menu-text"> 工作台 </span></a>
+                <a href="/forward/index"><span class="menu-text"> 工作台 </span></a>
                 <b class="arrow"></b>
             </li>
             <li class="">
-                <a href="management.html"><span class="menu-text"> 办理中心 </span></a>
+                <a href="/forward/management"><span class="menu-text"> 办理中心 </span></a>
                 <b class="arrow"></b>
             </li>
             <li class="active open">
@@ -54,37 +55,37 @@
                 <b class="arrow"></b>
                 <ul class="submenu">
                     <li class="">
-                        <a href="student.html"><i class="menu-icon fa fa-caret-right"></i>学员</a>
+                        <a href="/forward/student"><i class="menu-icon fa fa-caret-right"></i>学员</a>
                         <b class="arrow"></b>
                     </li>
                     <li class="active">
-                        <a href="classes.html"><i class="menu-icon fa fa-caret-right"></i>班级</a>
+                        <a href="/student/getXbClassroomList"><i class="menu-icon fa fa-caret-right"></i>班级</a>
                         <b class="arrow"></b>
                     </li>
                     <li class="">
-                        <a href="oneToOne.html">
-                        <i class="menu-icon fa fa-caret-right"></i>一对一</a>
+                        <a href="/forward/oneToOne">
+                            <i class="menu-icon fa fa-caret-right"></i>一对一</a>
                         <b class="arrow"></b>
                     </li>
                     <li class="">
-                        <a href="courseArray.html"><i class="menu-icon fa fa-caret-right"></i>排课</a>
+                        <a href="/forward/courseArray"><i class="menu-icon fa fa-caret-right"></i>排课</a>
                         <b class="arrow"></b>
                     </li>
                     <li class="">
-                        <a href="lessonTable.html"><i class="menu-icon fa fa-caret-right"></i>课程表</a>
+                        <a href="/forward/lessonTable"><i class="menu-icon fa fa-caret-right"></i>课程表</a>
                         <b class="arrow"></b>
                     </li>
                     <li class="">
-                        <a href="attendClass.html"><i class="menu-icon fa fa-caret-right"></i>记上课</a>
+                        <a href="/forward/attendClass"><i class="menu-icon fa fa-caret-right"></i>记上课</a>
                         <b class="arrow"></b>
                     </li>
                     <li class="">
-                        <a href="course.html"><i class="menu-icon fa fa-caret-right"></i>课程</a>
+                        <a href="/forward/course"><i class="menu-icon fa fa-caret-right"></i>课程</a>
                         <b class="arrow"></b>
                     </li>
                 </ul>
             </li>
-            <li class="hsub">
+            <li class="">
                 <a href="#" class="dropdown-toggle">
                     <span class="menu-text"> 内部管理 </span>
                     <b class="arrow fa fa-angle-down"></b>
@@ -92,15 +93,15 @@
                 <b class="arrow"></b>
                 <ul class="submenu">
                     <li class="">
-                        <a href="organization.html"><i class="menu-icon fa fa-caret-right"></i>组织架构</a>
+                        <a href="/accounts/getOrgansList"><i class="menu-icon fa fa-caret-right"></i>组织架构</a>
                         <b class="arrow"></b>
                     </li>
                     <li class="">
-                        <a href="newStudent.html"><i class="menu-icon fa fa-caret-right"></i>员工信息</a>
+                        <a href="/accounts/getEmployeeList"><i class="menu-icon fa fa-caret-right"></i>员工信息</a>
                         <b class="arrow"></b>
                     </li>
                 </ul>
-            </li>      
+            </li>
         </ul>
     </div>
     <div class="main-content">
@@ -114,189 +115,149 @@
             <div class="stopClass newClass">     
                 <div class="form-group">
                     <label><span>*</span>校区</label>
-                    <select name="" id="">
-                        <option value="">选择校区</option>
-                        <option value="">222</option>
-                        <option value="">333</option>
+                    <select name="organId" >
+                        <!--<option value="">选择校区</option>-->
+                        <option th:each="orgs:${organsList}" th:selected="${xbClass.organId == orgs.id}" th:value="${orgs.id}" th:text="${orgs.organName}"></option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label><span>*</span>课程</label>
-                    <select name="" id="">
-                        <option value="">111</option>
-                        <option value="">222</option>
-                        <option value="">333</option>
+                    <select name="courseId" >
+                        <option value="1">111</option>
+                        <option value="2">222</option>
+                        <option value="3">333</option>
                     </select>
                     <Span>请先选择校区再选择课程</Span>
                 </div>
                 <div class="form-group" style="display: block;">
                     <label for=""><span>*</span>班级名称</label>
-                    <input type="text" placeholder="该备注将会被打印且会在校宝家中显示" class="remark">
+                    <input type="hidden" name="id" th:value="${xbClass.id}">
+                    <input type="text" th:value="${xbClass.className}" name="className" placeholder="请输入班级名称" class="remark">
                 </div>
                 <div style="display:block;">
+                    <label>开班日期</label>
                     <div class="classDate">
-                        <label>开班日期</label>
-                        <input class="laydate-icon" id="demo" >   
+                        <input class="laydate-icon" id="demo" th:if="${xbClass.classBeginDate==null}" th:value="${xbClass.classBeginDate}" name="classBeginDate" />
+                        <input class="laydate-icon" id="demo"  th:if="${xbClass.classBeginDate!=null}" th:value="${#dates.format(xbClass.classBeginDate, 'yyyy-MM-dd')}" name="classBeginDate" />
                     </div>
-                    <div class="form-group">
+                    <!--<div class="form-group">
                         <input type="checkbox" class="check">
                         <span class="pend">日期待定</span>
-                    </div>
+                    </div>-->
                     <div class="form-group">
                         <label><span>*</span>预招人数</label>
-                        <input type="text" value="1">
+                        <input type="text" name="preRecruitNum" th:value="${xbClass.preRecruitNum}">
                         <span>人</span>
                     </div>
                     <div class="form-group">
                         <label>成班人数</label>
-                        <input type="text" value="1">
+                        <input type="text" name="establishNum" th:value="${xbClass.establishNum}">
                         <span>人</span>
                     </div>
                 </div>
                 <div style="display: block; margin-top:20px;">
                     <div class="form-group">
                         <label><span>*</span>每次上课</label>
-                        学员 <input type="text" value="1">
+                        学员
+                        <input type="text" name="studentNum" th:value="${xbClass.studentNum}">
                         <span>人</span>
                     </div>
                     <div class="form-group">
                         <label>教师</label>
-                        <input type="text" value="1">
+                        <input type="text" name="teacherNum" th:value="${xbClass.teacherNum}">
                         <span>课时</span>
                     </div>
                     <div class="form-group">
                         <label>招生状态</label>
-                        <input name="form-field-radio" type="radio" class="ace"><span class="lbl">开放招生</span>
-                        <input name="form-field-radio" type="radio" class="ace"><span class="lbl">停止招生</span>
+                        <input th:attr ="checked=${xbClass.recruitState == 0?true:false}" name="form-field-radio" name="recruitState" value="0" type="radio" class="ace"><span class="lbl">开放招生</span>
+                        <input th:attr ="checked=${xbClass.recruitState == 1?true:false}" name="form-field-radio" name="recruitState" value="1" type="radio" class="ace"><span class="lbl">停止招生</span>
                     </div>
                 </div>
                 <div style="display: block; margin-top:20px;">
                     <div class="form-group">
                         <label>教室</label>
-                        <select name="" id="">
-                            <option value="">选择教室</option>
-                            <option value="">222</option>
-                            <option value="">333</option>
+                        <select name="classroomId" >
+                            <!--<option value="">选择教室</option>-->
+                            <option th:each="classroom:${xbClassroomList}" th:selected="${xbClass.classroomId == classroom.id}" th:value="${classroom.id}" th:text="${classroom.classroomName}"></option>
                         </select>
                     </div>  
                     <div class="form-group teacher" >
                         <label>教师</label>
-                        <select name="" id="">
-                            <option value="">选择教师</option>
-                            <option value="">222</option>
-                            <option value="">333</option>
+                        <select name="teacherId" >
+                            <!--<option value="">选择教师</option>-->
+                            <option th:each="employee:${employeeList}" th:selected="${xbClass.teacherId == employee.id}" th:value="${employee.id}" th:text="${employee.employeeName}"></option>
                         </select>
-                        <select name="" id="">
+                        <!--<select name="" id="">
                             <option value="">选择助教</option>
                             <option value="">222</option>
                             <option value="">333</option>
                         </select>
                         <i>+</i>
-                        <span>以上教师和助教可对班级学员记上课和布置作业(需要拥有相关权限)</span>
+                        <span>以上教师和助教可对班级学员记上课和布置作业(需要拥有相关权限)</span>-->
                     </div>  
                 </div>
                 <div class="form-group" style="display: block;">
                     <label for="">备注</label>
-                    <input type="text"  class="remark">
+                    <input type="text"  class="remark" name="remarks" th:value="${xbClass.remarks}">
                 </div>
             </div>
         </div>
         <div class="enrollCon">
-            <button class="save">保存</button>
+            <button class="save" type="button" onclick="saveClass();">保存</button>
         </div>
     </div>
-    <!-- 选择已有学员 -->
-    <div id="modal-table" class="modal fade in subsidy" tabindex="-1" aria-hidden="false">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header no-padding">
-                        <div class="table-header">选择已有学员</div>
-                    </div>
-                    <div class="modalFrom">
-                        <div class="form-group" style="margin-right:0 !important;">
-                            <select name="" id="">
-                                <option value="">学员姓名</option>
-                                <option value="">张三</option>
-                                <option value="">李四</option>
-                            </select>
-                        </div> 
-                        <form class="form-search">
-                            <span class="input-icon">
-                                <input type="text" placeholder="请输入班级名称或教师名称" class="nav-search-input" id="nav-search-input" autocomplete="off">
-                                <i class="ace-icon fa fa-search nav-search-icon"></i>
-                            </span>
-                        </form>  
-                        <div class="form-group">
-                            <label>校区</label>
-                            <select name="" id="">
-                                <option value="">全部校区</option>
-                                <option value="">111</option>
-                                <option value="">222</option>
-                            </select>
-                        </div>                        
-                    </div>
-                    <div class="modal-body no-padding">
-                        <table class="table table-striped  table-hover no-margin-bottom no-border-top">
-                            <thead>
-                                <tr>
-                                    <th>姓名</th>
-                                    <th>联系方式</th>
-                                    <th>公立学校</th>
-                                    <th>在读课程</th>
-                                </tr>
-                            </thead>
-                            <tbody style="display: none;">
-                                <tr class="none">
-                                    <td>
-                                        <img src="../static/pages/img/none.png">
-                                        <span>很抱歉，这里什么都没有</span> 
-                                    </td>   
-                                </tr>
-                            </tbody>
-                            <tbody>
-                                <tr>
-                                    <td><img src="../static/pages/img/boy.png">张三</td>
-                                    <td>15874747474</td>
-                                    <td ></td>
-                                    <td><img src="../static/pages/img/ke.png">在读课程</td>
-                                </tr>
-                                <tr>
-                                    <td><img src="../static/pages/img/girl.png">张三</td>
-                                    <td>15874747474</td>
-                                    <td ></td>
-                                    <td><img src="../static/pages/img/ke.png">在读课程</td>
-                                </tr>
-                                <tr>
-                                    <td><img src="../static/pages/img/girl.png">张三</td>
-                                    <td>15874747474</td>
-                                    <td ></td>
-                                    <td><img src="../static/pages/img/ke.png">在读课程</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-        
-                    <div class="modal-footer no-margin-top">
-                        <button class="btn pull-left" data-dismiss="modal">
-                            取消
-                        </button>
-                        <p>已选择班级<span>0</span>个</p>
-                        <button class="btn pull-right" data-dismiss="modal">
-                            确定
-                        </button>
-                    </div>
-                </div>
-            </div>
-    </div>
-
-</div> 
-
+</div>
+</form>
 <script>
 !function(){
 laydate({elem: '#demo'});//绑定元素
 }();
 
+</script>
+<script type="text/javascript" th:inline="javascript">
+    var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/;
+    function saveClass(){
+        var data= serializeObject("#classform");
+        $.ajax({
+            type: 'post',
+            dataType: 'json',
+            url: basePath + '/student/save/xbclass',
+            data: JSON.stringify(data),
+            contentType:"application/json;charset=UTF-8",
+            cache: false,
+            async: true,
+            success: function (data) {
+                //var status = data.status;
+                var msg = data.msg;
+                alert("编辑成功！");
+                window.location.href = basePath + '/student/getXbClassroomList?room=1';
+                /*if(status=="0"){
+                    if (confirm(msg)) {
+                        window.location.href(basePath + '/accounts/getOrgansList');
+                    }
+                }else{
 
-</script> 
+                }*/
+            }
+        });
+    }
+
+    function serializeObject(form)
+    {
+        var o = {};
+        var a = $(form).serializeArray();
+        $.each(a, function() {
+            if (o[this.name]) {
+                if (!o[this.name].push) {
+                    o[this.name] = [o[this.name]];
+                }
+                o[this.name].push(this.value || '');
+            } else {
+                o[this.name] = this.value || '';
+            }
+        });
+        return o;
+    };
+</script>
 </body>
 </html>

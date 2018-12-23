@@ -1,5 +1,6 @@
 package org.springside.examples.bootapi.repository;
 
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springside.examples.bootapi.domain.SysEmployee;
 
@@ -10,7 +11,7 @@ import org.springside.examples.bootapi.domain.SysEmployee;
  * 
  * Spring Data JPA 还会解释新增方法名生成新方法的实现.
  */
-public interface EmployeeDao extends PagingAndSortingRepository<SysEmployee, Long> {
+public interface EmployeeDao extends PagingAndSortingRepository<SysEmployee, String>,JpaSpecificationExecutor<SysEmployee> {
 
 	SysEmployee findByUserName(String userName);
 }

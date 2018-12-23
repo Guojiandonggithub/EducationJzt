@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -34,16 +34,17 @@
         <span>机构中心</span>
         <span>退出</span>   
     </div>
-</div>  
+</div>
+<form id="roomform">
 <div class="main-container" id="main-container">
     <div id="sidebar" class="sidebar responsive">
         <ul class="nav nav-list" style="top: 0px;">
             <li class="">
-                <a href="index.html"><span class="menu-text"> 工作台 </span></a>
+                <a href="/forward/index"><span class="menu-text"> 工作台 </span></a>
                 <b class="arrow"></b>
             </li>
             <li class="">
-                <a href="management.html"><span class="menu-text"> 办理中心 </span></a>
+                <a href="/forward/management"><span class="menu-text"> 办理中心 </span></a>
                 <b class="arrow"></b>
             </li>
             <li class="active open">
@@ -54,37 +55,37 @@
                 <b class="arrow"></b>
                 <ul class="submenu">
                     <li class="">
-                        <a href="student.html"><i class="menu-icon fa fa-caret-right"></i>学员</a>
+                        <a href="/forward/student"><i class="menu-icon fa fa-caret-right"></i>学员</a>
                         <b class="arrow"></b>
                     </li>
                     <li class="active">
-                        <a href="classes.html"><i class="menu-icon fa fa-caret-right"></i>班级</a>
+                        <a href="/student/getXbClassroomList"><i class="menu-icon fa fa-caret-right"></i>班级</a>
                         <b class="arrow"></b>
                     </li>
                     <li class="">
-                        <a href="oneToOne.html">
-                        <i class="menu-icon fa fa-caret-right"></i>一对一</a>
+                        <a href="/forward/oneToOne">
+                            <i class="menu-icon fa fa-caret-right"></i>一对一</a>
                         <b class="arrow"></b>
                     </li>
                     <li class="">
-                        <a href="courseArray.html"><i class="menu-icon fa fa-caret-right"></i>排课</a>
+                        <a href="/forward/courseArray"><i class="menu-icon fa fa-caret-right"></i>排课</a>
                         <b class="arrow"></b>
                     </li>
                     <li class="">
-                        <a href="lessonTable.html"><i class="menu-icon fa fa-caret-right"></i>课程表</a>
+                        <a href="/forward/lessonTable"><i class="menu-icon fa fa-caret-right"></i>课程表</a>
                         <b class="arrow"></b>
                     </li>
                     <li class="">
-                        <a href="attendClass.html"><i class="menu-icon fa fa-caret-right"></i>记上课</a>
+                        <a href="/forward/attendClass"><i class="menu-icon fa fa-caret-right"></i>记上课</a>
                         <b class="arrow"></b>
                     </li>
                     <li class="">
-                        <a href="course.html"><i class="menu-icon fa fa-caret-right"></i>课程</a>
+                        <a href="/forward/course"><i class="menu-icon fa fa-caret-right"></i>课程</a>
                         <b class="arrow"></b>
                     </li>
                 </ul>
             </li>
-            <li class="hsub">
+            <li class="">
                 <a href="#" class="dropdown-toggle">
                     <span class="menu-text"> 内部管理 </span>
                     <b class="arrow fa fa-angle-down"></b>
@@ -92,52 +93,96 @@
                 <b class="arrow"></b>
                 <ul class="submenu">
                     <li class="">
-                        <a href="organization.html"><i class="menu-icon fa fa-caret-right"></i>组织架构</a>
+                        <a href="/accounts/getOrgansList"><i class="menu-icon fa fa-caret-right"></i>组织架构</a>
                         <b class="arrow"></b>
                     </li>
                     <li class="">
-                        <a href="newStudent.html"><i class="menu-icon fa fa-caret-right"></i>员工信息</a>
+                        <a href="/accounts/getEmployeeList"><i class="menu-icon fa fa-caret-right"></i>员工信息</a>
                         <b class="arrow"></b>
                     </li>
                 </ul>
-            </li>      
+            </li>
         </ul>
     </div>
-    <div class="main-content">
-        <div class="breadcrumbs" id="breadcrumbs">
-            <img src="../static/pages/img/line1.png">
-            <span>新建教室</span>
-            <img src="../static/pages/img/line.png">
-        </div>     
-        <div class="enrollCon">
-            <h2>教室信息</h2>
-            <div class="stopClass newClass">  
-                <div class="form-group" style="display: block;">
-                    <label for=""><span>*</span>教室名称</label>
-                    <input type="text" placeholder="" class="remark">
-                </div>   
-                <div class="form-group">
-                    <label><span>*</span>校区</label>
-                    <select name="" id="">
-                        <option value="">选择校区</option>
-                        <option value="">222</option>
-                        <option value="">333</option>
-                    </select>
+        <div class="main-content">
+            <div class="breadcrumbs" id="breadcrumbs">
+                <img src="../static/pages/img/line1.png">
+                <span>新建教室</span>
+                <img src="../static/pages/img/line.png">
+            </div>
+            <div class="enrollCon">
+                <h2>教室信息</h2>
+                <div class="stopClass newClass">
+                    <div class="form-group" style="display: block;">
+                        <label><span>*</span>教室名称</label>
+                        <input type="hidden" name="id" th:value="${xbClassroom.id}">
+                        <input type="text" placeholder="" th:value="${xbClassroom.classroomName}" name="classroomName" class="remark">
+                    </div>
+                    <div class="form-group">
+                        <label><span>*</span>校区</label>
+                        <select name="organId" >
+                            <!--<option value="">选择校区</option>-->
+                            <option th:each="orgs:${organsList}" th:selected="${xbClassroom.organId == orgs.id}" th:value="${orgs.id}" th:text="${orgs.organName}"></option>
+                        </select>
+                    </div>
                 </div>
             </div>
+            <div class="enrollCon">
+                <button class="save" type="button" onclick="saveRoom();">保存</button>
+            </div>
         </div>
-        <div class="enrollCon">
-            <button class="save">保存</button>
-        </div>
-    </div>
-
-</div> 
+</div>
+</form>
 
 <script>
 !function(){
 laydate({elem: '#demo'});//绑定元素
 }();
+</script>
+<script type="text/javascript" th:inline="javascript">
+var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/;
+function saveRoom(){
+    var data= serializeObject("#roomform");
+    $.ajax({
+        type: 'post',
+        dataType: 'json',
+        url: basePath + '/student/save/classroom',
+        data: JSON.stringify(data),
+        contentType:"application/json;charset=UTF-8",
+        cache: false,
+        async: true,
+        success: function (data) {
+            //var status = data.status;
+            var msg = data.msg;
+            alert("编辑成功！");
+            window.location.href = basePath + '/student/getXbClassroomList?room=0';
+            /*if(status=="0"){
+                if (confirm(msg)) {
+                    window.location.href(basePath + '/accounts/getOrgansList');
+                }
+            }else{
 
+            }*/
+        }
+    });
+}
+
+function serializeObject(form)
+{
+    var o = {};
+    var a = $(form).serializeArray();
+    $.each(a, function() {
+        if (o[this.name]) {
+            if (!o[this.name].push) {
+                o[this.name] = [o[this.name]];
+            }
+            o[this.name].push(this.value || '');
+        } else {
+            o[this.name] = this.value || '';
+        }
+    });
+    return o;
+};
 
 </script> 
 </body>
