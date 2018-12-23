@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -31,11 +31,11 @@
         </a>
     </div>
     <div class="pull-right eduName">
-        <span>万某 [管理员]</span> 
+        <span>万某 [管理员]</span>
         <span>机构中心</span>
-        <span>退出</span>   
+        <span>退出</span>
     </div>
-</div>  
+</div>
 <div class="main-container" id="main-container">
     <div id="sidebar" class="sidebar responsive">
         <ul class="nav nav-list" style="top: 0px;">
@@ -64,7 +64,7 @@
                     </li>
                     <li class="">
                         <a href="oneToOne.html">
-                        <i class="menu-icon fa fa-caret-right"></i>一对一</a>
+                            <i class="menu-icon fa fa-caret-right"></i>一对一</a>
                         <b class="arrow"></b>
                     </li>
                     <li class="">
@@ -101,7 +101,7 @@
                         <b class="arrow"></b>
                     </li>
                 </ul>
-            </li>      
+            </li>
         </ul>
     </div>
     <div class="main-content">
@@ -109,133 +109,57 @@
             <img src="../static/pages/img/line1.png">
             <span>新建课程</span>
             <img src="../static/pages/img/line.png">
-        </div>     
-        <!-- <div class="enrollCon">
-            <h2>班级信息</h2>
-            <div class="stopClass newClass">     
-                <div class="form-group">
-                    <label><span>*</span>校区</label>
-                    <select name="" id="">
-                        <option value="">选择校区</option>
-                        <option value="">222</option>
-                        <option value="">333</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label><span>*</span>课程</label>
-                    <select name="" id="">
-                        <option value="">111</option>
-                        <option value="">222</option>
-                        <option value="">333</option>
-                    </select>
-                    <Span>请先选择校区再选择课程</Span>
-                </div>
-                <div class="form-group" style="display: block;">
-                    <label for=""><span>*</span>班级名称</label>
-                    <input type="text" placeholder="该备注将会被打印且会在校宝家中显示" class="remark">
-                </div>
-                <div style="display:block;">
-                    <div class="classDate">
-                        <label>开班日期</label>
-                        <input class="laydate-icon" id="demo" >   
-                    </div>
-                    <div class="form-group">
-                        <input type="checkbox" class="check">
-                        <span class="pend">日期待定</span>
-                    </div>
-                    <div class="form-group">
-                        <label><span>*</span>预招人数</label>
-                        <input type="text" value="1">
-                        <span>人</span>
-                    </div>
-                    <div class="form-group">
-                        <label>成班人数</label>
-                        <input type="text" value="1">
-                        <span>人</span>
-                    </div>
-                </div>
-                <div style="display: block; margin-top:20px;">
-                    <div class="form-group">
-                        <label><span>*</span>每次上课</label>
-                        学员 <input type="text" value="1">
-                        <span>人</span>
-                    </div>
-                    <div class="form-group">
-                        <label>教师</label>
-                        <input type="text" value="1">
-                        <span>课时</span>
-                    </div>
-                    <div class="form-group">
-                        <label>招生状态</label>
-                        <input name="form-field-radio" type="radio" class="ace"><span class="lbl">开放招生</span>
-                        <input name="form-field-radio" type="radio" class="ace"><span class="lbl">停止招生</span>
-                    </div>
-                </div>
-                <div style="display: block; margin-top:20px;">
-                    <div class="form-group">
-                        <label>教室</label>
-                        <select name="" id="">
-                            <option value="">选择教室</option>
-                            <option value="">222</option>
-                            <option value="">333</option>
-                        </select>
-                    </div>  
-                    <div class="form-group teacher" >
-                        <label>教师</label>
-                        <select name="" id="">
-                            <option value="">选择教师</option>
-                            <option value="">222</option>
-                            <option value="">333</option>
-                        </select>
-                        <select name="" id="">
-                            <option value="">选择助教</option>
-                            <option value="">222</option>
-                            <option value="">333</option>
-                        </select>
-                        <i>+</i>
-                        <span>以上教师和助教可对班级学员记上课和布置作业(需要拥有相关权限)</span>
-                    </div>  
-                </div>
-                <div class="form-group" style="display: block;">
-                    <label for="">备注</label>
-                    <input type="text"  class="remark">
-                </div>
-            </div>
-        </div> -->
-        
-        <div class="form-box">
+        </div>
+        <div class="form-box" >
             <div class="main-form">
-                <h3>课程基础信息</h3>   
+                <h3>课程基础信息</h3>
+                <input type="hidden" id="courseId" th:value="${xbCourse?.id}">
                 <div class="form-group">
                     <label><span>*</span>课程类别</label>
-                    <input type="text">
-                    <a href="#modal-table1"  data-toggle="modal">新建类别</a>
+                    <select name="courseTypeId"    id="courseTypeId"  class="input-select" >
+                        <option value="-1">--请选择--</option>
+                        <option th:each="cts,userStat:${coursetypelist}"  th:selected="${cts.id == xbCourse?.courseTypeId}"
+                                th:value="${cts.id}" th:text="${cts.courseTypeName}"></option>
+                    </select>
+                    <!--<a href="#modal-table1"  data-toggle="modal">新建类别</a>-->
                 </div>
                 <div class="form-group">
                     <label>科目</label>
-                    <input type="text">
-                    <a href="#modal-table1"  data-toggle="modal">新建科目</a>
+                    <select name="subjectId"  id="subjectId" class="input-select" >
+                        <option value="-1">--请选择--</option>
+                        <option th:each="cts,userStat:${subjectlist}"  th:selected="${cts.id == xbCourse?.subjectId}"
+                                th:value="${cts.id}" th:text="${cts.subjectName}"></option>
+                    </select>
+                    <!-- <a href="#modal-table1"  data-toggle="modal">新建科目</a>-->
                 </div>
                 <div class="form-group">
                     <label><span>*</span>课程名称</label>
-                    <input type="text" placeholder="请输入课程名称">
+                    <input type="text" name="courseName" id="courseName" th:value="${xbCourse?.courseName}" placeholder="请输入课程名称">
                 </div>
                 <div class="form-group">
-                    <label><span>*</span>授课模式</label>
-                    <input name="form-field-radio" type="radio" class="ace"><span class="lbl">班课</span>
-                    <input name="form-field-radio" type="radio" class="ace"><span class="lbl">一对一</span>
+                    <label ><span>*</span>授课模式</label>
+                    <input name="type" type="radio" class="ace" value="0" th:checked="${xbCourse?.type=='0'}"><span class="lbl">班课</span>
+                    <input name="type" type="radio" class="ace" value="1" th:checked="${xbCourse?.type=='1'}"><span class="lbl">一对一</span>
                 </div>
                 <div class="form-group">
                     <label><span>*</span>收费模式</label>
-                    <p><input type="checkbox">按课时</p>
-                    <p><input type="checkbox">按期</p>
-                    <p><input type="checkbox">按时间</p>
+                    <p><input type="radio" name="chargingMode" value="0" th:checked="${xbCourse?.chargingMode=='0'}">按课时</p>
+                    <p><input type="radio" name="chargingMode" value="2" th:checked="${xbCourse?.chargingMode=='2'}">按期</p>
+                    <p><input type="radio" name="chargingMode" value="1" th:checked ="${xbCourse?.chargingMode=='1'}">按时间</p>
                 </div>
-                <div class="form-group">
+                <div class="form-group" th:if="${xbCourse==null}">
                     <label><span>*</span>开课校区</label>
-                    <p><input type="checkbox">全部校区</p>
-                    <p><input type="checkbox">青山分校</p>
-                    <p><input type="checkbox">111</p>
+                    <p><input type="checkbox" name="openingType" value="0" >全部校区</p>
+                    <p><input type="checkbox" name="openingType" value="1" >青山分校</p>
+                    <p><input type="checkbox" name="openingType" value="2" >洪兴分校</p>
+                    <p><input type="checkbox" name="openingType" value="3" >东兴分校</p>
+                </div>
+                <div class="form-group" th:if="${xbCourse!=null}">
+                    <label><span>*</span>开课校区</label>
+                    <p><input type="checkbox" name="openingType" value="0" th:checked="${#strings.contains(xbCourse.openingType,'0')}">全部校区</p>
+                    <p><input type="checkbox" name="openingType" value="1" th:checked="${#strings.contains(xbCourse.openingType,'1')}">青山分校</p>
+                    <p><input type="checkbox" name="openingType" value="2" th:checked="${#strings.contains(xbCourse.openingType,'2')}">洪兴分校</p>
+                    <p><input type="checkbox" name="openingType" value="3" th:checked="${#strings.contains(xbCourse.openingType,'3')}">东兴分校</p>
                 </div>
             </div>
             <div class="extend-form">
@@ -256,7 +180,7 @@
                                         <div class="count">
                                             <span class="glyphicon glyphicon-menu-up" id="add"></span>
                                             <span class="glyphicon glyphicon-menu-down" id="min"></span>
-                                        </div>  
+                                        </div>
                                     </div>
                                     <span class="txt">课时</span>
                                     <span class="txt">=</span>
@@ -265,7 +189,7 @@
                                         <div class="count">
                                             <span class="glyphicon glyphicon-menu-up" id="add1"></span>
                                             <span class="glyphicon glyphicon-menu-down" id="min1"></span>
-                                        </div>  
+                                        </div>
                                     </div>
                                     <span class="txt">元</span>
                                     <span class="glyphicon glyphicon-remove-sign"></span>
@@ -275,20 +199,16 @@
                         </td>
                     </tr>
                 </table>
-            </div>    
+            </div>
         </div>
-        
-        
-        
-        
-        
         <div class="enrollCon" style="margin-top:30px;">
-            <button class="save">保存</button>
+            <button class="save" onclick="saveCourse()">保存</button>
+            <button class="save" onclick="javascript:history.go(-1)">返回</button>
         </div>
     </div>
 
     <!-- 新建课程类别 -->
-    <div id="modal-table1" class="modal fade in" tabindex="-1" aria-hidden="false">
+    <!--<div id="modal-table1" class="modal fade in" tabindex="-1" aria-hidden="false">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header no-padding">
@@ -315,7 +235,7 @@
             </div>
         </div>
     </div>
-    <!-- 新建科目 -->
+    &lt;!&ndash; 新建科目 &ndash;&gt;
     <div id="modal-table2" class="modal fade in" tabindex="-1" aria-hidden="false">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -338,60 +258,152 @@
                 </div>
             </div>
         </div>
-    </div>
-</div> 
+    </div>-->
+    <script type="text/javascript" th:inline="javascript">
+        var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/;
+        //新建课程
+        function saveCourse(){
+            var courseId =  $("#courseId").val();
+            var courseTypeId =  $("#courseTypeId").val();
 
+            var courseTypeName =  $("#courseTypeId").find("option:selected").text();
+            if(courseTypeId=="-1"){
+                courseTypeName ="";
+            }
+            var subjectId =  $("#subjectId").val();
+            var subjectName =  $("#subjectId").find("option:selected").text();
+            if(subjectId=="-1"){
+                subjectName ="";
+            }
+            var courseName =  $("#courseName").val();
+            var type = $('input[name="type"]:checked').val();
+            var chargingMode = $('input[name="chargingMode"]:checked').val();
+
+            var strgetSelectValue = "";
+                var getSelectValueMenbers = $("input[name='openingType']:checked").each(function(j) {
+                if (j >= 0) {
+                    strgetSelectValue += $(this).val() + ","
+                }
+            });
+            var openingType = strgetSelectValue;
+            $.ajax({
+                url: [[@{/jwcentercourse/savecourse}]],
+            type: 'post',
+                dataType: 'json',
+                contentType: 'application/json',
+                data: JSON.stringify(
+                {id:courseId,
+                    courseTypeId:courseTypeId,
+                    courseTypeName:courseTypeName,
+                    subjectId:subjectId,
+                    subjectName:subjectName,
+                    courseName:courseName,
+                    type:type,
+                    state:"0",
+                    chargingMode:chargingMode,
+                    remarks:"备注",
+                    openingType:openingType
+                }
+            ),
+                async: true,
+                success: function(data) {
+                console.log("回调成功")
+                var status = data.status;
+                var msg = data.msg;
+                if(status=="0"){
+                    alert(data.msg);
+                    window.location.href=basePath+"/jwcentercourse/tocourse"
+                }else{
+                    alert(msg);
+                }
+            },
+            error:function(){
+                console.log("回调失败")
+            }
+        });
+        };
+
+        //删除课程类别
+        function subjectRemove(id){
+            $.ajax({
+                url: [[@{/jwcentercourse/removesubject}]],
+            type: 'post',
+                dataType: 'json',
+                contentType: 'application/json',
+                data: JSON.stringify({id:id}),
+                async: true,
+                success: function(data) {
+                console.log("回调成功")
+                var status = data.status;
+                var msg = data.msg;
+                if(status=="0"){
+                    var id = data.cousrtype.id;
+                    $("#"+id).parent().remove();
+                    alert(msg);
+                }else{
+                    alert(msg);
+                }
+            },
+            error:function(){
+                console.log("回调失败")
+            }
+        });
+        }
+    </script>
+</div>
+<!----------------------------------------------------------科目函数群------------------------------------------------------------->
 <script>
-!function(){
-laydate({elem: '#demo'});//绑定元素
-}();
-$(".glyphicon-remove-sign").click(function(){
-  $(this).parent().parent(".extend-list").hide();
-});
-</script> 
+    !function(){
+        laydate({elem: '#demo'});//绑定元素
+    }();
+    $(".glyphicon-remove-sign").click(function(){
+        $(this).parent().parent(".extend-list").hide();
+    });
+
+</script>
 <script>
     $(document).ready(function(){
-    //获得文本框对象
-    var t = $("#text_box");
-    //初始化数量为1,并失效减
-    $('#min').attr('disabled',true);
+        //获得文本框对象
+        var t = $("#text_box");
+        //初始化数量为1,并失效减
+        $('#min').attr('disabled',true);
         //数量增加操作
-        $("#add").click(function(){ 
-        // 给获取的val加上绝对值，避免出现负数
-        t.val(Math.abs(parseInt(t.val()))+1);
-        if (parseInt(t.val())!=1){
-        $('#min').attr('disabled',false);
-        };
-        }) 
+        $("#add").click(function(){
+            // 给获取的val加上绝对值，避免出现负数
+            t.val(Math.abs(parseInt(t.val()))+1);
+            if (parseInt(t.val())!=1){
+                $('#min').attr('disabled',false);
+            };
+        })
         //数量减少操作
         $("#min").click(function(){
-        t.val(Math.abs(parseInt(t.val()))-1);
-        if (parseInt(t.val())==1){
-        $('#min').attr('disabled',true);
-        };
+            t.val(Math.abs(parseInt(t.val()))-1);
+            if (parseInt(t.val())==1){
+                $('#min').attr('disabled',true);
+            };
         })
     });
-</script> 
+</script>
 <script>
     $(document).ready(function(){
-    //获得文本框对象
-    var t = $("#text_box1");
-    //初始化数量为1,并失效减
-    $('#min1').attr('disabled',true);
+        //获得文本框对象
+        var t = $("#text_box1");
+        //初始化数量为1,并失效减
+        $('#min1').attr('disabled',true);
         //数量增加操作
-        $("#add1").click(function(){ 
-        // 给获取的val加上绝对值，避免出现负数
-        t.val(Math.abs(parseInt(t.val()))+1);
-        if (parseInt(t.val())!=1){
-        $('#min1').attr('disabled',false);
-        };
-        }) 
+        $("#add1").click(function(){
+            // 给获取的val加上绝对值，避免出现负数
+            t.val(Math.abs(parseInt(t.val()))+1);
+            if (parseInt(t.val())!=1){
+                $('#min1').attr('disabled',false);
+            };
+        })
         //数量减少操作
         $("#min1").click(function(){
-        t.val(Math.abs(parseInt(t.val()))-1);
-        if (parseInt(t.val())==1){
-        $('#min1').attr('disabled',true);
-        };
+            t.val(Math.abs(parseInt(t.val()))-1);
+            if (parseInt(t.val())==1){
+                $('#min1').attr('disabled',true);
+            };
         })
     });
 </script>

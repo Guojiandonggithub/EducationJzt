@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springside.examples.bootapi.domain.SysEmployee;
 import org.springside.examples.bootapi.domain.XbCourse;
 import org.springside.examples.bootapi.repository.EmployeeDao;
+import org.springside.examples.bootapi.repository.Result;
 import org.springside.examples.bootapi.repository.XbCourseDao;
 import org.springside.examples.bootapi.service.exception.ErrorCode;
 import org.springside.examples.bootapi.service.exception.ServiceException;
@@ -24,6 +25,7 @@ import org.springside.modules.utils.text.EncodeUtil;
 import org.springside.modules.utils.text.HashUtil;
 
 import javax.annotation.PostConstruct;
+import javax.naming.spi.DirStateFactory;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -39,11 +41,6 @@ public class XbCourseService {
 	@Value("${app.loginTimeoutSecs:600}")
 	private int loginTimeoutSecs;
 
-	// codehale metrics
-	@Autowired
-	private CounterService counterService;
-
-	// guava cache
 	private Cache<String, SysEmployee> loginUsers;
 
 	@PostConstruct
@@ -56,6 +53,21 @@ public class XbCourseService {
 		List<XbCourse> list =  (List)xbCourseDao.findAll();
 		return list;
 	}
+	public XbCourse findById(String id){
+		return xbCourseDao.findById(id);
+	}
+	public XbCourse saveXbCourse(XbCourse xbcourse){
+		return xbCourseDao.save(xbcourse);
+	}
 
+	public boolean  removeXbCourse(XbCourse xbcourse){
+		try {
+			xbCourseDao.delete(xbcourse);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
 
 }

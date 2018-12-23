@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="../static/pages/css/index.css">
     <link rel="stylesheet" href="../static/pages/css/management.css">
     <link rel="stylesheet" href="../static/pages/css/student.css">
-    <link rel="stylesheet" href="../static/pages/css/madal.css">
+    <link rel="stylesheet" href="../static/pages/css/madal.css">p
     <link rel="stylesheet" href="../static/pages/css/bootstrap.min.css">
     <link rel="stylesheet" href="../static/pages/css/font-awesome.min.css" />
 
@@ -70,7 +70,7 @@
                         <b class="arrow"></b>
                     </li>
                     <li class="">
-                        <a href="courseArray.html"><i class="menu-icon fa fa-caret-right"></i>排课</a>
+                        <a th:href="@{/jw_center_arranging_course/to_arranging_course}"><i class="menu-icon fa fa-caret-right"></i>排课</a>
                         <b class="arrow"></b>
                     </li>
                     <li class="">
@@ -82,7 +82,7 @@
                         <b class="arrow"></b>
                     </li>
                     <li class="active">
-                        <a href="course.html"><i class="menu-icon fa fa-caret-right"></i>课程</a>
+                        <a th:href="@{/jwcentercourse/tocourse}"><i class="menu-icon fa fa-caret-right"></i>课程</a>
                         <b class="arrow"></b>
                     </li>
                 </ul>
@@ -124,7 +124,7 @@
                 <!-- 学员列表 -->
                 <div > 
                     <div class="screen">
-                        <a class="stdEnroll" th:href="@{/jwcentercourse/goaddcourse}" target="_blank">新建课程</a>
+                        <a class="stdEnroll" th:href="@{/jwcentercourse/goaddcourse}" >新建课程</a>
                         <div class="screenTop">  
                             <select class="selectName">
                                 <option value="AZ">学员姓名</option>
@@ -209,9 +209,6 @@
                                     <th>状态</th>
                                     <th>课程类别</th>
                                     <th>科目</th>
-                                    <th>学费</th>
-                                    <th>学年</th>
-                                    <th>年级</th>
                                     <th>开班/课数</th>
                                     <th>开课校区数</th>
                                     <th>学费标准</th>
@@ -231,7 +228,7 @@
                                 </tr>
                                 <tr id="choose" class="choose" th:each="obj,iterStat:${courselist}">
                                     <td><input type="checkbox"></td>
-
+                                    <input th:id="${obj.id}" type="hidden" >
                                     <td th:text="${obj.courseName}"></td>
                                     <td th:switch="${obj.type}">
                                         <span th:case="'0'">班课</span>
@@ -244,16 +241,13 @@
                                     </td>
                                     <td th:text="${obj.courseTypeName}"></td>
                                     <td th:text="${obj.subjectName}"></td>
-                                    <th>学费</th>
-                                    <th>学年</th>
-                                    <th>年级	</th>
                                     <th>开班/课数</th>
                                     <td>开课校区数</td>
                                     <td th:text="${obj.tuitionFee}">学费标准</td>
                                     <td>教材(元)</td>
                                     <td>杂费</td>
                                     <td th:text="${obj.remarks}">备注</td>
-                                    <td>创建日期</td>
+                                    <td th:text="${obj.createDate}">创建日期</td>
                                     <td>
                                         <div class="btn-group">
                                             <p data-toggle="dropdown" class="down" aria-expanded="false">
@@ -262,14 +256,13 @@
                                             </p>
                                             <ul class="dropdown-menu dropdown-default">
                                                 <li>
-                                                    <a href="courseEdit.html" target="_blank">编辑</a>
-                                                </li>
-            
-                                                <li>
-                                                    <a href="">复制</a>
+                                                    <a th:href="@{/jwcentercourse/goaddcourse(courseId=${obj.id})}"  >编辑</a>
                                                 </li>
                                                 <li>
-                                                    <a href="">删除</a>
+                                                    <a >复制</a>
+                                                </li>
+                                                <li>
+                                                    <a th:onclick="|sourceRemove('${obj.id}')|">删除</a>
                                                 </li>
                                             </ul>
                                         </div>
@@ -329,7 +322,7 @@
                     </div>
                 </div>
             </div>
-            <!-- 上课列表 -->
+            <!-- 课程类别列表 -->
             <div id="divideList" class="tab-pane fade student course">
                 <div> 
                     <div class="screen" style="height:84px;">
@@ -358,7 +351,7 @@
                                                     <a  href="#modal-table1" data-toggle="modal"   th:onclick="|javascript:sourceEdit('${ctype.id}','${ctype.layOrder}','${ctype.courseTypeName}')|">编辑</a>
                                                 </li>
                                                 <li>
-                                                    <a  th:onclick="|javascript:sourceRemove('${ctype.id}')|">删除</a>
+                                                    <a  th:onclick="|javascript:sourceTypeRemove('${ctype.id}')|">删除</a>
                                                 </li>
                                             </ul>
                                         </div>
@@ -417,7 +410,7 @@
                     </div>
                 </div>
             </div>
-            <!-- 科目设置 -->
+            <!-- 科目列表 -->
             <div id="expiryStu" class="tab-pane fade student course">
                 <!-- 学员列表 -->
                 <div> 
@@ -426,15 +419,18 @@
                     </div>
                     <div class="orderCon">
                         <div class="orderTable">
-                            <table class="table table-hover">
+                            <table id="subjectList" class="table table-hover">
                                 <tr>
                                     <th>科目名称</th>
                                     <th>状态</th>
                                     <th>操作</th>
                                 </tr>
-                                <tr id="choose" class="choose" class="choose"  th:each="course,courseStat:${coursetypelist}">
-                                    <td th:text="${course.courseTypeName}">物理</td>
-                                    <td th:text="${course.layOrder}">正常</td>
+                                <tr id="choose" class="choose" class="choose"  th:each="sub,subStat:${subjectlist}">
+                                    <input type="hidden" th:id="${sub.id}"/>
+                                    <td th:text="${sub.subjectName}">科目名称</td>
+                                    <td th:switch="${sub.state}">
+                                        <span th:case="'0'">正常</span>
+                                        <span th:case="'1'">停用</span>
                                     <td>
                                         <div class="btn-group">
                                             <p data-toggle="dropdown" class="down" aria-expanded="false">
@@ -443,36 +439,13 @@
                                             </p>
                                             <ul class="dropdown-menu dropdown-default">
                                                 <li>
-                                                    <a href="#modal-table2"  data-toggle="modal">编辑</a>
+                                                    <a href="#modal-table2"  data-toggle="modal" th:onclick="|javascript:subjectEdit('${sub.id}','${sub.subjectName}','${sub.state}')|">编辑</a>
                                                 </li>
                                                 <li>
-                                                    <a href="">删除</a>
+                                                    <a  th:onclick="|javascript:subjectRemove('${sub.id}')|">删除</a>
                                                 </li>
                                                 <li>
                                                     <a href="">停用</a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr id="choose" class="choose">
-                                    <td>物理</td>
-                                    <td>下架</td>
-                                    <td>
-                                        <div class="btn-group">
-                                            <p data-toggle="dropdown" class="down" aria-expanded="false">
-                                                更多
-                                                <span class="ace-icon fa fa-caret-down icon-on-right"></span>
-                                            </p>
-                                            <ul class="dropdown-menu dropdown-default">
-                                                <li>
-                                                    <a href="#modal-table2"  data-toggle="modal">编辑</a>
-                                                </li>
-                                                <li>
-                                                    <a href="">删除</a>
-                                                </li>
-                                                <li>
-                                                    <a href="">启用</a>
                                                 </li>
                                             </ul>
                                         </div>
@@ -608,26 +581,80 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header no-padding">
-                    <div class="table-header">新建科目</div>
+                    <div class="table-header">新建科目1</div>
                 </div>
-                    <div class="modal-body" style="padding:15px !important">  
-                        <div class="form-group" style="display: inline; margin-left:20px;">
-                            <label for="">科目名称</label>
-                            <input type="text" placeholder="请填写科目名称">
-                        </div>  
-                    </div>        
+                <div class="modal-body" style="padding:15px !important">
+                    <input id="subjectId" type="hidden" value=""/>
+                    <div class="form-group" style="display: inline; margin-left:20px;">
+                        <label for="xbSubjectName">科目名称</label>
+                        <input id="xbSubjectName" type="text" placeholder="请填写科目名称">
+                    </div>
+                </div>
                 <div class="modal-footer no-margin-top">
                     <button class="btn pull-left" data-dismiss="modal">
                         取消
                     </button>
-                    <button class="btn pull-right" data-dismiss="modal">
+                    <button class="btn pull-right" data-dismiss="modal" onclick="saveSubject()">
                         确定
                     </button>
                 </div>
             </div>
         </div>
     </div>
-</div> 
+</div>
+<!----------------------------------------------------------课程函数群------------------------------------------------------------->
+<script type="text/javascript" th:inline="javascript">
+    var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/;
+    //课程编辑赋值
+    function courseEdit(courseId){
+        $.ajax({
+            //url: [[@{/jwcentercourse/goaddcourse}]],
+            url: basePath+'/jwcentercourse/goaddcourse',
+            method: 'POST',
+            data: {"courseId":courseId},
+            success: function(data) {
+            console.log("回调成功")
+            var status = data.status;
+            var msg = data.msg;
+            if(status=="0"){
+                alert(data.msg);
+                window.location.href=basePath+"/jwcentercourse/tocourse"
+            }else{
+                alert(msg);
+            }
+        },
+        error:function(){
+            console.log("回调失败")
+        }
+     });
+    }
+    //课程类别
+    function sourceRemove(id){
+        $.ajax({
+            url: [[@{/jwcentercourse/removecourse}]],
+            type: 'post',
+            dataType: 'json',
+            contentType: 'application/json',
+            data: JSON.stringify({id:id}),
+            async: true,
+            success: function(data) {
+            console.log("回调成功")
+            var status = data.status;
+            var msg = data.msg;
+            if(status=="0"){
+                var id = data.course.id;
+                $("#"+id).parent().remove();
+                alert(msg);
+            }else{
+                alert(msg);
+            }
+        },
+        error:function(){
+            console.log("回调失败")
+        }
+    });
+    }
+</script>
 <script>
     $(function(){
         laydate({elem: '#demo'});//绑定元素
@@ -665,6 +692,7 @@
         });
     });
 </script>
+<!--课程类别函数群-->
 <script type="text/javascript" th:inline="javascript">
     //新建课程类别
     function saveCoruseType(){
@@ -700,7 +728,7 @@
                         html.push('<input type="hidden" id="'+id+'"/>');
                         html.push('     <td>'+layOrder+'</td>');
                         html.push('     <td >'+courseTypeName+'</td>');
-                        html.push('     <td><div class="btn-group"><p data-toggle="dropdown" class="down" aria-expanded="false">更多<span class="ace-icon fa fa-caret-down icon-on-right"></span></p><ul class="dropdown-menu dropdown-default"><li><a href="#modal-table1"  data-toggle="modal" onclick="javascript:sourceEdit(\''+id+'\',\''+layOrder+'\',\''+courseTypeName+'\')">编辑</a></li><li><a onclick="javascript:sourceRemove(\''+id+'\')">删除</a></li></ul></div></td>');
+                        html.push('     <td><div class="btn-group"><p data-toggle="dropdown" class="down" aria-expanded="false">更多<span class="ace-icon fa fa-caret-down icon-on-right"></span></p><ul class="dropdown-menu dropdown-default"><li><a href="#modal-table1"  data-toggle="modal" onclick="javascript:sourceEdit(\''+id+'\',\''+layOrder+'\',\''+courseTypeName+'\')">编辑</a></li><li><a onclick="javascript:sourceTypeRemove(\''+id+'\')">删除</a></li></ul></div></td>');
                         html.push('</tr>');
                         $("#courseTypeList").append(html.join(""))
                         alert(msg);
@@ -711,7 +739,7 @@
                         html.push('<input type="hidden" id="'+id+'"/>');
                         html.push('     <td>'+layOrder+'</td>');
                         html.push('     <td >'+courseTypeName+'</td>');
-                        html.push('     <td><div class="btn-group"><p data-toggle="dropdown" class="down" aria-expanded="false">更多<span class="ace-icon fa fa-caret-down icon-on-right"></span></p><ul class="dropdown-menu dropdown-default"><li><a href="#modal-table1"  data-toggle="modal" onclick="javascript:sourceEdit(\''+id+'\',\''+layOrder+'\',\''+courseTypeName+'\')">编辑</a></li><li><a  onclick="javascript:sourceRemove(\''+id+'\')">删除</a></li></ul></div></td>');
+                        html.push('     <td><div class="btn-group"><p data-toggle="dropdown" class="down" aria-expanded="false">更多<span class="ace-icon fa fa-caret-down icon-on-right"></span></p><ul class="dropdown-menu dropdown-default"><li><a href="#modal-table1"  data-toggle="modal" onclick="javascript:sourceEdit(\''+id+'\',\''+layOrder+'\',\''+courseTypeName+'\')">编辑</a></li><li><a  onclick="javascript:sourceTypeRemove(\''+id+'\')">删除</a></li></ul></div></td>');
                         html.push('</tr>');
                         $("#courseTypeList").append(html.join(""))
                         $("#courTypeId").val("");
@@ -735,9 +763,137 @@
         $("#courseTypecourseTypeName").val(courseTypeName);
     }
     //删除课程类别
-    function sourceRemove(id){
+    function sourceTypeRemove(id){
         $.ajax({
             url: [[@{/jwcentercourse/removecoursetype}]],
+            type: 'post',
+            dataType: 'json',
+            contentType: 'application/json',
+            data: JSON.stringify({id:id}),
+            async: true,
+            success: function(data) {
+                console.log("回调成功")
+                var status = data.status;
+                var msg = data.msg;
+                if(status=="0"){
+                    var id = data.cousrtype.id;
+                    $("#"+id).parent().remove();
+                    alert(msg);
+                }else{
+                    alert(msg);
+                }
+            },
+            error:function(){
+                console.log("回调失败")
+            }
+        });
+    }
+
+</script>
+<!----------------------------------------------------------科目函数群------------------------------------------------------------->
+<script type="text/javascript" th:inline="javascript">
+    //新建科目
+function saveSubject(){
+        var xbSubjectName =  $("#xbSubjectName").val();
+        var subjectId =  $("#subjectId").val();
+            $.ajax({
+                url: [[@{/jwcentercourse/savesubject}]],
+                type: 'post',
+                dataType: 'json',
+                contentType: 'application/json',
+                data: JSON.stringify({id:subjectId,subjectName:xbSubjectName}),
+                async: true,
+                success: function(data) {
+                console.log("回调成功")
+                var status = data.status;
+                var msg = data.msg;
+                if(status=="0"){
+                    var id = data.cousrtype.id;
+                    var subjectName = data.cousrtype.subjectName;
+                    var state = data.cousrtype.state;
+                    var html = [];
+                    if(subjectId==""){
+                        html.push('<tr id="choose" class="choose"  >');
+                        html.push('<input type="hidden" id="'+id+'"/>');
+                        html.push(' <td >'+subjectName+'</td>');
+                        html.push('<td>');
+                        html.push('     <span>正常</span>');
+                        html.push('<td>');
+                        html.push('<div class="btn-group">');
+                        html.push('     <p data-toggle="dropdown" class="down" aria-expanded="false">更多');
+                        html.push('          <span class="ace-icon fa fa-caret-down icon-on-right"></span>');
+                        html.push('     </p>');
+                        html.push('<ul class="dropdown-menu dropdown-default">');
+                        html.push(' <li>');
+                        html.push('     <a href="#modal-table2"  data-toggle="modal" onclick="javascript:subjectEdit(\''+id+'\',\''+subjectName+'\',\''+state+'\')">编辑</a>');
+                        html.push('</li>');
+                        html.push('<li>');
+                        html.push('     <a onclick="javascript:subjectRemove(\''+id+'\')">删除</a>');
+                        html.push('</li>');
+                        html.push('<li>');
+                        html.push('<a href="">停用</a>');
+                        html.push('</li>');
+                        html.push('</ul>');
+                        html.push('</div>');
+                        html.push('</td>');
+                        html.push('</tr>');
+                        $("#subjectList").append(html.join(""));
+                        alert(msg);
+                    }else{
+                        $("#"+subjectId).parent().remove();
+                        html.push('<tr id="choose" class="choose"   >');
+                        html.push('<input type="hidden" id="'+id+'"/>');
+                        html.push(' <td >'+subjectName+'</td>');
+                        html.push('<td>');
+                        html.push('     <span>正常</span>');
+                        html.push('<td>');
+                        html.push('<div class="btn-group">');
+                        html.push('<p data-toggle="dropdown" class="down" aria-expanded="false">更多');
+                        html.push('<span class="ace-icon fa fa-caret-down icon-on-right"></span>');
+                        html.push('</p>');
+                        html.push('<ul class="dropdown-menu dropdown-default">');
+                        html.push(' <li>');
+                        html.push('     <a href="#modal-table2"  data-toggle="modal" onclick="javascript:subjectEdit(\''+id+'\',\''+subjectName+'\',\''+state+'\')">编辑</a>');
+                        html.push('</li>');
+                        html.push('<li>');
+                        html.push('     <a onclick="javascript:subjectRemove(\''+id+'\')">删除</a>');
+                        html.push('</li>');
+                        html.push('<li>');
+                        html.push('<a href="">停用</a>');
+                        html.push('</li>');
+                        html.push('</ul>');
+                        html.push('</div>');
+                        html.push('</td>');
+                        html.push('</tr>');
+                        $("#subjectList").append(html.join(""));
+                        $("#subjectId").val("");
+                        $("#xbSubjectName").val("");
+                        alert("更新类别成功");
+                    }
+                }else{
+                    alert(msg);
+                }
+            },
+            error:function(){
+                console.log("回调失败")
+            }
+        });
+    };
+    //科目编辑赋值
+    function subjectEdit(id,xbSubjectName,state){
+        $("#subjectId").val(id);
+        $("#xbSubjectName").val(xbSubjectName);
+        /*if(state=="0"){
+            $("#xbSubjectState").val("正常");
+        }else{
+            $("#xbSubjectState").val("停用");
+        }*/
+
+    }
+    //删除课程类别
+    function subjectRemove(id){
+        $.ajax({
+            url: [[@{/jwcentercourse/removesubject}]],
         type: 'post',
             dataType: 'json',
             contentType: 'application/json',
