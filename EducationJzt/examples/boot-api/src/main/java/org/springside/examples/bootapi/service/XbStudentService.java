@@ -14,7 +14,9 @@ import org.springside.examples.bootapi.domain.XbClass;
 import org.springside.examples.bootapi.domain.XbClassroom;
 import org.springside.examples.bootapi.repository.XbClassDao;
 import org.springside.examples.bootapi.repository.XbClassroomDao;
+import org.springside.examples.bootapi.repository.XbStudentDao;
 
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -42,7 +44,14 @@ public class XbStudentService {
 				filters.values(), XbClass.class);
 		return xbClassDao.findAll(spec,pageable);
 	}
-
+	@Transactional
+	public List<XbClassroom> findXbClassRoomListAll(){
+		return (List<XbClassroom>)xbClassroomDao.findAll();
+	}
+	@Transactional
+	public List<XbClass> findXbClassListAll(){
+		return (List<XbClass>)xbClassDao.findAll();
+	}
 	@Transactional
 	public XbClassroom saveXbClassroom(XbClassroom classroom) {
 		return xbClassroomDao.save(classroom);
@@ -72,5 +81,12 @@ public class XbStudentService {
 	public XbClass getXbClass(String id) {
 		return xbClassDao.findOne(id);
 	}
-
+	@Transactional
+	public XbClass getXbClassById(String id){
+		return xbClassDao.getById(id);
+	}
+	@Transactional
+	public XbClassroom getXbClassroomById(String id){
+		return xbClassroomDao.getById(id);
+	}
 }

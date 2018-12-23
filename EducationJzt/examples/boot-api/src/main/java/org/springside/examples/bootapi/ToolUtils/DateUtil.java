@@ -15,7 +15,7 @@ import java.util.Date;
  */
 public class DateUtil {
 
-    private static String DATE_TIME_FORMAT="yyyyMMddHHmmss", TIME_FORMAT="HHmmss",DATE_FORMAT="yyyyMMdd";
+    private static String DATE_TIME_FORMAT="yyyy-MM-dd HH:mm:ss", TIME_FORMAT="HH:mm:ss",DATE_FORMAT="yyyy-MM-dd";
     private static Logger LogUtil = LoggerFactory.getLogger(DateUtil.class);
 
     public static double toDouble(String s)

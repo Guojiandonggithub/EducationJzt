@@ -16,6 +16,7 @@ import org.springside.examples.bootapi.ToolUtils.common.modules.persistence.Dyna
 import org.springside.examples.bootapi.ToolUtils.common.modules.persistence.SearchFilter;
 import org.springside.examples.bootapi.domain.SysEmployee;
 import org.springside.examples.bootapi.domain.SysEmployeeSub;
+import org.springside.examples.bootapi.domain.XbClassroom;
 import org.springside.examples.bootapi.repository.EmployeeDao;
 import org.springside.examples.bootapi.repository.EmployeeSubDao;
 import org.springside.examples.bootapi.service.exception.ErrorCode;
@@ -25,6 +26,7 @@ import org.springside.modules.utils.text.EncodeUtil;
 import org.springside.modules.utils.text.HashUtil;
 
 import javax.annotation.PostConstruct;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -70,7 +72,7 @@ public class EmployeeService {
 		}
 
 		String token = IdGenerator.uuid2();
-		loginUsers.put(token, SysEmployee);
+		loginUsers.put("qnjl-mylove-forevery", SysEmployee);
 		counterService.increment("loginUser");
 		return SysEmployee;
 	}
@@ -121,7 +123,10 @@ public class EmployeeService {
 				filters.values(), SysEmployee.class);
 		return employeeDao.findAll(spec,pageable);
 	}
-
+	@Transactional
+	public List<SysEmployee> findSysEmployeeListAll(){
+		return (List<SysEmployee>)employeeDao.findAll();
+	}
 	@Transactional
 	public SysEmployee getSysEmployee(String id) {
 		return employeeDao.findOne(id);
@@ -144,5 +149,8 @@ public class EmployeeService {
 	protected static String hashPassword(String password) {
 		return EncodeUtil.encodeBase64(HashUtil.sha1(password));
 	}
-
+	@Transactional
+	public SysEmployee getSysEmployeeById(String id){
+		return employeeDao.getById(id);
+	}
 }

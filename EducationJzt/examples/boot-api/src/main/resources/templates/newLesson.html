@@ -143,9 +143,12 @@
                 </div>
                 <div class="form-group">
                     <label><span>*</span>收费模式</label>
-                    <p><input type="radio" name="chargingMode" value="0" th:checked="${xbCourse?.chargingMode=='0'}">按课时</p>
-                    <p><input type="radio" name="chargingMode" value="2" th:checked="${xbCourse?.chargingMode=='2'}">按期</p>
-                    <p><input type="radio" name="chargingMode" value="1" th:checked ="${xbCourse?.chargingMode=='1'}">按时间</p>
+                    <p><input type="radio" name="chargingMode" value="0" th:checked="${xbCourse?.chargingMode=='0'}"
+                              th:onclick="|chargingMode('0')|">按课时</p>
+                    <p><input type="radio" name="chargingMode" value="2" th:checked="${xbCourse?.chargingMode=='2'}"
+                              th:onclick="|chargingMode('1')|">按期</p>
+                    <p><input type="radio" name="chargingMode" value="1" th:checked ="${xbCourse?.chargingMode=='1'}"
+                              th:onclick="|chargingMode('2')|">按时间</p>
                 </div>
                 <div class="form-group" th:if="${xbCourse==null}">
                     <label><span>*</span>开课校区</label>
@@ -261,7 +264,11 @@
     </div>-->
     <script type="text/javascript" th:inline="javascript">
         var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/;
-        //新建课程
+
+
+
+
+        //--------------------------------------------------------------新建课程------------------------------------------------------------------------
         function saveCourse(){
             var courseId =  $("#courseId").val();
             var courseTypeId =  $("#courseTypeId").val();

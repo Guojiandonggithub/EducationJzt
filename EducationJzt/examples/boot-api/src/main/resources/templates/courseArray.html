@@ -105,7 +105,7 @@
                             <a href="/accounts/getOrgansList"><i class="menu-icon fa fa-caret-right"></i>组织架构</a>
                             <b class="arrow"></b>
                         </li>
-                        <li class="active">
+                        <li class="">
                             <a href="/accounts/getEmployeeList"><i class="menu-icon fa fa-caret-right"></i>员工信息</a>
                             <b class="arrow"></b>
                         </li>
@@ -255,7 +255,7 @@
                                     <th>周日 11-04</th>
                                 </tr>
                                 <tr>
-                                    <td>张三——珠心算(1对1)</td>
+                                    <td>一班</td>
                                     <td></td>
                                     <td></td>
                                     <td></td>
@@ -265,11 +265,11 @@
                                     <td></td>
                                 </tr>
                                 <tr>
-                                    <td>张三——珠心算(1对1)</td>
+                                    <td>二班</td>
                                     <td></td>
                                     <td rowspan="1">
                                         <div class="rows2 skList">
-                                            <span>17:00 张三——珠心算(1对1)</span>
+                                            <span>17:00 11112222张三——珠心算(1对1)</span>
                                         </div>
                                         <div class="rows2 infoShow">
                                             <span>开始：2018-10-29 08:00</span>
@@ -287,7 +287,7 @@
                                     <td></td>
                                 </tr>
                                 <tr>
-                                    <td>张三——珠心算(1对1)</td>
+                                    <td>三班</td>
                                     <td></td>
                                     <td>
                                         
@@ -311,7 +311,7 @@
                                     <td></td>
                                 </tr>
                                 <tr>
-                                    <td>张三——珠心算(1对1)</td>
+                                    <td>四班</td>
                                     <td></td>
                                     <td rowspan="1">
                                         <div class="rows2 skList">
@@ -333,11 +333,6 @@
                                     <td></td>
                                 </tr>
                             </table>
-
-
-
-
-
                         </div>
                         
 
@@ -576,10 +571,12 @@
                                         <input th:id="${less.id}"  type="hidden">
                                         <td><input  type="checkbox"></td>
                                         <td th:text="${less.startDateTime}">上课日期</td>
-                                        <td>16:30-18:00时间段</td>
-                                        <td th:text="${less.className}"><img src="../static/pages/img/1v1.png">班级/一对一</td>
-                                        <td th:text="${less.teacherName}">教师</td>
-                                        <td th:text="${less.classRoomName}">教室</td>
+                                        <td th:text="${less.timeInterval}">16:30-18:00时间段</td>
+                                        <td th:text="${less.xbclass.className}">
+                                           <img src="../static/pages/img/1v1.png" />
+                                        </td>
+                                        <td th:text="${less.sysemployee.employeeName}">教师</td>
+                                        <td th:text="${less.xbclassroom.classroomName}">教室</td>
                                         <td th:text="${less.xbsubject.subjectName}">科目</td>
                                         <td>/</td>
                                         <td>/</td>
@@ -792,9 +789,7 @@
                                 <div class="form-group">
                                     <label><i>*</i>班级</label>
                                     <select name="classId" id="classId">
-                                        <option value="11111111111">张三珠心算</option>
-                                        <option value="22222222">识字贺红波</option>
-                                        <option value="33333333333">张阿慧作文</option>
+                                        <option th:each="cla,claSta:${xbClassList}" th:value="${cla.id}" th:text="${cla.className}"></option>
                                     </select>
                                 </div>
                                 <div class="form-group">
@@ -818,10 +813,10 @@
                                 <label><i>*</i>上课时段</label>
                                 <select name="timeInterval" id="timeInterval">
                                     <option value="">选择时段</option>
-                                    <option value="1">9:30-10:30</option>
-                                    <option value="2">10:30-10:20</option>
-                                    <option value="3">14:00-15:30</option>
-                                    <option value="4">15:30-17:00</option>
+                                    <option value="9:30-10:30">9:30-10:30</option>
+                                    <option value="10:30-10:20">10:30-10:20</option>
+                                    <option value="14:00-15:30">14:00-15:30</option>
+                                    <option value="15:30-17:00">15:30-17:00</option>
                                 </select>
                                 <span>自定义时间</span>
                             </div>
@@ -830,18 +825,14 @@
                                     <label><i>*</i>教师</label>
                                     <select name="teacherId" id="teacherId">
                                         <option value="">请选择教师</option>
-                                        <option value="11111111">张三老师</option>
-                                        <option value="22222222">李四老师</option>
-                                        <option value="33333333">王五老师</option>
+                                        <option th:each="employ,employSta:${sysEmployeeList}" th:value="${employ.id}" th:text="${employ.employeeName}"></option>
                                     </select>
                                 </div>
                                 <div class="form-group">
                                     <label>助教</label>
                                     <select name="tutorId" id="tutorId">
                                         <option value="">请选择助教</option>
-                                        <option value="1111111111">张甲助教</option>
-                                        <option value="2222222222">李乙助教</option>
-                                        <option value="33333333333">王丙助教</option>
+                                        <option th:each="employ,employSta:${sysEmployeeList}" th:value="${employ.id}" th:text="${employ.employeeName}"></option>
                                     </select>
                                 </div>
                             </div>
@@ -850,11 +841,7 @@
                                     <label><i>*</i>教室</label>
                                     <select name="classRoomId" id="classRoomId">
                                         <option value="">请选择教室</option>
-                                        <option value="11111">1号教室</option>
-                                        <option value="222222">2号教室</option>
-                                        <option value="333333">3号教室</option>
-                                        <option value="444444">4号教室</option>
-                                        <option value="555555">5号教室</option>
+                                        <option th:each="room,roomSta:${xbClassroomList}" th:value="${room.id}" th:text="${room.classroomName}"></option>
                                     </select>
                                 </div>
                                 <div class="form-group">
@@ -1005,13 +992,19 @@
             cache: false,
             async: true,
             success: function (data) {
+                //console.log("新建排课表回调数据data="+data)
                 var status = data.status;
                 var msg = data.msg;
-                var rsxbAttendClass = data.rsxbAttendClass;
-                var subject = rsxbAttendClass.xbsubject;
+                var rsxbAttendClass = data.rsxbAttendClass;//排课表
+                var subject = rsxbAttendClass.xbsubject;//科目
+                var xbclass = rsxbAttendClass.xbclass;//班级
+                var xbclassroom = rsxbAttendClass.xbclassroom;//教室
+                var sysemployee = rsxbAttendClass.sysemployee;//教师
                 if(status=="0"){
                     alert(msg);
-                    attendClassLoad(rsxbAttendClass.id,"2018-12-12","16:30-18:00","语文班","张媛","三年二班","1",subject.subjectName);
+                    attendClassLoad(rsxbAttendClass.id,rsxbAttendClass.startDateTime,rsxbAttendClass.timeInterval,
+                        xbclass.className,sysemployee.employeeName,xbclassroom.classroomName,
+                        rsxbAttendClass.wayOfTeaching,subject.subjectName);
                 }else{
                     alert(msg);
                 }
@@ -1021,7 +1014,8 @@
     }
 
     //动态日程列表
-    function attendClassLoad(id,startDateTime,timeInterval,className,teacherName,classRoomName,way_of_teaching,subjectName){
+    function attendClassLoad(id,startDateTime,timeInterval,className,
+                             teacherName,classRoomName,way_of_teaching,subjectName){
         var html = [];
         html.push('<tr id="choose"  >');
         html.push('<input id="'+id+'"  type="hidden">');
@@ -1172,12 +1166,12 @@
 
 
         $(function () {
-
+            //var basetimePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/;
             var date = new Date();
             var d = date.getDate();
             var m = date.getMonth();
             var y = date.getFullYear();
-
+            var url = basePath+"/jw_center_arranging_course/to_arranging_course_fullcalendar";
             $('#calendarTime #calendar').fullCalendar({
                 header: {
                     right: '',
@@ -1189,51 +1183,50 @@
                 editable: true,
                 timeFormat: 'H:mm',
                 axisFormat: 'H:mm',
-                events: [{
-                        title: '科源校区1',
-                        start: new Date(y, m, 1),
-                        backgroundColor: '#33a299;'
+                 events: function(start, end, callback) {
+                var fstart = $.fullCalendar.formatDate(start, "yyyy-MM-dd");
+                var fend = $.fullCalendar.formatDate(end, "yyyy-MM-dd");
+                $.ajax({
+                    type: "post",
+                    url: url,//我是用ajax获取后台数据的，这里填写地址
+                    dataType: "json",
+                    data: {
+                        start: fstart,
+                        end: fend
                     },
-                    {
-                        title: '科源校区2',
-                        start: new Date(y, m, d - 5),
-                        end: new Date(y, m, d - 2),
-                        backgroundColor: '#6aa8f1;'
-
+                    success: function(data) {
+                        if (data) {
+                            var event = [];
+                            var listentity = data.listentity;
+                            $.each(listentity, function(i) {
+                                var d = listentity[i];
+                                var id = d.id;
+                                var time = d.timeInterval.split("-");
+                                var date = d.startDateTime.split("-");
+                                var className =d.xbclass.className;
+                                var y = date[0];
+                                var m = date[1];
+                                var d = date[2];
+                                var starthhtime = time[0].split(":")[0];
+                                var startmmtime = time[0].split(":")[1];
+                                var endhhtime = time[1].split(":")[0];
+                                var endtmmtime = time[1].split(":")[1];
+                                event.push({
+                                    _id: id,
+                                    title:className,
+                                    start: new Date(y, m-1, d ,starthhtime,startmmtime),
+                                    end: new Date(y, m-1, d ,endhhtime,endtmmtime),
+                                    allDay: false
+                                });
+                            });
+                            callback(event);
+                        }
                     },
-                    {
-                        title: '科源校区3\r\n张三\n5号教室',
-                        start: new Date(y, m, d - 5),
-                        end: new Date(y, m, d - 2),
-                        backgroundColor: '#6aa8f1;'
-
-                    },
-                    {
-                        title: '科源校区4\r\n张三\n5号教室',
-                        start: new Date(y, m, 28),
-                        end: new Date(y, m, 29),
-                        backgroundColor: '#fc8038'
-                    },
-                    {
-                        title: '科源校区7\r\n张三\n5号教室',
-                        start: new Date(y, m, d + 1, 19, 0),
-                        end: new Date(y, m, d + 1, 22, 30),
-                        backgroundColor: '#3967a3;'
-                    },
-                    {
-                        title: '科源校区5\r\n张三\n5号教室',
-                        start: new Date(y, m, 28),
-                        end: new Date(y, m, 29),
-                        backgroundColor: '#fc8038'
-                    },
-                    {
-                        title: '科源校区6\r\n张三\n5号教室',
-                        start: new Date(y, m, d + 1, 19, 0),
-                        end: new Date(y, m, d + 1, 22, 30),
-                        backgroundColor: '#3967a3;'
-                    },
-                ],
-
+                    error:function(){
+                        alert("错了")
+                    }
+                });
+            },
             });
         });
 
@@ -1249,16 +1242,13 @@
             header: {
                 center: 'prev,title,next,today',
             },
-            
             defaultView:'agendaWeek',
-
-
             firstDay: 1,
             editable: true,
             timeFormat: 'H:mm',
             axisFormat: 'H:mm',
             events: [{
-                    title: '科源校区诶诶我惹人\r\n张三\n5号教室',
+                    title: '鼠标悬停',
                     start: new Date(y, m, 1),
                     backgroundColor: '#33a299;'
                 },

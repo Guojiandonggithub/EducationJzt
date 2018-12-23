@@ -14,4 +14,5 @@ import org.springside.examples.bootapi.domain.SysEmployee;
 public interface EmployeeDao extends PagingAndSortingRepository<SysEmployee, String>,JpaSpecificationExecutor<SysEmployee> {
 
 	SysEmployee findByUserName(String userName);
+	SysEmployee getById(String id);
 }

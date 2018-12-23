@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springside.examples.bootapi.ToolUtils.DateUtil;
 import org.springside.examples.bootapi.domain.SysEmployee;
 import org.springside.examples.bootapi.domain.XbAttendClass;
 import org.springside.examples.bootapi.domain.XbCourse;
@@ -22,7 +23,6 @@ import java.util.concurrent.TimeUnit;
 public class XbAttendClassService {
 
 	private static Logger logger = LoggerFactory.getLogger(XbAttendClassService.class);
-
 	@Autowired
 	private XbAttendClassDao xbAttendClassDao;
 
@@ -46,6 +46,9 @@ public class XbAttendClassService {
 		return xbAttendClassDao.findById(id);
 	}
 	public XbAttendClass saveXbAttendClass(XbAttendClass xbattendclass){
+		//xbattendclass.setCreateUserId(loginUsers.getIfPresent("qnjl-mylove-forevery").id);//添加创建人
+		xbattendclass.setCreateUserId("4028818367cc62780167cc695f490000");//添加创建人
+		xbattendclass.setCreateDate(DateUtil.getTodayDateStr());
 		return xbAttendClassDao.save(xbattendclass);
 	}
 

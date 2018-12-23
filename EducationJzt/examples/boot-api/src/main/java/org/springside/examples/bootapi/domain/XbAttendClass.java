@@ -43,6 +43,16 @@ public class XbAttendClass {
     @OneToOne()
     @JoinColumn(name="subjectId",referencedColumnName = "id",insertable = false,updatable = false)
     public XbSubject xbsubject;
+    @OneToOne()
+    @JoinColumn(name="classId",referencedColumnName = "id",insertable = false,updatable = false)
+    public XbClass xbclass;
+    @OneToOne()
+    @JoinColumn(name="classRoomId",referencedColumnName = "id",insertable = false,updatable = false)
+    public XbClassroom xbclassroom;
+    @OneToOne()
+    @JoinColumn(name="teacherId",referencedColumnName = "id",insertable = false,updatable = false)
+    public SysEmployee sysemployee;
+
     public String getId() {
         return id;
     }
@@ -233,5 +243,29 @@ public class XbAttendClass {
 
     public void setXbsubject(XbSubject xbsubject) {
         this.xbsubject = xbsubject;
+    }
+
+    public XbClass getXbclass() {
+        return xbclass;
+    }
+
+    public void setXbclass(XbClass xbclass) {
+        this.xbclass = xbclass;
+    }
+
+    public XbClassroom getXbclassroom() {
+        return xbclassroom;
+    }
+
+    public void setXbclassroom(XbClassroom xbclassroom) {
+        this.xbclassroom = xbclassroom;
+    }
+
+    public SysEmployee getSysemployee() {
+        return sysemployee;
+    }
+
+    public void setSysemployee(SysEmployee sysemployee) {
+        this.sysemployee = sysemployee;
     }
 }

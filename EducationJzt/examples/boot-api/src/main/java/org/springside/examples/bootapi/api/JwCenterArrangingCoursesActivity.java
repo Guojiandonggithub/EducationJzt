@@ -7,20 +7,18 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springside.examples.bootapi.ToolUtils.HttpServletUtil;
-import org.springside.examples.bootapi.domain.XbAttendClass;
-import org.springside.examples.bootapi.domain.XbCourse;
-import org.springside.examples.bootapi.domain.XbSubject;
-import org.springside.examples.bootapi.repository.XbAttendClassDao;
-import org.springside.examples.bootapi.repository.XbSubjectDao;
+import org.springside.examples.bootapi.domain.*;
+import org.springside.examples.bootapi.repository.XbClassDao;
+import org.springside.examples.bootapi.service.EmployeeService;
 import org.springside.examples.bootapi.service.XbAttendClassService;
+import org.springside.examples.bootapi.service.XbStudentService;
 import org.springside.examples.bootapi.service.XbSubjectService;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * 排课
@@ -34,6 +32,11 @@ public class JwCenterArrangingCoursesActivity {
     public XbAttendClassService xbAttendClassService;
     @Autowired
     public XbSubjectService xbSubjectService;
+    @Autowired
+    public XbStudentService xbStudentService;
+    @Autowired
+    public EmployeeService employeeService;
+
     /**
      * 跳转到排课
      * @return
@@ -43,7 +46,9 @@ public class JwCenterArrangingCoursesActivity {
         logger.info("跳转到排课");
         model.addAttribute("xbAttendList",xbAttendClassService.findXbAttendClassAll());
         model.addAttribute("xbSubjectList",xbSubjectService.findSubjectAll());
-
+        model.addAttribute("xbClassList",xbStudentService.findXbClassListAll());
+        model.addAttribute("xbClassroomList",xbStudentService.findXbClassRoomListAll());
+        model.addAttribute("sysEmployeeList",employeeService.findSysEmployeeListAll());
         return "courseArray";
     }
     /**
@@ -57,6 +62,15 @@ public class JwCenterArrangingCoursesActivity {
         XbAttendClass rsxc = xbAttendClassService.saveXbAttendClass(xbAttendClass);
         XbSubject xbsubject = xbSubjectService.findById(rsxc.getSubjectId());
         rsxc.setXbsubject(xbsubject!=null?xbsubject:new XbSubject());
+       XbClass findxbclass = xbStudentService.getXbClassById(rsxc.getClassId());
+        XbClass responxbclass = new XbClass();
+        responxbclass.setId(findxbclass.getId());
+        responxbclass.setClassName(findxbclass.getClassName());
+        rsxc.setXbclass(responxbclass!=null?responxbclass:new XbClass());
+        XbClassroom xbclassroom = xbStudentService.getXbClassroomById(rsxc.getClassRoomId());
+        rsxc.setXbclassroom(xbclassroom!=null?xbclassroom:new XbClassroom());
+        SysEmployee sysemployee = employeeService.getSysEmployeeById(rsxc.getTeacherId());
+        rsxc.setSysemployee(sysemployee!=null?sysemployee:new SysEmployee());
         if(!StringUtils.isEmpty(rsxc.getId())){
             jsonObject.put("msg", "新建排课成功");
             jsonObject.put("status","0");
@@ -66,6 +80,36 @@ public class JwCenterArrangingCoursesActivity {
             jsonObject.put("status","1");
         }
         HttpServletUtil.reponseWriter(jsonObject,resp);
+    }
+    /**
+     * 跳转到排课日程表
+     * @return
+     */
+    @PostMapping("/to_arranging_course_fullcalendar")
+    public String toArrangingCourseFullcalendar(HttpServletRequest req,
+                                                HttpServletResponse resp,
+            @RequestParam(value="start",defaultValue = "") String start,
+            @RequestParam(value="fend",defaultValue = "") String fend){
+        logger.info("跳转到排课");
+        List<XbAttendClass> listentity = xbAttendClassService.findXbAttendClassAll();
+        for(XbAttendClass xba:listentity){
+            XbClass xbclass = xbStudentService.getXbClassById(xba.getClassId());
+            XbClass responxbclass = new XbClass();
+            responxbclass.setId(xbclass.getId());
+            responxbclass.setClassName(xbclass.getClassName());
+            xba.setXbclass(responxbclass);
+        }
+        JSONObject jsonObject = new JSONObject();
+        if(listentity.size()>0){
+            jsonObject.put("msg", "查询排课成功");
+            jsonObject.put("listentity", com.alibaba.fastjson.JSONObject.toJSON(listentity));
+            jsonObject.put("status","0");
+        }else{
+            jsonObject.put("status","1");
+            jsonObject.put("msg", "查询排课失败");
+        }
+        HttpServletUtil.reponseWriter(jsonObject,resp);
+        return "courseArray";
     }
     @PostMapping("/remove_xbAttend_class")
     public void removeCourse(@RequestBody XbAttendClass xbattendclass, HttpServletResponse resp){
