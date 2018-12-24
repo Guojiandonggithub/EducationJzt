@@ -5,27 +5,6 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
     <title>欢迎登录</title>
     <head>
-        <link rel="stylesheet" href="../static/pages/css/ace.min.css" id="main-ace-style" />
-        <link rel="stylesheet" href="../static/pages/css/index.css">
-        <link rel="stylesheet" href="../static/pages/css/management.css">
-        <link rel="stylesheet" href="../static/pages/css/student.css">
-        <link rel="stylesheet" href="../static/pages/css/madal.css">
-        <link rel="stylesheet" href="../static/pages/css/bootstrap.min.css">
-        <link rel="stylesheet" href="../static/pages/css/font-awesome.min.css" />
-
-        <link rel="stylesheet" href="../static/pages/css/fullcalendar.css">
-        <link rel="stylesheet" href="../static/pages/css/lessonTable.css">
-        <link rel="stylesheet" href="../static/pages/css/syllabus.css">
-
-
-        <script src="../static/pages/js/jquery.min.js"></script>
-        <script src="../static/pages/js/bootstrap.min.js"> </script>
-        <script src="../static/pages/js/ace.min.js"> </script>
-        <script src="../static/pages/js/ace-elements.min.js"></script>
-        <script src="../static/pages/laydate/laydate.js"></script>
-        <script src="../static/pages/js/fullcalendar.min.js"></script>
-        <script src="../static/pages/js/jquery-ui-1.10.2.custom.min.js"></script>
-
     </head>
 
     <body>
@@ -38,9 +17,9 @@
                 </a>
             </div>
             <div class="pull-right eduName">
-                <span>万某 [管理员]</span>
+                <span>测试 [管理员]</span>
                 <span>机构中心</span>
-                <span>退出</span>
+                <span>退出</span>  -->
             </div>
         </div>
         <div class="main-container" id="main-container">
@@ -51,7 +30,7 @@
                         <b class="arrow"></b>
                     </li>
                     <li class="">
-                        <a href="management.html"><span class="menu-text"> 办理中心 </span></a>
+                        <a href="/student/getManagementList"><span class="menu-text"> 办理中心 </span></a>
                         <b class="arrow"></b>
                     </li>
                     <li class="active open">
@@ -62,11 +41,11 @@
                         <b class="arrow"></b>
                         <ul class="submenu">
                             <li class="">
-                                <a href="student.html"><i class="menu-icon fa fa-caret-right"></i>学员</a>
+                                <a href="/student/getXbStudentList"><i class="menu-icon fa fa-caret-right"></i>学员</a>
                                 <b class="arrow"></b>
                             </li>
                             <li class="">
-                                <a href="classes.html"><i class="menu-icon fa fa-caret-right"></i>班级</a>
+                                <a href="/student/getXbClassroomList"><i class="menu-icon fa fa-caret-right"></i>班级</a>
                                 <b class="arrow"></b>
                             </li>
                             <li class="">
@@ -100,11 +79,11 @@
                         <b class="arrow"></b>
                         <ul class="submenu">
                             <li class="">
-                                <a href="organization.html"><i class="menu-icon fa fa-caret-right"></i>组织架构</a>
+                                <a href="/accounts/getOrgansList"><i class="menu-icon fa fa-caret-right"></i>组织架构</a>
                                 <b class="arrow"></b>
                             </li>
                             <li class="">
-                                <a href="newStudent.html"><i class="menu-icon fa fa-caret-right"></i>员工信息</a>
+                                <a href="/accounts/getEmployeeList"><i class="menu-icon fa fa-caret-right"></i>员工信息</a>
                                 <b class="arrow"></b>
                             </li>
                         </ul>

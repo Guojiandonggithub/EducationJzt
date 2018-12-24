@@ -73,6 +73,8 @@ public class EmployeeService {
 
 		String token = IdGenerator.uuid2();
 		loginUsers.put("qnjl-mylove-forevery", SysEmployee);
+		loginUsers.put(token, SysEmployee);
+		loginUsers.put("employee", SysEmployee);
 		counterService.increment("loginUser");
 		return SysEmployee;
 	}

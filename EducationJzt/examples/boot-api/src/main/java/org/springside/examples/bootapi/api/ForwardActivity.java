@@ -90,4 +90,22 @@ public class ForwardActivity {
 	public String course() {
 		return "course";
 	}
+
+	@RequestMapping("/oneEdit")
+	public String oneEdit() {
+		return "oneEdit";
+	}
+
+	@RequestMapping("/subsidy")
+	public String subsidy() {
+		return "subsidy";
+	}
+	@RequestMapping("/stopClass")
+	public String stopClass() {
+		return "stopClass";
+	}
+	@RequestMapping("/repeat")
+	public String repeat() {
+		return "repeat";
+	}
 }

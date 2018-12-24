@@ -496,21 +496,150 @@ button.choiceStu{
 }
 
 
+/* 报名信息 */
 
+.apply .alert-info{
+    background:none;
+    border:0;
+    border-top: 4px solid #5295e7;    
+    padding-top: 20px;
+}
 
+.apply h2 a{
+    float:right;
+    margin-left:10px;
+    background:#5597e5;
+    color:#fff !important;
+    padding:5px 10px;
+    border-radius: 4px;
+    font-size:14px;
+}
+.select-selection{
+    
+    height: 30px;
+    position: relative;
+    display: block;
+    box-sizing: border-box;
+    outline: 0;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: pointer;
+    position: relative;
+    background-color: #fff;
+    border-radius: 4px;
+    border: 1px solid #b9bec5;
+    -webkit-transition: all .2s ease-in-out;
+    transition: all .2s ease-in-out;
+}
+.select-selection input{
+    display: inline-block;
+    width:180px;
+    height: 30px;
+    line-height: 30px;
+    padding: 0 24px 0 8px;
+    font-size: 14px;
+    outline: 0;
+    border: none;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    color: #30404f;
+    background-color: transparent;
+    position: relative;
+    cursor: pointer;
+}
+.select-dropdown{
+    width: 800px!important;
+    left: 360px!important;
+    height: 200px;
+    overflow-y:auto;
+    box-shadow: 0 0 20px rgba(53,83,158,.3);
+    overflow: auto;
+    margin: 5px 0;
+    padding: 10px 0;
+    background-color: #fff;
+    box-sizing: border-box;
+    border-radius: 4px;
+    -webkit-box-shadow: 0 1px 6px rgba(0,0,0,.2);
+    position: absolute!important;
+    z-index: 900;
+    display: none;
+}
+.select-item-disabled{
+    color: #ccc !important;
+    cursor: not-allowed !important;
+}
+.select-item{
+    margin: 0;
+    line-height: normal;
+    padding: 7px 16px;
+    clear: both;
+    color: #30404f;
+    font-size: 14px!important;
+    white-space: nowrap;
+    list-style: none;
+    cursor: pointer;
+    transition: background .2s ease-in-out;
+    border: 0 !important;
+}
+.select-dropdown-list{
+    margin:0;
+}
+.select-item .row{
+    position: relative;
+    margin-left: 0;
+    margin-right: 0;
+    height: auto;
+    zoom: 1;
+    display: block;
+}
+.select-item .row div{
+    float:left;
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+.btn-ghost{
+    width: 100px;
+    margin-right: 10px;
+    background: #fff;
+    border: 1px solid #ccc;
+    height: 30px;
+    line-height: 30px;
+    color: #555;
+}
+.income input,.income select{
+    width:150px;
+    height:30px;
+    border:1px solid #ccc;
+}
+.income label{
+    font-weight: normal;
+}
+.normal-ul{
+    padding: 20px 12px;
+    border-radius: 4px;
+    background: #f3f8fd;
+    display: table;
+    width: 100%;
+}
+.normal-ul li{
+    display: table-cell;
+    width: 50%;
+    padding: 0 12px;
+}
+.normal-input-inner{
+    position: relative;
+    display: inline-block;
+    text-align: left;
+}
+.input-wrapper{
+    display: inline-block;
+    width: 100%;
+    position: relative;
+    vertical-align: middle;
+}
+.input-wrapper input{
+    width:100%;
+}
 
 

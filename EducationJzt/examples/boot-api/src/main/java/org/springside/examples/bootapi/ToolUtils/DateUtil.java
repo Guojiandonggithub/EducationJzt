@@ -188,7 +188,7 @@ public class DateUtil {
         return df.format(value);
     }
 
-    public static String toString(java.util.Date date)
+    public static String toString(Date date)
     {
         if (date == null)
             return null;
@@ -218,7 +218,7 @@ public class DateUtil {
         return formatter.format(date);
     }
 
-    public static String toString(java.util.Date date, String pattern)
+    public static String toString(Date date, String pattern)
     {
         if (date == null)
             return null;
@@ -226,7 +226,7 @@ public class DateUtil {
         return formatter.format(date);
     }
 
-    public static java.util.Date toDate(String s, String pattern)  throws ParseException
+    public static Date toDate(String s, String pattern)  throws ParseException
     {
         if (s == null)
             return null;
@@ -260,7 +260,7 @@ public class DateUtil {
         return toString(d);
     }
 
-    public static String getDateTimeStr(java.util.Date date) {
+    public static String getDateTimeStr(Date date) {
         return toString(date,DATE_TIME_FORMAT);
     }
 
@@ -276,15 +276,15 @@ public class DateUtil {
         return toString(new Date(),DATE_FORMAT);
     }
 
-    public static String getTimeStr(java.util.Date date) {
+    public static String getTimeStr(Date date) {
         return toString(date,TIME_FORMAT);
     }
 
-    public static String getDateStr(java.util.Date date) {
+    public static String getDateStr(Date date) {
         return toString(date,DATE_FORMAT);
     }
 
-    public static Date trimTime(java.util.Date date) {
+    public static Date trimTime(Date date) {
         SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
         Date maxD = null;
         try {
@@ -336,12 +336,12 @@ public class DateUtil {
         return null;
     }
 
-    public static java.util.Date toDate(int n) throws ParseException
+    public static Date toDate(int n) throws ParseException
     {
         return toDate(Integer.toString(n), "yyyyMMdd");
     }
 
-    public static java.sql.Date toDate(java.util.Date date)
+    public static java.sql.Date toDate(Date date)
     {
         return new java.sql.Date(date.getTime());
     }

@@ -2,31 +2,24 @@ package org.springside.examples.bootapi.service;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import com.sun.org.apache.xpath.internal.objects.XBooleanStatic;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.actuate.metrics.CounterService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springside.examples.bootapi.ToolUtils.common.modules.persistence.DynamicSpecifications;
+import org.springside.examples.bootapi.ToolUtils.common.modules.persistence.SearchFilter;
 import org.springside.examples.bootapi.domain.SysEmployee;
 import org.springside.examples.bootapi.domain.XbCourse;
-import org.springside.examples.bootapi.repository.EmployeeDao;
-import org.springside.examples.bootapi.repository.Result;
 import org.springside.examples.bootapi.repository.XbCourseDao;
-import org.springside.examples.bootapi.service.exception.ErrorCode;
-import org.springside.examples.bootapi.service.exception.ServiceException;
-import org.springside.modules.utils.misc.IdGenerator;
-import org.springside.modules.utils.text.EncodeUtil;
-import org.springside.modules.utils.text.HashUtil;
 
 import javax.annotation.PostConstruct;
-import javax.naming.spi.DirStateFactory;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -68,6 +61,14 @@ public class XbCourseService {
 			return false;
 		}
 		return true;
+	}
+
+	@Transactional
+	public Page<XbCourse> getXbCourseList(Pageable pageable, Map<String, Object> searchParams) {
+		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
+		Specification<XbCourse> spec = DynamicSpecifications.bySearchFilter(
+				filters.values(), XbCourse.class);
+		return xbCourseDao.findAll(spec,pageable);
 	}
 
 }

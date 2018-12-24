@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="../static/pages/css/index.css">
     <link rel="stylesheet" href="../static/pages/css/management.css">
     <link rel="stylesheet" href="../static/pages/css/student.css">
-    <link rel="stylesheet" href="../tatic/pages/css/madal.css">
+    <link rel="stylesheet" href="../static/pages/css/madal.css">
     <link rel="stylesheet" href="../static/pages/css/bootstrap.min.css">
     <link rel="stylesheet" href="../static/pages/css/font-awesome.min.css" />
 
@@ -28,14 +28,14 @@
     <div class="navbar-header pull-left">
         <a href="index.html" class="navbar-brand">
             <small>
-                <img src="../../resources/static/pages/img/logo.png" alt="">
+                <img src="../static/pages/img/logo.png" alt="">
             </small>
         </a>
     </div>
     <div class="pull-right eduName">
-        <span>万某 [管理员]</span> 
+        <!--<span>万某 [管理员]</span>
         <span>机构中心</span>
-        <span>退出</span>   
+        <span>退出</span>  -->
     </div>
 </div>  
 <div class="main-container" id="main-container">
@@ -46,18 +46,18 @@
                 <b class="arrow"></b>
             </li>
             <li class="">
-                <a href="/forward/management"><span class="menu-text"> 办理中心 </span></a>
+                <a href="/student/getManagementList"><span class="menu-text"> 办理中心 </span></a>
                 <b class="arrow"></b>
             </li>
-            <li class="">
+            <li class="active open">
                 <a href="#" class="dropdown-toggle">
                     <span class="menu-text">教务中心</span>
                     <b class="arrow fa fa-angle-down"></b>
                 </a>
                 <b class="arrow"></b>
                 <ul class="submenu">
-                    <li class="">
-                        <a href="/forward/student"><i class="menu-icon fa fa-caret-right"></i>学员</a>
+                    <li class="active">
+                        <a href="/student/getXbStudentList"><i class="menu-icon fa fa-caret-right"></i>学员</a>
                         <b class="arrow"></b>
                     </li>
                     <li class="">
@@ -65,7 +65,7 @@
                         <b class="arrow"></b>
                     </li>
                     <li class="">
-                        <a href="/forward/oneToOne">
+                        <a href="/student/getOneToOneList">
                             <i class="menu-icon fa fa-caret-right"></i>一对一</a>
                         <b class="arrow"></b>
                     </li>
@@ -82,12 +82,12 @@
                         <b class="arrow"></b>
                     </li>
                     <li class="">
-                        <a href="/forward/course"><i class="menu-icon fa fa-caret-right"></i>课程</a>
+                        <a href="/jwcentercourse/tocourse"><i class="menu-icon fa fa-caret-right"></i>课程</a>
                         <b class="arrow"></b>
                     </li>
                 </ul>
             </li>
-            <li class="active open">
+            <li class="">
                 <a href="#" class="dropdown-toggle">
                     <span class="menu-text"> 内部管理 </span>
                     <b class="arrow fa fa-angle-down"></b>
@@ -98,7 +98,7 @@
                         <a href="/accounts/getOrgansList"><i class="menu-icon fa fa-caret-right"></i>组织架构</a>
                         <b class="arrow"></b>
                     </li>
-                    <li class="active">
+                    <li class="">
                         <a href="/accounts/getEmployeeList"><i class="menu-icon fa fa-caret-right"></i>员工信息</a>
                         <b class="arrow"></b>
                     </li>
@@ -108,9 +108,9 @@
     </div>
     <div class="main-content">
         <div class="breadcrumbs" id="breadcrumbs">
-            <img src="../../resources/static/pages/img/line1.png">
+            <img src="../static/pages/img/line1.png">
             <span>学员</span>
-            <img src="../../resources/static/pages/img/line.png">
+            <img src="../static/pages/img/line.png">
         </div> 
         <div class="tabbable">
             <ul class="nav nav-tabs" id="myTab">
@@ -131,7 +131,7 @@
                 <!-- 学员列表 -->
                 <div id="studentList" class="tab-pane fade in active"> 
                     <div class="screen">
-                        <a class="stdEnroll" href="/student/enroll">新生报名</a>
+                        <a class="stdEnroll" href="/student/getStudent">新生报名</a>
                         <div class="screenTop">  
                             <select class="selectName">
                                 <option value="AZ">学员姓名</option>
@@ -198,7 +198,7 @@
                             <button type="button" class="btn btn-primary">批量删除学员</button>
                         </div> 
                         <div class="result">
-                            当前结果：学员共计<span>111</span>名，报读课程数总计：<span>111</span>条
+                            <!--当前结果：学员共计<span>111</span>名，报读课程数总计：<span>111</span>条-->
                         </div>
                         <div class="orderTable">
                             <table class="table table-hover">
@@ -223,89 +223,49 @@
                                         <span href="#modal-table"  data-toggle="modal" class="glyphicon glyphicon-option-vertical" aria-hidden="true"></span>
                                     </th>
                                 </tr>
-                                <tr id="choose">
+                                <tr id="chooses" th:each="studentrelation:${xbStudentPage.content}">
                                     <td><input type="checkbox"></td>
-                                    <td><img src="../../resources/static/pages/img/boy.png">张三</td>
-                                    <td>18958777777</td>
-                                    <td>母亲</td>
-                                    <td>0.00</td>
-                                    <td>2511.00<a href="">补费</a></td>
-                                    <td>识字1</td>
-                                    <td>192.00课时</td>
-                                    <td>2018-05-20</td>
-                                    <td></td>
-                                </tr>
-                                <tr id="choose">
-                                    <td><input type="checkbox"></td>
-                                    <td><img src="../../resources/static/pages/img/boy.png">张三</td>
-                                    <td>18958777777</td>
-                                    <td>母亲</td>
-                                    <td>0.00</td>
-                                    <td>2511.00<a href="">补费</a></td>
-                                    <td>识字1</td>
-                                    <td>192.00课时</td>
-                                    <td>2018-05-20</td>
-                                    <td></td>
-                                </tr>
-                                <tr id="choose">
-                                    <td><input type="checkbox"></td>
-                                    <td><img src="../../resources/static/pages/img/boy.png">张三</td>
-                                    <td>18958777777</td>
-                                    <td>母亲</td>
-                                    <td>0.00</td>
-                                    <td>2511.00<a href="">补费</a></td>
-                                    <td>识字1</td>
-                                    <td>192.00课时</td>
-                                    <td>2018-05-20</td>
+                                    <td th:text="${studentrelation.xbStudent.studentName}"><img src="../static/pages/img/boy.png"></td>
+                                    <td th:text="${studentrelation.xbStudent.contactPhone}"></td>
+                                    <td th:text="${studentrelation.xbStudent.contactRelation}"></td>
+                                    <td th:text="${studentrelation.xbStudent.surplusMoney}"></td>
+                                    <td th:text="${studentrelation.xbStudent.paymentMoney}"><a href="">补费</a></td>
+                                    <td th:text="${studentrelation.xbCourse.courseName}"></td>
+                                    <td th:text="${studentrelation.xbCourse.period}">课时</td>
+                                    <td  th:text="${#dates.format(studentrelation.enrollDate, 'yyyy-MM-dd')}"></td>
                                     <td></td>
                                 </tr>
                             </table>
-                            <div class="orderPage">
+                            <div class="orderPage" style="margin-top:30px;">
                                 <div class="page">
                                     单页显示：
-                                    <select>
-                                        <option>20条/页</option>
-                                        <option>50条/页</option>
-                                        <option>100条/页</option>
+                                    <select id="size" name="size" onchange="getOrgansListPage('');">
+                                        <option th:selected="${roomcurrentzise eq 20}" value="20">20条/页</option>
+                                        <option th:selected="${roomcurrentzise eq 5}" value="5">5条/页</option>
+                                        <option th:selected="${roomcurrentzise eq 10}" value="10">10条/页</option>
+                                        <option th:selected="${roomcurrentzise eq 15}" value="15">15条/页</option>
                                     </select>
                                 </div>
-                                <ul class="pagination">
+                                <ul class="pagination" th:if="${xbStudentPage.getTotalPages() gt 0}" >
                                     <li class="disabled">
-                                        <a href="#">首页</a>
+                                        <a href="#" th:onclick="'javascript:getOrgansListPage(\''+0+'\')'">首页</a>
                                     </li>
-                                    <li class="disabled">
-                                        <a href="#">
+                                    <li class="disabled" th:if="${xbStudentPage.getNumber()-1} ge 0">
+                                        <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${xbStudentPage.getNumber()-1}+'\')'">
                                             <i class="ace-icon fa fa-angle-double-left"></i>
                                         </a>
-                                    </li>  
-                                    <li class="active">
-                                        <a href="#">1</a>
                                     </li>
-            
-                                    <li>
-                                        <a href="#">2</a>
+                                    <li class="active" th:each="i:${#numbers.sequence(1,xbStudentPage.getTotalPages())}">
+                                        <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${i}+'\')'" th:text="${i}"></a>
                                     </li>
-            
-                                    <li>
-                                        <a href="#">3</a>
-                                    </li>
-            
-                                    <li>
-                                        <a href="#">4</a>
-                                    </li>
-            
-                                    <li>
-                                        <a href="#">5</a>
-                                    </li>
-            
-                                    <li>
-                                        <a href="#">
+                                    <li th:if="${xbStudentPage.getTotalPages()} ge ${xbStudentPage.getNumber()+2} ">
+                                        <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${xbStudentPage.getNumber()+2}+'\')'">
                                             <i class="ace-icon fa fa-angle-double-right"></i>
                                         </a>
                                     </li>
-                                    <li class="">
-                                        <a href="#">尾页</a>
-                                    </li>
+                                    <!-- <li class="">
+                                         <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${currentnumber}+'\')'">尾页</a>
+                                     </li>-->
                                 </ul>
                             </div>
                         </div>    
@@ -317,8 +277,8 @@
                         <div class="screenTop">  
                             <select class="selectName">
                                 <option value="AZ">学员姓名</option>
-                                <option value="AL">手机尾号</option>
-                                <option value="AK">微信号</option>
+                                <option value="AL">手机号</option>
+                                <!--<option value="AK">微信号</option>-->
                             </select>
                             <div class="nav-search" id="nav-search">
                                 <form class="form-search">
@@ -399,54 +359,23 @@
                                     <th>上课时间</th>
                                     <th>报名时间</th>                                
                                 </tr>
-                                <tr id="choose">
+                                <tr id="chooses" th:each="studentrelations:${xbStudentPage.content}">
                                     <td><input type="checkbox"></td>
-                                    <td><img src="../../resources/static/pages/img/boy.png">张三</td>
-                                    <td>18958777777</td>
-                                    <td style="width:200px;">科源分校识字张三18班</td>
+                                    <td th:text="${studentrelations.xbStudent.studentName}"><img src="../static/pages/img/boy.png"></td>
+                                    <td th:text="${studentrelations.xbStudent.contactPhone}"></td>
+                                    <td th:text="${studentrelations.xbClass.className}" style="width:200px;"></td>
                                     <td>在读</td>
-                                    <td>识字1</td>
-                                    <td>3021.60</td>
-                                    <td>科源分校</td>
-                                    <td>李四</td>
+                                    <td th:text="${studentrelations.xbCourse.courseName}"></td>
+                                    <td th:text="${studentrelations.xbCourse.tuitionFee}"></td>
+                                    <td th:text="${studentrelations.sysOrgans.organName}"></td>
+                                    <td th:text="${studentrelations.xbClass.teacher.employeeName}"></td>
                                     <td>
                                         <span>每周周日 14:00-15:00</span>
                                         <span>每周周日 14:00-15:00</span>
                                     </td>
-                                    <td>2018-05-20</td>
+                                    <td th:text="${#dates.format(studentrelations.enrollDate, 'yyyy-MM-dd')}"></td>
                                 </tr>
-                                <tr id="choose">
-                                    <td><input type="checkbox"></td>
-                                    <td><img src="../../resources/static/pages/img/boy.png">张三</td>
-                                    <td>18958777777</td>
-                                    <td style="width:200px;">科源分校识字张三18班</td>
-                                    <td>在读</td>
-                                    <td>识字1</td>
-                                    <td>3021.60</td>
-                                    <td>科源分校</td>
-                                    <td>李四</td>
-                                    <td>
-                                        <span>每周周日 14:00-15:00</span>
-                                        <span>每周周日 14:00-15:00</span>
-                                    </td>
-                                    <td>2018-05-20</td>
-                                </tr>
-                                <tr id="choose">
-                                    <td><input type="checkbox"></td>
-                                    <td><img src="../../resources/static/pages/img/boy.png">张三</td>
-                                    <td>18958777777</td>
-                                    <td style="width:200px;">科源分校识字张三18班</td>
-                                    <td>在读</td>
-                                    <td>识字1</td>
-                                    <td>3021.60</td>
-                                    <td>科源分校</td>
-                                    <td>李四</td>
-                                    <td>
-                                        <span>每周周日 14:00-15:00</span>
-                                        <span>每周周日 14:00-15:00</span>
-                                    </td>
-                                    <td>2018-05-20</td>
-                                </tr>
+
                             </table>
                             <div class="orderPage">
                                 <div class="page">
@@ -502,7 +431,7 @@
                 <!-- 到期学员 -->
                 <div id="expiryStu" class="tab-pane fade expiryStu">
                     <div class="screen">  
-                        <a class="stdEnroll" href="../../resources/templates/enroll.html" target="_blank">新生报名</a>
+                        <a class="stdEnroll" href="/student/getStudent">新生报名</a>
                         <button class="batch">批量导入</button>                   
                         <div class="screenTop"> 
                             <div class="form-group">
@@ -612,7 +541,7 @@
                                 </tr>
                                 <tr id="choose">
                                     <td><input type="checkbox"></td>
-                                    <td><img src="../../resources/static/pages/img/boy.png">张三</td>
+                                    <td><img src="../static/pages/img/boy.png">张三</td>
                                     <td>18958777777</td>
                                     <td>母亲</td>
                                     <td>0.00</td>
@@ -621,15 +550,15 @@
                                     <td>0.00课时</td>
                                     <td>2018-05-20</td>
                                     <td class="renew">
-                                        <a href="../../resources/templates/enroll.html">
-                                            <img src="../../resources/static/pages/img/WechatIMG2.pic">续费
+                                        <a href="/student/getStudent">
+                                            <img src="../static/pages/img/WechatIMG2.pic">续费
                                         </a>
                                     </td>
                                     <td></td>
                                 </tr>
                                 <tr id="choose">
                                     <td><input type="checkbox"></td>
-                                    <td><img src="../../resources/static/pages/img/boy.png">张三</td>
+                                    <td><img src="../static/pages/img/boy.png">张三</td>
                                     <td>18958777777</td>
                                     <td>母亲</td>
                                     <td>0.00</td>
@@ -638,8 +567,8 @@
                                     <td>0.00课时</td>
                                     <td>2018-05-20</td>
                                     <td class="renew">
-                                        <a href="../../resources/templates/enroll.html">
-                                            <img src="../../resources/static/pages/img/WechatIMG2.pic">续费
+                                        <a href="/student/getStudent">
+                                            <img src="../static/pages/img/WechatIMG2.pic">续费
                                         </a>
                                     </td>
                                     <td></td>
@@ -788,7 +717,7 @@
                                 </tr>
                                 <tr id="choose">
                                     <td><input type="checkbox"></td>
-                                    <td><img src="../../resources/static/pages/img/boy.png">张三</td>
+                                    <td><img src="../static/pages/img/boy.png">张三</td>
                                     <td>18958777777</td>
                                     <td>0.00</td>
                                     <td>识字1</td>
@@ -800,7 +729,7 @@
                                 </tr>
                                 <tr id="choose">
                                     <td><input type="checkbox"></td>
-                                    <td><img src="../../resources/static/pages/img/boy.png">张三</td>
+                                    <td><img src="../static/pages/img/boy.png">张三</td>
                                     <td>18958777777</td>
                                     <td>0.00</td>
                                     <td>识字1</td>
@@ -812,7 +741,7 @@
                                 </tr>
                                 <tr id="choose">
                                     <td><input type="checkbox"></td>
-                                    <td><img src="../../resources/static/pages/img/boy.png">张三</td>
+                                    <td><img src="../static/pages/img/boy.png">张三</td>
                                     <td>18958777777</td>
                                     <td>0.00</td>
                                     <td>识字1</td>
@@ -922,8 +851,7 @@
             </div>
         </div>
     </div>
-
-</div> 
+</div>
 <script>
 !function(){
 laydate({elem: '#demo'});//绑定元素
@@ -965,6 +893,16 @@ function chooseAll2(){
         this.checked = isCheck;       //循环赋值给每个复选框是否选中
     });  
 };
+</script>
+<script type="text/javascript" th:inline="javascript">
+var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/;
+function getOrgansListPage(page){
+    var size = $('#size option:selected').val();//选中的值
+    if(page){
+        page = page -1;
+    }
+    window.location.href = basePath + '/student/getXbStudentList?page='+page+'&size='+size+'&room=0';
+}
 </script> 
 </body>
 </html>

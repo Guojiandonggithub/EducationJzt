@@ -30,9 +30,9 @@
         </a>
     </div>
     <div class="pull-right eduName">
-        <span>万某 [管理员]</span> 
+        <!--<span>万某 [管理员]</span>
         <span>机构中心</span>
-        <span>退出</span>   
+        <span>退出</span>  -->
     </div>
 </div>
 <form id="classform">
@@ -44,7 +44,7 @@
                 <b class="arrow"></b>
             </li>
             <li class="">
-                <a href="/forward/management"><span class="menu-text"> 办理中心 </span></a>
+                <a href="/student/getManagementList"><span class="menu-text"> 办理中心 </span></a>
                 <b class="arrow"></b>
             </li>
             <li class="active open">
@@ -55,7 +55,7 @@
                 <b class="arrow"></b>
                 <ul class="submenu">
                     <li class="">
-                        <a href="/forward/student"><i class="menu-icon fa fa-caret-right"></i>学员</a>
+                        <a href="/student/getXbStudentList"><i class="menu-icon fa fa-caret-right"></i>学员</a>
                         <b class="arrow"></b>
                     </li>
                     <li class="active">
@@ -63,7 +63,7 @@
                         <b class="arrow"></b>
                     </li>
                     <li class="">
-                        <a href="/forward/oneToOne">
+                        <a href="/student/getOneToOneList">
                             <i class="menu-icon fa fa-caret-right"></i>一对一</a>
                         <b class="arrow"></b>
                     </li>
@@ -80,7 +80,7 @@
                         <b class="arrow"></b>
                     </li>
                     <li class="">
-                        <a href="/forward/course"><i class="menu-icon fa fa-caret-right"></i>课程</a>
+                        <a href="/jwcentercourse/tocourse"><i class="menu-icon fa fa-caret-right"></i>课程</a>
                         <b class="arrow"></b>
                     </li>
                 </ul>
@@ -123,9 +123,7 @@
                 <div class="form-group">
                     <label><span>*</span>课程</label>
                     <select name="courseId" >
-                        <option value="1">111</option>
-                        <option value="2">222</option>
-                        <option value="3">333</option>
+                        <option th:each="course:${xbCourseList}" th:selected="${xbClass.courseId == course.id}" th:value="${course.id}" th:text="${course.courseName}"></option>
                     </select>
                     <Span>请先选择校区再选择课程</Span>
                 </div>
@@ -169,8 +167,8 @@
                     </div>
                     <div class="form-group">
                         <label>招生状态</label>
-                        <input th:attr ="checked=${xbClass.recruitState == 0?true:false}" name="form-field-radio" name="recruitState" value="0" type="radio" class="ace"><span class="lbl">开放招生</span>
-                        <input th:attr ="checked=${xbClass.recruitState == 1?true:false}" name="form-field-radio" name="recruitState" value="1" type="radio" class="ace"><span class="lbl">停止招生</span>
+                        <input th:attr ="checked=${xbClass.recruitState == '0'?true:false}" name="form-field-radio" name="recruitState" value="0" type="radio" class="ace"><span class="lbl">开放招生</span>
+                        <input th:attr ="checked=${xbClass.recruitState == '1'?true:false}" name="form-field-radio" name="recruitState" value="1" type="radio" class="ace"><span class="lbl">停止招生</span>
                     </div>
                 </div>
                 <div style="display: block; margin-top:20px;">

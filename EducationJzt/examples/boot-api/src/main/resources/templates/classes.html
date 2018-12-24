@@ -33,9 +33,9 @@
         </a>
     </div>
     <div class="pull-right eduName">
-        <span>万某 [管理员]</span> 
+        <!--<span>万某 [管理员]</span>
         <span>机构中心</span>
-        <span>退出</span>   
+        <span>退出</span>  -->
     </div>
 </div>  
 <div class="main-container" id="main-container">
@@ -46,7 +46,7 @@
                 <b class="arrow"></b>
             </li>
             <li class="">
-                <a href="/forward/management"><span class="menu-text"> 办理中心 </span></a>
+                <a href="/student/getManagementList"><span class="menu-text"> 办理中心 </span></a>
                 <b class="arrow"></b>
             </li>
             <li class="active open">
@@ -57,7 +57,7 @@
                 <b class="arrow"></b>
                 <ul class="submenu">
                     <li class="">
-                        <a href="/forward/student"><i class="menu-icon fa fa-caret-right"></i>学员</a>
+                        <a href="/student/getXbStudentList"><i class="menu-icon fa fa-caret-right"></i>学员</a>
                         <b class="arrow"></b>
                     </li>
                     <li class="active">
@@ -65,7 +65,7 @@
                         <b class="arrow"></b>
                     </li>
                     <li class="">
-                        <a href="/forward/oneToOne">
+                        <a href="/student/getOneToOneList">
                             <i class="menu-icon fa fa-caret-right"></i>一对一</a>
                         <b class="arrow"></b>
                     </li>
@@ -82,7 +82,7 @@
                         <b class="arrow"></b>
                     </li>
                     <li class="">
-                        <a href="/forward/course"><i class="menu-icon fa fa-caret-right"></i>课程</a>
+                        <a href="/jwcentercourse/tocourse"><i class="menu-icon fa fa-caret-right"></i>课程</a>
                         <b class="arrow"></b>
                     </li>
                 </ul>
@@ -114,6 +114,7 @@
         </div> 
         <div class="tabbable">
             <ul class="nav nav-tabs" id="myTab">
+                <input type="hidden" id="room" th:value="${room}"/>
                 <li class="active">
                     <a data-toggle="tab" href="#class" class="class">班级列表</a>
                 </li>
@@ -178,7 +179,7 @@
                                         </div>
                                     </td>
                                     <td th:text="${xbclass.teacher.employeeName}"></td>
-                                    <td>识字1</td>
+                                    <td th:text="${xbclass.xbCourse.courseName}"></td>
                                     <td th:text="${xbclass.sysOrgans.organName}"></td>
                                     <td th:text="${#dates.format(xbclass.classBeginDate, 'yyyy-MM-dd')}"></td>
                                     <td class="classTime">
@@ -199,10 +200,10 @@
                                             </p>
                                             <ul class="dropdown-menu dropdown-default" style="display: none;">
                                                 <li>
-                                                    <a href="manageClass.html" target="_blank">编辑</a>
+                                                    <a th:href="@{'/student/getXbClass?id='+${xbclass.id}}">编辑</a>
                                                 </li>
                                                 <li>
-                                                    <a href="">删除班级</a>
+                                                    <a href="#"  th:onclick="'javascript:deleteClass(\''+${xbclass.id}+'\')'">删除班级</a>
                                                 </li>                                                            
                                             </ul>
                                         </div>
@@ -278,7 +279,6 @@
                                     <th>操作</th>
                                 </tr>
                                 <tr id="choosetype" class="choose" th:each="classroom,rooms:${xbClassroomPage.content}">
-                                    <input type="hidden" id="room" th:text="${room}"/>
                                     <td th:text="${rooms.index+1}">序号</td>
                                     <td th:text="${classroom.classroomName}"></td>
                                     <td th:text="${classroom.sysOrgans.organName}">所属校区</td>
@@ -293,7 +293,7 @@
                                                     <a  th:href="@{'/student/getClassroom?id='+${classroom.id}}" data-toggle="modal">编辑</a>
                                                 </li>
                                                 <li>
-                                                    <a  th:onclick="@{'/student/getClassroom?id='+${classroom.id}}">删除</a>
+                                                    <a  th:onclick="'javascript:deleteClassroom(\''+${classroom.id}+'\')'">删除</a>
                                                 </li>
                                             </ul>
                                         </div>
@@ -304,10 +304,10 @@
                                 <div class="page">
                                     单页显示：
                                     <select id="size" name="size" onchange="getOrgansListPage('');">
-                                        <option th:selected="${roomcurrentzise eq 1}" value="1">20条/页</option>
-                                        <option th:selected="${roomcurrentzise eq 2}" value="2">5条/页</option>
-                                        <option th:selected="${roomcurrentzise eq 3}" value="3">10条/页</option>
-                                        <option th:selected="${roomcurrentzise eq 4}" value="4">15条/页</option>
+                                        <option th:selected="${roomcurrentzise eq 20}" value="20">20条/页</option>
+                                        <option th:selected="${roomcurrentzise eq 5}" value="5">5条/页</option>
+                                        <option th:selected="${roomcurrentzise eq 10}" value="10">10条/页</option>
+                                        <option th:selected="${roomcurrentzise eq 15}" value="15">15条/页</option>
                                     </select>
                                 </div>
                                 <ul class="pagination" th:if="${xbClassroomPage.getTotalPages() gt 0}" >
@@ -436,6 +436,49 @@ $(function(){
         }
         window.location.href = basePath + '/student/getXbClassroomList?page='+page+'&size='+size+'&room=0';
     }
+
+    function deleteClassroom(id){
+        if(confirm("确定要删除该教室吗？")){
+            $.ajax({
+                url: basePath + '/student/delete/classroom/'+id,
+                type: 'get',
+                dataType: 'json',
+                contentType: 'application/json',
+                async: true,
+                success: function(data) {
+                    var status = data.status;
+                    var msg = data.msg;
+                    alert("删除成功！");
+                    window.location.href = basePath + '/student/getXbClassroomList?room=0';
+                },
+                error:function(){
+                    console.log("回调失败")
+                }
+            });
+        }
+    }
+
+    function deleteClass(id){
+        if(confirm("确定要删除该班级吗？")){
+            $.ajax({
+                url: basePath + '/student/delete/class/'+id,
+                type: 'get',
+                dataType: 'json',
+                contentType: 'application/json',
+                async: true,
+                success: function(data) {
+                    var status = data.status;
+                    var msg = data.msg;
+                    alert("删除成功！");
+                    window.location.href = basePath + '/student/getXbClassroomList?room=1';
+                },
+                error:function(){
+                    console.log("回调失败")
+                }
+            });
+        }
+    }
+
 </script> 
 </body>
 </html>

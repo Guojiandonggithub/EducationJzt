@@ -1,34 +1,30 @@
 package org.springside.examples.bootapi.api;
 
-import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springside.examples.bootapi.ToolUtils.DateUtil;
 import org.springside.examples.bootapi.ToolUtils.HttpServletUtil;
 import org.springside.examples.bootapi.domain.XbCourse;
 import org.springside.examples.bootapi.domain.XbCourseType;
 import org.springside.examples.bootapi.domain.XbSubject;
-import org.springside.examples.bootapi.repository.Result;
 import org.springside.examples.bootapi.service.XbCourseService;
 import org.springside.examples.bootapi.service.XbCourseTypeService;
 import org.springside.examples.bootapi.service.XbSubjectService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 教务中心-学员

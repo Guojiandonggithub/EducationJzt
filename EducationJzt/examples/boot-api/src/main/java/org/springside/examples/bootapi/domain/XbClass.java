@@ -27,9 +27,9 @@ public class XbClass {
     public SysOrgans sysOrgans;
     public String organId;
     public String organName;
-    /*@OneToOne()
+    @OneToOne()
     @JoinColumn(name="courseId",referencedColumnName = "id",insertable = false,updatable = false)
-    public SysOrgans sysOrgans;*/
+    public XbCourse xbCourse;
     public String courseId;
     public String courseName;
     public Date classBeginDate;

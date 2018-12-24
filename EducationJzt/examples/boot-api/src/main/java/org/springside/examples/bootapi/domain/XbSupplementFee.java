@@ -10,44 +10,33 @@ import java.util.Date;
 // JPA实体类的标识
 
 /**
- * 学员
+ * 办理中心
  */
 @Entity
-public class XbStudent {
+public class XbSupplementFee {
 
     // JPA 主键标识, 策略为由数据库生成主键
     @Id
     @GenericGenerator(name="idGenerator", strategy="uuid") //这个是hibernate的注解/生成32位UUID
     @GeneratedValue(generator="idGenerator")
     public String id;
+    @OneToOne()
+    @JoinColumn(name="studentId",referencedColumnName = "id",insertable = false,updatable = false)
+    public XbStudent xbStudent;
+    public String studentId;
     public String studentName;
-    public String contactPhone;
-    public String contactRelation;
-    public String secondaryPhone;
-    public String secondaryRelation;
-    public String otherPhone;
-    public String otherRelation;
-    public Date birthday;
-    public String sex;
-    public String photo;
     public String paymentType;
     public BigDecimal paymentMoney;
-    public BigDecimal surplusMoney;
-    @OneToOne()
-    @JoinColumn(name="organId",referencedColumnName = "id",insertable = false,updatable = false)
-    public SysOrgans sysOrgans;
-    public String organId;
-    public String organName;
-    public String salesSource;
-    public Date handleDate;
+    public Date paymentDate;
     public String handlePerson;
-    public String salesPerson;
+    public String remarks;
+    public String orderNumber;
 
-    public XbStudent() {
+    public XbSupplementFee() {
 
     }
 
-    public XbStudent(String id) {
+    public XbSupplementFee(String id) {
         this.id = id;
     }
 

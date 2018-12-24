@@ -11,9 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springside.examples.bootapi.ToolUtils.DateUtil;
 import org.springside.examples.bootapi.domain.SysEmployee;
 import org.springside.examples.bootapi.domain.XbAttendClass;
-import org.springside.examples.bootapi.domain.XbCourse;
 import org.springside.examples.bootapi.repository.XbAttendClassDao;
-import org.springside.examples.bootapi.repository.XbCourseDao;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
