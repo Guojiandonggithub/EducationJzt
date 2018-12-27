@@ -205,17 +205,13 @@
                                             <span class="glyphicon glyphicon-triangle-bottom"></span>
                                         </div>                                       
                                     </th>
-                                    <th>类型</th>
-                                    <th>状态</th>
                                     <th>课程类别</th>
-                                    <th>科目</th>
-                                    <th>开班/课数</th>
-                                    <th>开课校区数</th>
-                                    <th>学费标准</th>
-                                    <th>教材(元)</th>
-                                    <th>杂费(元)</th>
-                                    <th>备注</th>
-                                    <th>创建日期
+                                    <th>授课模式</th>
+                                    <th>开班数</th>
+                                    <th>收费模式</th>
+                                    <th>开课校区</th>
+                                    <th>创建日期</th>
+                                    <th>课程状态</th>
                                         <div class="sort">
                                             <span class="glyphicon glyphicon-triangle-top"></span>
                                             <span class="glyphicon glyphicon-triangle-bottom"></span>
@@ -226,28 +222,27 @@
                                         <span href="#modal-table"  data-toggle="modal" class="glyphicon glyphicon-option-vertical" aria-hidden="true"></span>
                                     </th>
                                 </tr>
-                                <tr id="choose" class="choose" th:each="obj,iterStat:${courselist}">
+                                <tr id="choose" class="choose" th:each="obj,iterStat:${courselist}" th:if="${courselist} != null">
                                     <td><input type="checkbox"></td>
                                     <input th:id="${obj.id}" type="hidden" >
                                     <td th:text="${obj.courseName}"></td>
+                                    <td th:text="${obj.xbcoursetype.courseTypeName}"></td>
                                     <td th:switch="${obj.type}">
-                                        <span th:case="'0'">班课</span>
-                                        <span th:case="'1'">一对一</span>
-
+                                        <span th:case="0">班课</span>
+                                        <span th:case="1">一对一</span>
                                     </td>
+                                    <td th:text="10"></td>
+                                    <td th:switch="${obj.chargingMode}">
+                                        <span th:case="0">按课时</span>
+                                        <span th:case="1">按时间</span>
+                                        <span th:case="2">按期</span>
+                                    </td>
+                                    <td>1</td>
+                                    <td th:text="${obj.createDate}">创建日期</td>
                                     <td th:switch="${obj.state}">
                                         <span th:case="0">正常</span>
                                         <span th:case="1">下架</span>
                                     </td>
-                                    <td th:text="${obj.courseTypeName}"></td>
-                                    <td th:text="${obj.subjectName}"></td>
-                                    <th>开班/课数</th>
-                                    <td>开课校区数</td>
-                                    <td th:text="${obj.tuitionFee}">学费标准</td>
-                                    <td>教材(元)</td>
-                                    <td>杂费</td>
-                                    <td th:text="${obj.remarks}">备注</td>
-                                    <td th:text="${obj.createDate}">创建日期</td>
                                     <td>
                                         <div class="btn-group">
                                             <p data-toggle="dropdown" class="down" aria-expanded="false">
@@ -336,7 +331,7 @@
                                     <th>课程类别</th>
                                     <th>操作</th>
                                 </tr>
-                                <tr id="choosetype" class="choose" th:each="ctype,coursta:${coursetypelist}">
+                                <tr id="choosetype" class="choose" th:each="ctype,coursta:${coursetypelist}" th:if="${coursetypelist} != null">
                                     <input type="hidden" th:id="${ctype.id}"/>
                                     <td th:text="${ctype.layOrder}">序号</td>
                                     <td th:text="${ctype.courseTypeName}">课程类别</td>

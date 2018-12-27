@@ -3,11 +3,9 @@ package org.springside.examples.bootapi.domain;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.List;
 
 // JPA实体类的标识
 
@@ -24,6 +22,7 @@ public class XbCourse {
     public String id;
     public String courseTypeId;
     public String courseTypeName;
+
     public String subjectId;
     public String subjectName;
     public String courseName;
@@ -37,12 +36,18 @@ public class XbCourse {
     public String tuitionType;
     public Integer period;
     public String remarks;
-    @Column(name = "opening_type", nullable = true, columnDefinition ="char(1)")
+    //@Column(name = "opening_type", nullable = true, columnDefinition ="char(1)")
     public String openingType;
+    public String openingTypes;
     public String preCourseIds;
     public String preCourseNames;
     public String createDate;
+    @OneToOne()
+    @JoinColumn(name="courseTypeId",referencedColumnName = "id",insertable = false,updatable = false)
+    public XbCourseType xbcoursetype;
     public String createTime;
+    @Transient
+    List<XbCoursePreset> xbCoursePresetList;
     public XbCourse() {
 
     }
@@ -202,5 +207,13 @@ public class XbCourse {
 
     public void setSubjectId(String subjectId) {
         this.subjectId = subjectId;
+    }
+
+    public String getOpeningTypes() {
+        return openingTypes;
+    }
+
+    public void setOpeningTypes(String openingTypes) {
+        this.openingTypes = openingTypes;
     }
 }

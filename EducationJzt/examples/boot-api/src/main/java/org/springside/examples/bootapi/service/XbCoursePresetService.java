@@ -41,7 +41,9 @@ public class XbCoursePresetService {
 	public XbCoursePreset saveXbCoursePreset(XbCoursePreset xbcoursepreset){
 		return xbCoursePresetDao.save(xbcoursepreset);
 	}
-
+	public List<XbCoursePreset> findXbCoursePresetListByCourseid(String courseid){
+		return xbCoursePresetDao.findByCourseId(courseid);
+	}
 	public boolean  removeXbCoursePreset(XbCoursePreset xbcoursepreset){
 		try {
 			xbCoursePresetDao.delete(xbcoursepreset);

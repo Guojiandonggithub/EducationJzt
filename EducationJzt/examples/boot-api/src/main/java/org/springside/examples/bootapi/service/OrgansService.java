@@ -46,4 +46,7 @@ public class OrgansService {
 	public List<SysOrgans> getOrgansList() {
 		return organsDao.findSysOrgansList("1");
 	}
+
+	public List<SysOrgans> getOrgansListAll(){return (List)organsDao.findAll();};
+
 }

@@ -19,6 +19,7 @@
     <script src="../static/pages/js/ace.min.js"> </script>
     <script src="../static/pages/js/ace-elements.min.js"></script>
     <script src="../static/pages/laydate/laydate.js"></script>
+    <script src="../static/pages/js/course-newlesson.js"></script>
 
 </head>
 <body>
@@ -110,208 +111,169 @@
             <span>新建课程</span>
             <img src="../static/pages/img/line.png">
         </div>
-        <div class="form-box" >
-            <div class="main-form">
-                <h3>课程基础信息</h3>
-                <input type="hidden" id="courseId" th:value="${xbCourse?.id}">
-                <div class="form-group">
-                    <label><span>*</span>课程类别</label>
-                    <select name="courseTypeId"    id="courseTypeId"  class="input-select" >
-                        <option value="-1">--请选择--</option>
-                        <option th:each="cts,userStat:${coursetypelist}"  th:selected="${cts.id == xbCourse?.courseTypeId}"
-                                th:value="${cts.id}" th:text="${cts.courseTypeName}"></option>
-                    </select>
-                    <!--<a href="#modal-table1"  data-toggle="modal">新建类别</a>-->
+
+            <div class="form-box" >
+             <form  id="dJFrom" th:method="post" >
+                <div class="main-form">
+                    <h3>课程基础信息</h3>
+                    <input type="hidden" id="courseId" name="id" th:value="${xbCourse?.id}">
+                    <input type="hidden" id="courseId" name="state" value="0">
+                    <div class="form-group">
+                        <label><span>*</span>课程类别</label>
+                        <select name="courseTypeId"    id="courseTypeId"  class="input-select" >
+                            <option value="-1">--请选择--</option>
+                            <option th:each="cts,userStat:${coursetypelist}"  th:selected="${cts.id == xbCourse?.courseTypeId}"
+                                    th:value="${cts.id}" th:text="${cts.courseTypeName}"></option>
+                        </select>
+                        <!--<a href="#modal-table1"  data-toggle="modal">新建类别</a>-->
+                    </div>
+                    <div class="form-group">
+                        <label>科目</label>
+                        <select name="subjectId"  id="subjectId" class="input-select" >
+                            <option value="-1">--请选择--</option>
+                            <option th:each="cts,userStat:${subjectlist}"  th:selected="${cts.id == xbCourse?.subjectId}"
+                                    th:value="${cts.id}" th:text="${cts.subjectName}"></option>
+                        </select>
+                        <!-- <a href="#modal-table1"  data-toggle="modal">新建科目</a>-->
+                    </div>
+                    <div class="form-group">
+                        <label><span>*</span>课程名称</label>
+                        <input type="text" name="courseName" id="courseName" th:value="${xbCourse?.courseName}" placeholder="请输入课程名称">
+                    </div>
+                    <div class="form-group">
+                        <label ><span>*</span>授课模式</label>
+                        <input name="type" type="radio" class="ace" value="0" th:checked="${xbCourse?.type=='0'}"><span class="lbl">班课</span>
+                        <input name="type" type="radio" class="ace" value="1" th:checked="${xbCourse?.type=='1'}"><span class="lbl">一对一</span>
+                    </div>
+                    <div class="form-group">
+                        <label><span>*</span>收费模式</label>
+                        <p><input type="radio" name="chargingMode" value="0" th:checked="${xbCourse?.chargingMode=='0'}"
+                                  th:onclick="|chargingMode('0')|">按课时</p>
+                        <!--<p><input type="radio" name="chargingMode" value="2" th:checked="${xbCourse?.chargingMode=='2'}"
+                                  th:onclick="|chargingMode('2')|">按期</p>
+                        <p><input type="radio" name="chargingMode" value="1" th:checked ="${xbCourse?.chargingMode=='1'}"
+                                  th:onclick="|chargingMode('1')|">按时间</p>-->
+                    </div>
+                    <div class="form-group" >
+                        <label><span>*</span>开课校区</label>
+                        <p><input type="radio" name="openingType" value="0" th:checked="${xbCourse?.openingType=='0'}" th:onclick="|schoolType('0',${xbCourse?.id})|">全部校区</p>
+                        <p><input type="radio" name="openingType" value="1" th:checked="${xbCourse?.openingType=='1'}" th:onclick="|schoolType('1',${xbCourse?.id})|">指定校区</p>
+                    </div>
+                        <div id="zhidingSchool"   class="form-group" >
+                            <p th:each="sorg,sorgSta:${sorganList}" >
+                                <span th:if=" ${!#strings.isEmpty(xbCourse) }" th:if="${xbCourse?.openingType} eq '1'" style="display:block">
+                                    <input  type="checkbox" name="openingTypes"
+                                            th:checked="${#strings.contains(xbCourse.openingTypes,sorg.id)}"
+                                            th:onclick="|appointSchool('${sorgSta.index}','${sorg.organName}','${xbCourse?.id}','${sorg.id}',this)|"  th:value="${sorg.id}" >
+                                <span th:text="${sorg.organName}"></span>
+                                </span>
+                                <span th:if=" ${!#strings.isEmpty(xbCourse) }" th:if="${xbCourse?.openingType} eq '0'" style="display:block">
+                                    <input  type="checkbox" name="openingTypes"
+                                            th:onclick="|appointSchool('${sorgSta.index}','${sorg.organName}','${xbCourse?.id}','${sorg.id}',this)|"  th:value="${sorg.id}" >
+                                <span th:text="${sorg.organName}"></span>
+                                </span>
+                                <span th:if=" ${#strings.isEmpty(xbCourse) }" >
+                                    <input  type="checkbox" name="openingTypes"
+                                            th:onclick="|appointSchool('${sorgSta.index}','${sorg.organName}','${xbCourse?.id}','${sorg.id}',this)|"  th:value="${sorg.id}" >
+                                    <span th:text="${sorg.organName}"></span>
+                                </span>
+
+                            </p>
+                        </div>
                 </div>
-                <div class="form-group">
-                    <label>科目</label>
-                    <select name="subjectId"  id="subjectId" class="input-select" >
-                        <option value="-1">--请选择--</option>
-                        <option th:each="cts,userStat:${subjectlist}"  th:selected="${cts.id == xbCourse?.subjectId}"
-                                th:value="${cts.id}" th:text="${cts.subjectName}"></option>
-                    </select>
-                    <!-- <a href="#modal-table1"  data-toggle="modal">新建科目</a>-->
-                </div>
-                <div class="form-group">
-                    <label><span>*</span>课程名称</label>
-                    <input type="text" name="courseName" id="courseName" th:value="${xbCourse?.courseName}" placeholder="请输入课程名称">
-                </div>
-                <div class="form-group">
-                    <label ><span>*</span>授课模式</label>
-                    <input name="type" type="radio" class="ace" value="0" th:checked="${xbCourse?.type=='0'}"><span class="lbl">班课</span>
-                    <input name="type" type="radio" class="ace" value="1" th:checked="${xbCourse?.type=='1'}"><span class="lbl">一对一</span>
-                </div>
-                <div class="form-group">
-                    <label><span>*</span>收费模式</label>
-                    <p><input type="radio" name="chargingMode" value="0" th:checked="${xbCourse?.chargingMode=='0'}"
-                              th:onclick="|chargingMode('0')|">按课时</p>
-                    <p><input type="radio" name="chargingMode" value="2" th:checked="${xbCourse?.chargingMode=='2'}"
-                              th:onclick="|chargingMode('1')|">按期</p>
-                    <p><input type="radio" name="chargingMode" value="1" th:checked ="${xbCourse?.chargingMode=='1'}"
-                              th:onclick="|chargingMode('2')|">按时间</p>
-                </div>
-                <div class="form-group" th:if="${xbCourse==null}">
-                    <label><span>*</span>开课校区</label>
-                    <p><input type="checkbox" name="openingType" value="0" >全部校区</p>
-                    <p><input type="checkbox" name="openingType" value="1" >青山分校</p>
-                    <p><input type="checkbox" name="openingType" value="2" >洪兴分校</p>
-                    <p><input type="checkbox" name="openingType" value="3" >东兴分校</p>
-                </div>
-                <div class="form-group" th:if="${xbCourse!=null}">
-                    <label><span>*</span>开课校区</label>
-                    <p><input type="checkbox" name="openingType" value="0" th:checked="${#strings.contains(xbCourse.openingType,'0')}">全部校区</p>
-                    <p><input type="checkbox" name="openingType" value="1" th:checked="${#strings.contains(xbCourse.openingType,'1')}">青山分校</p>
-                    <p><input type="checkbox" name="openingType" value="2" th:checked="${#strings.contains(xbCourse.openingType,'2')}">洪兴分校</p>
-                    <p><input type="checkbox" name="openingType" value="3" th:checked="${#strings.contains(xbCourse.openingType,'3')}">东兴分校</p>
+            </form>
+                <div class="extend-form">
+                    <h3>定价标准</h3>
+                    <table id="dingjiaiform" class="table-bordered">
+                                <tr>
+                                    <th>校区</th>
+                                    <th>定价标准</th>
+                                </tr>
+                             <span th:if=" ${!#strings.isEmpty(xbCourse) }">
+                                 <tr  th:if=" ${xbCourse.openingType} eq '0'" >
+                                    <td>全部校区</td>
+                                    <input type="hidden" id="XbCoursePresetcourseId" name="courseId" value="th:value="${preset?.courseId}"/>
+                                    <input type="hidden" id="XbCoursePresetorganIds" name="organIds" value="th:value="${preset?.organIds}"/>
+                                    <td>
+                                        <div class="extend-list">
+                                            <div class="form-group">
+                                                <label>按课时</label>
+                                                <div class="numCon">
+                                                    <input id="XbCoursePresetperiodNum" name="periodNum" type="text" th:value="${preset?.periodNum}"/>
+                                                </div>
+                                                <span class="txt">课时</span>
+                                                <span class="txt">=</span>
+                                                <div class="numCon">
+                                                    <input id="XbCoursePresetmoney" name="money" type="text" th:value="${preset?.money}"/>
+                                                </div>
+                                                <span class="txt">元</span>
+                                                <span class="glyphicon glyphicon-remove-sign"></span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                 </tr>
+                                 <tr  th:if="${xbCourse.openingType} eq '1'" th:each="pre,preSta:${presetlist}">
+                                    <td th:text="${pre.sysorgans.organName}"></td>
+                                    <input type="hidden" id="XbCoursePresetcourseId" name="courseId" th:value="${pre?.courseId}"/>
+                                    <input type="hidden" id="XbCoursePresetorganIds" name="organIds" th:value="${pre?.organIds}"/>
+                                    <td>
+                                        <div class="extend-list">
+                                            <div class="form-group">
+                                                <label>按课时</label>
+                                                <div class="numCon">
+                                                    <input id="XbCoursePresetperiodNum" name="periodNum" type="text" th:value="${pre?.periodNum}"/>
+                                                </div>
+                                                <span class="txt">课时</span>
+                                                <span class="txt">=</span>
+                                                <div class="numCon">
+                                                    <input id="XbCoursePresetmoney" name="money" type="text" th:value="${pre?.money}"/>
+                                                </div>
+                                                <input type="hidden" id="preid" name="id" th:value="${pre?.id}"/>
+                                                <span class="txt">元</span>
+                                                <span class="glyphicon glyphicon-remove-sign"></span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </span>
+                    </table>
+
+                    </table>
                 </div>
             </div>
-            <div class="extend-form">
-                <h3>定价标准</h3>
-                <table class="table-bordered">
-                    <tr>
-                        <th>校区</th>
-                        <th>定价标准</th>
-                    </tr>
-                    <tr>
-                        <td>全部校区</td>
-                        <td>
-                            <div class="extend-list">
-                                <div class="form-group">
-                                    <label>按课时</label>
-                                    <div class="numCon">
-                                        <input id="text_box" name="" type="text" value="0"/>
-                                        <div class="count">
-                                            <span class="glyphicon glyphicon-menu-up" id="add"></span>
-                                            <span class="glyphicon glyphicon-menu-down" id="min"></span>
-                                        </div>
-                                    </div>
-                                    <span class="txt">课时</span>
-                                    <span class="txt">=</span>
-                                    <div class="numCon">
-                                        <input id="text_box1" name="" type="text" value="0"/>
-                                        <div class="count">
-                                            <span class="glyphicon glyphicon-menu-up" id="add1"></span>
-                                            <span class="glyphicon glyphicon-menu-down" id="min1"></span>
-                                        </div>
-                                    </div>
-                                    <span class="txt">元</span>
-                                    <span class="glyphicon glyphicon-remove-sign"></span>
-                                    <span class="glyphicon glyphicon-plus-sign"></span>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-        </div>
+
         <div class="enrollCon" style="margin-top:30px;">
             <button class="save" onclick="saveCourse()">保存</button>
             <button class="save" onclick="javascript:history.go(-1)">返回</button>
         </div>
     </div>
-
-    <!-- 新建课程类别 -->
-    <!--<div id="modal-table1" class="modal fade in" tabindex="-1" aria-hidden="false">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header no-padding">
-                    <div class="table-header">新建课程类别</div>
-                </div>
-                    <div class="modal-body" style="padding:15px !important">
-                        <div class="form-group" style="display: inline;">
-                            <label for="">序号</label>
-                            <input type="text" value="8">
-                        </div>  
-                        <div class="form-group" style="display: inline; margin-left:20px;">
-                            <label for="">类别名称</label>
-                            <input type="text" placeholder="请输入课程类别">
-                        </div>  
-                    </div>        
-                <div class="modal-footer no-margin-top">
-                    <button class="btn pull-left" data-dismiss="modal">
-                        取消
-                    </button>
-                    <button class="btn pull-right" data-dismiss="modal">
-                        确定
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-    &lt;!&ndash; 新建科目 &ndash;&gt;
-    <div id="modal-table2" class="modal fade in" tabindex="-1" aria-hidden="false">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header no-padding">
-                    <div class="table-header">新建科目</div>
-                </div>
-                    <div class="modal-body" style="padding:15px !important">  
-                        <div class="form-group" style="display: inline; margin-left:20px;">
-                            <label for="">科目名称</label>
-                            <input type="text" placeholder="请填写科目名称">
-                        </div>  
-                    </div>        
-                <div class="modal-footer no-margin-top">
-                    <button class="btn pull-left" data-dismiss="modal">
-                        取消
-                    </button>
-                    <button class="btn pull-right" data-dismiss="modal">
-                        确定
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>-->
     <script type="text/javascript" th:inline="javascript">
         var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/;
 
-
-
-
-        //--------------------------------------------------------------新建课程------------------------------------------------------------------------
+        //--------------------------------------------------------------新建课程---麻烦版本---------------------------------------------------------------------
         function saveCourse(){
-            var courseId =  $("#courseId").val();
-            var courseTypeId =  $("#courseTypeId").val();
+            var datafrom= serializeObject("#dJFrom");
+            var list = [];
 
-            var courseTypeName =  $("#courseTypeId").find("option:selected").text();
-            if(courseTypeId=="-1"){
-                courseTypeName ="";
-            }
-            var subjectId =  $("#subjectId").val();
-            var subjectName =  $("#subjectId").find("option:selected").text();
-            if(subjectId=="-1"){
-                subjectName ="";
-            }
-            var courseName =  $("#courseName").val();
-            var type = $('input[name="type"]:checked').val();
-            var chargingMode = $('input[name="chargingMode"]:checked').val();
-
-            var strgetSelectValue = "";
-                var getSelectValueMenbers = $("input[name='openingType']:checked").each(function(j) {
-                if (j >= 0) {
-                    strgetSelectValue += $(this).val() + ","
-                }
+            $("#dingjiaiform tr:not(:first)").each(function () {
+                var $ele = $(this);
+                var obj = {};
+                var x = $ele.find("input");
+                 obj.courseId = x.eq(0).val();
+                 obj.organIds = x.eq(1).val();
+                 obj.periodNum = x.eq(2).val();
+                 obj.money = x.eq(3).val();
+                 obj.id = x.eq(4).val();
+                list.push(obj);
             });
-            var openingType = strgetSelectValue;
+            datafrom.xbcoursepresetlist = list;
             $.ajax({
-                url: [[@{/jwcentercourse/savecourse}]],
-            type: 'post',
+                url: basePath+'/jwcentercourse/savecourse',
+                type: 'get',
                 dataType: 'json',
-                contentType: 'application/json',
-                data: JSON.stringify(
-                {id:courseId,
-                    courseTypeId:courseTypeId,
-                    courseTypeName:courseTypeName,
-                    subjectId:subjectId,
-                    subjectName:subjectName,
-                    courseName:courseName,
-                    type:type,
-                    state:"0",
-                    chargingMode:chargingMode,
-                    remarks:"备注",
-                    openingType:openingType
-                }
-            ),
+                contentType:"application/json;charset=UTF-8",
+                data: {dataentity:JSON.stringify(datafrom)},
+                cache: false,
                 async: true,
                 success: function(data) {
                 console.log("回调成功")
@@ -356,6 +318,21 @@
             }
         });
         }
+        function serializeObject(form){
+            var o = {};
+            var a = $(form).serializeArray();
+            $.each(a, function() {
+                if (o[this.name]) {
+                    if (!o[this.name].push) {
+                        o[this.name] = [o[this.name]];
+                    }
+                    o[this.name].push(this.value || '');
+                } else {
+                    o[this.name] = this.value || '';
+                }
+            });
+            return o;
+        };
     </script>
 </div>
 <!----------------------------------------------------------科目函数群------------------------------------------------------------->
@@ -371,22 +348,26 @@
 <script>
     $(document).ready(function(){
         //获得文本框对象
-        var t = $("#text_box");
+        var t = $("#periodNum");
         //初始化数量为1,并失效减
-        $('#min').attr('disabled',true);
+        $("#min").attr({"disabled": "disabled"});
+
+       //$('#min').attr('disabled',true);
         //数量增加操作
         $("#add").click(function(){
             // 给获取的val加上绝对值，避免出现负数
             t.val(Math.abs(parseInt(t.val()))+1);
             if (parseInt(t.val())!=1){
-                $('#min').attr('disabled',false);
+                $("#min").removeAttr("disabled");
+               // $('#min').attr('disabled',false);
             };
         })
         //数量减少操作
         $("#min").click(function(){
             t.val(Math.abs(parseInt(t.val()))-1);
             if (parseInt(t.val())==1){
-                $('#min').attr('disabled',true);
+                $("#min").attr({"disabled": "disabled"});
+                //$('#min').attr('disabled',true);
             };
         })
     });
@@ -394,7 +375,7 @@
 <script>
     $(document).ready(function(){
         //获得文本框对象
-        var t = $("#text_box1");
+        var t = $("#money");
         //初始化数量为1,并失效减
         $('#min1').attr('disabled',true);
         //数量增加操作

@@ -1,17 +1,15 @@
 package org.springside.examples.bootapi.domain;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.math.BigDecimal;
 
 // JPA实体类的标识
 
 /**
- * 定价标准表
+ * 课程表
  */
 @Entity
 public class XbCoursePreset {
@@ -21,13 +19,16 @@ public class XbCoursePreset {
     @GenericGenerator(name="idGenerator", strategy="uuid") //这个是hibernate的注解/生成32位UUID
     @GeneratedValue(generator="idGenerator")
     public String id;
-    public Integer courseId;
+    public String courseId;
     public Integer periodNum;
     public BigDecimal money;
+
     public String organIds;
     public String organNames;
+    @OneToOne()
+    @JoinColumn(name="organIds",referencedColumnName = "id",insertable = false,updatable = false)
+    public SysOrgans sysorgans;
     public XbCoursePreset() {
-
     }
     public XbCoursePreset(String id) {
         this.id = id;
@@ -41,11 +42,11 @@ public class XbCoursePreset {
         this.id = id;
     }
 
-    public Integer getCourseId() {
+    public String getCourseId() {
         return courseId;
     }
 
-    public void setCourseId(Integer courseId) {
+    public void setCourseId(String courseId) {
         this.courseId = courseId;
     }
 
