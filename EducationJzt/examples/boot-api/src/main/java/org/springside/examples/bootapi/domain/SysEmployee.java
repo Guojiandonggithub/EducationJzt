@@ -28,6 +28,7 @@ public class SysEmployee {
     public Integer isAllow;
     public String photo;
     public String organId;
+    public String deleteStatus;
 
     public SysEmployee() {
 

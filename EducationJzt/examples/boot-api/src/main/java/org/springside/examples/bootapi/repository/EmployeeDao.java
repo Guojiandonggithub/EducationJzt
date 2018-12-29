@@ -4,6 +4,8 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springside.examples.bootapi.domain.SysEmployee;
 
+import java.util.List;
+
 /**
  * 基于Spring Data JPA的Dao接口, 自动根据接口生成实现.
  * 
@@ -15,4 +17,5 @@ public interface EmployeeDao extends PagingAndSortingRepository<SysEmployee, Str
 
 	SysEmployee findByUserName(String userName);
 	SysEmployee getById(String id);
+	List<SysEmployee> findByDeleteStatus(String deletestatus);
 }

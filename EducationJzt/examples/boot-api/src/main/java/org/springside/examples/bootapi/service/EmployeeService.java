@@ -127,7 +127,7 @@ public class EmployeeService {
 	}
 	@Transactional
 	public List<SysEmployee> findSysEmployeeListAll(){
-		return (List<SysEmployee>)employeeDao.findAll();
+		return employeeDao.findByDeleteStatus("1");
 	}
 	@Transactional
 	public SysEmployee getSysEmployee(String id) {
@@ -141,10 +141,14 @@ public class EmployeeService {
 
 	@Transactional
 	public void delete(String id) {
-		employeeDao.delete(id);
+		SysEmployee sysEmployee = employeeDao.findOne(id);
+		sysEmployee.deleteStatus="0";
+		employeeDao.save(sysEmployee);
 		SysEmployeeSub sysEmployeeSub = employeeSubDao.findByUserId(id);
 		if(null!=sysEmployeeSub){
-			employeeSubDao.delete(sysEmployeeSub);
+			sysEmployeeSub.deleteStatus = "0";
+			employeeSubDao.save(sysEmployeeSub);
+			//employeeSubDao.delete(sysEmployeeSub);
 		}
 	}
 

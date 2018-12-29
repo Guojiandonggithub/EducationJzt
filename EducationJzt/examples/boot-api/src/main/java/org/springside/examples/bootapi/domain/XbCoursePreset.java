@@ -1,6 +1,5 @@
 package org.springside.examples.bootapi.domain;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -49,7 +48,6 @@ public class XbCoursePreset {
     public void setCourseId(String courseId) {
         this.courseId = courseId;
     }
-
     public Integer getPeriodNum() {
         return periodNum;
     }

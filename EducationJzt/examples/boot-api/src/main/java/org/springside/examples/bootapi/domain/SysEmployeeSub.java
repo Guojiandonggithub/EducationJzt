@@ -41,6 +41,7 @@ public class SysEmployeeSub {
     public String subGzkkh;
     public String subSb;
     public String userId;
+    public String deleteStatus;
     @Transient
     public String employeeSubid;
 

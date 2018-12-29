@@ -144,6 +144,7 @@ public class AccountActivity {
 		}
 		Page<SysEmployee> employeePage = null;
 		try {
+			searhMap.put("EQ_deleteStatus","1");
 			employeePage = accountService.getAccountList(pageable,searhMap);
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -24,6 +24,7 @@ public class SysOrgans {
     public Integer campusType;
     public String parentId;
     public Integer layOrder;
+    public String deleteStatus;
 
     public SysOrgans() {
 

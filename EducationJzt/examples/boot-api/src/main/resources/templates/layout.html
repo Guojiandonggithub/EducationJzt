@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"  xmlns:layout="http://www.w3.org/1999/xhtml">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
@@ -8,9 +8,9 @@
     </head>
 
     <body>
-        <div id="navbar" class="eduNav">
+        <div id="navbar" class="eduNav" th:fragment="top">
             <div class="navbar-header pull-left">
-                <a href="index.html" class="navbar-brand">
+                <a href="/forward/index" class="navbar-brand">
                     <small>
                         <img src="../static/pages/img/logo.png" alt=""/>
                     </small>
@@ -18,71 +18,71 @@
             </div>
             <div class="pull-right eduName">
                 <span>测试 [管理员]</span>
+                <span>退出</span>
                 <span>机构中心</span>
-                <span>退出</span>  -->
             </div>
         </div>
         <div class="main-container" id="main-container">
-            <div id="sidebar" class="sidebar responsive">
-                <ul class="nav nav-list" style="top: 0px;">
-                    <li class="">
-                        <a href="index.html"><span class="menu-text"> 工作台 </span></a>
+            <div id="sidebar" class="sidebar responsive" th:fragment="left(tab1,tab2)">
+                <ul class="nav nav-list" style="top: 0px;" id="zhu">
+                    <li th:class="${tab1=='11'}? 'active'">
+                        <a href="/forward/index"><span class="menu-text"> 工作台 </span></a>
                         <b class="arrow"></b>
                     </li>
-                    <li class="">
+                    <li th:class="${tab1=='12'}? 'active'">
                         <a href="/student/getManagementList"><span class="menu-text"> 办理中心 </span></a>
                         <b class="arrow"></b>
                     </li>
-                    <li class="active open">
+                    <li th:class="${tab1=='13'}? 'active open'">
                         <a href="#" class="dropdown-toggle">
                             <span class="menu-text">教务中心</span>
                             <b class="arrow fa fa-angle-down"></b>
                         </a>
                         <b class="arrow"></b>
-                        <ul class="submenu">
-                            <li class="">
+                        <ul class="submenu" id="submenu">
+                            <li th:class="${tab2=='31'}? 'active'">
                                 <a href="/student/getXbStudentList"><i class="menu-icon fa fa-caret-right"></i>学员</a>
                                 <b class="arrow"></b>
                             </li>
-                            <li class="">
+                            <li th:class="${tab2=='32'}? 'active'">
                                 <a href="/student/getXbClassroomList"><i class="menu-icon fa fa-caret-right"></i>班级</a>
                                 <b class="arrow"></b>
                             </li>
-                            <li class="">
-                                <a href="oneToOne.html">
+                            <li th:class="${tab2=='33'}? 'active'">
+                                <a href="/student/getOneToOneList">
                                     <i class="menu-icon fa fa-caret-right"></i>一对一</a>
                                 <b class="arrow"></b>
                             </li>
-                            <li class="">
+                            <li th:class="${tab2=='34'}? 'active'">
                                 <a href="courseArray.html"><i class="menu-icon fa fa-caret-right"></i>排课</a>
                                 <b class="arrow"></b>
                             </li>
-                            <li class="">
+                            <li th:class="${tab2=='35'}? 'active'">
                                 <a href="lessonTable.html"><i class="menu-icon fa fa-caret-right"></i>课程表</a>
                                 <b class="arrow"></b>
                             </li>
-                            <li class="active">
+                            <li th:class="${tab2=='36'}? 'active'">
                                 <a href="attendClass.html"><i class="menu-icon fa fa-caret-right"></i>记上课</a>
                                 <b class="arrow"></b>
                             </li>
-                            <li class="">
+                            <li th:class="${tab2=='37'}? 'active'">
                                 <a href="course.html"><i class="menu-icon fa fa-caret-right"></i>课程</a>
                                 <b class="arrow"></b>
                             </li>
                         </ul>
                     </li>
-                    <li class="hsub">
+                    <li th:class="${tab1=='14'}? 'active open'">
                         <a href="#" class="dropdown-toggle">
                             <span class="menu-text"> 内部管理 </span>
                             <b class="arrow fa fa-angle-down"></b>
                         </a>
                         <b class="arrow"></b>
                         <ul class="submenu">
-                            <li class="">
+                            <li th:class="${tab2=='41'}? 'active'">
                                 <a href="/accounts/getOrgansList"><i class="menu-icon fa fa-caret-right"></i>组织架构</a>
                                 <b class="arrow"></b>
                             </li>
-                            <li class="">
+                            <li th:class="${tab2=='42'}? 'active'">
                                 <a href="/accounts/getEmployeeList"><i class="menu-icon fa fa-caret-right"></i>员工信息</a>
                                 <b class="arrow"></b>
                             </li>
@@ -90,7 +90,21 @@
                     </li>
                 </ul>
             </div>
-            <div layout:fragment="content"></div>
+            <div class="container" layout:fragment="content"></div>
         </div>
+
+        <script type="text/javascript" th:inline="javascript">
+            $(function(){
+                //$(".dropdown-menu  li").addClass('active');
+                //$("#submenu-menu  li").addClass('active');
+                /*$("#submenu li").click(function() {
+                    $(this).parents('li').addClass('active');  // 删除其他兄弟元素的样式
+                    alert($(this).parents('li'));
+                    $(this).parents('li').addClass('open');  // 删除其他兄弟元素的样式
+                    $(this).siblings('li').removeClass('active');  // 删除其他兄弟元素的样式
+                    $(this).addClass('active');                            // 添加当前元素的样式
+                });*/
+            });
+        </script>
     </body>
 </html>

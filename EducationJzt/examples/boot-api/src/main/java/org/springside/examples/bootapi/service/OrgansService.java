@@ -34,12 +34,15 @@ public class OrgansService {
 
 	@Transactional
 	public void delete(String id) {
-		organsDao.delete(id);
+		SysOrgans sysOrgans = organsDao.findOne(id);
+		sysOrgans.deleteStatus = "0";
+		organsDao.save(sysOrgans);
+		//organsDao.delete(id);
 	}
 
 	@Transactional
 	public Page<SysOrgans>  getOrgansList(Pageable pageable) {
-		return organsDao.findByParentId(pageable,"1");
+		return organsDao.findByParentIdAndDeleteStatus(pageable,"1","1");
 	}
 
 	@Transactional

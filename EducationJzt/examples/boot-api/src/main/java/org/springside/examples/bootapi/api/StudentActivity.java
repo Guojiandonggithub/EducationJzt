@@ -156,7 +156,7 @@ public class StudentActivity {
 	 * @return
 	 */
 	@RequestMapping("/getXbClassroomList")
-	public String getOrgansList(@RequestParam(required = false) String room,ModelMap model, Pageable pageable){
+	public String getXbClassroomList(@RequestParam(required = false) String room,ModelMap model, Pageable pageable){
 		if(null==room){
 			room = "1";
 		}

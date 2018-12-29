@@ -84,4 +84,13 @@ public class BootApiApplication extends SpringBootServletInitializer{
 			SpringApplicationBuilder builder) {
 		return builder.sources(this.getClass());
 	}
+
+	/*@Resource
+	private void configureThymeleafStaticVars(ThymeleafViewResolver viewResolver) {
+		if(viewResolver != null) {
+			Map<String, Object> vars = new HashMap<>();
+			vars.put("var2", "var2");
+			viewResolver.setStaticVariables(vars);
+		}
+	}*/
 }
