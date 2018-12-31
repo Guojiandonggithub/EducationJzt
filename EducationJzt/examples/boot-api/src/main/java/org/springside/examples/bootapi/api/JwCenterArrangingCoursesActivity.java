@@ -52,6 +52,7 @@ public class JwCenterArrangingCoursesActivity {
         logger.info("跳转到排课");
         List<XbAttendClass> xbAttendClassList = xbAttendClassService.findXbAttendClassAll();
         model.addAttribute("xbAttendList",xbAttendClassList);
+        model.addAttribute("xbAttendConflicList",xbAttendClassService.findXbAttendConflictList());
         model.addAttribute("xbattendTotal",xbAttendClassList.size());
         model.addAttribute("xbSubjectList",xbSubjectService.findSubjectAll());
         model.addAttribute("xbClassList",xbStudentService.findXbClassListAll());

@@ -539,9 +539,9 @@
                             </div>
                         </div>
                         <div class="orderCon">
-                            <div class="export">
+                            <!--<div class="export">
                                 <button type="button" class="btn btn-primary">批量删除</button>
-                            </div>
+                            </div>-->
                             <div class="result">
                                 当前结果：共计<span th:text="${xbattendTotal}"></span>条排课
                             </div>
@@ -562,12 +562,13 @@
                                         <th>操作</th>
                                     </tr>
                                     <tr id="choose" th:each="less,lessSta:${xbAttendList}" >
-                                        <input th:id="${less.id}"  type="hidden">
+                                        <input th:id="${less.id}+'_kc'"  type="hidden">
                                         <td><input  type="checkbox"></td>
                                         <td th:text="${less.startDateTime}">上课日期</td>
                                         <td th:text="${less.timeInterval}">16:30-18:00时间段</td>
-                                        <td th:text="${less.xbclass.className}">
-                                           <img src="../static/pages/img/1v1.png" />
+                                        <td th:if="${less.wayOfTeaching=='1'}" th:text="${less.xbclass.className}+'(一对一)'">
+                                        </td>
+                                        <td th:if="${less.wayOfTeaching=='2'}" th:text="${less.xbclass.className}+'(班课)'">
                                         </td>
                                         <td th:text="${less.sysemployee.employeeName}">教师</td>
                                         <td th:text="${less.xbclassroom.classroomName}">教室</td>
@@ -588,7 +589,7 @@
                                                            '${less.startDateTime}','${less.endDateTime}','${less.timeInterval}',
                                                            '${less.teacherId}','${less.tutorId}','${less.classRoomId}',
                                                            '${less.subjectId}','${less.classTheme}')|">编辑</a>
-                                                        <a th:onclick="|javascript:attendClassRemove('${less.id}')|">删除</a>
+                                                        <a style="cursor:pointer" th:onclick="|javascript:attendClassRemove('${less.id}','1')|">删除</a>
                                                     </li>
                                                 </ul>
                                             </div>
@@ -649,7 +650,7 @@
                     <!-- 日程冲突 -->
                     <div id="conflict" class="tab-pane fade conflict">
                         <div class="screen">
-                            <div class="conflicDate" style="margin-top: 24px !important;">
+                          <!--<div class="conflicDate" style="margin-top: 24px !important;">
                                 <span class="glyphicon glyphicon-menu-left"></span>
                                 <p>2018/10/28 - 2018/11/28</p>
                                 <span class="glyphicon glyphicon-menu-right"></span>
@@ -673,10 +674,10 @@
                                         </span>
                                     </form>
                                 </div>
-                            </div>
+                            </div>-->
                         </div>
-                        <div class="orderCon">
-                            <div class="orderTable">
+                        <div class="orderCon ">
+                            <div class="orderTable rcct">
                                 <table class="table table-hover">
                                     <tr>
                                         <th>上课时间</th>
@@ -686,15 +687,26 @@
                                         <th>教室</th>
                                         <th>操作</th>
                                     </tr>
-                                    <tr id="choose">
-                                        <td>2018-10-11 08:00-17:00</td>
-                                        <td>张三珠心算(1对1)</td>
-                                        <td>珠心算</td>
-                                        <td>张三</td>
-                                        <td>科1号教室</td>
+                                    <tr th:each="conf,confSte:${xbAttendConflicList}" id="choose">
+                                        <input th:id="${conf.id}+'_ct'"  type="hidden">
+                                        <td th:text="${conf.startDateTime} +' '+${conf.timeInterval}">上课时间</td>
+                                        <td th:if="${conf.wayOfTeaching=='1'}" th:text="${conf.xbclass.className}+'(一对一)'">
+                                        </td>
+                                        <td th:if="${conf.wayOfTeaching=='2'}" th:text="${conf.xbclass.className}+'(班课)'">
+                                        </td>
+                                        <td  th:text="${conf.xbclass.xbCourse.courseName}">课程</td>
+                                        <td  th:text="${conf.sysemployee.employeeName}">教师</td>
+                                        <td  th:text="${conf.xbclassroom.classroomName}">教室</td>
                                         <td>
-                                            <a href="#modal-table1" role="button" data-toggle="modal"><img src="../static/pages/img/edit.png">编辑</a>
-                                            <a href="" data-toggle="modal" data-target="#myModal"><img src="../static/pages/img/del.png">删除</a>
+                                            <a href="#modal-table" role="button" data-toggle="modal"
+                                               th:onclick="|javascript:attendClassEdit('${conf.id}',
+                                                           '${conf.xbclass.id}','${conf.wayOfTeaching}','${conf.scheduleMode}',
+                                                           '${conf.startDateTime}','${conf.endDateTime}','${conf.timeInterval}',
+                                                           '${conf.teacherId}','${conf.tutorId}','${conf.classRoomId}',
+                                                           '${conf.subjectId}','${conf.classTheme}')|"
+                                            ><img src="../static/pages/img/edit.png">编辑</a>
+                                            <a  style="cursor:pointer" th:onclick="|javascript:attendClassRemove('${conf.id}','2')|">
+                                                <img src="../static/pages/img/del.png">删除</a>
 
                                         </td>
                                     </tr>
@@ -789,7 +801,8 @@
                                 <div class="form-group">
                                     <label><i>*</i>班级</label>
                                     <select name="classId" id="classId">
-                                        <option th:each="cla,claSta:${xbClassList}" th:value="${cla.id}" th:text="${cla.className}"></option>
+                                        <!--<option th:each="cla,claSta:${xbClassList}" th:value="${cla.id}" th:text="${cla.xbCourse.courseName}"></option>-->
+                                        <option th:each="cla,claSta:${xbClassList}" th:value="${cla.id}" th:text="'班级：'+${cla.className}+'  课程：'+${cla.xbCourse.courseName}"></option>
                                     </select>
                                 </div>
                                 <div class="form-group">
@@ -832,7 +845,7 @@
                                 <select name="timeInterval" id="timeInterval">
                                     <option value="">选择时段</option>
                                     <option value="9:30-10:30">9:30-10:30</option>
-                                    <option value="10:30-10:20">10:30-10:20</option>
+                                    <option value="10:30-11:20">10:30-11:20</option>
                                     <option value="14:00-15:30">14:00-15:30</option>
                                     <option value="15:30-17:00">15:30-17:00</option>
                                     <option value="17:00-18:30">17:00-18:30</option>
@@ -1121,8 +1134,28 @@
         html.push('</tr>');
         $("#attendClassList").append(html.join(""))
     }
+    function isRemove(id){
+        var html = [];
+        html.push('<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"> ');
+        html.push('	<div class="modal-dialog" role="document">                                                      ');
+        html.push('		<div class="modal-content">                                                                 ');
+        html.push('			<div class="modal-header">                                                              ');
+        html.push('				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span   ');
+        html.push('						aria-hidden="true">&times;</span></button>                                  ');
+        html.push('				<h4 class="modal-title" id="myModalLabel">请确认是否删除</h4>                       ');
+        html.push('			</div>                                                                                  ');
+        html.push('			<div class="modal-footer">                                                              ');
+        html.push('				<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>    ');
+        html.push('				<button type="button" class="btn btn-primary"                                       ');
+        html.push('						tonclick="attendClassRemove('+id+')>好</button>       ‘；                   ');
+        html.push('			</div>                                                                                  ');
+        html.push('		</div>                                                                                      ');
+        html.push('	</div>                                                                                          ');
+        html.push('</div>                                                                                           ');
+        $(".orderTable .rcct").append(html.join(""));
+    }
     //删除课程类别
-    function attendClassRemove(id){
+    function attendClassRemove(id,type){
         $.ajax({
             url: [[@{/jw_center_arranging_course/remove_xbAttend_class}]],
         type: 'post',
@@ -1136,7 +1169,12 @@
             var msg = data.msg;
             if(status=="0"){
                 var id = data.xbattendclass.id;
-                $("#"+id).parent().remove();
+                if(type=="1"){
+                    $("#"+id+"_kc").parent().remove();
+                }else if(type=="2"){
+                    $("#"+id+"_ct").parent().remove();
+                }
+
                 alert(msg);
             }else{
                 alert(msg);

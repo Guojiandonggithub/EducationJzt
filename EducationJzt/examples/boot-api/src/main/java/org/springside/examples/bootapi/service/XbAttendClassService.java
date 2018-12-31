@@ -40,6 +40,9 @@ public class XbAttendClassService {
 		List<XbAttendClass> list =  (List)xbAttendClassDao.findAll();
 		return list;
 	}
+	public List<XbAttendClass> findXbAttendConflictList(){
+		return xbAttendClassDao.findXbAttendConflictList();
+	}
 	public XbAttendClass findById(String id){
 		return xbAttendClassDao.findOne(id);
 	}
