@@ -136,21 +136,21 @@
                     <div id="array" class="tab-pane fade in active">
                         <ul class="nav nav-tabs arrayBtn" style="border-bottom: 1px solid #ccc;">
                             <li class="active">
-                                <a data-toggle="tab" href="#calendarTime" class="calendarTime">时间课表视图</a>
+                                <a data-toggle="tab" style="cursor:pointer"  class="calendarTime">时间课表视图</a>
                             </li>
                             <li>
-                                <a data-toggle="tab" href="#calendarRoom" class="calendarRoom">班级课表视图</a>
+                                <a data-toggle="tab" style="cursor:pointer" class="calendarRoom">班级课表视图</a>
                             </li>
                             <li>
-                                <a data-toggle="tab" href="#calendarTeacher" class="calendarTeacher">教师课表视图</a>
+                                <a data-toggle="tab"  style="cursor:pointer" class="calendarTeacher">教师课表视图</a>
                             </li>
                         </ul>
 
-                            <div class="tab-pane fade in active" id="calendarTime">
+                        <div class="tab-pane fade in active" id="calendarTime" >
                                 <div class="arrayForm">
                                     <div class="" style="display: flex;">
                                         <div class="checkAll">
-                                            <label>校区选择：</label>
+                                            <label>校区选择1：</label>
                                             <input type="checkbox" id="sel_2" onchange="selectAll2()">全部
                                         </div>
                                         <div class="checkList">
@@ -192,9 +192,8 @@
                                         <p class="state4"><span></span>冲突日程</p>
                                     </div>
                                 </div>
-                            </div>
-
-                        <div class="tab-pane fade in" id="calendarRoom" style="display:none;">
+                        </div>
+                        <div class="tab-pane fade in " id="calendarRoom"  >
                                 <div class="arrayForm">
                                     <div class="" style="display: flex;">
                                         <div class="checkAll">
@@ -232,18 +231,15 @@
                                         </select>
                                     </div>
                                 </div>
-                            <div id="calendar">
-                                <div class="classStyle">
-                                    <p class="state1"><span></span>已记上课</p>
-                                    <p class="state2"><span></span>我的日程</p>
-                                    <p class="state3"><span></span>正常日程</p>
-                                    <p class="state4"><span></span>冲突日程</p>
+                                <div id="calendar">
+                                    <div class="classStyle">
+                                        <p class="state1"><span></span>已记上课</p>
+                                        <p class="state2"><span></span>我的日程</p>
+                                        <p class="state3"><span></span>正常日程</p>
+                                        <p class="state4"><span></span>冲突日程</p>
+                                    </div>
                                 </div>
-                            </div>
-
-
-
-                            <table class="table table-hover table-bordered syllabus">
+                           <!-- <table class="table table-hover table-bordered syllabus">
                                 <tr>
                                     <th style="width:150px !important;">班级名称</th>
                                     <th>周一 10-29</th>
@@ -332,11 +328,11 @@
                                     <td></td>
                                     <td></td>
                                 </tr>
-                            </table>
+                            </table>-->
                         </div>
                         
 
-                        <div class="tab-pane fade in" id="calendarTeacher" style="display:none;">
+                        <div class="tab-pane fade in" id="calendarTeacher" >
                                 <div class="arrayForm">
                                     <div class="" style="display: flex;">
                                         <div class="checkAll">
@@ -348,7 +344,7 @@
                                             <span><input type="checkbox">科源分校</span>
                                             <span><input type="checkbox">昆区分校</span>
                                             <span><input type="checkbox">东胜分校</span>
-                                        </div>   
+                                        </div>
                                     </div>
                                     <p>
                                         <label>查看范围：</label>全部
@@ -382,8 +378,7 @@
                                     <p class="state4"><span></span>冲突日程</p>
                                 </div>
                             </div>
-
-                            <table class="table table-hover table-bordered syllabus">
+                            <!--<table class="table table-hover table-bordered syllabus">
                                 <tr>
                                     <th style="width:150px !important;">教师名称</th>
                                     <th>周一 10-29</th>
@@ -430,7 +425,7 @@
                                     <td>张三</td>
                                     <td></td>
                                     <td>
-                                        
+
                                     </td>
                                     <td></td>
                                     <td></td>
@@ -472,8 +467,7 @@
                                     <td></td>
                                     <td></td>
                                 </tr>
-                            </table>
-
+                            </table>-->
                         </div>
 
 
@@ -549,10 +543,10 @@
                                 <button type="button" class="btn btn-primary">批量删除</button>
                             </div>
                             <div class="result">
-                                当前结果：共计<span>111</span>条排课
+                                当前结果：共计<span th:text="${xbattendTotal}"></span>条排课
                             </div>
                             <div  class="orderTable">
-                                <table id="attendClassList" class="table table-hover">
+                                <table id="attendClassList" class="table table-hover" th:fragment="attendClassList">
                                     <tr>
                                         <th>
                                             <input type="checkbox" id="sel_3" onchange="chooseAll()">
@@ -588,7 +582,12 @@
                                                 </p>
                                                 <ul class="dropdown-menu dropdown-default">
                                                     <li>
-                                                        <a href="">编辑</a>
+                                                        <a href="#modal-table"  data-toggle="modal"
+                                                           th:onclick="|javascript:attendClassEdit('${less.id}',
+                                                           '${less.xbclass.id}','${less.wayOfTeaching}','${less.scheduleMode}',
+                                                           '${less.startDateTime}','${less.endDateTime}','${less.timeInterval}',
+                                                           '${less.teacherId}','${less.tutorId}','${less.classRoomId}',
+                                                           '${less.subjectId}','${less.classTheme}')|">编辑</a>
                                                         <a th:onclick="|javascript:attendClassRemove('${less.id}')|">删除</a>
                                                     </li>
                                                 </ul>
@@ -783,6 +782,7 @@
                     <div class="modal-header no-padding">
                         <div class="table-header">新建日程</div>
                     </div>
+                    <input id="id" name="id" type="hidden" value=""/>
                     <div class="modal-body no-padding">
                         <div id="classl" class="tab-pane fade in active">
                             <div class="grounInline">
@@ -799,15 +799,33 @@
                                         <option value="2">班级</option>
                                     </select>
                                 </div>
-                                <div class="form-group">
+                                <div id="scheduleModediv" class="form-group">
                                     <label><i>*</i>排课日程方式</label>
-                                    <input name="scheduleMode" type="radio" class="ace" value="1"><span class="lbl">单次</span>
-                                    <input name="scheduleMode" type="radio" class="ace" value="2"><span class="lbl">重复</span>
+                                    <input name="scheduleMode" type="radio" class="ace" value="1"
+                                           th:onclick="|paikeFan('1')|"><span class="lbl">单次</span>
+                                    <input name="scheduleMode" type="radio" class="ace" value="2"
+                                           th:onclick="|paikeFan('2')|"><span class="lbl">重复</span>
                                 </div>
                             </div>
-                            <div class="form-group">
+                            <div id="singleStrarDate" class="form-group">
                                 <label><i>*</i>上课日期</label>
                                 <input class="laydate-icon" id="startDateTime" name="startDateTime">
+                                <span id="manyStrarDate"  style="display: none;">
+                                    至
+                                    <input class="laydate-icon" id="endDateTime" name="endDateTime">
+                                </span>
+                            </div>
+
+                            <div id="manyWeek" class="manyWeek" style="display: none;">
+                                <label><i>*</i>重复设置</label>
+                                <input type="checkbox" name="weekType" value="0" ><span>全选</span>
+                                <input type="checkbox" name="weekType" value="1" ><span>周一</span>
+                                <input type="checkbox" name="weekType" value="2" ><span>周二</span>
+                                <input type="checkbox" name="weekType" value="3" ><span>周三</span>
+                                <input type="checkbox" name="weekType" value="4" ><span>周四</span>
+                                <input type="checkbox" name="weekType" value="5" ><span>周五</span>
+                                <input type="checkbox" name="weekType" value="6" ><span>周六</span>
+                                <input type="checkbox" name="weekType" value="7" ><span>周日</span>
                             </div>
                             <div class="form-group">
                                 <label><i>*</i>上课时段</label>
@@ -817,6 +835,8 @@
                                     <option value="10:30-10:20">10:30-10:20</option>
                                     <option value="14:00-15:30">14:00-15:30</option>
                                     <option value="15:30-17:00">15:30-17:00</option>
+                                    <option value="17:00-18:30">17:00-18:30</option>
+                                    <option value="18:30-20:00">18:30-20:00</option>
                                 </select>
                                 <span>自定义时间</span>
                             </div>
@@ -858,7 +878,7 @@
                         </div>
                     </div>
                     <div class="modal-footer no-margin-top">
-                        <button class="btn pull-left" data-dismiss="modal">
+                        <button class="btn pull-left" data-dismiss="modal" onclick="cecalAttendClass()">
                             取消
                         </button>
                         <button class="btn pull-right" data-dismiss="modal" onclick="saveAttendClass()">
@@ -980,9 +1000,57 @@
 <!--新建日程函数群-->
 <script type="text/javascript" th:inline="javascript">
     var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/;
+    function cecalAttendClass(){
+        $("#id").val("");
+        $("#classId").val("");
+        $("#wayOfTeaching").val("");
+        //$(":radio[name='scheduleMode'][value='" + scheduleMode + "']").prop("checked", "checked");
+        $("#scheduleMode").removeAttr("checked");
+        $("#scheduleModediv").show();
+        //$(":radio[name='scheduleMode']").prop("disabled", true);
+        $("#startDateTime").val("");
+        if(endDateTime!=''){
+            $("#endDateTime").val("");
+        }
+        $("#timeInterval").val("");
+        $("#teacherId").val("");
+        $("#tutorId").val("");
+        $("#classRoomId").val("");
+        $("#subjectId").val("");
+        $("#classTheme").val("");
+    }
+    //日程编辑
+    function attendClassEdit(id,xbclassid,wayOfTeaching,scheduleMode,startDateTime,endDateTime,timeInterval,
+                             teacherid,tutorid,classRoomid,subjectid,classTheme){
+        $("#id").val(id);
+        $("#classId").val(xbclassid);
+        $("#wayOfTeaching").val(wayOfTeaching);
+        $(":radio[name='scheduleMode'][value='" + scheduleMode + "']").prop("checked", "checked");
+        //$(":radio[name='scheduleMode']").prop("disabled", true);
+        $("#scheduleModediv").hide();
+        $("#startDateTime").val(startDateTime);
+        if(endDateTime!=''){
+               $("#endDateTime").val(endDateTime);
+        }
+        $("#timeInterval").val(timeInterval);
+        $("#teacherId").val(teacherid);
+        $("#tutorId").val(tutorid);
+        $("#classRoomId").val(classRoomid);
+        $("#subjectId").val(subjectid);
+        $("#classTheme").val(classTheme);
+
+    }
+
     //新建日程
     function saveAttendClass(){
         var data= serializeObject("#iform");
+       var  strgetSelectValue = "";
+        var getSelectValueMenbers = $("input[name='weekday']:checked").each(function(j) {
+            if (j >= 0) {
+                strgetSelectValue += $(this).val() + ","
+            }
+        });
+            data.weekday  = strgetSelectValue;
         $.ajax({
             type: 'post',
             dataType: 'json',
@@ -1000,15 +1068,21 @@
                 var xbclass = rsxbAttendClass.xbclass;//班级
                 var xbclassroom = rsxbAttendClass.xbclassroom;//教室
                 var sysemployee = rsxbAttendClass.sysemployee;//教师
-                if(status=="0"){
+                if(status=="00"){
                     alert(msg);
                     attendClassLoad(rsxbAttendClass.id,rsxbAttendClass.startDateTime,rsxbAttendClass.timeInterval,
                         xbclass.className,sysemployee.employeeName,xbclassroom.classroomName,
                         rsxbAttendClass.wayOfTeaching,subject.subjectName);
+                }else if(status=="01") {
+                    alert(msg);
+                    window.location.href = basePath + '/jw_center_arranging_course/to_arranging_course';
                 }else{
                     alert(msg);
                 }
-                //window.location.href = basePath + '/jw_center_arranging_course/to_arranging_course';
+
+            },
+            error:function(){
+                console.log("错误")
             }
         });
     }
@@ -1077,7 +1151,7 @@
         var o = {};
         var a = $(form).serializeArray();
         $.each(a, function() {
-            if (o[this.name]) {
+            if (o[this.name] ) {
                 if (!o[this.name].push) {
                     o[this.name] = [o[this.name]];
                 }
@@ -1095,40 +1169,42 @@
                 elem: '#startDateTime'
             }); //绑定元素
             laydate({
+                elem: '#endDateTime'
+            }); //绑定元素
+            laydate({
                 elem: '#demo1'
             }); //绑定元素
         }();
 
         $(".calendarTime").click(function () {
+            calendarTimeShow();
+        });
+        function calendarTimeShow(){
             $("#calendarTime").show();
             $("#calendarRoom").hide();
             $("#calendarTeacher").hide();
-        });
+        }
         $(".calendarRoom").click(function () {
+            calendarRoomShow();
+        });
+        function calendarRoomShow(){
             $("#calendarRoom").show();
             $("#calendarTime").hide();
             $("#calendarTeacher").hide();
-        });
+        }
         $(".calendarTeacher").click(function () {
+            calendarTeacherShow();
+        });
+        function calendarTeacherShow(){
             $("#calendarTeacher").show();
             $("#calendarTime").hide();
             $("#calendarRoom").hide();
-        });
-
+        }
         $(".btn-down").click(function () {
             $(this).siblings(".dropdown-menu").toggle();
         });
         $(".tag .close").click(function () {
             $(this).parent(".tag").hide();
-        });
-        $(".classl").click(function () {
-            $("#classl").show().siblings("#teacherl,#rooml").hide();
-        });
-        $(".teacherl").click(function () {
-            $("#teacherl").show().siblings("#classl,#rooml").hide();
-        });
-        $(".rooml").click(function () {
-            $("#rooml").show().siblings("#classl,#teacherl").hide();
         });
 
         function selectAll() {
@@ -1149,7 +1225,6 @@
                 this.checked = isCheck; //循环赋值给每个复选框是否选中
             });
         };
-
         function chooseAll() {
             var isCheck = $("#sel_3").is(':checked'); //获得全选复选框是否选中
             $("#choose input[type='checkbox']").each(function () {
@@ -1157,22 +1232,191 @@
             });
         };
 
-        $(".skList").hover(function () {
+       /* $(".skList").hover(function () {
             $(this).siblings(".infoShow").toggle(300);
         });
         $(".ctList").hover(function () {
             $(this).siblings(".infoShow").toggle(300);
-        });
-
+        });*/
+        //排课方式
+       function paikeFan(){
+          var scheduleMode =  $('input:radio[name="scheduleMode"]:checked').val();
+           $("[name='weekType']").removeAttr("checked");//取消全选
+           $("#startDateTime #endDateTime").val("");
+           if(scheduleMode=='1'){
+               $("#manyStrarDate").hide();
+               $("#manyWeek").hide();
+           }else{
+               $("#manyStrarDate").show();
+               $("#manyWeek").show();
+           }
+       }
 
         $(function () {
-            //var basetimePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/;
             var date = new Date();
             var d = date.getDate();
             var m = date.getMonth();
             var y = date.getFullYear();
             var url = basePath+"/jw_center_arranging_course/to_arranging_course_fullcalendar";
-            $('#calendarTime #calendar').fullCalendar({
+                $('#calendarTime #calendar').fullCalendar({
+                    header: {
+                        right: '',
+                        center: 'prev,title,next,today',
+                        left: 'agendaDay,agendaWeek,month'
+                    },
+                    defaultView:'agendaWeek',
+                    firstDay: 1,
+                    editable: true,
+                    timeFormat: 'H:mm',
+                    axisFormat: 'H:mm',
+                    events: function(start, end, callback) {
+                        var fstart = $.fullCalendar.formatDate(start, "yyyy-MM-dd");
+                        var fend = $.fullCalendar.formatDate(end, "yyyy-MM-dd");
+                        $.ajax({
+                            type: "post",
+                            url: url,//我是用ajax获取后台数据的，这里填写地址
+                            dataType: "json",
+                            data: {
+                                start: fstart,
+                                end: fend
+                            },
+                            success: function(data) {
+                                if (data) {
+                                    var event = [];
+                                    var listentity = data.listentity;
+                                    $.each(listentity, function(i) {
+                                        var d = listentity[i];
+                                        var id = d.id;
+                                        var time = d.timeInterval.split("-");
+                                        var date = d.startDateTime.split("-");
+                                        var className =d.xbclass.className;
+                                        var y = date[0];
+                                        var m = date[1];
+                                        var d = date[2];
+                                        var starthhtime = time[0].split(":")[0];
+                                        var startmmtime = time[0].split(":")[1];
+                                        var endhhtime = time[1].split(":")[0];
+                                        var endtmmtime = time[1].split(":")[1];
+                                        event.push({
+                                            _id: id,
+                                            title:className,
+                                            start: new Date(y, m-1, d ,starthhtime,startmmtime),
+                                            end: new Date(y, m-1, d ,endhhtime,endtmmtime),
+                                            allDay: false
+                                        });
+                                    });
+                                    callback(event);
+                                }
+                            },
+                            error:function(){
+                                alert("错了")
+                            }
+                        });
+                    },
+                    //点击事件
+                    eventClick: function(event) {
+                        alert("哈哈哈")
+                        if (event.url) {
+                            window.open(event.url);
+                            return false;
+                        }
+                    },
+                    loading: function (bool) {
+                        if (bool) $('#loading').show();
+                        else $('#loading').hide();
+                    },
+                    //#region 鼠标放上去显示信息
+                    eventMouseover: function (calEvent, jsEvent, view) {
+                        var fstart = $.fullCalendar.formatDate(calEvent.start, "yyyy/MM/dd HH:mm");
+                        var fend = $.fullCalendar.formatDate(calEvent.end, "yyyy/MM/dd HH:mm");
+                        $(this).attr('title', fstart + " - " + fend + " " + calEvent.title);
+                      //  鼠标悬浮到title的时候可以设置展现哪些信息
+                       // $(this).attr('title', calEvent.fullname);
+                        //$(this).attr('title', "哈哈哈");
+                        $(this).css('font-weight', 'normal');
+                        //            $(this).tooltip({
+                        //                effect: 'toggle',
+                        //                cancelDefault: true
+                        //            });
+                        var evtcontent = '<div class="tanchu">                  ';
+                        evtcontent += '		<span>开始：2018-10-29 08:00</span>        ';
+                        evtcontent += '		<span>结束：2018-10-29 17:00</span>        ';
+                        evtcontent += '		<span>教室：5号教室</span>                 ';
+                        evtcontent += '		<span>班课/一对一：青山分校2018届4班</span>';
+                        evtcontent += '		<span>教师：汪大东</span>                  ';
+                        evtcontent += '		<span>助教：张三</span>                    ';
+                        evtcontent += '</div>								       ';
+                        //$(this).html(evtcontent);
+                        //$(this).parent().append(evtcontent);
+                    },
+                    eventMouseout: function (event, jsEvent, view) {
+                        console.log('out');
+                        calendar.fullCalendar('removeEvents', bgEvent.id);
+                    },
+            });
+            $('#calendarRoom #calendar').fullCalendar({
+                header: {
+                    right: '',
+                    center: 'prev,title,next,today',
+                    left: 'agendaWeek'
+                },
+                defaultView:'agendaWeek',
+                firstDay: 1,
+                editable: true,
+                timeFormat: 'H:mm',
+                axisFormat: 'H:mm',
+                events: [{
+                    title: '科源校区诶诶我惹人\r\n张三\n5号教室',
+                    start: new Date(y, m, 1),
+                    backgroundColor: '#33a299;'
+                },
+                    {
+                        title: '科源校区诶诶我惹人\r\n张三\n5号教室',
+                        start: new Date(y, m, d - 5),
+                        end: new Date(y, m, d - 2),
+                        backgroundColor: '#6aa8f1;'
+
+                    },
+                    {
+                        title: '科源校区诶诶我惹人\r\n张三\n5号教室',
+                        start: new Date(y, m, d - 5),
+                        end: new Date(y, m, d - 2),
+                        backgroundColor: '#6aa8f1;'
+
+                    },
+                    {
+                        title: '科源校区诶诶我惹人\r\n张三\n5号教室',
+                        start: new Date(y, m, 28),
+                        end: new Date(y, m, 29),
+                        backgroundColor: '#fc8038'
+                    },
+                    {
+                        title: '科源校区诶诶我惹人\r\n张三\n5号教室',
+                        start: new Date(y, m, d + 1, 19, 0),
+                        end: new Date(y, m, d + 1, 22, 30),
+                        backgroundColor: '#3967a3;'
+                    },
+                    {
+                        title: '科源校区诶诶我惹人\r\n张三\n5号教室',
+                        start: new Date(y, m, 28),
+                        end: new Date(y, m, 29),
+                        backgroundColor: '#fc8038'
+                    },
+                    {
+                        title: '科源校区诶诶我惹人\r\n张三\n5号教室',
+                        start: new Date(y, m, d + 1, 19, 0),
+                        end: new Date(y, m, d + 1, 22, 30),
+                        backgroundColor: '#3967a3;'
+                    },
+                ],
+                dayClick: function(date) {
+                    var selDate =$.fullCalendar.formatDate(date,'yyyy-MM-dd');//格式化日期
+                    console.log('dayClick触发的时间为：', date);
+                }
+            });
+
+
+            $('#calendarTeacher #calendar').fullCalendar({
                 header: {
                     right: '',
                     center: 'prev,title,next,today',
@@ -1183,187 +1427,71 @@
                 editable: true,
                 timeFormat: 'H:mm',
                 axisFormat: 'H:mm',
-                 events: function(start, end, callback) {
-                var fstart = $.fullCalendar.formatDate(start, "yyyy-MM-dd");
-                var fend = $.fullCalendar.formatDate(end, "yyyy-MM-dd");
-                $.ajax({
-                    type: "post",
-                    url: url,//我是用ajax获取后台数据的，这里填写地址
-                    dataType: "json",
-                    data: {
-                        start: fstart,
-                        end: fend
+                events: [{
+                        title: '老师1',
+                        start: new Date(y, m, 1),
+                        backgroundColor: '#33a299;'
                     },
-                    success: function(data) {
-                        if (data) {
-                            var event = [];
-                            var listentity = data.listentity;
-                            $.each(listentity, function(i) {
-                                var d = listentity[i];
-                                var id = d.id;
-                                var time = d.timeInterval.split("-");
-                                var date = d.startDateTime.split("-");
-                                var className =d.xbclass.className;
-                                var y = date[0];
-                                var m = date[1];
-                                var d = date[2];
-                                var starthhtime = time[0].split(":")[0];
-                                var startmmtime = time[0].split(":")[1];
-                                var endhhtime = time[1].split(":")[0];
-                                var endtmmtime = time[1].split(":")[1];
-                                event.push({
-                                    _id: id,
-                                    title:className,
-                                    start: new Date(y, m-1, d ,starthhtime,startmmtime),
-                                    end: new Date(y, m-1, d ,endhhtime,endtmmtime),
-                                    allDay: false
-                                });
-                            });
-                            callback(event);
-                        }
+                    {
+                        title: '老师2',
+                        start: new Date(y, m, d - 5),
+                        end: new Date(y, m, d - 2),
+                        backgroundColor: '#6aa8f1;'
+
                     },
-                    error:function(){
-                        alert("错了")
-                    }
-                });
-            },
+                    {
+                        title: '老师3',
+                        start: new Date(y, m, d - 5),
+                        end: new Date(y, m, d - 2),
+                        backgroundColor: '#6aa8f1;'
+
+                    },
+                    {
+                        title: '老师4',
+                        start: new Date(y, m, 28),
+                        end: new Date(y, m, 29),
+                        backgroundColor: '#fc8038'
+                    },
+                    {
+                        title: '老师5',
+                        start: new Date(y, m, d + 1, 19, 0),
+                        end: new Date(y, m, d + 1, 22, 30),
+                        backgroundColor: '#3967a3;'
+                    },
+                    {
+                        title: '老师6',
+                        start: new Date(y, m, 28),
+                        end: new Date(y, m, 29),
+                        backgroundColor: '#fc8038'
+                    },
+                    {
+                        title: '老师6',
+                        start: new Date(y, m, d + 1, 19, 0),
+                        end: new Date(y, m, d + 1, 22, 30),
+                        backgroundColor: '#3967a3;'
+                    },
+                ],
+
             });
-        });
-
-
-        $(function () {
-
-        var date = new Date();
-        var d = date.getDate();
-        var m = date.getMonth();
-        var y = date.getFullYear();
-
-        $('#calendarRoom #calendar').fullCalendar({
-            header: {
-                center: 'prev,title,next,today',
-            },
-            defaultView:'agendaWeek',
-            firstDay: 1,
-            editable: true,
-            timeFormat: 'H:mm',
-            axisFormat: 'H:mm',
-            events: [{
-                    title: '鼠标悬停',
-                    start: new Date(y, m, 1),
-                    backgroundColor: '#33a299;'
-                },
-                {
-                    title: '科源校区诶诶我惹人\r\n张三\n5号教室',
-                    start: new Date(y, m, d - 5),
-                    end: new Date(y, m, d - 2),
-                    backgroundColor: '#6aa8f1;'
-
-                },
-                {
-                    title: '科源校区诶诶我惹人\r\n张三\n5号教室',
-                    start: new Date(y, m, d - 5),
-                    end: new Date(y, m, d - 2),
-                    backgroundColor: '#6aa8f1;'
-
-                },
-                {
-                    title: '科源校区诶诶我惹人\r\n张三\n5号教室',
-                    start: new Date(y, m, 28),
-                    end: new Date(y, m, 29),
-                    backgroundColor: '#fc8038'
-                },
-                {
-                    title: '科源校区诶诶我惹人\r\n张三\n5号教室',
-                    start: new Date(y, m, d + 1, 19, 0),
-                    end: new Date(y, m, d + 1, 22, 30),
-                    backgroundColor: '#3967a3;'
-                },
-                {
-                    title: '科源校区诶诶我惹人\r\n张三\n5号教室',
-                    start: new Date(y, m, 28),
-                    end: new Date(y, m, 29),
-                    backgroundColor: '#fc8038'
-                },
-                {
-                    title: '科源校区诶诶我惹人\r\n张三\n5号教室',
-                    start: new Date(y, m, d + 1, 19, 0),
-                    end: new Date(y, m, d + 1, 22, 30),
-                    backgroundColor: '#3967a3;'
-                },
-            ],
-
-        });
-        });
-
-
-
-        $(function () {
-
-        var date = new Date();
-        var d = date.getDate();
-        var m = date.getMonth();
-        var y = date.getFullYear();
-
-        $('#calendarTeacher #calendar').fullCalendar({
-            header: {
-                center: 'prev,title,next,today',
-            },
-            
-            defaultView:'agendaWeek',
-
-
-            firstDay: 1,
-            editable: true,
-            timeFormat: 'H:mm',
-            axisFormat: 'H:mm',
-            events: [{
-                    title: '科源校区诶诶我惹人\r\n张三\n5号教室',
-                    start: new Date(y, m, 1),
-                    backgroundColor: '#33a299;'
-                },
-                {
-                    title: '科源校区诶诶我惹人\r\n张三\n5号教室',
-                    start: new Date(y, m, d - 5),
-                    end: new Date(y, m, d - 2),
-                    backgroundColor: '#6aa8f1;'
-
-                },
-                {
-                    title: '科源校区诶诶我惹人\r\n张三\n5号教室',
-                    start: new Date(y, m, d - 5),
-                    end: new Date(y, m, d - 2),
-                    backgroundColor: '#6aa8f1;'
-
-                },
-                {
-                    title: '科源校区诶诶我惹人\r\n张三\n5号教室',
-                    start: new Date(y, m, 28),
-                    end: new Date(y, m, 29),
-                    backgroundColor: '#fc8038'
-                },
-                {
-                    title: '科源校区诶诶我惹人\r\n张三\n5号教室',
-                    start: new Date(y, m, d + 1, 19, 0),
-                    end: new Date(y, m, d + 1, 22, 30),
-                    backgroundColor: '#3967a3;'
-                },
-                {
-                    title: '科源校区诶诶我惹人\r\n张三\n5号教室',
-                    start: new Date(y, m, 28),
-                    end: new Date(y, m, 29),
-                    backgroundColor: '#fc8038'
-                },
-                {
-                    title: '科源校区诶诶我惹人\r\n张三\n5号教室',
-                    start: new Date(y, m, d + 1, 19, 0),
-                    end: new Date(y, m, d + 1, 22, 30),
-                    backgroundColor: '#3967a3;'
-                },
-            ],
-
-        });
+            calendarTimeShow();
         });
     </script>
 </body>
+<style>
 
+    .tanchu {
+        background: #66b8b2;
+        color: #fff;
+        text-align: left;
+        padding:0 5px;
+        margin: 5px;
+        height: 22px;
+        font-size: 12px;
+        overflow: hidden;
+    }
+    .manyWeek input{
+        width: 30px;
+        height: 15px;
+    }
+</style>
 </html>

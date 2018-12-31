@@ -55,13 +55,13 @@
 .fc-event {
     background: #33a299;
 }
-#calendarRoom .fc-content,#calendarTeacher .fc-content{
+/*#calendarRoom .fc-content,#calendarTeacher .fc-content{
     display: none;
-}
-#calendarRoom .fc-header-left,#calendarRoom .fc-header-right,
+}*/
+/*#calendarRoom .fc-header-left,#calendarRoom .fc-header-right,
 #calendarTeacher .fc-header-left,#calendarTeacher .fc-header-right{
     display: none;
-}
+}*/
 
 
 

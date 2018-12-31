@@ -7,8 +7,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
+import java.util.*;
 
 /**
  * Created by ZhangLei on 2018/12/18 0018
@@ -425,9 +424,74 @@ public class DateUtil {
         now.getTime();
         return toString(now.getTime(),DATE_FORMAT);
     }
+
     public static void main(String[] args) {
         System.out.println(DateUtil.getDateStr(new Date()));
         System.out.println(DateUtil.getDateBefore(new Date(),2));
     }
+    /**
+     * 判断当前日期是星期几
+     *
+     * @param pTime 修要判断的时间
+     * @return dayForWeek 判断结果
+     * @Exception 发生异常
+     */
+    public static int dayForWeek(String pTime) {
+        SimpleDateFormat format = null;
+        int dayForWeek = 0;
+        try {
+            format = new SimpleDateFormat("yyyy-MM-dd");
+            java.util. Calendar c =  java.util. Calendar.getInstance();
+            c.setTime(format.parse(pTime));
+            if(c.get( java.util. Calendar.DAY_OF_WEEK) == 1){
+                dayForWeek = 7;
+            }else{
+                dayForWeek = c.get( java.util. Calendar.DAY_OF_WEEK) - 1;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return dayForWeek;
+    }
 
+    /**
+     * 获取时间段内所有日期
+     * @param dBegin
+     * @param dEnd
+     * @return
+     */
+    public static List<Date> findDates(Date dBegin, Date dEnd)
+    {
+        List lDate = new ArrayList();
+        lDate.add(dBegin);
+        Calendar calBegin = Calendar.getInstance();
+        // 使用给定的 Date 设置此 Calendar 的时间
+        calBegin.setTime(dBegin);
+        Calendar calEnd = Calendar.getInstance();
+        // 使用给定的 Date 设置此 Calendar 的时间
+        calEnd.setTime(dEnd);
+
+        // 测试此日期是否在指定日期之后
+        while (dEnd.after(calBegin.getTime()))
+        {
+            // 根据日历的规则，为给定的日历字段添加或减去指定的时间量
+            calBegin.add(Calendar.DAY_OF_MONTH, 1);
+            lDate.add(calBegin.getTime());
+        }
+        return lDate;
+    }
+
+    /**
+     * 是否包含星期
+     * @return
+     */
+    public static boolean doesItIncludeAWeek(String arr,String targetValue){
+        if (arr.indexOf(dayForWeek(targetValue)+"")>-1){
+            return true;
+        }
+        return false;
+    }
+    public static boolean useList(String[] arr,String targetValue){
+        return Arrays.asList(arr).contains(targetValue);
+    }
 }

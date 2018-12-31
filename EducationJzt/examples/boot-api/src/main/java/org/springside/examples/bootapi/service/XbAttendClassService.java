@@ -41,7 +41,7 @@ public class XbAttendClassService {
 		return list;
 	}
 	public XbAttendClass findById(String id){
-		return xbAttendClassDao.findById(id);
+		return xbAttendClassDao.findOne(id);
 	}
 	public XbAttendClass saveXbAttendClass(XbAttendClass xbattendclass){
 		//xbattendclass.setCreateUserId(loginUsers.getIfPresent("qnjl-mylove-forevery").id);//添加创建人

@@ -38,6 +38,8 @@ public class XbAttendClass {
     public String createUserName;
     public String createDate;
     public String timeInterval;
+    @Transient
+    public String weekType;
     @Column(name = "schedule_mode", nullable = true, columnDefinition ="char(1)")
     public String scheduleMode;
     @OneToOne()
@@ -268,4 +270,5 @@ public class XbAttendClass {
     public void setSysemployee(SysEmployee sysemployee) {
         this.sysemployee = sysemployee;
     }
+
 }

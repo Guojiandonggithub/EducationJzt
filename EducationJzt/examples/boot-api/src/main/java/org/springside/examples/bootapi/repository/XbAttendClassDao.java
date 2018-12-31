@@ -11,6 +11,6 @@ import org.springside.examples.bootapi.domain.XbAttendClass;
  * 
  * Spring Data JPA 还会解释新增方法名生成新方法的实现.
  */
-public interface XbAttendClassDao extends PagingAndSortingRepository<XbAttendClass, Long> {
+public interface XbAttendClassDao extends PagingAndSortingRepository<XbAttendClass, String> {
     XbAttendClass findById(String id);
 }
