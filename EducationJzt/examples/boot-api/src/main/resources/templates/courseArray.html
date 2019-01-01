@@ -981,12 +981,12 @@
     function saveAttendClass(){
         var data= serializeObject("#iform");
        var  strgetSelectValue = "";
-        var getSelectValueMenbers = $("input[name='weekday']:checked").each(function(j) {
+        var getSelectValueMenbers = $("input[name='weekType']:checked").each(function(j) {
             if (j >= 0) {
                 strgetSelectValue += $(this).val() + ","
             }
         });
-            data.weekday  = strgetSelectValue;
+        data.weekType  = strgetSelectValue;
         $.ajax({
             type: 'post',
             dataType: 'json',

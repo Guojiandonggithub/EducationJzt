@@ -123,7 +123,7 @@ public class JwCenterArrangingCoursesActivity {
                         XbAttendClass xbAttendClassnew = new XbAttendClass();
                         BeanUtils.copyProperties(xbAttendClassnew, xbAttendClass);
                         xbAttendClassnew.setStartDateTime(sdf.format(date));
-                        xbAttendClassnew.setWeekDay(DateUtil.dayForWeekChinses(xbAttendClassnew.getStartDateTime()));
+                        xbAttendClassnew.setWeekDay(DateUtil.dayForWeekChinses(xbAttendClass.getStartDateTime()));
                          rsxc = xbAttendClassService.saveXbAttendClass(xbAttendClassnew);
                     }
                 }
