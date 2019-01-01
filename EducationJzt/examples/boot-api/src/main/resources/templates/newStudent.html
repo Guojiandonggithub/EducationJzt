@@ -129,7 +129,7 @@
                                 <button type="button" class="btn btn-primary">批量调整所属部门</button>
                             </div> -->
                             <div class="result">
-                                当前结果：共计<span>15</span>人
+                                当前结果：共计<span th:text="${employeePage.getTotalElements()}"></span>人
                             </div>
                             <div class="orderTable">
                                 <table class="table table-hover">
@@ -199,10 +199,10 @@
                         </div>
                     </div>
                 </div>
+                </div>
             </div>
-        </div>
-    </form>
-</div> 
+        </form>
+    </div>
 <script>
 !function(){
 laydate({elem: '#demo'});//绑定元素
@@ -267,7 +267,6 @@ function getOrgansListPage(page){
     {
         var o = {};
         var a = $(form).serializeArray();
-        alert(a);
         $.each(a, function() {
             if (o[this.name]) {
                 if (!o[this.name].push) {

@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
-      layout:decorator="layout" >
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -24,9 +23,12 @@
 
 </head>
 <body>
+<div th:replace="layout::top"></div>
 <form id="iform">
 <div class="main-container" id="main-container">
-        <div class="main-content" layout:fragment="content">
+    <div th:replace="layout::left('14','42')">
+    </div>
+        <div class="main-content">
             <div class="breadcrumbs" id="breadcrumb">
                 <img src="../static/pages/img/line1.png">
                 <span>员工信息</span>
@@ -305,6 +307,7 @@ function readFile(){
     var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/;
 
     function saveEmployee(){
+        alert(123);
         var data= serializeObject("#iform");
         $.ajax({
             type: 'get',

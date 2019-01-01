@@ -1,9 +1,10 @@
 package org.springside.examples.bootapi.repository;
 
 
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springside.examples.bootapi.domain.XbCourse;
 import org.springside.examples.bootapi.domain.XbCoursePreset;
-import org.springside.examples.bootapi.domain.XbSubject;
 
 import java.util.List;
 
@@ -14,6 +15,6 @@ import java.util.List;
  * 
  * Spring Data JPA 还会解释新增方法名生成新方法的实现.
  */
-public interface XbCoursePresetDao extends PagingAndSortingRepository<XbCoursePreset, Long> {
+public interface XbCoursePresetDao extends PagingAndSortingRepository<XbCoursePreset, String>,JpaSpecificationExecutor<XbCoursePreset> {
     List<XbCoursePreset> findByCourseId(String courseid);
 }

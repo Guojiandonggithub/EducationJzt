@@ -11,14 +11,12 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springside.examples.bootapi.ToolUtils.HttpServletUtil;
 import org.springside.examples.bootapi.domain.*;
-import org.springside.examples.bootapi.service.EmployeeService;
-import org.springside.examples.bootapi.service.OrgansService;
-import org.springside.examples.bootapi.service.XbCourseService;
-import org.springside.examples.bootapi.service.XbStudentService;
+import org.springside.examples.bootapi.service.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +40,9 @@ public class StudentActivity {
 	@Autowired
 	public XbCourseService xbCourseService;
 
+	@Autowired
+	public XbCoursePresetService xbCoursePresetService;
+
 	/*
 	 * 跳转到学员
 	 * @return
@@ -59,7 +60,7 @@ public class StudentActivity {
 		/*model.addAttribute("xbXbStudent",student);*/
 		model.addAttribute("xbStudentList",xbStudentList);
 		model.addAttribute("organsList",organsList);
-		model.addAttribute("classPage",classPage);
+		model.addAttribute("flag","1");
 		return "enroll";
 	}
 
@@ -121,15 +122,41 @@ public class StudentActivity {
 	 * @return
 	 */
 	@RequestMapping("/getXbStudentList")
-	public String getXbStudentList(@RequestParam(required = false) String room,ModelMap model, Pageable pageable){
-		if(null==room){
-			room = "1";
-		}
-		model.addAttribute("room",room);
+	public String getXbStudentList(@RequestParam(required = false) String data,ModelMap model, Pageable pageable){
+		Map<String,Object> resultMap = new HashMap<>();
 		Map<String,Object> searhMap = new HashMap<>();
+		if(null!=data){
+			resultMap = com.alibaba.fastjson.JSONObject.parseObject(data,searhMap.getClass());
+		}
+		String organId = (String)resultMap.get("organId");
+		String type = (String)resultMap.get("type");
+		String nameormobile = (String)resultMap.get("nameormobile");
+		if(null==organId){
+			organId = "0";
+		}else if(!organId.equals("0")){
+			searhMap.put("EQ_organId",organId);
+		}
+		if(null==type){
+			type = "AZ";
+		}
+		if(null!=nameormobile&&!nameormobile.equals("")){
+			if(type.equals("AZ")){
+				searhMap.put("LIKE_xbStudent.studentName",nameormobile);
+			}else{
+				searhMap.put("LIKE_xbStudent.contactPhone",nameormobile);
+			}
+		}
+		Iterable<SysOrgans> organsList = organsService.getOrgansList();
 		Page<XbStudentRelation> xbStudentPage = studentService.getXbStudentRelationList(pageable,searhMap);
+		Map<String,Object> studentMap = new HashMap<>();
+		Page<XbStudent> xbStudentsPage = studentService.getXbStudentList(pageable,studentMap);
 		model.addAttribute("xbStudentPage",xbStudentPage);
+		model.addAttribute("xbStudentsPage",xbStudentsPage);
+		model.addAttribute("organId",organId);
+		model.addAttribute("organsList",organsList);
 		model.addAttribute("roomcurrentzise",xbStudentPage.getSize());
+		model.addAttribute("nameormobile",nameormobile);
+		model.addAttribute("type",type);
 		return "student";
 	}
 
@@ -196,9 +223,13 @@ public class StudentActivity {
 		if(null!=id){
 			xbClass = studentService.getXbClass(id);
 		}
-		List<SysOrgans> organsList = organsService.getOrgansList();
-		Map<String,Object> searhMap = new HashMap<>();
 		Map<String,Object> xbCoursesearhMap = new HashMap<>();
+		List<SysOrgans> organsList = organsService.getOrgansList();
+		if(organsList.size()>0){
+			xbCoursesearhMap.put("EQ_",organsList.get(0).id);
+		}
+		Map<String,Object> searhMap = new HashMap<>();
+
 		//xbCoursesearhMap.put("IN_openingType",organsList.get(0).id);
 		Page<XbCourse> xbCoursePage = xbCourseService.getXbCourseList(pageable,xbCoursesearhMap);
 		List<SysEmployee> employeeList = employeeService.getAccountList(pageable,searhMap).getContent();
@@ -247,12 +278,12 @@ public class StudentActivity {
 		}
 	}
 	@RequestMapping("/save/enroll")
-	public void saveOrgans(@RequestParam String studentEntity, HttpServletResponse resp) {
+	public void saveOrgans(@RequestParam String studentEntity,@RequestParam String xbStudentRelation, HttpServletResponse resp) {
 		Map<String, Object> map  =  new HashMap<>();
 		try {
 			XbStudent xbStudent = com.alibaba.fastjson.JSONObject.parseObject(studentEntity,XbStudent.class);
 			XbSupplementFee xbSupplementFee = com.alibaba.fastjson.JSONObject.parseObject(studentEntity,XbSupplementFee.class);
-			XbStudentRelation xbStudentRelation = com.alibaba.fastjson.JSONObject.parseObject(studentEntity,XbStudentRelation.class);
+			List<XbStudentRelation> xbStudentRelationList = com.alibaba.fastjson.JSONArray.parseArray(xbStudentRelation,XbStudentRelation.class);
 			BigDecimal su = xbStudent.paymentMoney.subtract(xbStudent.surplusMoney);
 			BigDecimal pay = xbStudent.surplusMoney.subtract(xbStudent.paymentMoney);
 			int r=su.compareTo(BigDecimal.ZERO); //和0，Zero比较
@@ -266,10 +297,19 @@ public class StudentActivity {
 			xbStudent.surplusMoney = su;
 			xbStudent.paymentMoney = pay;
 			xbStudent = studentService.saveXbStudent(xbStudent);
-			xbStudentRelation.studentId = xbStudent.id;
 			xbSupplementFee.studentId = xbStudent.id;
-			xbStudentRelation.id = xbStudentRelation.relationId;
-			studentService.saveXbStudentRelation(xbStudentRelation);
+			String content = "";
+			for (XbStudentRelation studentRelation : xbStudentRelationList) {
+				studentRelation.studentId = xbStudent.id;
+				XbCourse xbCourse = xbCourseService.findById(studentRelation.courseId);
+				content = content+xbCourse.courseName +",";
+				studentService.saveXbStudentRelation(studentRelation);
+			}
+			if(content.endsWith(",")){
+				content = content.substring(0,content.length()-1);
+			}
+			xbSupplementFee.remarks = content;
+			xbSupplementFee.type = "0";//报名
 			studentService.saveXbSupplementFee(xbSupplementFee);
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put("status","1");
@@ -298,6 +338,192 @@ public class StudentActivity {
 		model.addAttribute("XbSupplementFeePage",XbSupplementFeePage);
 		model.addAttribute("roomcurrentzise",XbSupplementFeePage.getSize());
 		return "management";
+	}
+
+	/**
+	 * 获取班级列表
+	 * @return
+	 */
+	@RequestMapping("/getClassList")
+	public String getClassList(@RequestParam(required = false) String orginId,@RequestParam(required = false) String classesName,ModelMap model, Pageable pageable){
+		List<SysOrgans> organsList = organsService.getOrgansList();
+		if(organsList.size()>0){
+			Map<String,Object> xbCoursesearhMap = new HashMap<>();
+			if(null==orginId&&!orginId.equals("")){
+				orginId = organsList.get(0).id;
+			}
+			xbCoursesearhMap.put("EQ_organId",orginId);
+			if(null!=classesName&&!classesName.equals("")){
+				xbCoursesearhMap.put("LIKE_className",classesName);
+			}
+			Page<XbClass> xbClassPage = studentService.getXbClassList(pageable,xbCoursesearhMap);
+			model.addAttribute("xbClassPage",xbClassPage);
+		}
+		return "enroll::classlist";
+	}
+
+	/**
+	 * 获取课程列表
+	 * @return
+	 */
+	@RequestMapping("/getCourseList")
+	public String getCourseList(@RequestParam(required = false) String orginId,@RequestParam(required = false) String courseName,ModelMap model, Pageable pageable){
+		List<SysOrgans> organsList = organsService.getOrgansList();
+		if(organsList.size()>0){
+			Map<String,Object> xbCoursesearhMap = new HashMap<>();
+			if(null==orginId&&!orginId.equals("")){
+				orginId = organsList.get(0).id;
+			}
+			xbCoursesearhMap.put("EQ_organIds",orginId);
+			if(null!=courseName&&!courseName.equals("")){
+				xbCoursesearhMap.put("LIKE_xbCourse.courseName",courseName);
+			}
+			Page<XbCoursePreset> xbCoursePage = xbCoursePresetService.getXbCoursePresetList(pageable,xbCoursesearhMap);
+			model.addAttribute("xbCoursePage",xbCoursePage);
+		}
+		return "enroll::courselist";
+	}
+
+	/**
+	 * 选择课程
+	 * @return
+	 */
+	@RequestMapping("/chooseCourse")
+	public String chooseCourse(@RequestParam(required = false) String courseIds,ModelMap model, Pageable pageable){
+		List<XbCoursePreset> xbCourseList = new ArrayList<>();
+		BigDecimal money = new BigDecimal(0);
+			if(null!=courseIds&&!courseIds.equals("")){
+				String[] str = courseIds.split(",");
+				for (int i = 0; i < str.length; i++) {
+					XbCoursePreset xbCoursePreset = new XbCoursePreset();
+					xbCoursePreset = xbCoursePresetService.getXbCoursePreset(str[i]);
+					Map<String,Object> xbClasssearhMap = new HashMap<>();
+					xbClasssearhMap.put("EQ_courseId",xbCoursePreset.getCourseId());
+					Page<XbClass> classPage = studentService.getXbClassList(pageable,xbClasssearhMap);
+					xbCoursePreset.setXbClassList(classPage.getContent());
+					money = money.add(xbCoursePreset.money);
+					xbCourseList.add(xbCoursePreset);
+				}
+			}
+			model.addAttribute("xbCourseLists",xbCourseList);
+			model.addAttribute("money",money);
+			model.addAttribute("organName",xbCourseList.get(0).sysorgans.organName);
+		return "enroll::baoming";
+	}
+
+	/**
+	 * 选择班级
+	 * @return
+	 */
+	@RequestMapping("/chooseClass")
+	public String chooseClass(@RequestParam(required = false) String classIds,ModelMap model, Pageable pageable){
+		List<XbCoursePreset> xbCoursePresetList = new ArrayList<>();
+		BigDecimal money = new BigDecimal(0);
+			if(null!=classIds&&!classIds.equals("")){
+				String[] str = classIds.split(",");
+				for (int i = 0; i < str.length; i++) {
+					List<XbClass> classList = new ArrayList<>();
+					XbClass xbClass = studentService.getXbClass(str[i]);
+					classList.add(xbClass);
+					Map<String,Object> xbClasssearhMap = new HashMap<>();
+					xbClasssearhMap.put("EQ_courseId",xbClass.courseId);
+					xbClasssearhMap.put("EQ_organIds",xbClass.organId);
+					List<XbCoursePreset> xbCourseList = xbCoursePresetService.getXbCoursePresets(xbClasssearhMap);
+					xbCourseList.get(0).setXbClassList(classList);
+					money = money.add(xbCourseList.get(0).money);
+					xbCoursePresetList.addAll(xbCourseList);
+				}
+			}
+			model.addAttribute("xbCourseLists",xbCoursePresetList);
+			model.addAttribute("money",money);
+			model.addAttribute("organName",xbCoursePresetList.get(0).sysorgans.organName);
+		return "enroll::baoming";
+	}
+
+	/**
+	 * 跳转到查询欠费学员
+	 * @return
+	 */
+	@RequestMapping("/getQianfeiList")
+	public String getQianfeiList(@RequestParam(required = false) String data,ModelMap model, Pageable pageable){
+		Map<String,Object> resultMap = new HashMap<>();
+		Map<String,Object> searhMap = new HashMap<>();
+		if(null!=data){
+			resultMap = com.alibaba.fastjson.JSONObject.parseObject(data,searhMap.getClass());
+		}
+		String organId = (String)resultMap.get("organId");
+		String type = (String)resultMap.get("type");
+		String nameormobile = (String)resultMap.get("nameormobile");
+		if(null==organId){
+			organId = "0";
+		}else if(!organId.equals("0")){
+			searhMap.put("EQ_organId",organId);
+		}
+		if(null==type){
+			type = "AZ";
+		}
+		if(null!=nameormobile&&!nameormobile.equals("")){
+			if(type.equals("AZ")){
+				searhMap.put("LIKE_xbStudent.studentName",nameormobile);
+			}else{
+				searhMap.put("LIKE_xbStudent.contactPhone",nameormobile);
+			}
+		}
+		Iterable<SysOrgans> organsList = organsService.getOrgansList();
+		searhMap.put("GT_xbStudent.paymentMoney","0");
+		Page<XbStudentRelation> xbStudentPage = studentService.getXbStudentRelationList(pageable,searhMap);
+		Map<String,Object> studentMap = new HashMap<>();
+		studentMap.put( "GT_paymentMoney","0");
+		Page<XbStudent> xbStudentsPage = studentService.getXbStudentList(pageable,studentMap);
+		model.addAttribute("xbqianfeiPage",xbStudentPage);
+		model.addAttribute("xbStudentsPage",xbStudentsPage);
+		model.addAttribute("organId",organId);
+		model.addAttribute("organsList",organsList);
+		model.addAttribute("roomcurrentzise",xbStudentPage.getSize());
+		model.addAttribute("nameormobile",nameormobile);
+		model.addAttribute("type",type);
+		return "student::qianfei";
+	}
+
+	/**
+	 * 跳转到查询到期学员
+	 * @return
+	 */
+	@RequestMapping("/getexpiryStulist")
+	public String getexpiryStulist(@RequestParam(required = false) String data,ModelMap model, Pageable pageable){
+		Map<String,Object> resultMap = new HashMap<>();
+		Map<String,Object> searhMap = new HashMap<>();
+		if(null!=data){
+			resultMap = com.alibaba.fastjson.JSONObject.parseObject(data,searhMap.getClass());
+		}
+		String organId = (String)resultMap.get("organId");
+		String type = (String)resultMap.get("type");
+		String nameormobile = (String)resultMap.get("nameormobile");
+		if(null==organId){
+			organId = "0";
+		}else if(!organId.equals("0")){
+			searhMap.put("EQ_organId",organId);
+		}
+		if(null==type){
+			type = "AZ";
+		}
+		if(null!=nameormobile&&!nameormobile.equals("")){
+			if(type.equals("AZ")){
+				searhMap.put("LIKE_xbStudent.studentName",nameormobile);
+			}else{
+				searhMap.put("LIKE_xbStudent.contactPhone",nameormobile);
+			}
+		}
+		Iterable<SysOrgans> organsList = organsService.getOrgansList();
+		searhMap.put("EQ_periodNum","0");
+		Page<XbStudentRelation> xbStudentPage = studentService.getXbStudentRelationList(pageable,searhMap);
+		model.addAttribute("expiryStuPage",xbStudentPage);
+		model.addAttribute("organId",organId);
+		model.addAttribute("organsList",organsList);
+		model.addAttribute("roomcurrentzise",xbStudentPage.getSize());
+		model.addAttribute("nameormobile",nameormobile);
+		model.addAttribute("type",type);
+		return "student::expiryStu";
 	}
 
 }

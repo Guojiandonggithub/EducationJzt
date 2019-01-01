@@ -16,6 +16,7 @@ import org.springside.examples.bootapi.repository.*;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Service
 public class XbStudentService {
@@ -43,6 +44,7 @@ public class XbStudentService {
 	@Transactional
 	public XbSupplementFee saveXbSupplementFee(XbSupplementFee xbSupplementFee) {
 		xbSupplementFee.paymentDate = new Date();
+		xbSupplementFee.orderNumber = UUID.randomUUID().toString();
 		return xbSupplementFeeDao.save(xbSupplementFee);
 	}
 

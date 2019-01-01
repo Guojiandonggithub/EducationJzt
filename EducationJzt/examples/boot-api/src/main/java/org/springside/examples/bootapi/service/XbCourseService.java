@@ -71,4 +71,10 @@ public class XbCourseService {
 		return xbCourseDao.findAll(spec,pageable);
 	}
 
+	@Transactional(readOnly = true)
+	public List<XbCourse> findCourseList(String organId){
+		List<XbCourse> list =  (List)xbCourseDao.findAll();
+		return list;
+	}
+
 }

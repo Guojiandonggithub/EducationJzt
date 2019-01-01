@@ -4,6 +4,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.List;
 
 // JPA实体类的标识
 
@@ -18,12 +19,19 @@ public class XbCoursePreset {
     @GenericGenerator(name="idGenerator", strategy="uuid") //这个是hibernate的注解/生成32位UUID
     @GeneratedValue(generator="idGenerator")
     public String id;
+
+    @OneToOne()
+    @JoinColumn(name="courseId",referencedColumnName = "id",insertable = false,updatable = false)
+    public XbCourse xbCourse;
     public String courseId;
     public Integer periodNum;
     public BigDecimal money;
 
     public String organIds;
     public String organNames;
+    @Transient
+    public List<XbClass>  xbClassList;
+
     @OneToOne()
     @JoinColumn(name="organIds",referencedColumnName = "id",insertable = false,updatable = false)
     public SysOrgans sysorgans;
@@ -78,5 +86,13 @@ public class XbCoursePreset {
 
     public void setOrganNames(String organNames) {
         this.organNames = organNames;
+    }
+
+    public List<XbClass> getXbClassList() {
+        return xbClassList;
+    }
+
+    public void setXbClassList(List<XbClass> xbClassList) {
+        this.xbClassList = xbClassList;
     }
 }

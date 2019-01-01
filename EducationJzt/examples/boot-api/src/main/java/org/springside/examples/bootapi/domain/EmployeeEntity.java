@@ -1,7 +1,8 @@
 package org.springside.examples.bootapi.domain;
 
+import java.util.List;
+
 // JPA实体类的标识
 public class EmployeeEntity {
-    public SysEmployee sysEmployee;
-    public SysEmployeeSub sysEmployeeSub;
+    public List<String> courseId;
 }

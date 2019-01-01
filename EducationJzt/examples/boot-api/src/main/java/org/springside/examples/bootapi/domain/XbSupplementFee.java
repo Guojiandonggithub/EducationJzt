@@ -27,10 +27,12 @@ public class XbSupplementFee {
     public String studentName;
     public String paymentType;
     public BigDecimal paymentMoney;
+    public BigDecimal surplusMoney;
     public Date paymentDate;
     public String handlePerson;
     public String remarks;
     public String orderNumber;
+    public String type;
 
     public XbSupplementFee() {
 

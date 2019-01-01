@@ -44,84 +44,57 @@
                     <a data-toggle="tab" href="#divideList">学员分班列表</a>
                 </li>
                 <li>
-                    <a data-toggle="tab" href="#expiryStu">到期学员</a>
+                    <a data-toggle="tab" href="#expiryStu" onclick="getexpiryStulist('');">到期学员</a>
                 </li>
                 <li>
-                    <a data-toggle="tab" href="#arrearList">课程欠费学员</a>
+                    <a data-toggle="tab" href="#arrearList" onclick="getqianfeilist('');">课程欠费学员</a>
                 </li>
             </ul>
             <div class="tab-content student">
                 <!-- 学员列表 -->
-                <div id="studentList" class="tab-pane fade in active"> 
+                <div id="studentList" class="tab-pane fade in active">
+                    <form id="searchform">
                     <div class="screen">
                         <a class="stdEnroll" href="/student/getStudent">新生报名</a>
                         <div class="screenTop">  
-                            <select class="selectName">
-                                <option value="AZ">学员姓名</option>
-                                <option value="AL">手机尾号</option>
-                                <option value="AK">微信号</option>
+                            <select class="selectName" name="type">
+                                <option th:selected="${type eq 'AZ'}" value="AZ">学员姓名</option>
+                                <option th:selected="${type eq 'AL'}" value="AL">手机尾号</option>
+                                <!--<option value="AK">微信号</option>-->
                             </select>
                             <div class="nav-search" id="nav-search">
                                 <form class="form-search">
                                     <span class="input-icon">
-                                        <input type="text" placeholder="请输入姓名、支持拼音缩写" class="nav-search-input" id="nav-search-input" autocomplete="off">
+                                        <input type="text" name="nameormobile" th:value="${nameormobile}" placeholder="请输入姓名、支持拼音缩写" class="nav-search-input" id="nav-search-input" autocomplete="off">
                                         <i class="ace-icon fa fa-search nav-search-icon"></i>
                                     </span>
                                 </form>
                             </div>
-                            <div class="btn-group">
-                                <button class="btn btn-down">
-                                    筛选
-                                    <i>1</i>
-                                    <span class="ace-icon fa fa-caret-down icon-on-right"></span>
-                                </button>
-                                <div class="dropdown-menu">
-                                    <div class="screenData">
-                                        <select>
-                                            <option value="">报读校区</option>
-                                            <option value="y">青山校区</option>
-                                            <option value="n">科源校区</option>
-                                            <option value="n">坤元校区</option>
-                                        </select> 
-                                        <select>
-                                            <option value="">教师</option>
-                                            <option value="y">111</option>
-                                            <option value="n">1111</option>
-                                        </select>            
-                                    </div>
-                                    <div class="screenData">
-                                        <select>
-                                            <option value="">报读校区</option>
-                                            <option value="y">青山校区</option>
-                                            <option value="n">科源校区</option>
-                                            <option value="n">坤元校区</option>
-                                        </select> 
-                                        <select>
-                                            <option value="">课时状态</option>
-                                            <option value="y">在读</option>
-                                            <option value="n">转出</option>
-                                            <option value="y">退费</option>
-                                            <option value="n">停课</option>
-                                            <option value="n">结课</option>
-                                            <option value="n">转课</option>
-                                        </select>            
-                                    </div>     
-                                </div>
-                            </div>                                
+                            <div class="form-group" style="display: inline;">
+                                <button type="button" th:onclick="'javascript:getOrgansListPage(\'\')'">搜索</button>
+                            </div>
                         </div>
                         <div class="screenBot tags">
-                            课程状况：
-                            <span class="tag">在读<button type="button" class="close">×</button></span>
-                            <span class="tag">在读<button type="button" class="close">×</button></span>
-                            <p>清空筛选</p>
+                            <div class="control-group">
+                                <label class="control-label">管辖校区</label>
+                                <input  th:attr ="checked=${organId == '0'?true:false}" name="organId" type="radio" th:value="0" class="ace" th:onclick="'javascript:getOrgansListPage(\'\')'">
+                                <span class="lbl" th:text="全部校区"></span>
+                                <th:block class="checkbox" th:each="orgs:${organsList}">
+                                    <label>
+                                        <input th:attr ="checked=${organId == orgs.id?true:false}" name="organId" type="radio" th:value="${orgs.id}" class="ace" th:onclick="'javascript:getOrgansListPage(\'\')'">
+                                        <span class="lbl" th:text="${orgs.organName}"></span>
+                                    </label>
+                                </th:block>
+                            </div>
                         </div>
                     </div>
+                    </form>
                     <div class="orderCon">
                         <div class="export">
                             <button type="button" class="btn btn-primary">批量删除学员</button>
                         </div> 
                         <div class="result">
-                            <!--当前结果：学员共计<span>111</span>名，报读课程数总计：<span>111</span>条-->
+                            当前结果：学员共计<span th:text="${xbStudentsPage.getTotalElements()}"></span>名，报读课程数总计：<span th:text="${xbStudentPage.getTotalElements()}"></span>条
                         </div>
                         <div class="orderTable">
                             <table class="table table-hover">
@@ -154,7 +127,7 @@
                                     <td th:text="${studentrelation.xbStudent.surplusMoney}"></td>
                                     <td th:text="${studentrelation.xbStudent.paymentMoney}"><a href="">补费</a></td>
                                     <td th:text="${studentrelation.xbCourse.courseName}"></td>
-                                    <td th:text="${studentrelation.xbCourse.period}">课时</td>
+                                    <td th:text="${studentrelation.periodNum}">课时</td>
                                     <td  th:text="${#dates.format(studentrelation.enrollDate, 'yyyy-MM-dd')}"></td>
                                     <td></td>
                                 </tr>
@@ -196,66 +169,37 @@
                 </div>
                 <!-- 学员分班列表 -->
                 <div id="divideList" class="tab-pane fade divideList">
-                    <div class="screen">                       
-                        <div class="screenTop">  
-                            <select class="selectName">
-                                <option value="AZ">学员姓名</option>
-                                <option value="AL">手机号</option>
+                    <div class="screen">
+                        <div class="screenTop">
+                            <select class="selectName" name="type">
+                                <option th:selected="${type eq 'AZ'}" value="AZ">学员姓名</option>
+                                <option th:selected="${type eq 'AL'}" value="AL">手机尾号</option>
                                 <!--<option value="AK">微信号</option>-->
                             </select>
                             <div class="nav-search" id="nav-search">
                                 <form class="form-search">
                                     <span class="input-icon">
-                                        <input type="text" placeholder="请输入姓名、支持拼音缩写" class="nav-search-input" id="nav-search-input" autocomplete="off">
+                                        <input type="text" name="nameormobile" th:value="${nameormobile}" placeholder="请输入姓名、支持拼音缩写" class="nav-search-input" id="nav-search-input" autocomplete="off">
                                         <i class="ace-icon fa fa-search nav-search-icon"></i>
                                     </span>
                                 </form>
                             </div>
-                            <div class="btn-group">
-                                <button class="btn btn-down">
-                                    筛选
-                                    <i>1</i>
-                                    <span class="ace-icon fa fa-caret-down icon-on-right"></span>
-                                </button>
-                                <div class="dropdown-menu">
-                                    <div class="screenData">
-                                        <select>
-                                            <option value="">报读校区</option>
-                                            <option value="y">青山校区</option>
-                                            <option value="n">科源校区</option>
-                                            <option value="n">坤元校区</option>
-                                        </select> 
-                                        <select>
-                                            <option value="">教师</option>
-                                            <option value="y">111</option>
-                                            <option value="n">1111</option>
-                                        </select>            
-                                    </div>
-                                    <div class="screenData">
-                                        <select>
-                                            <option value="">报读校区</option>
-                                            <option value="y">青山校区</option>
-                                            <option value="n">科源校区</option>
-                                            <option value="n">坤元校区</option>
-                                        </select> 
-                                        <select>
-                                            <option value="">课时状态</option>
-                                            <option value="y">在读</option>
-                                            <option value="n">转出</option>
-                                            <option value="y">退费</option>
-                                            <option value="n">停课</option>
-                                            <option value="n">结课</option>
-                                            <option value="n">转课</option>
-                                        </select>            
-                                    </div>     
-                                </div>
-                            </div>                                
+                            <div class="form-group" style="display: inline;">
+                                <button type="button" th:onclick="'javascript:getOrgansListPage(\'\')'">搜索</button>
+                            </div>
                         </div>
                         <div class="screenBot tags">
-                            课程状况：
-                            <span class="tag">在读<button type="button" class="close">×</button></span>
-                            <span class="tag">在读<button type="button" class="close">×</button></span>
-                            <p>清空筛选</p>
+                            <div class="control-group">
+                                <label class="control-label">管辖校区</label>
+                                <input  th:attr ="checked=${organId == '0'?true:false}" name="organId" type="radio" th:value="0" class="ace" th:onclick="'javascript:getOrgansListPage(\'\')'">
+                                <span class="lbl" th:text="全部校区"></span>
+                                <th:block class="checkbox" th:each="orgs:${organsList}">
+                                    <label>
+                                        <input th:attr ="checked=${organId == orgs.id?true:false}" name="organId" type="radio" th:value="${orgs.id}" class="ace" th:onclick="'javascript:getOrgansListPage(\'\')'">
+                                        <span class="lbl" th:text="${orgs.organName}"></span>
+                                    </label>
+                                </th:block>
+                            </div>
                         </div>
                     </div>
                     <div class="orderCon">
@@ -263,7 +207,7 @@
                             <button type="button" class="btn btn-primary">导出当前结果</button>
                         </div> 
                         <div class="result">
-                            当前结果：学员共计<span>111</span>名，报读课程数总计：<span>111</span>条
+                            当前结果：学员共计<span th:text="${xbStudentsPage.getTotalElements()}"></span>名，报读课程数总计：<span th:text="${xbStudentPage.getTotalElements()}"></span>条
                         </div>
                         <div class="orderTable">
                             <table class="table table-hover">
@@ -353,9 +297,10 @@
                 </div>
                 <!-- 到期学员 -->
                 <div id="expiryStu" class="tab-pane fade expiryStu">
-                    <div class="screen">  
-                        <a class="stdEnroll" href="/student/getStudent">新生报名</a>
-                        <button class="batch">批量导入</button>                   
+                    <th:block th:if="${expiryStuPage}" th:fragment="expiryStu">
+                        <form id="expiryStuearchform">
+                    <!--<div class="screen">
+                        <button class="batch">批量导入</button>
                         <div class="screenTop"> 
                             <div class="form-group">
                                 <label>学费到期查询：</label> 
@@ -374,45 +319,6 @@
                                 <input type="text" value="0">
                                 <button type="button">搜索</button>
                             </div>
-                            <div class="btn-group">
-                                <button class="btn btn-down">
-                                    筛选
-                                    <i>1</i>
-                                    <span class="ace-icon fa fa-caret-down icon-on-right"></span>
-                                </button>
-                                <div class="dropdown-menu">
-                                    <div class="screenData">
-                                        <select>
-                                            <option value="">报读校区</option>
-                                            <option value="y">青山校区</option>
-                                            <option value="n">科源校区</option>
-                                            <option value="n">坤元校区</option>
-                                        </select> 
-                                        <select>
-                                            <option value="">教师</option>
-                                            <option value="y">111</option>
-                                            <option value="n">1111</option>
-                                        </select>            
-                                    </div>
-                                    <div class="screenData">
-                                        <select>
-                                            <option value="">报读校区</option>
-                                            <option value="y">青山校区</option>
-                                            <option value="n">科源校区</option>
-                                            <option value="n">坤元校区</option>
-                                        </select> 
-                                        <select>
-                                            <option value="">课时状态</option>
-                                            <option value="y">在读</option>
-                                            <option value="n">转出</option>
-                                            <option value="y">退费</option>
-                                            <option value="n">停课</option>
-                                            <option value="n">结课</option>
-                                            <option value="n">转课</option>
-                                        </select>            
-                                    </div>     
-                                </div>
-                            </div>                                
                         </div>
                         <div class="screenBot tags">
                             课程状况：
@@ -420,17 +326,17 @@
                             <span class="tag">在读<button type="button" class="close">×</button></span>
                             <p>清空筛选</p>
                         </div>
-                    </div>
+                    </div>-->
                     <div class="orderCon">
                         <div class="export">
-                            <button type="button" class="btn btn-primary">批量删除学员</button>
+                            <!--<button type="button" class="btn btn-primary">批量删除学员</button>
                             <div class="form-group">
                                 <input type="checkbox">
                                 显示剩余学费
-                            </div>
+                            </div>-->
                         </div> 
                         <div class="result">
-                            当前结果：学员共计<span>111</span>名，报读课程数总计：<span>111</span>条
+                            当前结果：报读课程数总计：<span th:text="${expiryStuPage.getTotalElements()}"></span>条
                         </div>
                         <div class="orderTable">
                             <table class="table table-hover">
@@ -448,10 +354,10 @@
                                     <th>联系方式</th>
                                     <th>所属关系</th>
                                     <th>余额
-                                        <div class="sort">
+                                        <!--<div class="sort">
                                             <span class="glyphicon glyphicon-triangle-top"></span>
                                             <span class="glyphicon glyphicon-triangle-bottom"></span>
-                                        </div> 
+                                        </div> -->
                                     </th>
                                     <th>欠费</th>
                                     <th>报读课程</th>
@@ -462,38 +368,16 @@
                                         <span href="#modal-table"  data-toggle="modal" class="glyphicon glyphicon-option-vertical" aria-hidden="true"></span>
                                     </th>                                
                                 </tr>
-                                <tr id="choose">
+                                <tr id="chooses" th:each="studentrelation:${expiryStuPage.content}">
                                     <td><input type="checkbox"></td>
-                                    <td><img src="../static/pages/img/boy.png">张三</td>
-                                    <td>18958777777</td>
-                                    <td>母亲</td>
-                                    <td>0.00</td>
-                                    <td>0</td>
-                                    <td>作文</td>
-                                    <td>0.00课时</td>
-                                    <td>2018-05-20</td>
-                                    <td class="renew">
-                                        <a href="/student/getStudent">
-                                            <img src="../static/pages/img/WechatIMG2.pic">续费
-                                        </a>
-                                    </td>
-                                    <td></td>
-                                </tr>
-                                <tr id="choose">
-                                    <td><input type="checkbox"></td>
-                                    <td><img src="../static/pages/img/boy.png">张三</td>
-                                    <td>18958777777</td>
-                                    <td>母亲</td>
-                                    <td>0.00</td>
-                                    <td>-2300.00<a href="">补费</a></td>
-                                    <td>作文</td>
-                                    <td>0.00课时</td>
-                                    <td>2018-05-20</td>
-                                    <td class="renew">
-                                        <a href="/student/getStudent">
-                                            <img src="../static/pages/img/WechatIMG2.pic">续费
-                                        </a>
-                                    </td>
+                                    <td th:text="${studentrelation.xbStudent.studentName}"><img src="../static/pages/img/boy.png"></td>
+                                    <td th:text="${studentrelation.xbStudent.contactPhone}"></td>
+                                    <td th:text="${studentrelation.xbStudent.contactRelation}"></td>
+                                    <td th:text="${studentrelation.xbStudent.surplusMoney}"></td>
+                                    <td th:text="${studentrelation.xbStudent.paymentMoney}"><a href="">补费</a></td>
+                                    <td th:text="${studentrelation.xbCourse.courseName}"></td>
+                                    <td th:text="${studentrelation.periodNum}">课时</td>
+                                    <td  th:text="${#dates.format(studentrelation.enrollDate, 'yyyy-MM-dd')}"></td>
                                     <td></td>
                                 </tr>
                             </table>
@@ -549,76 +433,49 @@
                     </div>
                 </div>
                 <!-- 课程欠费学员 -->
-                <div id="arrearList" class="tab-pane fade arrearList">
-                    <div class="screen"> 
-                        <span class="arrearInfo">课程欠费维度下学员列表，监控学员课消状态</span>                      
-                        <div class="screenTop">  
-                            <select class="selectName">
-                                <option value="AZ">学员姓名</option>
-                                <option value="AL">手机尾号</option>
-                                <option value="AK">微信号</option>
+                <div id="arrearList" class="tab-pane fade arrearList" >
+                    <th:block th:if="${xbqianfeiPage}" th:fragment="qianfei">
+                    <form id="qianfeisearchform">
+                    <div class="screen">
+                        <span class="arrearInfo">课程欠费维度下学员列表，监控学员课消状态</span>
+                        <div class="screenTop">
+                            <select class="selectName" name="type">
+                                <option th:selected="${type eq 'AZ'}" value="AZ">学员姓名</option>
+                                <option th:selected="${type eq 'AL'}" value="AL">手机尾号</option>
+                                <!--<option value="AK">微信号</option>-->
                             </select>
                             <div class="nav-search" id="nav-search">
                                 <form class="form-search">
                                     <span class="input-icon">
-                                        <input type="text" placeholder="请输入姓名、支持拼音缩写" class="nav-search-input" id="nav-search-input" autocomplete="off">
+                                        <input type="text" name="nameormobile" th:text="${nameormobile}" th:value="${nameormobile}" placeholder="请输入姓名、支持拼音缩写" class="nav-search-input" id="nav-search-input" autocomplete="off">
                                         <i class="ace-icon fa fa-search nav-search-icon"></i>
                                     </span>
                                 </form>
                             </div>
-                            <div class="btn-group">
-                                <button class="btn btn-down">
-                                    筛选
-                                    <i>1</i>
-                                    <span class="ace-icon fa fa-caret-down icon-on-right"></span>
-                                </button>
-                                <div class="dropdown-menu">
-                                    <div class="screenData">
-                                        <select>
-                                            <option value="">报读校区</option>
-                                            <option value="y">青山校区</option>
-                                            <option value="n">科源校区</option>
-                                            <option value="n">坤元校区</option>
-                                        </select> 
-                                        <select>
-                                            <option value="">教师</option>
-                                            <option value="y">111</option>
-                                            <option value="n">1111</option>
-                                        </select>            
-                                    </div>
-                                    <div class="screenData">
-                                        <select>
-                                            <option value="">报读校区</option>
-                                            <option value="y">青山校区</option>
-                                            <option value="n">科源校区</option>
-                                            <option value="n">坤元校区</option>
-                                        </select> 
-                                        <select>
-                                            <option value="">课时状态</option>
-                                            <option value="y">在读</option>
-                                            <option value="n">转出</option>
-                                            <option value="y">退费</option>
-                                            <option value="n">停课</option>
-                                            <option value="n">结课</option>
-                                            <option value="n">转课</option>
-                                        </select>            
-                                    </div>     
-                                </div>
-                            </div>                                
+                            <div class="form-group" style="display: inline;">
+                                <button type="button" th:onclick="'javascript:getqianfeilist(\'\')'">搜索</button>
+                            </div>
                         </div>
                         <div class="screenBot tags">
-                            课程状况：
-                            <span class="tag">在读<button type="button" class="close">×</button></span>
-                            <span class="tag">在读<button type="button" class="close">×</button></span>
-                            <p>清空筛选</p>
+                            <div class="control-group">
+                                <label class="control-label">管辖校区</label>
+                                <input  th:attr ="checked=${organId == '0'?true:false}" name="organId" type="radio" th:value="0" class="ace" th:onclick="'javascript:getqianfeilist(\'\')'">
+                                <span class="lbl" th:text="全部校区"></span>
+                                <th:block class="checkbox" th:each="orgs:${organsList}">
+                                    <label>
+                                        <input th:attr ="checked=${organId == orgs.id?true:false}" name="organId" type="radio" th:value="${orgs.id}" class="ace" th:onclick="'javascript:getqianfeilist(\'\')'">
+                                        <span class="lbl" th:text="${orgs.organName}"></span>
+                                    </label>
+                                </th:block>
+                            </div>
                         </div>
                     </div>
                     <div class="orderCon">
-                        <div class="export">
+                        <!--<div class="export">
                             <button type="button" class="btn btn-primary">导出当前结果</button>
-                        </div> 
+                        </div> -->
                         <div class="result">
-                            当前结果：学员共计<span>111</span>名，报读课程数总计：<span>111</span>条
+                            当前结果：学员共计<span th:text当前结果：学员共计<span th:text="${xbStudentsPage.getTotalElements()}"></span>名，报读课程数总计：<span th:text="${xbqianfeiPage.getTotalElements()}"></span>条
                         </div>
                         <div class="orderTable">
                             <table class="table table-hover">
@@ -630,48 +487,22 @@
                                     <th>联系方式</th>
                                     <th>余额</th>
                                     <th>报读课程</th>
-                                    <th>课程学费</th>
-                                    <th>课程实收</th>
-                                    <th>已用学费</th>
-                                    <th>看不清</th>  
+                                    <th>剩余课时数</th>
+                                    <th>剩余金额</th>
+                                    <th>欠费金额</th>
                                     <th>
                                         <span href="#modal-table" data-toggle="modal" class="glyphicon glyphicon-option-vertical" aria-hidden="true"></span>
                                     </th>                              
                                 </tr>
-                                <tr id="choose">
+                                <tr id="choose" th:each="couse : ${xbqianfeiPage.content}" >
                                     <td><input type="checkbox"></td>
-                                    <td><img src="../static/pages/img/boy.png">张三</td>
-                                    <td>18958777777</td>
-                                    <td>0.00</td>
-                                    <td>识字1</td>
-                                    <td>3021.60</td>
-                                    <td>450.00</td>
-                                    <td>0.00</td>
-                                    <td>450.00</td>
-                                    <td></td>
-                                </tr>
-                                <tr id="choose">
-                                    <td><input type="checkbox"></td>
-                                    <td><img src="../static/pages/img/boy.png">张三</td>
-                                    <td>18958777777</td>
-                                    <td>0.00</td>
-                                    <td>识字1</td>
-                                    <td>3021.60</td>
-                                    <td>450.00</td>
-                                    <td>0.00</td>
-                                    <td>450.00</td>
-                                    <td></td>
-                                </tr>
-                                <tr id="choose">
-                                    <td><input type="checkbox"></td>
-                                    <td><img src="../static/pages/img/boy.png">张三</td>
-                                    <td>18958777777</td>
-                                    <td>0.00</td>
-                                    <td>识字1</td>
-                                    <td>3021.60</td>
-                                    <td>450.00</td>
-                                    <td>0.00</td>
-                                    <td>450.00</td>
+                                    <td th:text="${couse.xbStudent.studentName}"><img src="../static/pages/img/boy.png"></td>
+                                    <td th:text="${couse.xbStudent.contactPhone}"></td>
+                                    <td th:text="${couse.xbStudent.surplusMoney}"></td>
+                                    <td th:text="${couse.xbCourse.courseName}"></td>
+                                    <td th:text="${couse.periodNum}"></td>
+                                    <td th:text="${couse.receivable}"></td>
+                                    <td th:text="${couse.xbStudent.paymentMoney}"></td>
                                     <td></td>
                                 </tr>
                             </table>
@@ -725,8 +556,9 @@
                             </div>
                         </div>    
                     </div>
+                    </form>
+                    </th:block>
                 </div>
-
             </div>
         </div>
 
@@ -734,7 +566,7 @@
         
     </div>
 
-    <!-- 自定义选项弹窗 -->
+    <!-- 自定义选项弹窗
     <div id="modal-table" class="modal fade in" tabindex="-1" aria-hidden="false">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -773,7 +605,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div>-->
 </div>
 <script>
 !function(){
@@ -820,12 +652,76 @@ function chooseAll2(){
 <script type="text/javascript" th:inline="javascript">
 var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/;
 function getOrgansListPage(page){
+    var data= serializeObject("#searchform");
     var size = $('#size option:selected').val();//选中的值
     if(page){
         page = page -1;
     }
-    window.location.href = basePath + '/student/getXbStudentList?page='+page+'&size='+size+'&room=0';
+    window.location.href = basePath + '/student/getXbStudentList?page='+page+'&size='+size+'&room=0'+'&data='+JSON.stringify(data);;
 }
-</script> 
+
+function serializeObject(form)
+{
+    var o = {};
+    var a = $(form).serializeArray();
+    $.each(a, function() {
+        if (o[this.name]) {
+            if (!o[this.name].push) {
+                o[this.name] = [o[this.name]];
+            }
+            o[this.name].push(this.value || '');
+        } else {
+            o[this.name] = this.value || '';
+        }
+    });
+    return o;
+};
+
+
+function getqianfeilist(page){
+    var data= serializeObject("#qianfeisearchform");
+    var size = $('#size option:selected').val();//选中的值
+    if(page){
+        page = page -1;
+    }
+    console.log("ddddddddddddddddddd"+data);
+    $.ajax({
+        type: 'get',
+        //dataType: 'json',
+        url: basePath + '/student/getQianfeiList',
+        data: {data:data},
+        contentType:"application/json;charset=UTF-8",
+        cache: false,
+        async: true,
+        success: function (data) {
+            console.log(data);
+            $("#arrearList").html("");
+            $('#arrearList').html(data);
+        }
+    });
+}
+
+function getexpiryStulist(page){
+    var data= serializeObject("#expiryStuearchform");
+    var size = $('#size option:selected').val();//选中的值
+    if(page){
+        page = page -1;
+    }
+    $.ajax({
+        type: 'get',
+        //dataType: 'json',
+        url: basePath + '/student/getexpiryStulist',
+        data: {data:data},
+        contentType:"application/json;charset=UTF-8",
+        cache: false,
+        async: true,
+        success: function (data) {
+            console.log(data);
+            $("#expiryStu").html("");
+            $('#expiryStu').html(data);
+        }
+    });
+}
+</script>
 </body>
 </html>

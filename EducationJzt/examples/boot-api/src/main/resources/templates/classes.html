@@ -85,7 +85,7 @@
                                             <span class="glyphicon glyphicon-triangle-bottom"></span>
                                         </div>
                                     </th>
-                                    <th>上课时间</th>
+                                    <!--<th>上课时间</th>-->
                                     <th>招生状态</th>
                                     <th>操作</th>
                                     <th>
@@ -105,12 +105,12 @@
                                     <td th:text="${xbclass.xbCourse.courseName}"></td>
                                     <td th:text="${xbclass.sysOrgans.organName}"></td>
                                     <td th:text="${#dates.format(xbclass.classBeginDate, 'yyyy-MM-dd')}"></td>
-                                    <td class="classTime">
-                                        <Span>每周周日15:30-16:30</Span>
-                                        <Span>每周周日15:30-16:30</Span>
-                                    </td>
+
                                     <td th:if="${xbclass.recruitState=='0'}">
-                                        <Span class="recruit">开放招生</Span>
+                                        <!--<td class="classTime">
+                                           <Span>每周周日15:30-16:30</Span>
+                                           <Span>每周周日15:30-16:30</Span>
+                                       </td>-->   <Span class="recruit">开放招生</Span>
                                     </td>
                                     <td th:if="${xbclass.recruitState=='1'}">
                                         <Span class="recruit">停止招生</Span>
