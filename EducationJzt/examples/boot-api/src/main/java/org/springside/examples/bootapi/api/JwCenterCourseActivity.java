@@ -6,6 +6,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -23,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -51,9 +53,12 @@ public class JwCenterCourseActivity {
     @RequestMapping("/tocourse")
     public String toCourse(ModelMap model){
         logger.info("跳转到课程");
-        List<XbCourse> list = xbCourseService.findCourseAll();
+        /*List<XbCourse> list = xbCourseService.findCourseAll();
         logger.info("查询到课程list.size="+list.size());
-        model.addAttribute("courselist",list);
+        model.addAttribute("courselist",list);*/
+        Map<String,Object> xbClasssearhMap = new HashMap<>();
+        List<XbCoursePreset> prelist = xbCoursePresetService.getXbCoursePresets(xbClasssearhMap);
+        model.addAttribute("prelist",prelist);
         List<XbCourseType> coursetypelist = xbCourseTypeService.findCourseTypeAll();
         model.addAttribute("coursetypelist",coursetypelist);
         List<XbSubject> subjectlist = xbSubjectService.findSubjectAll();
@@ -66,25 +71,29 @@ public class JwCenterCourseActivity {
      */
     @RequestMapping("/goaddcourse")
     public String goAddCourse(HttpServletRequest req,
-            @RequestParam(value="courseId",defaultValue = "") String courseId, ModelMap model){
+            @RequestParam(value="courseId",defaultValue = "") String courseId,
+            @RequestParam(value="presetid",defaultValue = "") String presetid,
+                          ModelMap model){
         logger.info("跳转到新建课程");
+        //查询所有课程类别
         List<XbCourseType> coursetypelist = xbCourseTypeService.findCourseTypeAll();
         model.addAttribute("coursetypelist",coursetypelist);
+        //查询所有科目
         List<XbSubject> subjectlist = xbSubjectService.findSubjectAll();
         model.addAttribute("subjectlist",subjectlist);
+        //查询所有校区
+        List<SysOrgans> sorganList = organsService.getOrgansList();
+        model.addAttribute("sorganList",sorganList);
         model.addAttribute("xbCourse",null);
-        model.addAttribute("presetlist",null);
-        if(!courseId.equals("")){
+        model.addAttribute("pre",null);
+        if(!presetid.equals("")){
             XbCourse xbc = xbCourseService.findById(courseId);
             model.addAttribute("xbCourse",xbc);
-            List<XbCoursePreset> persetList = xbCoursePresetService.findXbCoursePresetListByCourseid(courseId);
-            if(persetList.size()>0){
-                model.addAttribute("presetlist",persetList);
-                model.addAttribute("preset",persetList.get(0));
-            }
+            XbCoursePreset pre = xbCoursePresetService.getXbCoursePreset(presetid);
+            model.addAttribute("pre",pre);
+
         }
-        List<SysOrgans> sorganList = organsService.getOrgansListAll();
-        model.addAttribute("sorganList",sorganList);
+
         return "newLesson";
     }
 
@@ -97,45 +106,28 @@ public class JwCenterCourseActivity {
     public void saveCourse(@RequestParam String dataentity,
                            HttpServletResponse resp){
         logger.info("新建课程");
-        boolean app = true;
-        String rsmsg = "新建课程成功";
+
+        String rsmsg = "新建课程异常";
         XbCourse xbcourse = com.alibaba.fastjson.JSONObject.parseObject(dataentity,XbCourse.class);
-        boolean isadd = true;
-        if(StringUtils.isNotEmpty(xbcourse.getId())){
-            isadd=false;
-        }
         com.alibaba.fastjson.JSONObject obj= com.alibaba.fastjson.JSONObject.parseObject(dataentity);//获取jsonobject对象
         List<Map<String,String>> list=(List)obj.getJSONArray("xbcoursepresetlist");//获取的结果集合转换成数组
-        Date date  = new Date();
-        xbcourse.setCreateDate(DateUtil.getDateStr(date));
-        xbcourse.setCreateTime(DateUtil.getTimeStr(date));
-        XbCourse entity =  xbCourseService.saveXbCourse(xbcourse);
-        if(StringUtils.isEmpty(entity.getId())){
-            app = false;
-            rsmsg ="录入课程表为空";
+        boolean app = true;
+        if(StringUtils.isEmpty(xbcourse.getId())){
+            rsmsg = "新建课程成功";
+            app = designatedCampus(list,xbcourse,app);
+            if(!app){
+                rsmsg = "新建课程失败";
+            }
         }else{
-            //指定校区save
-            if(entity.getOpeningType().equals("1")){
-                logger.info("指定校区插入entity.getId()="+entity.getId()+",list.size()="+list.size());
-                app = designatedCampus(list,entity.getId(),app);
-                if(!app){
-                    rsmsg = "指定校区保存失败";
-                }
-
-            //全部校区
-            }else{
-                logger.info("全部校区插入entity.getId()="+entity.getId()+",list.size()="+list.size());
-                app = allSchool(list,entity.getId(),app,isadd);
-                if(!app){
-                    rsmsg = "全部校区保存失败";
-                }
+            rsmsg = "编辑课程成功";
+            app =  designatedCampusEdit(list,xbcourse,app);
+            if(!app){
+                rsmsg = "编辑课程失败";
             }
         }
         JSONObject jsonObject = new JSONObject();
         if(app){
             jsonObject.put("status","0");
-            jsonObject.put("cousrtype",com.alibaba.fastjson.JSONObject.toJSON(entity));
-
         }else{
             jsonObject.put("status","1");
         }
@@ -145,48 +137,22 @@ public class JwCenterCourseActivity {
     }
 
     /**
-     * 全部校区
-     * @return
-     */
-    private boolean allSchool(List<Map<String,String >> list,String xbcid,boolean app,boolean isadd){
-        Map allmap = list.get(0);
-        //查出所有校区信息
-        if(isadd){
-            List<SysOrgans> sorganlistlist = organsService.getOrgansListAll();
-            for(SysOrgans sysorg: sorganlistlist){
-                XbCoursePreset pre = new XbCoursePreset();
-                String courid = (String)allmap.get("courseId");
-                if(StringUtils.isEmpty(courid) || courid.equals("null")){
-                    courid = xbcid;
-                }
-                pre.setCourseId(courid);
-                pre.setOrganIds(sysorg.id );
-                pre.setMoney(BigDecimal.valueOf(Double.parseDouble((String)allmap.get("money"))));
-                pre.setPeriodNum(Integer.parseInt((String)allmap.get("periodNum")));
-                XbCoursePreset rs= xbCoursePresetService.saveXbCoursePreset(pre);
-                if(StringUtils.isEmpty(rs.getId())){
-                    app = false;
-                    break;
-                }
-            }
-        }else{
-            List<XbCoursePreset> list1 = xbCoursePresetService.findXbCoursePresetListByCourseid(xbcid);
-            app = designatedCampusEdit(list1,app,allmap);
-        }
-
-        return app;
-    }
-    /**
      * 编辑校区
      */
-    private boolean designatedCampusEdit(List<XbCoursePreset> list,boolean app,Map allmap){
-        for(XbCoursePreset map:list){
+    private boolean designatedCampusEdit(List<Map<String,String >> list,XbCourse xbcourse,boolean app){
+        for(Map map:list){
+            //开始存课程
+            Date date  = new Date();
+            xbcourse.setCreateDate(DateUtil.getDateStr(date));
+            xbcourse.setCreateTime(DateUtil.getTimeStr(date));
+            XbCourse entity =  xbCourseService.saveXbCourse(xbcourse);
+            //开始存课时
             XbCoursePreset pre = new XbCoursePreset();
-            String courid = map.getCourseId();
-                pre.setId(map.getId());
-            pre.setCourseId(courid);
-            pre.setMoney(BigDecimal.valueOf(Double.parseDouble((String)allmap.get("money"))));
-            pre.setPeriodNum(Integer.parseInt((String)allmap.get("periodNum")));
+            pre.setId((String)map.get("id"));
+            pre.setCourseId(entity.getId());
+            pre.setOrganIds((String)map.get("organIds") );
+            pre.setMoney(BigDecimal.valueOf(Double.parseDouble((String)map.get("money"))));
+            pre.setPeriodNum(Integer.parseInt((String)map.get("periodNum")));
             XbCoursePreset rs= xbCoursePresetService.saveXbCoursePreset(pre);
             if(StringUtils.isEmpty(rs.getId())){
                 app = false;
@@ -196,19 +162,20 @@ public class JwCenterCourseActivity {
         return app;
     }
     /**
-     * 指定校区
+     * save课程
      */
-    private boolean designatedCampus(List<Map<String,String >> list,String xbcid,boolean app){
+    private boolean designatedCampus(List<Map<String,String >> list,XbCourse xbcourse,boolean app){
         for(Map map:list){
+            //开始存课程
+            Date date  = new Date();
+            xbcourse.setCreateDate(DateUtil.getDateStr(date));
+            xbcourse.setCreateTime(DateUtil.getTimeStr(date));
+            XbCourse xbcnew = new XbCourse();
+            BeanUtils.copyProperties(xbcourse,xbcnew);
+            XbCourse entity =  xbCourseService.saveXbCourse(xbcnew);
+            //开始存课时
             XbCoursePreset pre = new XbCoursePreset();
-            String courid = (String)map.get("courseId");
-            if(StringUtils.isEmpty(courid) || courid.equals("null")){
-                courid = xbcid;
-            }else {
-                pre.setId((String)map.get("id"));
-
-            }
-            pre.setCourseId(courid);
+            pre.setCourseId(entity.getId());
             pre.setOrganIds((String)map.get("organIds") );
             pre.setMoney(BigDecimal.valueOf(Double.parseDouble((String)map.get("money"))));
             pre.setPeriodNum(Integer.parseInt((String)map.get("periodNum")));

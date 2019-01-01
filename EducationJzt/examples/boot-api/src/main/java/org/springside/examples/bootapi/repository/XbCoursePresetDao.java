@@ -17,4 +17,5 @@ import java.util.List;
  */
 public interface XbCoursePresetDao extends PagingAndSortingRepository<XbCoursePreset, String>,JpaSpecificationExecutor<XbCoursePreset> {
     List<XbCoursePreset> findByCourseId(String courseid);
+
 }

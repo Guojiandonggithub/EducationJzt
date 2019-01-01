@@ -132,6 +132,8 @@
                                     <th>开班数</th>
                                     <th>收费模式</th>
                                     <th>开课校区</th>
+                                    <th>课时</th>
+                                    <th>金额</th>
                                     <th>创建日期</th>
                                     <th>课程状态</th>
                                         <div class="sort">
@@ -144,24 +146,26 @@
                                         <span href="#modal-table"  data-toggle="modal" class="glyphicon glyphicon-option-vertical" aria-hidden="true"></span>
                                     </th>
                                 </tr>
-                                <tr id="choose" class="choose" th:each="obj,iterStat:${courselist}" th:if="${courselist} != null">
+                                <tr id="choose" class="choose" th:each="obj,iterStat:${prelist}" th:if="${prelist} != null">
                                     <td><input type="checkbox"></td>
                                     <input th:id="${obj.id}" type="hidden" >
-                                    <td th:text="${obj.courseName}"></td>
-                                    <td th:text="${obj.xbcoursetype.courseTypeName}"></td>
-                                    <td th:switch="${obj.type}">
+                                    <td th:text="${obj.xbCourse.courseName}"></td>
+                                    <td th:text="${obj.xbCourse.xbcoursetype.courseTypeName}"></td>
+                                    <td th:switch="${obj.xbCourse.type}">
                                         <span th:case="0">班课</span>
                                         <span th:case="1">一对一</span>
                                     </td>
                                     <td th:text="10"></td>
-                                    <td th:switch="${obj.chargingMode}">
+                                    <td th:switch="${obj.xbCourse.chargingMode}">
                                         <span th:case="0">按课时</span>
                                         <span th:case="1">按时间</span>
                                         <span th:case="2">按期</span>
                                     </td>
-                                    <td>1</td>
-                                    <td th:text="${obj.createDate}">创建日期</td>
-                                    <td th:switch="${obj.state}">
+                                    <td th:text="${obj.sysorgans.organName}">开课校区</td>
+                                    <td th:text="${obj.periodNum}">课时</td>
+                                    <td th:text="${obj.money}">金额</td>
+                                    <td th:text="${obj.xbCourse.createDate}+' '+${obj.xbCourse.createTime}">创建日期</td>
+                                    <td th:switch="${obj.xbCourse.state}">
                                         <span th:case="0">正常</span>
                                         <span th:case="1">下架</span>
                                     </td>
@@ -173,7 +177,7 @@
                                             </p>
                                             <ul class="dropdown-menu dropdown-default">
                                                 <li>
-                                                    <a th:href="@{/jwcentercourse/goaddcourse(courseId=${obj.id})}"  >编辑</a>
+                                                    <a th:href="@{/jwcentercourse/goaddcourse(courseId=${obj.xbCourse.id},presetid=${obj.id})}"  >编辑</a>
                                                 </li>
                                                 <li>
                                                     <a >复制</a>

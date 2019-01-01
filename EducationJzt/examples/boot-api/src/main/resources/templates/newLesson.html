@@ -40,7 +40,7 @@
                 <div class="main-form">
                     <h3>课程基础信息</h3>
                     <input type="hidden" id="courseId" name="id" th:value="${xbCourse?.id}">
-                    <input type="hidden" id="courseId" name="state" value="0">
+                    <input type="hidden" id="state" name="state" value="0">
                     <div class="form-group">
                         <label><span>*</span>课程类别</label>
                         <select name="courseTypeId"    id="courseTypeId"  class="input-select" >
@@ -79,28 +79,29 @@
                     </div>
                     <div class="form-group" >
                         <label><span>*</span>开课校区</label>
-                        <p><input type="radio" name="openingType" value="0" th:checked="${xbCourse?.openingType=='0'}" th:onclick="|schoolType('0',${xbCourse?.id})|">全部校区</p>
-                        <p><input type="radio" name="openingType" value="1" th:checked="${xbCourse?.openingType=='1'}" th:onclick="|schoolType('1',${xbCourse?.id})|">指定校区</p>
+                        <span th:if=" ${#strings.isEmpty(xbCourse) }" >
+                            <p><input type="radio" name="openingType" value="0" th:checked="${xbCourse?.openingType=='0'}" th:onclick="|schoolType('0',${xbCourse?.id})|">全部校区</p>
+                            <p><input type="radio" name="openingType" value="1" th:checked="${xbCourse?.openingType=='1'}" th:onclick="|schoolType('1',${xbCourse?.id})|">指定校区</p>
+                         </span>
+                        <span th:if=" ${!#strings.isEmpty(xbCourse) }" th:if=" ${!#strings.isEmpty(pre) }" >
+                            <p><input type="radio" name="openingType" value="0"  disabled="disabled">全部校区</p>
+                            <p><input type="radio" name="openingType" value="1" checked="checked" disabled="disabled">指定校区</p>
+                        </span>
                     </div>
                         <div id="zhidingSchool"   class="form-group" >
                             <p th:each="sorg,sorgSta:${sorganList}" >
-                                <span th:if=" ${!#strings.isEmpty(xbCourse) }" th:if="${xbCourse?.openingType} eq '1'" style="display:block">
-                                    <input  type="checkbox" name="openingTypes"
-                                            th:checked="${#strings.contains(xbCourse.openingTypes,sorg.id)}"
-                                            th:onclick="|appointSchool('${sorgSta.index}','${sorg.organName}','${xbCourse?.id}','${sorg.id}',this)|"  th:value="${sorg.id}" >
-                                <span th:text="${sorg.organName}"></span>
-                                </span>
-                                <span th:if=" ${!#strings.isEmpty(xbCourse) }" th:if="${xbCourse?.openingType} eq '0'" style="display:block">
-                                    <input  type="checkbox" name="openingTypes"
-                                            th:onclick="|appointSchool('${sorgSta.index}','${sorg.organName}','${xbCourse?.id}','${sorg.id}',this)|"  th:value="${sorg.id}" >
-                                <span th:text="${sorg.organName}"></span>
-                                </span>
                                 <span th:if=" ${#strings.isEmpty(xbCourse) }" >
                                     <input  type="checkbox" name="openingTypes"
-                                            th:onclick="|appointSchool('${sorgSta.index}','${sorg.organName}','${xbCourse?.id}','${sorg.id}',this)|"  th:value="${sorg.id}" >
+                                            th:onclick="|appointSchool('${sorgSta.index}','${sorg.organName}','${xbCourse?.id}','${sorg.id}',this)|"
+                                            th:value="${sorg.id}" >
                                     <span th:text="${sorg.organName}"></span>
                                 </span>
-
+                                <span th:if=" ${!#strings.isEmpty(xbCourse) }" th:if=" ${!#strings.isEmpty(pre) }" >
+                                    <input  type="checkbox" name="openingTypes" disabled="disabled"
+                                            th:checked="${sorg.id} == ${pre.organIds}"
+                                            th:value="${sorg.id}" >
+                                    <span th:text="${sorg.organName}"></span>
+                                </span>
                             </p>
                         </div>
                 </div>
@@ -112,30 +113,8 @@
                                     <th>校区</th>
                                     <th>定价标准</th>
                                 </tr>
-                             <span th:if=" ${!#strings.isEmpty(xbCourse) }">
-                                 <tr  th:if=" ${xbCourse.openingType} eq '0'" >
-                                    <td>全部校区</td>
-                                    <input type="hidden" id="XbCoursePresetcourseId" name="courseId" value="th:value="${preset?.courseId}"/>
-                                    <input type="hidden" id="XbCoursePresetorganIds" name="organIds" value="th:value="${preset?.organIds}"/>
-                                    <td>
-                                        <div class="extend-list">
-                                            <div class="form-group">
-                                                <label>按课时</label>
-                                                <div class="numCon">
-                                                    <input id="XbCoursePresetperiodNum" name="periodNum" type="text" th:value="${preset?.periodNum}"/>
-                                                </div>
-                                                <span class="txt">课时</span>
-                                                <span class="txt">=</span>
-                                                <div class="numCon">
-                                                    <input id="XbCoursePresetmoney" name="money" type="text" th:value="${preset?.money}"/>
-                                                </div>
-                                                <span class="txt">元</span>
-                                                <span class="glyphicon glyphicon-remove-sign"></span>
-                                            </div>
-                                        </div>
-                                    </td>
-                                 </tr>
-                                 <tr  th:if="${xbCourse.openingType} eq '1'" th:each="pre,preSta:${presetlist}">
+                             <span th:if=" ${!#strings.isEmpty(pre) }">
+                                 <tr>
                                     <td th:text="${pre.sysorgans.organName}"></td>
                                     <input type="hidden" id="XbCoursePresetcourseId" name="courseId" th:value="${pre?.courseId}"/>
                                     <input type="hidden" id="XbCoursePresetorganIds" name="organIds" th:value="${pre?.organIds}"/>
@@ -177,18 +156,30 @@
         function saveCourse(){
             var datafrom= serializeObject("#dJFrom");
             var list = [];
-
-            $("#dingjiaiform tr:not(:first)").each(function () {
-                var $ele = $(this);
-                var obj = {};
-                var x = $ele.find("input");
-                 obj.courseId = x.eq(0).val();
-                 obj.organIds = x.eq(1).val();
-                 obj.periodNum = x.eq(2).val();
-                 obj.money = x.eq(3).val();
-                 obj.id = x.eq(4).val();
-                list.push(obj);
-            });
+            //全部校区
+            if(datafrom.openingType=="0"){
+                $("input[name='openingTypes']:checked").each(function(j) {
+                    var obj = {};
+                    obj.courseId = $("#XbCoursePresetcourseId").val();
+                    obj.organIds =  $(this).val();
+                    obj.periodNum = $("#XbCoursePresetperiodNum").val();
+                    obj.money = $("#XbCoursePresetmoney").val();
+                    list.push(obj);
+                });
+            //指定校区
+            }else{
+                $("#dingjiaiform tr:not(:first)").each(function () {
+                    var $ele = $(this);
+                    var obj = {};
+                    var x = $ele.find("input");
+                    obj.courseId = x.eq(0).val();
+                    obj.organIds = x.eq(1).val();
+                    obj.periodNum = x.eq(2).val();
+                    obj.money = x.eq(3).val();
+                    obj.id = x.eq(4).val();
+                    list.push(obj);
+                });
+            }
             datafrom.xbcoursepresetlist = list;
             $.ajax({
                 url: basePath+'/jwcentercourse/savecourse',

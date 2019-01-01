@@ -2,32 +2,33 @@
 $(function(){
     var type = $('input[name="openingType"]:checked').val();
     var courseId = $("#courseId").val();
- //   schoolType(type,courseId)
+    //schoolType(type,courseId)
 });
 
 function schoolType(type,courseId){
-    alert(type)
     $("#dingjiaiform tr:not(:first)").remove();
-    $('#zhidingSchool input:checkbox').each(function() {
-        $(this).attr('checked', false);
-    });
+    //收费模式 按课时
     var chargingMode = $('input[name="chargingMode"]:checked').val();
     var charging ="按课时";
-    if(chargingMode=='0'){
-        charging="按课时";
-    }else if(chargingMode=='2'){
-        charging="按期";
-    }else if(chargingMode=='1'){
-        charging="按时间";
-    }
-    //指定校区
-    if(type=='1'){
-        $("#zhidingSchool").show();
+    if(chargingMode=='0'){charging="按课时";}else
+    if(chargingMode=='2'){ charging="按期";}else
+    if(chargingMode=='1'){charging="按时间";}
     //全部校区
-    }else{
+    if(type=='0'){
+        //选中所有校区
+        $('#zhidingSchool input:checkbox').each(function() {
+            $(this).prop('checked', true);
+        });
+        //不显示
         $("#zhidingSchool").hide();
         dingJiaBiaoZunAll(courseId,charging)
 
+    //指定校区
+    }else{
+        $('#zhidingSchool input:checkbox').each(function() {
+            $(this).prop('checked',false);
+        });
+        $("#zhidingSchool").show();
     }
 }
 
@@ -110,19 +111,19 @@ function dingJiaBiaoZunAll(courseId,chargingMode){
     var html = [];
     html.push('<tr id="delete_0">                                                                          ');
     html.push('	<td>全校</td>                                                            ');
-    html.push('	<input type="hidden" name="XbCoursePreset[0].courseId" value="'+courseId+'"/>                              ');
-    html.push('	<input type="hidden" name="XbCoursePreset[0].organIds" value=""/>                              ');
+    html.push('	<input type="hidden" id="XbCoursePresetcourseId" name="XbCoursePresetcourseId" value="'+courseId+'"/>                              ');
+    html.push('	<input type="hidden" id="XbCoursePresetorganIds" name="XbCoursePresetorganIds" value=""/>                              ');
     html.push('	<td>                                                                         ');
     html.push('		<div class="extend-list">                                                ');
     html.push('			<div class="form-group">                                             ');
     html.push('				<label>'+chargingMode+'</label>                                            ');
     html.push('				<div class="numCon">                                             ');
-    html.push('					<input id="text_box" name="XbCoursePreset[0].periodNum" type="text" value="0"/>');
+    html.push('					<input id="XbCoursePresetperiodNum" name="XbCoursePresetperiodNum" type="text" value="0"/>');
     html.push('				</div>                                                           ');
     html.push('				<span class="txt">课时</span>                                    ');
     html.push('				<span class="txt">=</span>                                       ');
     html.push('				<div class="numCon">                                             ');
-    html.push('					<input id="text_box1" name="XbCoursePreset[0].money" type="text" value="0"/>   ');
+    html.push('					<input id="XbCoursePresetmoney" name="money" type="text" value="0"/>   ');
     html.push('				</div>                                                           ');
     html.push('				<span class="txt">元</span>                                      ');
     html.push('				<span class="glyphicon glyphicon-remove-sign"></span>            ');

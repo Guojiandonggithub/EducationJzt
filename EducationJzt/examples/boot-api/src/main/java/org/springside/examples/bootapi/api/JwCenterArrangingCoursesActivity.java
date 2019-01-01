@@ -61,27 +61,6 @@ public class JwCenterArrangingCoursesActivity {
         return "courseArray";
     }
 
-    public static void main(String[] args) {
-        try {
-            Calendar cal = Calendar.getInstance();
-            String start = "2018-09-20";
-            String end = "2019-09-30";
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            Date dBegin = sdf.parse(start);
-            Date dEnd = sdf.parse(end);
-            List<Date> lDate = DateUtil.findDates(dBegin, dEnd);
-            String[] str = {"4","7"};
-            for (Date date : lDate)
-            {
-               /* if(DateUtil.doesItIncludeAWeek(str,sdf.format(date))){
-                    System.out.println(sdf.format(date));
-                }*/
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     /**
      * 保存排课
      * @return
