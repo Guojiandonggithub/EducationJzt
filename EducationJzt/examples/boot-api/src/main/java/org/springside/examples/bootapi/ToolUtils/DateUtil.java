@@ -430,6 +430,29 @@ public class DateUtil {
         System.out.println(DateUtil.getDateBefore(new Date(),2));
     }
     /**
+     * 判断日期为星期几
+     */
+    public static String dayForWeekChinses(String pTime){
+        int i = dayForWeek(pTime);
+        String weekname = "";
+        if(i==1){
+            weekname = "星期一";
+        }else if(i==2){
+            weekname = "星期二";
+        }else if(i==3){
+            weekname = "星期三";
+        }else if(i==4){
+            weekname = "星期四";
+        }else if(i==5){
+            weekname = "星期五";
+        }else if(i==6){
+            weekname = "星期六";
+        }else {
+            weekname = "星期日";
+        }
+        return weekname;
+    }
+    /**
      * 判断当前日期是星期几
      *
      * @param pTime 修要判断的时间

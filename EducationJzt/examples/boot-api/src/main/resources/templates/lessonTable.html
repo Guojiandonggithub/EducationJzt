@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 
 <head>
     <meta charset="UTF-8">
@@ -27,87 +27,9 @@
 </head>
 
 <body>
-    <div id="navbar" class="eduNav">
-        <div class="navbar-header pull-left">
-            <a href="index.html" class="navbar-brand">
-                <small>
-                    <img src="../static/pages/img/logo.png" alt="">
-                </small>
-            </a>
-        </div>
-        <div class="pull-right eduName">
-            <!--<span>万某 [管理员]</span>
-            <span>机构中心</span>
-            <span>退出</span>  -->
-        </div>
-    </div>
+    <div th:replace="layout::top"></div>
     <div class="main-container" id="main-container">
-        <div id="sidebar" class="sidebar responsive">
-            <ul class="nav nav-list" style="top: 0px;">
-                <li class="">
-                    <a href="/forward/index"><span class="menu-text"> 工作台 </span></a>
-                    <b class="arrow"></b>
-                </li>
-                <li class="">
-                    <a href="/student/getManagementList"><span class="menu-text"> 办理中心 </span></a>
-                    <b class="arrow"></b>
-                </li>
-                <li class="">
-                    <a href="#" class="dropdown-toggle">
-                        <span class="menu-text">教务中心</span>
-                        <b class="arrow fa fa-angle-down"></b>
-                    </a>
-                    <b class="arrow"></b>
-                    <ul class="submenu">
-                        <li class="">
-                            <a href="/student/getXbStudentList"><i class="menu-icon fa fa-caret-right"></i>学员</a>
-                            <b class="arrow"></b>
-                        </li>
-                        <li class="">
-                            <a href="/student/getXbClassroomList"><i class="menu-icon fa fa-caret-right"></i>班级</a>
-                            <b class="arrow"></b>
-                        </li>
-                        <li class="">
-                            <a href="/student/getOneToOneList">
-                                <i class="menu-icon fa fa-caret-right"></i>一对一</a>
-                            <b class="arrow"></b>
-                        </li>
-                        <li class="">
-                            <a href="/jw_center_arranging_course/to_arranging_course"><i class="menu-icon fa fa-caret-right"></i>排课</a>
-                            <b class="arrow"></b>
-                        </li>
-                        <li class="">
-                            <a href="/forward/lessonTable"><i class="menu-icon fa fa-caret-right"></i>课程表</a>
-                            <b class="arrow"></b>
-                        </li>
-                        <li class="">
-                            <a href="/forward/attendClass"><i class="menu-icon fa fa-caret-right"></i>记上课</a>
-                            <b class="arrow"></b>
-                        </li>
-                        <li class="">
-                            <a href="/jwcentercourse/tocourse"><i class="menu-icon fa fa-caret-right"></i>课程</a>
-                            <b class="arrow"></b>
-                        </li>
-                    </ul>
-                </li>
-                <li class="active open">
-                    <a href="#" class="dropdown-toggle">
-                        <span class="menu-text"> 内部管理 </span>
-                        <b class="arrow fa fa-angle-down"></b>
-                    </a>
-                    <b class="arrow"></b>
-                    <ul class="submenu">
-                        <li class="">
-                            <a href="/accounts/getOrgansList"><i class="menu-icon fa fa-caret-right"></i>组织架构</a>
-                            <b class="arrow"></b>
-                        </li>
-                        <li class="active">
-                            <a href="/accounts/getEmployeeList"><i class="menu-icon fa fa-caret-right"></i>员工信息</a>
-                            <b class="arrow"></b>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
+        <div th:replace="layout::left('13','35')">
         </div>
         <div class="main-content">
             <div class="breadcrumbs" id="breadcrumbs">
@@ -159,71 +81,109 @@
     </div>
     </div>
     </div>
-
-    <script type="text/javascript">
+    <script type="text/javascript" th:inline="javascript">
+        var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/;
         $(function () {
-
             var date = new Date();
             var d = date.getDate();
             var m = date.getMonth();
             var y = date.getFullYear();
-
+            var url = basePath+"/jw_center_arranging_course/to_arranging_course_fullcalendar";
             $('#calendar').fullCalendar({
                 header: {
                     right: '',
                     center: 'prev,title,next,today',
                     left: 'agendaDay,agendaWeek,month'
                 },
-
+                defaultView:'agendaWeek',
                 firstDay: 1,
                 editable: true,
                 timeFormat: 'H:mm',
                 axisFormat: 'H:mm',
-                events: [{
-                        title: '科源校区诶诶我惹人\r\n张三\n5号教室',
-                        start: new Date(y, m, 1),
-                        backgroundColor: '#33a299;'
-                    },
-                    {
-                        title: '科源校区诶诶我惹人\r\n张三\n5号教室',
-                        start: new Date(y, m, d - 5),
-                        end: new Date(y, m, d - 2),
-                        backgroundColor: '#6aa8f1;'
-
-                    },
-                    {
-                        title: '科源校区诶诶我惹人\r\n张三\n5号教室',
-                        start: new Date(y, m, d - 5),
-                        end: new Date(y, m, d - 2),
-                        backgroundColor: '#6aa8f1;'
-
-                    },
-                    {
-                        title: '科源校区诶诶我惹人\r\n张三\n5号教室',
-                        start: new Date(y, m, 28),
-                        end: new Date(y, m, 29),
-                        backgroundColor: '#fc8038'
-                    },
-                    {
-                        title: '科源校区诶诶我惹人\r\n张三\n5号教室',
-                        start: new Date(y, m, d + 1, 19, 0),
-                        end: new Date(y, m, d + 1, 22, 30),
-                        backgroundColor: '#3967a3;'
-                    },
-                    {
-                        title: '科源校区诶诶我惹人\r\n张三\n5号教室',
-                        start: new Date(y, m, 28),
-                        end: new Date(y, m, 29),
-                        backgroundColor: '#fc8038'
-                    },
-                    {
-                        title: '科源校区诶诶我惹人\r\n张三\n5号教室',
-                        start: new Date(y, m, d + 1, 19, 0),
-                        end: new Date(y, m, d + 1, 22, 30),
-                        backgroundColor: '#3967a3;'
-                    },
-                ],
-
+                events: function(start, end, callback) {
+                    var fstart = $.fullCalendar.formatDate(start, "yyyy-MM-dd");
+                    var fend = $.fullCalendar.formatDate(end, "yyyy-MM-dd");
+                    $.ajax({
+                        type: "post",
+                        url: url,//我是用ajax获取后台数据的，这里填写地址
+                        dataType: "json",
+                        data: {
+                            start: fstart,
+                            end: fend
+                        },
+                        success: function(data) {
+                            if (data) {
+                                var event = [];
+                                var listentity = data.listentity;
+                                $.each(listentity, function(i) {
+                                    var d = listentity[i];
+                                    var id = d.id;
+                                    var time = d.timeInterval.split("-");
+                                    var date = d.startDateTime.split("-");
+                                    var className =d.xbclass.className;
+                                    var y = date[0];
+                                    var m = date[1];
+                                    var d = date[2];
+                                    var starthhtime = time[0].split(":")[0];
+                                    var startmmtime = time[0].split(":")[1];
+                                    var endhhtime = time[1].split(":")[0];
+                                    var endtmmtime = time[1].split(":")[1];
+                                    event.push({
+                                        _id: id,
+                                        title:className,
+                                        start: new Date(y, m-1, d ,starthhtime,startmmtime),
+                                        end: new Date(y, m-1, d ,endhhtime,endtmmtime),
+                                        allDay: false
+                                    });
+                                });
+                                callback(event);
+                            }
+                        },
+                        error:function(){
+                            alert("错了")
+                        }
+                    });
+                },
+                //点击事件
+                eventClick: function(event) {
+                    alert("哈哈哈")
+                    if (event.url) {
+                        window.open(event.url);
+                        return false;
+                    }
+                },
+                loading: function (bool) {
+                    if (bool) $('#loading').show();
+                    else $('#loading').hide();
+                },
+                //#region 鼠标放上去显示信息
+                eventMouseover: function (calEvent, jsEvent, view) {
+                    var fstart = $.fullCalendar.formatDate(calEvent.start, "yyyy/MM/dd HH:mm");
+                    var fend = $.fullCalendar.formatDate(calEvent.end, "yyyy/MM/dd HH:mm");
+                    $(this).attr('title', fstart + " - " + fend + " " + calEvent.title);
+                    //  鼠标悬浮到title的时候可以设置展现哪些信息
+                    // $(this).attr('title', calEvent.fullname);
+                    //$(this).attr('title', "哈哈哈");
+                    $(this).css('font-weight', 'normal');
+                    //            $(this).tooltip({
+                    //                effect: 'toggle',
+                    //                cancelDefault: true
+                    //            });
+                    var evtcontent = '<div class="tanchu">                  ';
+                    evtcontent += '		<span>开始：2018-10-29 08:00</span>        ';
+                    evtcontent += '		<span>结束：2018-10-29 17:00</span>        ';
+                    evtcontent += '		<span>教室：5号教室</span>                 ';
+                    evtcontent += '		<span>班课/一对一：青山分校2018届4班</span>';
+                    evtcontent += '		<span>教师：汪大东</span>                  ';
+                    evtcontent += '		<span>助教：张三</span>                    ';
+                    evtcontent += '</div>								       ';
+                    //$(this).html(evtcontent);
+                    //$(this).parent().append(evtcontent);
+                },
+                eventMouseout: function (event, jsEvent, view) {
+                    console.log('out');
+                    calendar.fullCalendar('removeEvents', bgEvent.id);
+                },
             });
 
         });

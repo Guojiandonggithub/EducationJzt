@@ -20,7 +20,6 @@ import org.springside.examples.bootapi.service.OrgansService;
 public class ForwardActivity {
 
 	private static Logger logger = LoggerFactory.getLogger(ForwardActivity.class);
-
 	@Autowired
 	private EmployeeService accountService;
 	@Autowired

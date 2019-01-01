@@ -21,6 +21,7 @@ public class XbAttendClass {
     public String className;
     public String wayOfTeaching;
     public String startDateTime;
+    public String weekDay;
     public String endDateTime;
     public String teacherId;
     public String teacherName;
@@ -93,6 +94,14 @@ public class XbAttendClass {
 
     public void setStartDateTime(String startDateTime) {
         this.startDateTime = startDateTime;
+    }
+
+    public String getWeekDay() {
+        return weekDay;
+    }
+
+    public void setWeekDay(String weekDay) {
+        this.weekDay = weekDay;
     }
 
     public String getEndDateTime() {
