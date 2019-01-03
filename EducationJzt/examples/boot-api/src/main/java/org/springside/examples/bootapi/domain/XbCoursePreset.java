@@ -35,6 +35,7 @@ public class XbCoursePreset {
     @OneToOne()
     @JoinColumn(name="organIds",referencedColumnName = "id",insertable = false,updatable = false)
     public SysOrgans sysorgans;
+    public String deleteStatus;
     public XbCoursePreset() {
     }
     public XbCoursePreset(String id) {

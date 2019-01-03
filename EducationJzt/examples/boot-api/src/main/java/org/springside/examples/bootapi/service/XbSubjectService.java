@@ -7,16 +7,18 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.actuate.metrics.CounterService;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springside.examples.bootapi.ToolUtils.common.modules.persistence.DynamicSpecifications;
+import org.springside.examples.bootapi.ToolUtils.common.modules.persistence.SearchFilter;
 import org.springside.examples.bootapi.domain.SysEmployee;
-import org.springside.examples.bootapi.domain.XbCourseType;
 import org.springside.examples.bootapi.domain.XbSubject;
-import org.springside.examples.bootapi.repository.XbCourseTypeDao;
 import org.springside.examples.bootapi.repository.XbSubjectDao;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -47,6 +49,13 @@ public class XbSubjectService {
 	public List<XbSubject> findSubjectAll(){
 		List<XbSubject> list =  (List)xbSubjectDao.findAll();
 		return list;
+	}
+	public List<XbSubject> findXbSubjectList(Map<String,Object> searchParams){
+		searchParams.put("EQ_deleteStatus","1");
+		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
+		Specification<XbSubject> spec = DynamicSpecifications.bySearchFilter(
+				filters.values(), XbSubject.class);
+		return xbSubjectDao.findAll(spec);
 	}
 	public XbSubject saveXbSubject(XbSubject xbsubject){
 		return xbSubjectDao.save(xbsubject);

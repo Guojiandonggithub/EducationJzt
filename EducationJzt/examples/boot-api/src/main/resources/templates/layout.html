@@ -92,19 +92,39 @@
             </div>
             <div class="container" layout:fragment="content"></div>
         </div>
-
-        <script type="text/javascript" th:inline="javascript">
-            $(function(){
-                //$(".dropdown-menu  li").addClass('active');
-                //$("#submenu-menu  li").addClass('active');
-                /*$("#submenu li").click(function() {
-                    $(this).parents('li').addClass('active');  // 删除其他兄弟元素的样式
-                    alert($(this).parents('li'));
-                    $(this).parents('li').addClass('open');  // 删除其他兄弟元素的样式
-                    $(this).siblings('li').removeClass('active');  // 删除其他兄弟元素的样式
-                    $(this).addClass('active');                            // 添加当前元素的样式
-                });*/
-            });
-        </script>
+        <!--页码-->
+        <!--<div class="orderPage" style="margin-top:30px;" th:fragment="left(currentzise,entityPage)">
+            <div class="page">
+                单页显示：
+                <select id="size" name="size" onchange="getOrgansListPage('');">
+                    <option value="20">20条/页</option>
+                    <option value="5">5条/页</option>
+                    <option value="10">10条/页</option>
+                    <option value="15">15条/页</option>
+                </select>
+                <input type="hidden" id="currentzise" th:value="${currentzise}"/>
+            </div>
+            <ul class="pagination" th:if="${entityPage.getTotalPages() gt 0}" >
+                <li class="disabled">
+                    <a href="#" th:onclick="'javascript:getOrgansListPage(\''+0+'\')'">首页</a>
+                </li>
+                <li class="disabled" th:if="${entityPage.getNumber()-1} ge 0">
+                    <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${entityPage.getNumber()-1}+'\')'">
+                        <i class="ace-icon fa fa-angle-double-left"></i>
+                    </a>
+                </li>
+                <li class="active" th:each="i:${#numbers.sequence(1,entityPage.getTotalPages())}">
+                    <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${i}+'\')'" th:text="${i}"></a>
+                </li>
+                <li th:if="${entityPage.getTotalPages()} ge ${entityPage.getNumber()+2} ">
+                    <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${entityPage.getNumber()+2}+'\')'">
+                        <i class="ace-icon fa fa-angle-double-right"></i>
+                    </a>
+                </li>
+                &lt;!&ndash; <li class="">
+                     <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${currentnumber}+'\')'">尾页</a>
+                 </li>&ndash;&gt;
+            </ul>
+        </div>-->
     </body>
 </html>

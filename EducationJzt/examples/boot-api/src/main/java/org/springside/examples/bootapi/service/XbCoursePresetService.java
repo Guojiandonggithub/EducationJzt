@@ -59,6 +59,7 @@ public class XbCoursePresetService {
 
 	@Transactional
 	public Page<XbCoursePreset> getXbCoursePresetList(Pageable pageable, Map<String, Object> searchParams) {
+		searchParams.put("EQ_deleteStatus","1");
 		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
 		Specification<XbCoursePreset> spec = DynamicSpecifications.bySearchFilter(
 				filters.values(), XbCoursePreset.class);

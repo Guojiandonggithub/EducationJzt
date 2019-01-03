@@ -48,6 +48,7 @@ public class XbCourse {
     public String createTime;
     @Transient
     List<XbCoursePreset> xbCoursePresetList;
+    public String deleteStatus;
     public XbCourse() {
 
     }

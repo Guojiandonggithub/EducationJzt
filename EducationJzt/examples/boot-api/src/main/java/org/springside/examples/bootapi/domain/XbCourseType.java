@@ -22,7 +22,7 @@ public class XbCourseType {
     public String id;
     public String courseTypeName;
     public Integer layOrder;
-
+    public String deleteStatus;
     public XbCourseType() {
 
     }

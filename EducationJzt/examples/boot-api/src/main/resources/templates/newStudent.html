@@ -52,7 +52,8 @@
                                 <div class="nav-search" id="nav-search">
                                     <form class="form-search">
                                         <span class="input-icon">
-                                            <input type="text" placeholder="请输入姓名或者手机号" class="nav-search-input" name="nameormobile" th:value="${nameormobile}" autocomplete="off">
+                                            <input type="text" placeholder="请输入姓名或者手机号" class="nav-search-input"
+                                                   name="nameormobile" th:value="${nameormobile}" autocomplete="off">
                                             <i class="ace-icon fa fa-search nav-search-icon"></i>
                                         </span>
                                     </form>
@@ -252,16 +253,16 @@ function deleteEmployee(id){
     }
 }
 
-function getOrgansListPage(page){
-    var data= serializeObject("#searchform");
-    var size = $('#size option:selected').val();//选中的值
-    if(page){
-        page = page -1;
+    function getOrgansListPage(page){
+        var data= serializeObject("#searchform");
+        var size = $('#size option:selected').val();//选中的值
+        if(page){
+            page = page -1;
+        }
+        //var organId=$('input:radio[name="organId"]:checked').val();
+        //var isAttendClass=$('input:radio[name="isAttendClass"]:checked').val();
+        window.location.href = basePath + '/accounts/getEmployeeList?page='+page+'&size='+size+'&data='+JSON.stringify(data);
     }
-    //var organId=$('input:radio[name="organId"]:checked').val();
-    //var isAttendClass=$('input:radio[name="isAttendClass"]:checked').val();
-    window.location.href = basePath + '/accounts/getEmployeeList?page='+page+'&size='+size+'&data='+JSON.stringify(data);
-}
 
     function serializeObject(form)
     {

@@ -22,6 +22,7 @@ public class XbSubject {
     public String state;
     //@OneToOne(mappedBy = "xb_attend_class", fetch=FetchType.EAGER)
     //public XbAttendClass xbattendclass;
+    public String deleteStatus;
     public XbSubject() {
 
     }

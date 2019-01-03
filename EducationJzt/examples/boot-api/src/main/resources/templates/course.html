@@ -5,12 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
-    
+
     <link rel="stylesheet" href="../static/pages/css/ace.min.css" id="main-ace-style" />
     <link rel="stylesheet" href="../static/pages/css/index.css">
     <link rel="stylesheet" href="../static/pages/css/management.css">
     <link rel="stylesheet" href="../static/pages/css/student.css">
-    <link rel="stylesheet" href="../static/pages/css/madal.css">p
+    <link rel="stylesheet" href="../static/pages/css/newStudent.css"/>
+    <link rel="stylesheet" href="../static/pages/css/madal.css">
     <link rel="stylesheet" href="../static/pages/css/bootstrap.min.css">
     <link rel="stylesheet" href="../static/pages/css/font-awesome.min.css" />
 
@@ -20,10 +21,11 @@
     <script src="../static/pages/js/ace-elements.min.js"></script>
     <script src="../static/pages/laydate/laydate.js"></script>
 
-    
+
 
 </head>
 <body>
+<title>金字塔教育</title>
 <div th:replace="layout::top"></div>
 <div class="main-container" id="main-container">
     <div th:replace="layout::left('13','37')">
@@ -42,210 +44,188 @@
                 </li>
             </ul>
             <!-- 上课列表 -->
-            <div id="studentList" class="tab-pane fade in active student course">
-                <!-- 学员列表 -->
-                <div > 
-                    <div class="screen">
-                        <a class="stdEnroll" th:href="@{/jwcentercourse/goaddcourse}" >新建课程</a>
-                        <div class="screenTop">  
-                            <select class="selectName">
-                                <option value="AZ">学员姓名</option>
-                                <option value="AL">手机尾号</option>
-                                <option value="AK">微信号</option>
-                            </select>
-                            <div class="nav-search" id="nav-search">
-                                <form class="form-search">
-                                    <span class="input-icon">
-                                        <input type="text" placeholder="请输入姓名、支持拼音缩写" class="nav-search-input" id="nav-search-input" autocomplete="off">
-                                        <i class="ace-icon fa fa-search nav-search-icon"></i>
-                                    </span>
-                                </form>
-                            </div>
-                            <div class="btn-group">
-                                <button class="btn btn-down">
-                                    筛选
-                                    <i>1</i>
-                                    <span class="ace-icon fa fa-caret-down icon-on-right"></span>
-                                    </button>
-                                    <div class="dropdown-menu">
-                                        <div class="screenData">
-                                            <select>
-                                                <option value="">报读校区</option>
-                                                <option value="y">青山校区</option>
-                                                <option value="n">科源校区</option>
-                                                <option value="n">坤元校区</option>
-                                            </select>
-                                            <select>
-                                                <option value="">教师</option>
-                                                <option value="y">111</option>
-                                                <option value="n">1111</option>
-                                            </select>
-                                        </div>
-                                    <div class="screenData">
-                                        <select>
-                                            <option value="">报读校区</option>
-                                            <option value="y">青山校区</option>
-                                            <option value="n">科源校区</option>
-                                            <option value="n">坤元校区</option>
-                                        </select> 
-                                        <select>
-                                            <option value="">课时状态</option>
-                                            <option value="y">在读</option>
-                                            <option value="n">转出</option>
-                                            <option value="y">退费</option>
-                                            <option value="n">停课</option>
-                                            <option value="n">结课</option>
-                                            <option value="n">转课</option>
-                                        </select>            
-                                    </div>     
+            <form id="searchform">
+                <div id="studentList" class="tab-pane fade in active student course">
+                    <!-- 学员列表 -->
+                        <div class="screen">
+                            <a class="stdEnroll" th:href="@{/jwcentercourse/goaddcourse}" >新建课程</a>
+                            <div class="screenTop">
+                                <select class="selectName" name="type">
+                                    <option value="AZ" th:selected="${type eq 'AZ'}">课程名称</option>
+                                    <!--<option value="AL" th:selected="${type eq 'AL'}">课时</option>-->
+                                </select>
+                                <div class="nav-search" id="nav-search">
+                                    <form class="form-search">
+                                        <span class="input-icon">
+                                            <input type="text" placeholder="请输入课程名称" class="nav-search-input"
+                                                name="searhname" th:value="${searhname}"
+                                                   id="nav-search-input" autocomplete="off">
+                                            <i class="ace-icon fa fa-search nav-search-icon"></i>
+                                        </span>
+                                    </form>
                                 </div>
-                            </div>                                
-                        </div>
-                        <div class="screenBot tags">
-                            课程状况：
-                            <span class="tag">正常<button type="button" class="close">×</button></span>
-                            <p>清空筛选</p>
-                        </div>
-                    </div>
-                    <div class="orderCon">
-                        <div class="export">
-                            <button type="button" class="btn btn-primary">批量下载</button>
-                            <button type="button" class="btn btn-primary">批量删除</button>
-                        </div> 
-                        <div class="result">
-                            当前结果：共计<span>15</span>个课程，<span>13</span>个课程正在开课/班
-                        </div>
-                        <div class="orderTable">
-                            <table class="table table-hover">
-                                <tr>
-                                    <th>
-                                        <input type="checkbox" id="sel_1" onchange="selectAll()">
-                                    </th>
-                                    <th>课程名称
-                                        <div class="sort">
-                                            <span class="glyphicon glyphicon-triangle-top"></span>
-                                            <span class="glyphicon glyphicon-triangle-bottom"></span>
-                                        </div>                                       
-                                    </th>
-                                    <th>课程类别</th>
-                                    <th>授课模式</th>
-                                    <th>开班数</th>
-                                    <th>收费模式</th>
-                                    <th>开课校区</th>
-                                    <th>课时</th>
-                                    <th>金额</th>
-                                    <th>创建日期</th>
-                                    <th>课程状态</th>
-                                        <div class="sort">
-                                            <span class="glyphicon glyphicon-triangle-top"></span>
-                                            <span class="glyphicon glyphicon-triangle-bottom"></span>
-                                        </div>                                       
-                                    </th>
-                                    <th>操作</th>
-                                    <th>
-                                        <span href="#modal-table"  data-toggle="modal" class="glyphicon glyphicon-option-vertical" aria-hidden="true"></span>
-                                    </th>
-                                </tr>
-                                <tr id="choose" class="choose" th:each="obj,iterStat:${prelist}" th:if="${prelist} != null">
-                                    <td><input type="checkbox"></td>
-                                    <input th:id="${obj.id}" type="hidden" >
-                                    <td th:text="${obj.xbCourse.courseName}"></td>
-                                    <td th:text="${obj.xbCourse.xbcoursetype.courseTypeName}"></td>
-                                    <td th:switch="${obj.xbCourse.type}">
-                                        <span th:case="0">班课</span>
-                                        <span th:case="1">一对一</span>
-                                    </td>
-                                    <td th:text="10"></td>
-                                    <td th:switch="${obj.xbCourse.chargingMode}">
-                                        <span th:case="0">按课时</span>
-                                        <span th:case="1">按时间</span>
-                                        <span th:case="2">按期</span>
-                                    </td>
-                                    <td th:text="${obj.sysorgans.organName}">开课校区</td>
-                                    <td th:text="${obj.periodNum}">课时</td>
-                                    <td th:text="${obj.money}">金额</td>
-                                    <td th:text="${obj.xbCourse.createDate}+' '+${obj.xbCourse.createTime}">创建日期</td>
-                                    <td th:switch="${obj.xbCourse.state}">
-                                        <span th:case="0">正常</span>
-                                        <span th:case="1">下架</span>
-                                    </td>
-                                    <td>
-                                        <div class="btn-group">
-                                            <p data-toggle="dropdown" class="down" aria-expanded="false">
-                                                操作
-                                                <span class="ace-icon fa fa-caret-down icon-on-right"></span>
-                                            </p>
-                                            <ul class="dropdown-menu dropdown-default">
-                                                <li>
-                                                    <a th:href="@{/jwcentercourse/goaddcourse(courseId=${obj.xbCourse.id},presetid=${obj.id})}"  >编辑</a>
-                                                </li>
-                                                <li>
-                                                    <a >复制</a>
-                                                </li>
-                                                <li>
-                                                    <a th:onclick="|sourceRemove('${obj.id}')|">删除</a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </td>
-                                    <td></td>
-                                </tr>
-                            </table>
-                            <div class="orderPage">
-                                <div class="page">
-                                    单页显示：
-                                    <select>
-                                        <option>20条/页</option>
-                                        <option>50条/页</option>
-                                        <option>100条/页</option>
-                                    </select>
+                                <div class="form-group" style="display: inline;">
+                                    <button type="button" th:onclick="'javascript:getOrgansListPage(\'\')'">搜索</button>
                                 </div>
-                                <ul class="pagination">
-                                    <li class="disabled">
-                                        <a href="#">首页</a>
-                                    </li>
-                                    <li class="disabled">
-                                        <a href="#">
-                                            <i class="ace-icon fa fa-angle-double-left"></i>
-                                        </a>
-                                    </li>  
-                                    <li class="active">
-                                        <a href="#">1</a>
-                                    </li>
-            
-                                    <li>
-                                        <a href="#">2</a>
-                                    </li>
-            
-                                    <li>
-                                        <a href="#">3</a>
-                                    </li>
-            
-                                    <li>
-                                        <a href="#">4</a>
-                                    </li>
-            
-                                    <li>
-                                        <a href="#">5</a>
-                                    </li>
-            
-                                    <li>
-                                        <a href="#">
-                                            <i class="ace-icon fa fa-angle-double-right"></i>
-                                        </a>
-                                    </li>
-                                    <li class="">
-                                        <a href="#">尾页</a>
-                                    </li>
-                                </ul>
                             </div>
-                        </div>    
+                        <div class="control-position">
+                            <div class="control-group">
+                                <label class="control-label">校区</label>
+                                <input  th:attr ="checked=${organId == '0'?true:false}"
+                                        name="organId" type="radio" th:value="0" class="ace"
+                                        th:onclick="'javascript:getOrgansListPage(\'\')'">
+                                <span class="lbl" th:text="全部校区"></span>
+                                <div class="checkbox" th:each="orgs:${organsList}">
+                                    <label>
+                                        <input th:attr ="checked=${organId == orgs.id?true:false}"
+                                               name="organId" type="radio" th:value="${orgs.id}" class="ace"
+                                               th:onclick="'javascript:getOrgansListPage(\'\')'">
+                                        <span class="lbl" th:text="${orgs.organName}"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">课程类别</label>
+                                <input  th:attr ="checked=${typeId == '0'?true:false}"
+                                        name="typeId" type="radio" th:value="0" class="ace"
+                                        th:onclick="'javascript:getOrgansListPage(\'\')'">
+                                <span class="lbl" th:text="全部校区"></span>
+                                <div class="checkbox" th:each="types:${coursetypelist}">
+                                    <label>
+                                        <input th:attr ="checked=${typeId == types.id?true:false}"
+                                               name="typeId" type="radio" th:value="${types.id}" class="ace"
+                                               th:onclick="'javascript:getOrgansListPage(\'\')'">
+                                        <span class="lbl" th:text="${types.courseTypeName}"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="orderCon">
+                                <!--<div class="export">
+                                    <button type="button" class="btn btn-primary">批量下载</button>
+                                    <button type="button" class="btn btn-primary">批量删除</button>
+                                </div>-->
+                                <div class="result">
+                                    当前结果：共计<span th:text="${prelistsize}"></span>个课程，<span>13</span>个课程正在开课/班
+                                </div>
+                                <div class="orderTable">
+                                    <table  class="table table-hover">
+                                        <tr>
+                                            <th>
+                                                <input type="checkbox" id="sel_1" onchange="selectAll()">
+                                            </th>
+                                            <th>课程名称
+                                                <div class="sort">
+                                                    <span class="glyphicon glyphicon-triangle-top"></span>
+                                                    <span class="glyphicon glyphicon-triangle-bottom"></span>
+                                                </div>
+                                            </th>
+                                            <th>课程类别</th>
+                                            <th>授课模式</th>
+                                            <th>开班数</th>
+                                            <th>收费模式</th>
+                                            <th>开课校区</th>
+                                            <th>课时</th>
+                                            <th>金额</th>
+                                            <th>创建日期</th>
+                                            <th>课程状态</th>
+                                                <div class="sort">
+                                                    <span class="glyphicon glyphicon-triangle-top"></span>
+                                                    <span class="glyphicon glyphicon-triangle-bottom"></span>
+                                                </div>
+                                            </th>
+                                            <th>操作</th>
+                                            <th>
+                                                <span href="#modal-table"  data-toggle="modal" class="glyphicon glyphicon-option-vertical" aria-hidden="true"></span>
+                                            </th>
+                                        </tr>
+                                        <tbody id="courseList_tbodyid">
+                                        <th:block th:if="${prelist.content}" th:fragment="courselist">
+                                            <tr id="choose" class="choose" th:each="obj,iterStat:${prelist.content}" th:if="${prelist.content} != null">
+                                                <td><input type="checkbox"></td>
+                                                <input th:id="${obj.id}" type="hidden" >
+                                                <td th:text="${obj.xbCourse.courseName}"></td>
+                                                <td th:text="${obj.xbCourse.xbcoursetype.courseTypeName}"></td>
+                                                <td th:switch="${obj.xbCourse.type}">
+                                                    <span th:case="0">班课</span>
+                                                    <span th:case="1">一对一</span>
+                                                </td>
+                                                <td th:text="10"></td>
+                                                <td th:switch="${obj.xbCourse.chargingMode}">
+                                                    <span th:case="0">按课时</span>
+                                                    <span th:case="1">按时间</span>
+                                                    <span th:case="2">按期</span>
+                                                </td>
+                                                <td th:text="${obj.sysorgans.organName}">开课校区</td>
+                                                <td th:text="${obj.periodNum}">课时</td>
+                                                <td th:text="${obj.money}">金额</td>
+                                                <td th:text="${obj.xbCourse.createDate}+' '+${obj.xbCourse.createTime}">创建日期</td>
+                                                <td th:switch="${obj.xbCourse.state}">
+                                                    <span th:case="0">正常</span>
+                                                    <span th:case="1">下架</span>
+                                                </td>
+                                                <td>
+                                                    <div class="btn-group">
+                                                        <p data-toggle="dropdown" class="down" aria-expanded="false">
+                                                            操作
+                                                            <span class="ace-icon fa fa-caret-down icon-on-right"></span>
+                                                        </p>
+                                                        <ul class="dropdown-menu dropdown-default">
+                                                            <li>
+                                                                <a th:href="@{/jwcentercourse/goaddcourse(courseId=${obj.xbCourse.id},presetid=${obj.id})}"  >编辑</a>
+                                                            </li>
+                                                            <li>
+                                                                <a style="cursor:pointer">复制</a>
+                                                            </li>
+                                                            <li>
+                                                                <a style="cursor:pointer" th:onclick="|sourceRemove('${obj.id}')|">删除</a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </td>
+                                                <td></td>
+                                            </tr>
+                                        </th:block>
+                                        </tbody>
+                                    </table>
+                                    <div class="orderPage">
+                                        <div class="page">
+                                            单页显示：
+                                            <select id="size" name="size" onchange="getOrgansListPage('');>
+                                                <option value="20">20条/页</option>
+                                                <option value="5">5条/页</option>
+                                                <option value="10">10条/页</option>
+                                                <option value="15">15条/页</option>
+                                            </select>
+                                            <input type="hidden" id="currentzise" th:value="${currentzise}"/>
+                                        </div>
+                                        <ul class="pagination" th:if="${prelist.getTotalPages() gt 0}" >
+                                            <li class="disabled">
+                                                <a href="#" th:onclick="'javascript:getOrgansListPage(\''+0+'\')'">首页</a>
+                                            </li>
+                                            <li class="disabled" th:if="${prelist.getNumber()-1} ge 0">
+                                                <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${prelist.getNumber()-1}+'\')'">
+                                                    <i class="ace-icon fa fa-angle-double-left"></i>
+                                                </a>
+                                            </li>
+                                            <li class="active" th:each="i:${#numbers.sequence(1,prelist.getTotalPages())}">
+                                                <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${i}+'\')'" th:text="${i}"></a>
+                                            </li>
+                                            <li th:if="${prelist.getTotalPages()} ge ${prelist.getNumber()+2} ">
+                                                <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${prelist.getNumber()+2}+'\')'">
+                                                    <i class="ace-icon fa fa-angle-double-right"></i>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </form>
             <!-- 课程类别列表 -->
             <div id="divideList" class="tab-pane fade student course">
-                <div> 
+                <div>
                     <div class="screen" style="height:84px;">
                         <a class="stdEnroll" href="#modal-table1"  data-toggle="modal">新建课程类别</a>
                     </div>
@@ -257,84 +237,40 @@
                                     <th>课程类别</th>
                                     <th>操作</th>
                                 </tr>
-                                <tr id="choosetype" class="choose" th:each="ctype,coursta:${coursetypelist}" th:if="${coursetypelist} != null">
-                                    <input type="hidden" th:id="${ctype.id}"/>
-                                    <td th:text="${ctype.layOrder}">序号</td>
-                                    <td th:text="${ctype.courseTypeName}">课程类别</td>
-                                    <td>
-                                        <div class="btn-group">
-                                            <p data-toggle="dropdown" class="down" aria-expanded="false">
-                                                更多
-                                                <span class="ace-icon fa fa-caret-down icon-on-right"></span>
-                                            </p>
-                                            <ul class="dropdown-menu dropdown-default">
-                                                <li>
-                                                    <a  href="#modal-table1" data-toggle="modal"   th:onclick="|javascript:sourceEdit('${ctype.id}','${ctype.layOrder}','${ctype.courseTypeName}')|">编辑</a>
-                                                </li>
-                                                <li>
-                                                    <a  th:onclick="|javascript:sourceTypeRemove('${ctype.id}')|">删除</a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </td>
-                                </tr>
+                                <tbody id="coursetype_tbody_id">
+                                    <th:block th:if="${coursetypelist}" th:fragment="coursetypefralist">
+                                        <tr id="choosetype" class="choose" th:each="ctype,coursta:${coursetypelist}" th:if="${coursetypelist} != null">
+                                            <input type="hidden" th:id="${ctype.id}"/>
+                                            <td th:text="${ctype.layOrder}">序号</td>
+                                            <td th:text="${ctype.courseTypeName}">课程类别</td>
+                                            <td>
+                                                <div class="btn-group">
+                                                    <p data-toggle="dropdown" class="down" aria-expanded="false">
+                                                        更多
+                                                        <span class="ace-icon fa fa-caret-down icon-on-right"></span>
+                                                    </p>
+                                                    <ul class="dropdown-menu dropdown-default">
+                                                        <li>
+                                                            <a  href="#modal-table1" data-toggle="modal"   th:onclick="|javascript:sourceEdit('${ctype.id}','${ctype.layOrder}','${ctype.courseTypeName}')|">编辑</a>
+                                                        </li>
+                                                        <li>
+                                                            <a style="cursor:pointer"  th:onclick="|javascript:sourceTypeRemove('${ctype.id}')|">删除</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </th:block>
+                                </tbody>
                             </table>
-                            <div class="orderPage">
-                                <div class="page">
-                                    单页显示：
-                                    <select>
-                                        <option>20条/页</option>
-                                        <option>50条/页</option>
-                                        <option>100条/页</option>
-                                    </select>
-                                </div>
-                                <ul class="pagination">
-                                    <li class="disabled">
-                                        <a href="#">首页</a>
-                                    </li>
-                                    <li class="disabled">
-                                        <a href="#">
-                                            <i class="ace-icon fa fa-angle-double-left"></i>
-                                        </a>
-                                    </li>  
-                                    <li class="active">
-                                        <a href="#">1</a>
-                                    </li>
-            
-                                    <li>
-                                        <a href="#">2</a>
-                                    </li>
-            
-                                    <li>
-                                        <a href="#">3</a>
-                                    </li>
-            
-                                    <li>
-                                        <a href="#">4</a>
-                                    </li>
-            
-                                    <li>
-                                        <a href="#">5</a>
-                                    </li>
-            
-                                    <li>
-                                        <a href="#">
-                                            <i class="ace-icon fa fa-angle-double-right"></i>
-                                        </a>
-                                    </li>
-                                    <li class="">
-                                        <a href="#">尾页</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>    
+                        </div>
                     </div>
                 </div>
             </div>
             <!-- 科目列表 -->
             <div id="expiryStu" class="tab-pane fade student course">
                 <!-- 学员列表 -->
-                <div> 
+                <div>
                     <div class="screen" style="height:84px;">
                         <a class="stdEnroll" href="#modal-table2"  data-toggle="modal">新建科目</a>
                     </div>
@@ -346,32 +282,36 @@
                                     <th>状态</th>
                                     <th>操作</th>
                                 </tr>
-                                <tr id="choose" class="choose" class="choose"  th:each="sub,subStat:${subjectlist}">
-                                    <input type="hidden" th:id="${sub.id}"/>
-                                    <td th:text="${sub.subjectName}">科目名称</td>
-                                    <td th:switch="${sub.state}">
-                                        <span th:case="'0'">正常</span>
-                                        <span th:case="'1'">停用</span>
-                                    <td>
-                                        <div class="btn-group">
-                                            <p data-toggle="dropdown" class="down" aria-expanded="false">
-                                                更多
-                                                <span class="ace-icon fa fa-caret-down icon-on-right"></span>
-                                            </p>
-                                            <ul class="dropdown-menu dropdown-default">
-                                                <li>
-                                                    <a href="#modal-table2"  data-toggle="modal" th:onclick="|javascript:subjectEdit('${sub.id}','${sub.subjectName}','${sub.state}')|">编辑</a>
-                                                </li>
-                                                <li>
-                                                    <a  th:onclick="|javascript:subjectRemove('${sub.id}')|">删除</a>
-                                                </li>
-                                                <li>
-                                                    <a href="">停用</a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </td>
-                                </tr>
+                                <tbody id="subject_tbody_id">
+                                    <th:block th:if="${subjectlist}" th:fragment="subjectfralist">
+                                    <tr id="choose" class="choose" class="choose"  th:each="sub,subStat:${subjectlist}">
+                                        <input type="hidden" th:id="${sub.id}"/>
+                                        <td th:text="${sub.subjectName}">科目名称</td>
+                                        <td th:switch="${sub.state}">
+                                            <span th:case="'0'">正常</span>
+                                            <span th:case="'1'">停用</span>
+                                        <td>
+                                            <div class="btn-group">
+                                                <p data-toggle="dropdown" class="down" aria-expanded="false">
+                                                    更多
+                                                    <span class="ace-icon fa fa-caret-down icon-on-right"></span>
+                                                </p>
+                                                <ul class="dropdown-menu dropdown-default">
+                                                    <li>
+                                                        <a href="#modal-table2"  data-toggle="modal" th:onclick="|javascript:subjectEdit('${sub.id}','${sub.subjectName}','${sub.state}')|">编辑</a>
+                                                    </li>
+                                                    <li>
+                                                        <a  th:onclick="|javascript:subjectRemove('${sub.id}')|">删除</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="">停用</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    </th:block>
+                                </tbody>
                             </table>
                             <div class="orderPage">
                                 <div class="page">
@@ -390,27 +330,27 @@
                                         <a href="#">
                                             <i class="ace-icon fa fa-angle-double-left"></i>
                                         </a>
-                                    </li>  
+                                    </li>
                                     <li class="active">
                                         <a href="#">1</a>
                                     </li>
-            
+
                                     <li>
                                         <a href="#">2</a>
                                     </li>
-            
+
                                     <li>
                                         <a href="#">3</a>
                                     </li>
-            
+
                                     <li>
                                         <a href="#">4</a>
                                     </li>
-            
+
                                     <li>
                                         <a href="#">5</a>
                                     </li>
-            
+
                                     <li>
                                         <a href="#">
                                             <i class="ace-icon fa fa-angle-double-right"></i>
@@ -421,11 +361,11 @@
                                     </li>
                                 </ul>
                             </div>
-                        </div>    
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>        
+        </div>
     </div>
 
     <!-- 自定义选项弹窗 -->
@@ -453,10 +393,10 @@
                             <span><input type="checkbox">课程状态</span>
                             <span><input type="checkbox">上课校区</span>
                             <span><input type="checkbox">课时有校区</span>
-                        </div>   
+                        </div>
                     </div>
-                
-    
+
+
                 <div class="modal-footer no-margin-top">
                     <button class="btn pull-left" data-dismiss="modal">
                         取消
@@ -480,12 +420,12 @@
                         <div class="form-group" style="display: inline;">
                             <label for="courseTypeLayOrder">序号</label>
                             <input id="courseTypeLayOrder" type="text" value="" placeholder="建议不要输入重复序号">
-                        </div>  
+                        </div>
                         <div class="form-group" style="display: inline; margin-left:20px;">
                             <label for="courseTypecourseTypeName">类别名称</label>
                             <input id="courseTypecourseTypeName" type="text" placeholder="请输入课程类别">
-                        </div>  
-                    </div>        
+                        </div>
+                    </div>
                 <div class="modal-footer no-margin-top">
                     <button class="btn pull-left" data-dismiss="modal">
                         取消
@@ -526,6 +466,12 @@
 <!----------------------------------------------------------课程函数群------------------------------------------------------------->
 <script type="text/javascript" th:inline="javascript">
     var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/;
+    $(function(){
+        var a = $("#currentzise").val();
+        if(a!=20){
+            $("#size").val(a);
+        }
+    });
     //课程编辑赋值
     function courseEdit(courseId){
         $.ajax({
@@ -549,26 +495,19 @@
         }
      });
     }
-    //课程类别
+    //删除课程
     function sourceRemove(id){
         $.ajax({
-            url: [[@{/jwcentercourse/removecourse}]],
-            type: 'post',
-            dataType: 'json',
+            url: basePath+'/jwcentercourse/removecourse',
+            type: 'get',
             contentType: 'application/json',
-            data: JSON.stringify({id:id}),
+            data: {id:id},
             async: true,
             success: function(data) {
             console.log("回调成功")
-            var status = data.status;
-            var msg = data.msg;
-            if(status=="0"){
-                var id = data.course.id;
-                $("#"+id).parent().remove();
-                alert(msg);
-            }else{
-                alert(msg);
-            }
+                alert("删除成功")
+               $("#courseList_tbodyid").html("");
+               $("#courseList_tbodyid").append(data);
         },
         error:function(){
             console.log("回调失败")
@@ -686,23 +625,16 @@
     //删除课程类别
     function sourceTypeRemove(id){
         $.ajax({
-            url: [[@{/jwcentercourse/removecoursetype}]],
-            type: 'post',
-            dataType: 'json',
+            url: basePath+'/jwcentercourse/removecoursetype',
+            type: 'get',
             contentType: 'application/json',
-            data: JSON.stringify({id:id}),
+            data: {id:id},
             async: true,
             success: function(data) {
                 console.log("回调成功")
-                var status = data.status;
-                var msg = data.msg;
-                if(status=="0"){
-                    var id = data.cousrtype.id;
-                    $("#"+id).parent().remove();
-                    alert(msg);
-                }else{
-                    alert(msg);
-                }
+                alert("删除类别成功")
+                $("#coursetype_tbody_id").html("");
+                $("#coursetype_tbody_id").append(data);
             },
             error:function(){
                 console.log("回调失败")
@@ -714,92 +646,92 @@
 <!----------------------------------------------------------科目函数群------------------------------------------------------------->
 <script type="text/javascript" th:inline="javascript">
     //新建科目
-function saveSubject(){
-        var xbSubjectName =  $("#xbSubjectName").val();
-        var subjectId =  $("#subjectId").val();
-            $.ajax({
-                url: [[@{/jwcentercourse/savesubject}]],
-                type: 'post',
-                dataType: 'json',
-                contentType: 'application/json',
-                data: JSON.stringify({id:subjectId,subjectName:xbSubjectName}),
-                async: true,
-                success: function(data) {
-                console.log("回调成功")
-                var status = data.status;
-                var msg = data.msg;
-                if(status=="0"){
-                    var id = data.cousrtype.id;
-                    var subjectName = data.cousrtype.subjectName;
-                    var state = data.cousrtype.state;
-                    var html = [];
-                    if(subjectId==""){
-                        html.push('<tr id="choose" class="choose"  >');
-                        html.push('<input type="hidden" id="'+id+'"/>');
-                        html.push(' <td >'+subjectName+'</td>');
-                        html.push('<td>');
-                        html.push('     <span>正常</span>');
-                        html.push('<td>');
-                        html.push('<div class="btn-group">');
-                        html.push('     <p data-toggle="dropdown" class="down" aria-expanded="false">更多');
-                        html.push('          <span class="ace-icon fa fa-caret-down icon-on-right"></span>');
-                        html.push('     </p>');
-                        html.push('<ul class="dropdown-menu dropdown-default">');
-                        html.push(' <li>');
-                        html.push('     <a href="#modal-table2"  data-toggle="modal" onclick="javascript:subjectEdit(\''+id+'\',\''+subjectName+'\',\''+state+'\')">编辑</a>');
-                        html.push('</li>');
-                        html.push('<li>');
-                        html.push('     <a onclick="javascript:subjectRemove(\''+id+'\')">删除</a>');
-                        html.push('</li>');
-                        html.push('<li>');
-                        html.push('<a href="">停用</a>');
-                        html.push('</li>');
-                        html.push('</ul>');
-                        html.push('</div>');
-                        html.push('</td>');
-                        html.push('</tr>');
-                        $("#subjectList").append(html.join(""));
-                        alert(msg);
+    function saveSubject(){
+            var xbSubjectName =  $("#xbSubjectName").val();
+            var subjectId =  $("#subjectId").val();
+                $.ajax({
+                    url: [[@{/jwcentercourse/savesubject}]],
+                    type: 'post',
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    data: JSON.stringify({id:subjectId,subjectName:xbSubjectName}),
+                    async: true,
+                    success: function(data) {
+                    console.log("回调成功")
+                    var status = data.status;
+                    var msg = data.msg;
+                    if(status=="0"){
+                        var id = data.cousrtype.id;
+                        var subjectName = data.cousrtype.subjectName;
+                        var state = data.cousrtype.state;
+                        var html = [];
+                        if(subjectId==""){
+                            html.push('<tr id="choose" class="choose"  >');
+                            html.push('<input type="hidden" id="'+id+'"/>');
+                            html.push(' <td >'+subjectName+'</td>');
+                            html.push('<td>');
+                            html.push('     <span>正常</span>');
+                            html.push('<td>');
+                            html.push('<div class="btn-group">');
+                            html.push('     <p data-toggle="dropdown" class="down" aria-expanded="false">更多');
+                            html.push('          <span class="ace-icon fa fa-caret-down icon-on-right"></span>');
+                            html.push('     </p>');
+                            html.push('<ul class="dropdown-menu dropdown-default">');
+                            html.push(' <li>');
+                            html.push('     <a href="#modal-table2"  data-toggle="modal" onclick="javascript:subjectEdit(\''+id+'\',\''+subjectName+'\',\''+state+'\')">编辑</a>');
+                            html.push('</li>');
+                            html.push('<li>');
+                            html.push('     <a onclick="javascript:subjectRemove(\''+id+'\')">删除</a>');
+                            html.push('</li>');
+                            html.push('<li>');
+                            html.push('<a href="">停用</a>');
+                            html.push('</li>');
+                            html.push('</ul>');
+                            html.push('</div>');
+                            html.push('</td>');
+                            html.push('</tr>');
+                            $("#subjectList").append(html.join(""));
+                            alert(msg);
+                        }else{
+                            $("#"+subjectId).parent().remove();
+                            html.push('<tr id="choose" class="choose"   >');
+                            html.push('<input type="hidden" id="'+id+'"/>');
+                            html.push(' <td >'+subjectName+'</td>');
+                            html.push('<td>');
+                            html.push('     <span>正常</span>');
+                            html.push('<td>');
+                            html.push('<div class="btn-group">');
+                            html.push('<p data-toggle="dropdown" class="down" aria-expanded="false">更多');
+                            html.push('<span class="ace-icon fa fa-caret-down icon-on-right"></span>');
+                            html.push('</p>');
+                            html.push('<ul class="dropdown-menu dropdown-default">');
+                            html.push(' <li>');
+                            html.push('     <a href="#modal-table2"  data-toggle="modal" onclick="javascript:subjectEdit(\''+id+'\',\''+subjectName+'\',\''+state+'\')">编辑</a>');
+                            html.push('</li>');
+                            html.push('<li>');
+                            html.push('     <a onclick="javascript:subjectRemove(\''+id+'\')">删除</a>');
+                            html.push('</li>');
+                            html.push('<li>');
+                            html.push('<a href="">停用</a>');
+                            html.push('</li>');
+                            html.push('</ul>');
+                            html.push('</div>');
+                            html.push('</td>');
+                            html.push('</tr>');
+                            $("#subjectList").append(html.join(""));
+                            $("#subjectId").val("");
+                            $("#xbSubjectName").val("");
+                            alert("更新类别成功");
+                        }
                     }else{
-                        $("#"+subjectId).parent().remove();
-                        html.push('<tr id="choose" class="choose"   >');
-                        html.push('<input type="hidden" id="'+id+'"/>');
-                        html.push(' <td >'+subjectName+'</td>');
-                        html.push('<td>');
-                        html.push('     <span>正常</span>');
-                        html.push('<td>');
-                        html.push('<div class="btn-group">');
-                        html.push('<p data-toggle="dropdown" class="down" aria-expanded="false">更多');
-                        html.push('<span class="ace-icon fa fa-caret-down icon-on-right"></span>');
-                        html.push('</p>');
-                        html.push('<ul class="dropdown-menu dropdown-default">');
-                        html.push(' <li>');
-                        html.push('     <a href="#modal-table2"  data-toggle="modal" onclick="javascript:subjectEdit(\''+id+'\',\''+subjectName+'\',\''+state+'\')">编辑</a>');
-                        html.push('</li>');
-                        html.push('<li>');
-                        html.push('     <a onclick="javascript:subjectRemove(\''+id+'\')">删除</a>');
-                        html.push('</li>');
-                        html.push('<li>');
-                        html.push('<a href="">停用</a>');
-                        html.push('</li>');
-                        html.push('</ul>');
-                        html.push('</div>');
-                        html.push('</td>');
-                        html.push('</tr>');
-                        $("#subjectList").append(html.join(""));
-                        $("#subjectId").val("");
-                        $("#xbSubjectName").val("");
-                        alert("更新类别成功");
+                        alert(msg);
                     }
-                }else{
-                    alert(msg);
+                },
+                error:function(){
+                    console.log("回调失败")
                 }
-            },
-            error:function(){
-                console.log("回调失败")
-            }
-        });
-    };
+            });
+        };
     //科目编辑赋值
     function subjectEdit(id,xbSubjectName,state){
         $("#subjectId").val(id);
@@ -814,29 +746,52 @@ function saveSubject(){
     //删除课程类别
     function subjectRemove(id){
         $.ajax({
-            url: [[@{/jwcentercourse/removesubject}]],
-        type: 'post',
-            dataType: 'json',
+            url: basePath+'/jwcentercourse/removesubject',
+            type: 'get',
             contentType: 'application/json',
-            data: JSON.stringify({id:id}),
+            data: {id:id},
             async: true,
             success: function(data) {
-            console.log("回调成功")
-            var status = data.status;
-            var msg = data.msg;
-            if(status=="0"){
-                var id = data.cousrtype.id;
-                $("#"+id).parent().remove();
-                alert(msg);
-            }else{
-                alert(msg);
-            }
+            console.log("删除科目回调成功");
+            alert("删除科目成功")
+            $("#subject_tbody_id").html("");
+            $("#subject_tbody_id").append(data);
         },
         error:function(){
-            console.log("回调失败")
+            console.log("删除科目回调失败")
         }
     });
     }
 </script>
+<script type="text/javascript" th:inline="javascript">
+    //搜索
+    function getOrgansListPage(page){
+        var data= serializeObject("#searchform");
+        var size = $('#size option:selected').val();//选中的值
+        if(page){
+            page = page -1;
+        }
+        window.location.href = basePath + '/jwcentercourse/tocourse?page='+page+'&size='+size+'&data='+JSON.stringify(data);
+    }
+    function serializeObject(form)
+    {
+        var o = {};
+        var a = $(form).serializeArray();
+        $.each(a, function() {
+            if (o[this.name]) {
+                if (!o[this.name].push) {
+                    o[this.name] = [o[this.name]];
+                }
+                o[this.name].push(this.value || '');
+            } else {
+                o[this.name] = this.value || '';
+            }
+        });
+        return o;
+    };
+</script>
 </body>
 </html>
+<style>
+    a{cursor:pointer}
+</style>

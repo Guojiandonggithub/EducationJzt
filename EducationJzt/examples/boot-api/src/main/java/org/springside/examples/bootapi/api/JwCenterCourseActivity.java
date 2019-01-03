@@ -8,6 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -51,20 +53,60 @@ public class JwCenterCourseActivity {
      * @return
      */
     @RequestMapping("/tocourse")
-    public String toCourse(ModelMap model){
-        logger.info("跳转到课程");
-        /*List<XbCourse> list = xbCourseService.findCourseAll();
-        logger.info("查询到课程list.size="+list.size());
-        model.addAttribute("courselist",list);*/
-        Map<String,Object> xbClasssearhMap = new HashMap<>();
-        List<XbCoursePreset> prelist = xbCoursePresetService.getXbCoursePresets(xbClasssearhMap);
-        model.addAttribute("prelist",prelist);
-        List<XbCourseType> coursetypelist = xbCourseTypeService.findCourseTypeAll();
+    public String toCourse(ModelMap model,
+                           @RequestParam(required=false) String data,Pageable pageable){
+        logger.info("跳转到课程列表主页data="+data);
+        getXbCorusePresetListPage(model,pageable,data);
+        Map<String,Object> searhtypeMap = new HashMap<>();
+        List<XbCourseType> coursetypelist = xbCourseTypeService.findXbCourseTypeList(searhtypeMap);
         model.addAttribute("coursetypelist",coursetypelist);
-        List<XbSubject> subjectlist = xbSubjectService.findSubjectAll();
+        List<XbSubject> subjectlist = xbSubjectService.findXbSubjectList(searhtypeMap);
         model.addAttribute("subjectlist",subjectlist);
+        Iterable<SysOrgans> organsList = organsService.getOrgansList();
+        model.addAttribute("organsList",organsList);
+
         return "course";
     }
+
+    /**
+     * 查询所有课时
+     * @param model
+     * @param pageable
+     * @param data
+     */
+    private void getXbCorusePresetListPage(ModelMap model,Pageable pageable,String data){
+        Map<String,Object> resultMap = new HashMap<>();
+        Map<String,Object> searhMap = new HashMap<>();
+        if(null!=data){
+            resultMap = com.alibaba.fastjson.JSONObject.parseObject(data,searhMap.getClass());
+        }
+        //查询课程名
+        String searhname = (String)resultMap.get("searhname");
+        if(StringUtils.isNotEmpty(searhname)){
+            searhMap.put("LIKE_xbCourse.courseName",searhname);
+        }
+        //查询校区
+        String organId = (String)resultMap.get("organId");
+        if(null==organId){
+            organId = "0";
+        }else if(!organId.equals("0")){
+            searhMap.put("EQ_sysorgans.id",organId);
+        }
+        //查询课程类别
+        String typeId = (String)resultMap.get("typeId");
+        if(null==typeId){
+            typeId = "0";
+        }else if(!typeId.equals("0")){
+            searhMap.put("EQ_xbCourse.xbcoursetype.id",typeId);
+        }
+        Page<XbCoursePreset> prelist =xbCoursePresetService.getXbCoursePresetList(pageable,searhMap);
+        model.addAttribute("prelist",prelist);
+        model.addAttribute("prelistsize",prelist.getSize());
+        model.addAttribute("searhname",searhname);
+        model.addAttribute("organId",organId);
+        model.addAttribute("typeId",typeId);
+    }
+
     /**
      * 跳转到新建课程
      * @return
@@ -242,56 +284,69 @@ public class JwCenterCourseActivity {
         }
         logger.info("新建课程结束");
     }
-    @PostMapping("/removecourse")
-    public void removeCourse(@RequestBody XbCourse xbcourse,HttpServletResponse resp){
+
+    /**
+     * 删除课程
+     * @param resp
+     */
+    @RequestMapping("/removecourse")
+    public String removeCourse(@RequestParam(required=false) String id,HttpServletResponse resp,ModelMap model,Pageable pageable){
         logger.info("删除课程");
-        boolean rs = xbCourseService.removeXbCourse(xbcourse);
-        JSONObject jsonObject = new JSONObject();
-        if(rs){
-            jsonObject.put("msg", "删除课程成功");
-            jsonObject.put("course", com.alibaba.fastjson.JSONObject.toJSON(xbcourse));
-            jsonObject.put("status","0");
-        }else{
-            jsonObject.put("status","1");
-            jsonObject.put("msg", "删除课程失败");
+        try {
+            Map<String,Object> xbCoursesearhMap = new HashMap<>();
+            //逻辑删除课时
+            XbCoursePreset xbp = xbCoursePresetService.getXbCoursePreset(id);
+            xbp.deleteStatus = "0";
+            xbCoursePresetService.saveXbCoursePreset(xbp);
+            //逻辑删除课程
+            XbCourse xbc = xbCourseService.findById(xbp.getCourseId());
+            xbc.deleteStatus = "0";
+            xbCourseService.saveXbCourse(xbc);
+            xbCoursesearhMap.put("EQ_deleteStatus","1");
+            Page<XbCoursePreset> prelist = xbCoursePresetService.getXbCoursePresetList(pageable,xbCoursesearhMap);
+            model.addAttribute("prelist",prelist);
+        }catch(Exception e){
+            e.printStackTrace();
         }
-        logger.info("删除课程返回json参数="+jsonObject.toString());
-        HttpServletUtil.reponseWriter(jsonObject,resp);
-        logger.info("新建课程结束");
+        logger.info("删除课程结束");
+        return "course::courselist";
     }
-    @PostMapping("/removecoursetype")
-    public void removeCourseType(@RequestBody XbCourseType xbcoursetype,HttpServletResponse resp){
-        logger.info("删除课程");
-        boolean rs = xbCourseTypeService.removeXbCourseType(xbcoursetype);
-        JSONObject jsonObject = new JSONObject();
-        if(rs){
-            jsonObject.put("msg", "删除课程类别成功");
-            jsonObject.put("cousrtype", com.alibaba.fastjson.JSONObject.toJSON(xbcoursetype));
-            jsonObject.put("status","0");
-        }else{
-            jsonObject.put("status","1");
-            jsonObject.put("msg", "删除课程类别失败");
-        }
-        logger.info("删除课程返回json参数="+jsonObject.toString());
-        HttpServletUtil.reponseWriter(jsonObject,resp);
-        logger.info("新建课程结束");
+
+    /**
+     * 删除类别
+     * @param id
+     * @param resp
+     * @param model
+     * @return
+     */
+    @RequestMapping("/removecoursetype")
+    public String removeCourseType(@RequestParam String id,HttpServletResponse resp,ModelMap model){
+        logger.info("删除课程类别");
+        XbCourseType xbt = xbCourseTypeService.findXbCourseTypeById(id);
+        xbt.deleteStatus = "0";
+        xbCourseTypeService.saveXbCourseType(xbt);
+        Map<String,Object> searmap = new HashMap<String,Object>();
+        model.addAttribute("coursetypelist",xbCourseTypeService.findXbCourseTypeList(searmap));
+        logger.info("删除课程类别结束");
+        return "course::coursetypefralist";
     }
-    @PostMapping("/removesubject")
-    public void removeSubject(@RequestBody XbSubject xbsubject,HttpServletResponse resp){
-        logger.info("删除科目");
-        boolean rs = xbSubjectService.removeXbSubject(xbsubject);
-        JSONObject jsonObject = new JSONObject();
-        if(rs){
-            jsonObject.put("msg", "删除科目成功");
-            jsonObject.put("cousrtype", com.alibaba.fastjson.JSONObject.toJSON(xbsubject));
-            jsonObject.put("status","0");
-        }else{
-            jsonObject.put("status","1");
-            jsonObject.put("msg", "删除科目失败");
-        }
-        logger.info("删除科目返回json参数="+jsonObject.toString());
-        HttpServletUtil.reponseWriter(jsonObject,resp);
+
+    /**
+     * 删除科目
+     * @param id
+     * @param resp
+     * @param model
+     * @return
+     */
+    @RequestMapping("/removesubject")
+    public String removeSubject(@RequestParam String id,HttpServletResponse resp,ModelMap model){
+       XbSubject xbs =  xbSubjectService.findById(id);
+       xbs.deleteStatus = "0";
+       xbSubjectService.saveXbSubject(xbs);
+       Map<String,Object> searmap =  new HashMap<>();
+       model.addAttribute("subjectlist",xbSubjectService.findXbSubjectList(searmap));
         logger.info("新建课程结束");
+        return "course::subjectfralist";
     }
 
 }
