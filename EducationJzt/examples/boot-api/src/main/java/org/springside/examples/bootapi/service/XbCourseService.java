@@ -73,7 +73,7 @@ public class XbCourseService {
 
 	@Transactional(readOnly = true)
 	public List<XbCourse> findCourseList(String organId){
-		List<XbCourse> list =  (List)xbCourseDao.findAll();
+		List<XbCourse> list =  (List)xbCourseDao.findByOrganIds(organId);
 		return list;
 	}
 

@@ -110,6 +110,7 @@ public class EmployeeService {
 		}else{
 			sysEmployee.password = hashPassword(sysEmployee.password);
 		}
+		sysEmployee.deleteStatus = "1";
 		return employeeDao.save(sysEmployee);
 	}
 

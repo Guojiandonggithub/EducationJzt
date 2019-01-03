@@ -4,6 +4,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -36,6 +37,7 @@ public class XbStudent {
     @OneToOne()
     @JoinColumn(name="organId",referencedColumnName = "id",insertable = false,updatable = false)
     public SysOrgans sysOrgans;
+    @NotNull(message="校区不能为空")
     public String organId;
     public String organName;
     public String salesSource;

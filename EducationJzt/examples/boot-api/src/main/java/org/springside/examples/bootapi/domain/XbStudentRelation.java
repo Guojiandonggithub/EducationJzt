@@ -4,6 +4,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -23,18 +24,22 @@ public class XbStudentRelation {
     @OneToOne()
     @JoinColumn(name="studentId",referencedColumnName = "id",insertable = false,updatable = false)
     public XbStudent xbStudent;
+    @NotNull(message="用户不能为空")
     public String studentId;
     @OneToOne()
     @JoinColumn(name="organId",referencedColumnName = "id",insertable = false,updatable = false)
     public SysOrgans sysOrgans;
+    @NotNull(message="校区不能为空")
     public String organId;
     @OneToOne()
     @JoinColumn(name="courseId",referencedColumnName = "id",insertable = false,updatable = false)
     public XbCourse xbCourse;
+    @NotNull(message="课程不能为空")
     public String courseId;
     @OneToOne()
     @JoinColumn(name="classId",referencedColumnName = "id",insertable = false,updatable = false)
     public XbClass xbClass;
+    @NotNull(message="班级不能为空")
     public String classId;
     public BigDecimal receivable;
     public String remarksIn;

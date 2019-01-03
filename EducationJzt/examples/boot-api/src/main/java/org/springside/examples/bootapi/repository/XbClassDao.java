@@ -5,6 +5,8 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springside.examples.bootapi.domain.XbClass;
 
+import java.util.List;
+
 /**
  * 基于Spring Data JPA的Dao接口, 自动根据接口生成实现.
  * 
@@ -14,4 +16,6 @@ import org.springside.examples.bootapi.domain.XbClass;
  */
 public interface XbClassDao extends PagingAndSortingRepository<XbClass, String>,JpaSpecificationExecutor<XbClass> {
     XbClass getById(String id);
+
+    List<XbClass> getXbClassByDeleteStatus(String deleteStatus);
 }

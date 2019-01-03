@@ -31,6 +31,8 @@ public class XbStudentService {
 	@Autowired
 	private XbClassDao xbClassDao;
 	@Autowired
+	private XbRecordClassDao xbRecordClassDao;
+	@Autowired
 	private XbSupplementFeeDao xbSupplementFeeDao;
 
 	@Transactional
@@ -86,12 +88,14 @@ public class XbStudentService {
 		return studentDao.findOne(id);
 	}
 
-
-
-
+	@Transactional
+	public XbStudent getXbStudents(String id) {
+		return studentDao.findAllById(id);
+	}
 
 	@Transactional
 	public Page<XbClassroom>  getXbClassroomList(Pageable pageable,Map<String, Object> searchParams) {
+		searchParams.put("EQ_deleteStatus","1");
 		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
 		Specification<XbClassroom> spec = DynamicSpecifications.bySearchFilter(
 				filters.values(), XbClassroom.class);
@@ -100,6 +104,7 @@ public class XbStudentService {
 
 	@Transactional
 	public Page<XbClass>  getXbClassList(Pageable pageable,Map<String, Object> searchParams) {
+		searchParams.put("EQ_deleteStatus","1");
 		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
 		Specification<XbClass> spec = DynamicSpecifications.bySearchFilter(
 				filters.values(), XbClass.class);
@@ -107,20 +112,24 @@ public class XbStudentService {
 	}
 	@Transactional
 	public List<XbClassroom> findXbClassRoomListAll(){
-		return (List<XbClassroom>)xbClassroomDao.findAll();
+		return xbClassroomDao.getXbClassroomByDeleteStatus("1");
 	}
 	@Transactional
 	public List<XbClass> findXbClassListAll(){
-		return (List<XbClass>)xbClassDao.findAll();
+		return xbClassDao.getXbClassByDeleteStatus("1");
 	}
 	@Transactional
 	public XbClassroom saveXbClassroom(XbClassroom classroom) {
+		classroom.deleteStatus = "1";
 		return xbClassroomDao.save(classroom);
 	}
 
 	@Transactional
 	public void delete(String id) {
-		xbClassroomDao.delete(id);
+		XbClassroom xbClassroom = xbClassroomDao.findOne(id);
+		xbClassroom.deleteStatus = "0";
+		xbClassroomDao.save(xbClassroom);
+		//xbClassroomDao.delete(id);
 	}
 
 	@Transactional
@@ -130,12 +139,16 @@ public class XbStudentService {
 
 	@Transactional
 	public XbClass saveXbClass(XbClass classes) {
+		classes.deleteStatus = "1";
 		return xbClassDao.save(classes);
 	}
 
 	@Transactional
 	public void deleteClass(String id) {
-		xbClassDao.delete(id);
+		XbClass xbClass = xbClassDao.findOne(id);
+		xbClass.deleteStatus="0";
+		xbClassDao.save(xbClass);
+		//xbClassDao.delete(id);
 	}
 
 	@Transactional
@@ -146,8 +159,14 @@ public class XbStudentService {
 	public XbClass getXbClassById(String id){
 		return xbClassDao.getById(id);
 	}
+
 	@Transactional
 	public XbClassroom getXbClassroomById(String id){
 		return xbClassroomDao.getById(id);
+	}
+
+	@Transactional
+	public XbRecordClass saveXbRecordClass(XbRecordClass xbRecordClass){
+		return xbRecordClassDao.save(xbRecordClass);
 	}
 }

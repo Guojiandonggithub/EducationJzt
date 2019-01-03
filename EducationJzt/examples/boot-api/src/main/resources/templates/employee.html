@@ -20,6 +20,9 @@
     <script src="../static/pages/js/ace.min.js"> </script>
     <script src="../static/pages/js/ace-elements.min.js"></script>
     <script src="../static/pages/laydate/laydate.js"></script>
+    <script src="http://static.runoob.com/assets/jquery-validation-1.14.0/lib/jquery.js"></script>
+    <script src="http://static.runoob.com/assets/jquery-validation-1.14.0/dist/jquery.validate.min.js"></script>
+    <script src="http://static.runoob.com/assets/jquery-validation-1.14.0/dist/localization/messages_zh.js"></script>
 
 </head>
 <body>
@@ -307,22 +310,24 @@ function readFile(){
     var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/;
 
     function saveEmployee(){
-        var data= serializeObject("#iform");
-        $.ajax({
-            type: 'get',
-            dataType: 'json',
-            url: basePath + '/accounts/save/employee',
-            data: {employeeEntity:JSON.stringify(data)},
-            contentType:"application/json;charset=UTF-8",
-            cache: false,
-            async: true,
-            success: function (data) {
-                var status = data.status;
-                var msg = data.msg;
-                alert("编辑成功！");
-                window.location.href = basePath + '/accounts/getEmployeeList';
-            }
-        });
+        if ($("#iform").valid()) {
+            var data= serializeObject("#iform");
+            $.ajax({
+                type: 'get',
+                dataType: 'json',
+                url: basePath + '/accounts/save/employee',
+                data: {employeeEntity:JSON.stringify(data)},
+                contentType:"application/json;charset=UTF-8",
+                cache: false,
+                async: true,
+                success: function (data) {
+                    var status = data.status;
+                    var msg = data.msg;
+                    alert("编辑成功！");
+                    window.location.href = basePath + '/accounts/getEmployeeList';
+                }
+            });
+        }
     }
 
 
@@ -350,6 +355,64 @@ function readFile(){
         });
         return o;
     };
+
+
+$(function(){
+    $("#iform").validate({
+        rules : {
+            userName : {
+                required:true,
+                minlength:2,
+                maxlength:12
+            },
+            password : {
+                required:true,
+                minlength:2,
+                maxlength:12
+            },
+            employeeName : {
+                required:true,
+                minlength:2,
+                maxlength:5
+            },
+            mobilePhone : {
+                required:true,
+                minlength:2,
+                maxlength:12
+            },
+            sex : {
+                required:true
+            },
+            organId : {
+                required:true
+            },
+            isAttendClass : {
+                required:true
+            },
+            messages: {
+                mobilePhone: "手机号码不能为空",
+                isAttendClass: "请选择是否教室",
+                organId: "请选择校区",
+                sex: "请选择性别",
+                employeeName: {
+                    required: "名称不能为空",
+                    minlength: "用户名最少由2字符组成",
+                    maxlength:"用户名不能超过5个字符"
+                },
+                userName: {
+                    required: "登录名不能为空",
+                    minlength: "登录名最少由2字符组成",
+                    maxlength:"登录名不能超过12个字符"
+                },
+                password: {
+                    required: "请输入密码",
+                    minlength: "密码最少由两个字符组成",
+                    maxlength:"密码不能超过10个字符"
+                }
+            }
+        }
+    });
+})
 </script>
 
 </body>

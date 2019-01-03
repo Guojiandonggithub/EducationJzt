@@ -30,9 +30,11 @@
     <div class="main-content" layout:fragment="content">
         <div class="classInfo">
             <div class="info1">
-                <p><img src="../static/pages/img/ban.png">昆区分校识字1张三10班</p>
-                <p><span>校区：</span></span>昆区分校</p>  
-                <p><span>课程：</span></span>识字1</p> 
+                <p th:text="${classes.className}"><img src="../static/pages/img/ban.png"></p>
+                <p th:text="${classes.sysOrgans.organName}"<span>校区：</span></span></p>
+                <p th:text="${classes.xbCourse.courseName}"><span>课程：</span></span></p>
+                <input type="hidden" id="classId" name="classId" th:value="${classes.id}"/>
+                <input type="hidden" id="courseId" name="courseId" th:value="${classes.xbCourse.id}"/>
             </div>
             <div class="info2">
                 <div class="form-group">
@@ -41,162 +43,106 @@
                 </div>
                 <div class="form-group">
                     <label>教师课时</label>
-                    <input type="text" value="1">
+                    <input type="text" th:value="${classes.teacherNum}">
                 </div>
                 <div class="form-group">
                     <label>教师</label>
-                    <input type="text" value="张三">
+                    <input type="text" th:value="${classes.teacher.employeeName}">
                 </div>
-                <div class="form-group">
-                    <label>助教</label>
-                    <input type="text" value="">
-                </div>
-                <div class="form-group">
+                <!--<div class="form-group">
                     <label>科目</label>
                     <select name="" id="">
                         <option value="">请选择科目</option>
                         <option value="">111</option>
                         <option value="">222</option>
                     </select>
-                </div>
+                </div>-->
             </div> 
         </div>
         <div class="classCon">
-            <p class="people">班级应到人数<span>10</span>人，实到人数<span>0</span>人</p>
-            <div class="operate">
+            <p class="people">班级应到人数<span th:text="${classPage.getTotalElements()}"></span>人</p>
+            <!--<div class="operate">
                 <div class="form-group">
                     <label>批量操作</label>
-                    <input name="form-field-radio" type="radio" class="ace"><span class="lbl">上课</span>
-                    <input name="form-field-radio" type="radio" class="ace"><span class="lbl">请假</span>
-                    <input name="form-field-radio" type="radio" class="ace"><span class="lbl">旷课</span>
+                    <input name="form-field-radio" type="radio" name="state" value="0" class="ace"><span class="lbl">上课</span>
+                    <input name="form-field-radio" type="radio" name="state" value="1" class="ace"><span class="lbl">请假</span>
+                    <input name="form-field-radio" type="radio" name="state" value="2" class="ace"><span class="lbl">旷课</span>
                 </div>  
                 <div class="form-group">
                     <label>扣除课时</label>
                     <input type="text">
                     <span>可填小数，如0.5</span>
                 </div>  
-            </div>
-            <div class="infoList alert">
-                <div class="headPic">
-                    <img src="../static/pages/img/classgirl.png">
-                    <span>在读</span>
-                    <p>张三</p>
-                </div>
-                <div class="infoMid">
-                    <div class="infoForm">
-                        <div class="form-group">
-                            <input name="form-field-radio" type="radio" class="ace"><span class="lbl">上课</span>
-                            <input name="form-field-radio" type="radio" class="ace"><span class="lbl">请假</span>
-                            <input name="form-field-radio" type="radio" class="ace"><span class="lbl">旷课</span>
-                            <input name="form-field-radio" type="radio" class="ace"><span class="lbl">补课</span>
-                        </div>   
-                        <div class="form-group">
-                            <label>扣除课时</label>
-                            <input type="text">   
-                        </div>
-                        <p>剩余<span>190</span>课时，以请假<span>0</span>次</p>
+            </div>-->
+            <form id="classForm">
+                <div class="infoList alert" th:each="stu,stuindex:${classPage.getContent()}">
+                    <input type="hidden" name="studentId" th:value="${stu.xbStudent.id}"/>
+                    <div class="headPic">
+                        <img src="../static/pages/img/classgirl.png">
+                        <!--<span>在读</span>-->
+                        <p th:text="${stu.xbStudent.studentName}"></p>
                     </div>
-                    <div class="star">
-                        <p>
-                            <label>纪律专注</label>
-                            <span class="glyphicon glyphicon-star"></span>
-                            <span class="glyphicon glyphicon-star"></span>
-                            <span class="glyphicon glyphicon-star"></span>
-                            <span class="glyphicon glyphicon-star"></span>
-                            <span class="glyphicon glyphicon-star"></span>
-                        </p>
-                        <p>
-                            <label>活跃参与</label>
-                            <span class="glyphicon glyphicon-star"></span>
-                            <span class="glyphicon glyphicon-star"></span>
-                            <span class="glyphicon glyphicon-star"></span>
-                            <span class="glyphicon glyphicon-star"></span>
-                            <span class="glyphicon glyphicon-star"></span>
-                        </p>
-                    </div>
-                    <div class="msg">
-                        <label>教师留言</label>   
-                        <textarea></textarea> 
-                    </div>  
-                </div>
-                <div class="upload">
-                    <p>添加图片 上传的图片不可超过10m</p>
-                    <form action="api/dropzone" class="dropzone white dz-clickable">
-                        <div class="dz-message dz-clickable" ui-jp="dropzone" ui-options="{ url: 'api/dropzone' }">
-                            <h4 class="m-t-lg m-b-md">+</h4>
+                    <div class="infoMid">
+                        <div class="infoForm">
+                            <div class="form-group">
+                                <input  type="radio" th:name="'state'+${stuindex.index}" value="0" class="ace"><span class="lbl">上课</span>
+                                <input  type="radio" th:name="'state'+${stuindex.index}" value="1" class="ace"><span class="lbl">请假</span>
+                                <input  type="radio" th:name="'state'+${stuindex.index}" value="2" class="ace"><span class="lbl">旷课</span>
+                                <input  type="radio" th:name="'state'+${stuindex.index}" value="3" class="ace"><span class="lbl">补课</span>
+                            </div>
+                            <div class="form-group">
+                                <label>扣除课时</label>
+                                <input type="text" name="deductPeriod" >
+                            </div>
+                            <p>剩余<span th:text="${stu.periodNum}"></span>课时</p>
                         </div>
-                    </form>
-                </div>
-                <button type="button" class="close" data-dismiss="alert">
-                    <i class="ace-icon fa fa-times"></i>
-                </button>
-            </div>
-            <div class="infoList alert">
-                <div class="headPic">
-                    <img src="../static/pages/img/classboy.png">
-                    <span>在读</span>
-                    <p>张三</p>
-                </div>
-                <div class="infoMid">
-                    <div class="infoForm">
-                        <div class="form-group">
-                            <input name="form-field-radio" type="radio" class="ace"><span class="lbl">上课</span>
-                            <input name="form-field-radio" type="radio" class="ace"><span class="lbl">请假</span>
-                            <input name="form-field-radio" type="radio" class="ace"><span class="lbl">旷课</span>
-                            <input name="form-field-radio" type="radio" class="ace"><span class="lbl">补课</span>
-                        </div>   
-                        <div class="form-group">
-                            <label>扣除课时</label>
-                            <input type="text">   
+                        <!--<div class="star">
+                            <p>
+                                <label>纪律专注</label>
+                                <span class="glyphicon glyphicon-star"></span>
+                                <span class="glyphicon glyphicon-star"></span>
+                                <span class="glyphicon glyphicon-star"></span>
+                                <span class="glyphicon glyphicon-star"></span>
+                                <span class="glyphicon glyphicon-star"></span>
+                            </p>
+                            <p>
+                                <label>活跃参与</label>
+                                <span class="glyphicon glyphicon-star"></span>
+                                <span class="glyphicon glyphicon-star"></span>
+                                <span class="glyphicon glyphicon-star"></span>
+                                <span class="glyphicon glyphicon-star"></span>
+                                <span class="glyphicon glyphicon-star"></span>
+                            </p>
+                        </div>-->
+                        <div class="msg">
+                            <label>教师留言</label>
+                            <textarea name="teacherLeave"></textarea>
                         </div>
-                        <p>剩余<span>190</span>课时，以请假<span>0</span>次</p>
                     </div>
-                    <div class="star">
-                        <p>
-                            <label>纪律专注</label>
-                            <span class="glyphicon glyphicon-star"></span>
-                            <span class="glyphicon glyphicon-star"></span>
-                            <span class="glyphicon glyphicon-star"></span>
-                            <span class="glyphicon glyphicon-star"></span>
-                            <span class="glyphicon glyphicon-star"></span>
-                        </p>
-                        <p>
-                            <label>活跃参与</label>
-                            <span class="glyphicon glyphicon-star"></span>
-                            <span class="glyphicon glyphicon-star"></span>
-                            <span class="glyphicon glyphicon-star"></span>
-                            <span class="glyphicon glyphicon-star"></span>
-                            <span class="glyphicon glyphicon-star"></span>
-                        </p>
-                    </div>
-                    <div class="msg">
-                        <label>教师留言</label>   
-                        <textarea></textarea> 
-                    </div>  
+                    <!--<div class="upload">
+                        <p>添加图片 上传的图片不可超过10m</p>
+                        <form action="api/dropzone" class="dropzone white dz-clickable">
+                            <div class="dz-message dz-clickable" ui-jp="dropzone" ui-options="{ url: 'api/dropzone' }">
+                                <h4 class="m-t-lg m-b-md">+</h4>
+                            </div>
+                        </form>
+                    </div>-->
+                    <button type="button" class="close" data-dismiss="alert">
+                        <i class="ace-icon fa fa-times"></i>
+                    </button>
                 </div>
-                <div class="upload">
-                    <p>添加图片 上传的图片不可超过10m</p>
-                    <form action="api/dropzone" class="dropzone white dz-clickable">
-                        <div class="dz-message dz-clickable" ui-jp="dropzone" ui-options="{ url: 'api/dropzone' }">
-                            <h4 class="m-t-lg m-b-md">+</h4>
-                        </div>
-                    </form>
-                </div>
-                <button type="button" class="close" data-dismiss="alert">
-                    <i class="ace-icon fa fa-times"></i>
-                </button>
-            </div>
+            </form>
         </div>
         <div class="classInfo classContent">
-            <div class="form-group">
+            <!--<div class="form-group">
                 <label style="margin-top:20px;">上课内容</label>
                 <textarea name="" id="" cols="80" rows="2"></textarea>
             </div> 
             <div class="form-group">
                 <label>备注</label>
                 <textarea name="" id="" cols="80" rows="1"></textarea>
-            </div>  
-            <div class="form-group">
+            </div>  -->
+            <!--<div class="form-group">
                 <label style="margin-top:20px;">添加图片</label>
                 <form action="api/dropzone" class="dropzone white dz-clickable">
                     <div class="dz-message dz-clickable" ui-jp="dropzone" ui-options="{ url: 'api/dropzone' }">
@@ -204,8 +150,8 @@
                     </div>
                 </form>
                 <p>添加图片 上传的图片不可超过10m</p>
-            </div> 
-            <div class="found" >
+            </div> -->
+            <!--<div class="found" >
                 <div class="form-group">
                     <label>创建人</label>
                     <input type="text">
@@ -214,10 +160,10 @@
                     <label>创建时间</label>
                     <input class="laydate-icon" id="demo1">
                 </div> 
-            </div> 
+            </div> -->
         </div>
         <div class="classInfo">
-            <button class="save">保存</button>
+            <button class="save" type="button" onclick="saveRecordClass();">保存</button>
         </div>
 
         
@@ -237,8 +183,84 @@ $(".btn-down").click(function(){
 $(".tag .close").click(function(){
   $(this).parent(".tag").hide();
 });
+</script>
+<script type="text/javascript" th:inline="javascript">
+var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/;
+function saveRecordClass(){
+    var classId = $("#classId").val();
+    var courseId = $("#courseId").val();
+    var data= serializeObject("#classForm");
+    if(data){
+        console.log(data);
+        var list = [];
+        var aa = {
+            studentId:"",
+            state:"",
+            deductPeriod:"",
+            teacherLeave:"",
+            recordTime:"",
+            classId:"",
+            courseId:""
+        };
+        if(data.studentId.length==32){
+            aa.studentId = data.studentId;
+            aa.state = data.state0;
+            aa.deductPeriod = data.deductPeriod;
+            aa.teacherLeave = data.teacherLeave
+            aa.recordTime = $("#demo").val();
+            aa.classId = classId;
+            aa.courseId = courseId;
+            list.push(aa);
+        }else{
+            for (var i = 0; i < data.studentId.length; i++) {
+                aa = {};
+                aa.studentId = data.studentId[i];
+                var states = "state"+i;
+                var val=$('input:radio[name="'+states+'"]:checked').val();
+                aa.state = val;
+                aa.deductPeriod = data.deductPeriod[i];
+                aa.teacherLeave = data.teacherLeave[i];
+                aa.recordTime = $("#demo").val();
+                aa.classId = classId;
+                aa.courseId = courseId;
+                list.push(aa);
+            }
+        }
+        console.log(list);
+        $.ajax({
+            type: 'post',
+            dataType: 'json',
+            url: basePath + '/recordClass/save/recordClass',
+            data: JSON.stringify(list),
+            contentType:"application/json;charset=UTF-8",
+            cache: false,
+            async: true,
+            success: function (data) {
+                var status = data.status;
+                var msg = data.msg;
+                alert("编辑成功！");
+                window.location.href = basePath + '/recordClass/getRecordClassList';
+            }
+        });
+    }
+}
 
-
-</script> 
+function serializeObject(form)
+{
+    var o = {};
+    var a = $(form).serializeArray();
+    $.each(a, function() {
+        if (o[this.name]) {
+            if (!o[this.name].push) {
+                o[this.name] = [o[this.name]];
+            }
+            o[this.name].push(this.value || '');
+        } else {
+            o[this.name] = this.value || '';
+        }
+    });
+    return o;
+};
+</script>
 </body>
 </html>

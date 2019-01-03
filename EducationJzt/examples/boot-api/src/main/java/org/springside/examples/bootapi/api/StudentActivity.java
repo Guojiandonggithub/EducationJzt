@@ -21,7 +21,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
+/**
+ * 学员、班级、教室
+ */
 @Controller
 @RequestMapping(value = "/student")
 public class StudentActivity {
@@ -70,7 +72,7 @@ public class StudentActivity {
 	public void saveclassroom(@RequestBody XbClassroom classroom, HttpServletResponse resp) {
 		Map<String, Object> map  =  new HashMap<>();
 		try {
-					XbClassroom classroom1 = studentService.saveXbClassroom(classroom);
+			XbClassroom classroom1 = studentService.saveXbClassroom(classroom);
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put("status","1");
 			jsonObject.put("data", com.alibaba.fastjson.JSONObject.toJSON(classroom1));
@@ -225,21 +227,54 @@ public class StudentActivity {
 		}
 		Map<String,Object> xbCoursesearhMap = new HashMap<>();
 		List<SysOrgans> organsList = organsService.getOrgansList();
+		String organId = "";
 		if(organsList.size()>0){
-			xbCoursesearhMap.put("EQ_",organsList.get(0).id);
+			organId = organsList.get(0).id;
 		}
 		Map<String,Object> searhMap = new HashMap<>();
-
-		//xbCoursesearhMap.put("IN_openingType",organsList.get(0).id);
-		Page<XbCourse> xbCoursePage = xbCourseService.getXbCourseList(pageable,xbCoursesearhMap);
-		List<SysEmployee> employeeList = employeeService.getAccountList(pageable,searhMap).getContent();
-		List<XbClassroom> xbClassroomList = studentService.getXbClassroomList(pageable,searhMap).getContent();
+		Map<String,Object> roomsearhMap = new HashMap<>();
+		searhMap.put("EQ_organIds",organId);
+		List<XbCoursePreset> xbCoursePage = xbCoursePresetService.getXbCoursePresets(searhMap);
+		Map<String,Object> ygsearhMap = new HashMap<>();
+		ygsearhMap.put("EQ_isAttendClass","0");
+		List<SysEmployee> employeeList = employeeService.getAccountList(pageable,ygsearhMap).getContent();
+		roomsearhMap.put("EQ_organId",organId);
+		List<XbClassroom> xbClassroomList = studentService.getXbClassroomList(pageable,roomsearhMap).getContent();
 		model.addAttribute("xbClass",xbClass);
 		model.addAttribute("xbClassroomList",xbClassroomList);
 		model.addAttribute("employeeList",employeeList);
-		model.addAttribute("xbCourseList",xbCoursePage.getContent());
+		model.addAttribute("xbCourseList",xbCoursePage);
 		model.addAttribute("organsList",organsList);
 		return "newClass";
+	}
+
+	/*
+	 * 跳转到班级
+	 * @return
+	 */
+	@RequestMapping("/getXbClassJl")
+	public void getXbClassJl(@RequestParam(required = false) String organId,@RequestParam(required = false) String id,HttpServletResponse resp, ModelMap model, Pageable pageable){
+		Map<String,Object> searhMap = new HashMap<>();
+		Map<String,Object> roomsearhMap = new HashMap<>();
+		searhMap.put("EQ_organIds",organId);
+		List<XbCoursePreset> xbCoursePage = xbCoursePresetService.getXbCoursePresets(searhMap);
+		roomsearhMap.put("EQ_organId",organId);
+		List<XbClassroom> xbClassroomList = studentService.getXbClassroomList(pageable,roomsearhMap).getContent();
+		model.addAttribute("xbClassroomList",xbClassroomList);
+		model.addAttribute("xbCourseList",xbCoursePage);
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("msg", "新建科目成功");
+		jsonObject.put("status","0");
+		jsonObject.put("xbClassroomList",com.alibaba.fastjson.JSONObject.toJSON(xbClassroomList));
+		jsonObject.put("xbCourseList",com.alibaba.fastjson.JSONObject.toJSON(xbCoursePage));
+		logger.info("新建科目返回json参数="+jsonObject.toString());
+		resp.setContentType("text/html;charset=UTF-8");
+		try {
+			resp.getWriter().println(jsonObject.toJSONString());
+			resp.getWriter().close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@RequestMapping("/delete/classroom/{id}")
@@ -371,7 +406,7 @@ public class StudentActivity {
 		List<SysOrgans> organsList = organsService.getOrgansList();
 		if(organsList.size()>0){
 			Map<String,Object> xbCoursesearhMap = new HashMap<>();
-			if(null==orginId&&!orginId.equals("")){
+			if(null==orginId||orginId.equals("")){
 				orginId = organsList.get(0).id;
 			}
 			xbCoursesearhMap.put("EQ_organIds",orginId);
@@ -524,6 +559,43 @@ public class StudentActivity {
 		model.addAttribute("nameormobile",nameormobile);
 		model.addAttribute("type",type);
 		return "student::expiryStu";
+	}
+
+	/**
+	 * 跳转到查询学员
+	 * @return
+	 */
+	@RequestMapping("/getStudentList")
+	public String getStudentList(@RequestParam(required = false) String studentName,ModelMap model, Pageable pageable){
+		Map<String,Object> resultMap = new HashMap<>();
+		if(null!=studentName&&!studentName.equals("")){
+			resultMap.put("LIKE_studentName",studentName);
+		}
+		Page<XbStudent> xbStudentsPage = studentService.getXbStudentList(pageable,resultMap);
+		model.addAttribute("xbStudentPage",xbStudentsPage);
+		return "stopClass::studentList";
+	}
+
+	/*
+	 * 跳转到班级
+	 * @return
+	 */
+	@RequestMapping("/chooseStudent")
+	public void chooseStudent(@RequestParam(required = false) String studentId,HttpServletResponse resp, ModelMap model, Pageable pageable){
+		JSONObject jsonObject = new JSONObject();
+		Map<String,Object> searhMap = new HashMap<>();
+		try {
+			searhMap.put("EQ_studentId",studentId);
+			Page<XbStudentRelation> xbCoursePage = studentService.getXbStudentRelationList(pageable,searhMap);
+			jsonObject.put("msg", "新建科目成功");
+			jsonObject.put("status","0");
+			jsonObject.put("xbCoursePage",com.alibaba.fastjson.JSONObject.toJSON(xbCoursePage.getContent()));
+			resp.setContentType("text/html;charset=UTF-8");
+			resp.getWriter().println(jsonObject.toJSONString());
+			resp.getWriter().close();
+		} catch (IOException e) {
+			logger.info(e.toString());
+		}
 	}
 
 }

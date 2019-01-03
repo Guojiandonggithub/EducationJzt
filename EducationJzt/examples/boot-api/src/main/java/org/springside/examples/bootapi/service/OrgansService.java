@@ -29,6 +29,7 @@ public class OrgansService {
 	public SysOrgans register(SysOrgans organs) {
 		organs.organType = 1;
 		organs.parentId = "1";
+		organs.deleteStatus = "1";
 		return organsDao.save(organs);
 	}
 

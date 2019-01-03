@@ -18,6 +18,10 @@
     <script src="../static/pages/js/bootstrap.min.js"> </script>
     <script src="../static/pages/js/ace-elements.min.js"></script>
     <script src="../static/pages/laydate/laydate.js"></script>
+    <script src="http://static.runoob.com/assets/jquery-validation-1.14.0/lib/jquery.js"></script>
+    <script src="http://static.runoob.com/assets/jquery-validation-1.14.0/dist/jquery.validate.min.js"></script>
+    <script src="http://static.runoob.com/assets/jquery-validation-1.14.0/dist/localization/messages_zh.js"></script>
+
 </head>
 <body>
 <div th:replace="layout::top"></div>
@@ -48,7 +52,7 @@
                     </div>
                     <div class="form-group enrollNum">
                         <label class="col-sm-1">联系电话</label>
-                        <input type="text" name="contactPhone" id="studentName" placeholder="请输入联系电话" >
+                        <input type="text" name="contactPhone"  placeholder="请输入联系电话" >
                         <select name="contactRelation" id="contactRelation">
                             <option value="母亲">母亲</option>
                             <option value="父亲">父亲</option>
@@ -96,14 +100,14 @@
                             <label class="col-sm-1">磁卡卡号</label>
                             <input type="text"  placeholder="请输入磁卡卡号">
                         </div>
-                        <div class="form-group">
+                        <!--<div class="form-group">
                             <label class="col-sm-1">学员姓名</label>
                             <select name="" id="">
                                 <option value="">青山分校</option>
                                 <option value="">111</option>
                                 <option value="">222</option>
                             </select>
-                        </div>
+                        </div>-->
                         <div class="form-group">
                             <label class="col-sm-1">微信号</label>
                             <input type="text"  placeholder="请输入微信号">
@@ -507,6 +511,50 @@
     }();
     $(function(){
         //$(".apply").hide();
+        $("#enrollform").validate({
+            rules : {
+                studentName : {
+                    required:true,
+                    minlength:2,
+                    maxlength:10
+                },
+                contactPhone : {
+                    required:true,
+                    minlength:2,
+                    maxlength:12
+                },
+                classIds : {
+                    required:true
+                },
+                paymentMoney : {
+                    required:true,
+                    digits:true
+                },
+                adds : {
+                    required:true,
+                    minlength:2,
+                    maxlength:15
+                },
+                messages: {
+                    classIds: "还没有选择班级",
+                    phone2: "电话2不能为空",
+                    studentName: {
+                        required: "名称不能为空",
+                        minlength: "用户名最少由两个字符组成",
+                        maxlength:"用户名不能超过10个字符"
+                    },
+                    contactPhone: {
+                        required: "请输入密码",
+                        minlength: "地址最少由两个字符组成",
+                        maxlength:"地址不能超过10个字符"
+                    },
+                    paymentMoney: {
+                        required: "请输入实收金额",
+                        digits: "必须输入数字"
+                    }
+                }
+            }
+        });
     });
 
     $(".btn-down").click(function(){
@@ -555,45 +603,58 @@
     }
 
     function saveEnroll(){
-        var data= serializeObject("#enrollform");
-        console.log(data);
-        var list = [];
-        var aa = {
-            classIds:"",
-            courseId:"",
-            organId:"",
-            receivable:"",
-            remarksIn:"",
-            remarksOut:"",
-            periodNum:""
-        };
-        for (var i = 0; i < data.classIds.length; i++) {
-            aa = {};
-            aa.classId = data.classIds[i];
-            aa.courseId = data.courseId[i];
-            aa.organId = data.organIds[i];
-            aa.receivable = data.receivable[i];
-            aa.remarksIn = data.remarksIn[i];
-            aa.remarksOut = data.remarksOut[i];
-            aa.periodNum = data.periodNum[i];
-            list.push(aa);
-        }
-        console.log(list);
-        $.ajax({
-            type: 'get',
-            dataType: 'json',
-            url: basePath + '/student/save/enroll',
-            data: {studentEntity:JSON.stringify(data),xbStudentRelation:JSON.stringify(list)},
-            contentType:"application/json;charset=UTF-8",
-            cache: false,
-            async: true,
-            success: function (data) {
-                var status = data.status;
-                var msg = data.msg;
-                alert("编辑成功！");
-                window.location.href = basePath + '/student/getXbStudentList';
+        if ($("#enrollform").valid()) {
+            var data= serializeObject("#enrollform");
+            console.log(data);
+            var list = [];
+            var aa = {
+                classIds:"",
+                courseId:"",
+                organId:"",
+                receivable:"",
+                remarksIn:"",
+                remarksOut:"",
+                periodNum:""
+            };
+            if(data.classIds.length==32){
+                aa.classId = data.classIds;
+                aa.courseId = data.courseId;
+                aa.organId = data.organIds;
+                aa.receivable = data.receivable
+                aa.remarksIn = data.remarksIn;
+                aa.remarksOut = data.remarksOut;
+                aa.periodNum = data.periodNum;
+                list.push(aa);
+            }else{
+                for (var i = 0; i < data.classIds.length; i++) {
+                    aa = {};
+                    aa.classId = data.classIds[i];
+                    aa.courseId = data.courseId[i];
+                    aa.organId = data.organIds[i];
+                    aa.receivable = data.receivable[i];
+                    aa.remarksIn = data.remarksIn[i];
+                    aa.remarksOut = data.remarksOut[i];
+                    aa.periodNum = data.periodNum[i];
+                    list.push(aa);
+                }
             }
-        });
+            console.log(list);
+            $.ajax({
+                type: 'get',
+                dataType: 'json',
+                url: basePath + '/student/save/enroll',
+                data: {studentEntity:JSON.stringify(data),xbStudentRelation:JSON.stringify(list)},
+                contentType:"application/json;charset=UTF-8",
+                cache: false,
+                async: true,
+                success: function (data) {
+                    var status = data.status;
+                    var msg = data.msg;
+                    alert("编辑成功！");
+                    window.location.href = basePath + '/student/getXbStudentList';
+                }
+            });
+        }
     }
 
     function serializeObject(form)
@@ -662,6 +723,7 @@
             cache: false,
             async: true,
             success: function (data) {
+                console.log("qqqqqqq"+data);
             $(".apply").show();
             $("#baominginfo").html("");
             $('#baominginfo').html(data);
