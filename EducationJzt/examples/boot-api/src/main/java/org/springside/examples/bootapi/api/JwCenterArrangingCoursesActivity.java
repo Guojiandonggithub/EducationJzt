@@ -44,6 +44,18 @@ public class JwCenterArrangingCoursesActivity {
     public EmployeeService employeeService;
 
     /**
+     * 点击班级级联查询
+     * @return
+     */
+    @RequestMapping("/classToFindAll")
+    public String classToFindAll(@RequestParam String id,ModelMap model){
+       XbClass xbc = xbStudentService.getXbClass(id);
+       //SysEmployee sse = xbc.teacher;
+       //model.addAttribute("SysEmployee",sse);
+       model.addAttribute("XbClass",xbc);
+       return "courseArray::teacherfra";
+    }
+    /**
      * 跳转到排课
      * @return
      */

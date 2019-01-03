@@ -44,9 +44,6 @@
             </div>
             <div class="tabbable">
                 <ul class="nav nav-tabs" id="myTab">
-                   <!-- <li >
-                        <a data-toggle="tab" href="#array">排课</a>
-                    </li>-->
                     <li class="active">
                         <a data-toggle="tab" href="#schedule">日程列表</a>
                     </li>
@@ -55,348 +52,11 @@
                     </li>
                 </ul>
                 <div class="tab-content student">
-                    <!-- 排课 -->
-                    <div id="array" class="tab-pane fade ">
-                        <ul class="nav nav-tabs arrayBtn" style="border-bottom: 1px solid #ccc;">
-                            <li class="active">
-                                <a data-toggle="tab" style="cursor:pointer"  class="calendarTime">时间课表视图</a>
-                            </li>
-                            <li>
-                                <a data-toggle="tab" style="cursor:pointer" class="calendarRoom">班级课表视图</a>
-                            </li>
-                            <li>
-                                <a data-toggle="tab"  style="cursor:pointer" class="calendarTeacher">教师课表视图</a>
-                            </li>
-                        </ul>
-
-                        <div class="tab-pane fade in active" id="calendarTime" >
-                                <div class="arrayForm">
-                                    <div class="" style="display: flex;">
-                                        <div class="checkAll">
-                                            <label>校区选择1：</label>
-                                            <input type="checkbox" id="sel_2" onchange="selectAll2()">全部
-                                        </div>
-                                        <div class="checkList">
-                                            <span><input type="checkbox">青山分校</span>
-                                            <span><input type="checkbox">科源分校</span>
-                                            <span><input type="checkbox">昆区分校</span>
-                                            <span><input type="checkbox">东胜分校</span>
-                                        </div>
-                                    </div>
-                                    <p>
-                                        <label>查看范围：</label>全部
-                                    </p>
-                                    <div class="form-group">
-                                        <select name="" id="">
-                                            <option value="">按班级</option>
-                                            <option value="">111</option>
-                                            <option value="">222</option>
-                                            <option value="">333</option>
-                                        </select>
-                                        <select name="" id="">
-                                            <option value="">按教师</option>
-                                            <option value="">111</option>
-                                            <option value="">222</option>
-                                            <option value="">333</option>
-                                        </select>
-                                        <select name="" id="">
-                                            <option value="">按教室</option>
-                                            <option value="">111</option>
-                                            <option value="">222</option>
-                                            <option value="">333</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div id="calendar">
-                                    <div class="classStyle">
-                                        <p class="state1"><span></span>已记上课</p>
-                                        <p class="state2"><span></span>我的日程</p>
-                                        <p class="state3"><span></span>正常日程</p>
-                                        <p class="state4"><span></span>冲突日程</p>
-                                    </div>
-                                </div>
-                        </div>
-                        <div class="tab-pane fade in " id="calendarRoom"  >
-                                <div class="arrayForm">
-                                    <div class="" style="display: flex;">
-                                        <div class="checkAll">
-                                            <label>校区选择：</label>
-                                            <input type="checkbox" id="sel_1" onchange="selectAll()">全部
-                                        </div>
-                                        <div class="checkList">
-                                            <span><input type="checkbox">青山分校</span>
-                                            <span><input type="checkbox">科源分校</span>
-                                            <span><input type="checkbox">昆区分校</span>
-                                            <span><input type="checkbox">东胜分校</span>
-                                        </div>   
-                                    </div>
-                                    <p>
-                                        <label>查看范围：</label>全部
-                                    </p>
-                                    <div class="form-group">
-                                        <select name="" id="">
-                                            <option value="">按班级</option>
-                                            <option value="">111</option>
-                                            <option value="">222</option>
-                                            <option value="">333</option>
-                                        </select>
-                                        <select name="" id="">
-                                            <option value="">按教师</option>
-                                            <option value="">111</option>
-                                            <option value="">222</option>
-                                            <option value="">333</option>
-                                        </select>
-                                        <select name="" id="">
-                                            <option value="">按教室</option>
-                                            <option value="">111</option>
-                                            <option value="">222</option>
-                                            <option value="">333</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div id="calendar">
-                                    <div class="classStyle">
-                                        <p class="state1"><span></span>已记上课</p>
-                                        <p class="state2"><span></span>我的日程</p>
-                                        <p class="state3"><span></span>正常日程</p>
-                                        <p class="state4"><span></span>冲突日程</p>
-                                    </div>
-                                </div>
-                           <!-- <table class="table table-hover table-bordered syllabus">
-                                <tr>
-                                    <th style="width:150px !important;">班级名称</th>
-                                    <th>周一 10-29</th>
-                                    <th>周二 10-30</th>
-                                    <th>周三 10-31</th>
-                                    <th>周四 11-01</th>
-                                    <th>周五 11-02</th>
-                                    <th>周六 11-03</th>
-                                    <th>周日 11-04</th>
-                                </tr>
-                                <tr>
-                                    <td>一班</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>二班</td>
-                                    <td></td>
-                                    <td rowspan="1">
-                                        <div class="rows2 skList">
-                                            <span>17:00 11112222张三——珠心算(1对1)</span>
-                                        </div>
-                                        <div class="rows2 infoShow">
-                                            <span>开始：2018-10-29 08:00</span>
-                                            <span>结束：2018-10-29 17:00</span>
-                                            <span>教室：5号教室</span>
-                                            <span>班课/一对一：青山分校2018届4班</span>
-                                            <span>教师：汪大东</span>
-                                            <span>助教：张三</span>
-                                        </div>
-                                    </td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>三班</td>
-                                    <td></td>
-                                    <td>
-                                        
-                                    </td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>
-                                        <div class="rows2 ctList">
-                                            <span>17:00 张三——珠心算(1对1)</span>
-                                        </div>
-                                        <div class="rows2 infoShow">
-                                            <span>开始：2018-10-29 08:00</span>
-                                            <span>结束：2018-10-29 17:00</span>
-                                            <span>教室：5号教室</span>
-                                            <span>班课/一对一：青山分校2018届4班</span>
-                                            <span>教师：汪大东</span>
-                                            <span>助教：张三</span>
-                                        </div>
-                                    </td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>四班</td>
-                                    <td></td>
-                                    <td rowspan="1">
-                                        <div class="rows2 skList">
-                                            <span>17:00 张三——珠心算(1对1)</span>
-                                        </div>
-                                        <div class="rows2 infoShow">
-                                            <span>开始：2018-10-29 08:00</span>
-                                            <span>结束：2018-10-29 17:00</span>
-                                            <span>教室：5号教室</span>
-                                            <span>班课/一对一：青山分校2018届4班</span>
-                                            <span>教师：汪大东</span>
-                                            <span>助教：张三</span>
-                                        </div>
-                                    </td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                            </table>-->
-                        </div>
-                        
-
-                        <div class="tab-pane fade in" id="calendarTeacher" >
-                                <div class="arrayForm">
-                                    <div class="" style="display: flex;">
-                                        <div class="checkAll">
-                                            <label>校区选择：</label>
-                                            <input type="checkbox" id="sel_3" onchange="selectAll3()">全部
-                                        </div>
-                                        <div class="checkList">
-                                            <span><input type="checkbox">青山分校</span>
-                                            <span><input type="checkbox">科源分校</span>
-                                            <span><input type="checkbox">昆区分校</span>
-                                            <span><input type="checkbox">东胜分校</span>
-                                        </div>
-                                    </div>
-                                    <p>
-                                        <label>查看范围：</label>全部
-                                    </p>
-                                    <div class="form-group">
-                                        <select name="" id="">
-                                            <option value="">按班级</option>
-                                            <option value="">111</option>
-                                            <option value="">222</option>
-                                            <option value="">333</option>
-                                        </select>
-                                        <select name="" id="">
-                                            <option value="">按教师</option>
-                                            <option value="">111</option>
-                                            <option value="">222</option>
-                                            <option value="">333</option>
-                                        </select>
-                                        <select name="" id="">
-                                            <option value="">按教室</option>
-                                            <option value="">111</option>
-                                            <option value="">222</option>
-                                            <option value="">333</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            <div id="calendar">
-                                <div class="classStyle">
-                                    <p class="state1"><span></span>已记上课</p>
-                                    <p class="state2"><span></span>我的日程</p>
-                                    <p class="state3"><span></span>正常日程</p>
-                                    <p class="state4"><span></span>冲突日程</p>
-                                </div>
-                            </div>
-                            <!--<table class="table table-hover table-bordered syllabus">
-                                <tr>
-                                    <th style="width:150px !important;">教师名称</th>
-                                    <th>周一 10-29</th>
-                                    <th>周二 10-30</th>
-                                    <th>周三 10-31</th>
-                                    <th>周四 11-01</th>
-                                    <th>周五 11-02</th>
-                                    <th>周六 11-03</th>
-                                    <th>周日 11-04</th>
-                                </tr>
-                                <tr>
-                                    <td>张三</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>张三</td>
-                                    <td></td>
-                                    <td rowspan="1">
-                                        <div class="rows2 skList">
-                                            <span>17:00 张三——珠心算(1对1)</span>
-                                        </div>
-                                        <div class="rows2 infoShow">
-                                            <span>开始：2018-10-29 08:00</span>
-                                            <span>结束：2018-10-29 17:00</span>
-                                            <span>教室：5号教室</span>
-                                            <span>班课/一对一：青山分校2018届4班</span>
-                                            <span>教师：汪大东</span>
-                                            <span>助教：张三</span>
-                                        </div>
-                                    </td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>张三</td>
-                                    <td></td>
-                                    <td>
-
-                                    </td>
-                                    <td></td>
-                                    <td></td>
-                                    <td>
-                                        <div class="rows2 ctList">
-                                            <span>17:00 张三——珠心算(1对1)</span>
-                                        </div>
-                                        <div class="rows2 infoShow">
-                                            <span>开始：2018-10-29 08:00</span>
-                                            <span>结束：2018-10-29 17:00</span>
-                                            <span>教室：5号教室</span>
-                                            <span>班课/一对一：青山分校2018届4班</span>
-                                            <span>教师：汪大东</span>
-                                            <span>助教：张三</span>
-                                        </div>
-                                    </td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>张三</td>
-                                    <td></td>
-                                    <td rowspan="1">
-                                        <div class="rows2 skList">
-                                            <span>17:00 张三——珠心算(1对1)</span>
-                                        </div>
-                                        <div class="rows2 infoShow">
-                                            <span>开始：2018-10-29 08:00</span>
-                                            <span>结束：2018-10-29 17:00</span>
-                                            <span>教室：5号教室</span>
-                                            <span>班课/一对一：青山分校2018届4班</span>
-                                            <span>教师：汪大东</span>
-                                            <span>助教：张三</span>
-                                        </div>
-                                    </td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                            </table>-->
-                        </div>
-                    </div>
                     <!-- 日程列表 -->
                     <div id="schedule" class="tab-pane fade in active">
                         <div class="screen">
-                            <a class="stdEnroll" href="#modal-table" role="button" data-toggle="modal">新建日程</a>
+                            <a class="stdEnroll" th:onclick="|javascript:cecalAttendClass()|"
+                               href="#modal-table" role="button" data-toggle="modal">新建日程</a>
                             <div class="screenTop">
                                 <select class="selectName">
                                     <option value="AZ">学员姓名</option>
@@ -412,44 +72,8 @@
                                         </span>
                                     </form>
                                 </div>
-                                <div class="btn-group">
-                                    <button class="btn btn-down">
-                                        筛选
-                                        <i>1</i>
-                                        <span class="ace-icon fa fa-caret-down icon-on-right"></span>
-                                    </button>
-                                    <div class="dropdown-menu">
-                                        <div class="screenData">
-                                            <select>
-                                                <option value="">报读校区</option>
-                                                <option value="y">青山校区</option>
-                                                <option value="n">科源校区</option>
-                                                <option value="n">坤元校区</option>
-                                            </select>
-                                            <select>
-                                                <option value="">教师</option>
-                                                <option value="y">111</option>
-                                                <option value="n">1111</option>
-                                            </select>
-                                        </div>
-                                        <div class="screenData">
-                                            <select>
-                                                <option value="">报读校区</option>
-                                                <option value="y">青山校区</option>
-                                                <option value="n">科源校区</option>
-                                                <option value="n">坤元校区</option>
-                                            </select>
-                                            <select>
-                                                <option value="">课时状态</option>
-                                                <option value="y">在读</option>
-                                                <option value="n">转出</option>
-                                                <option value="y">退费</option>
-                                                <option value="n">停课</option>
-                                                <option value="n">结课</option>
-                                                <option value="n">转课</option>
-                                            </select>
-                                        </div>
-                                    </div>
+                                <div class="form-group" style="display: inline;">
+                                    <button type="button" th:onclick="'javascript:getOrgansListPage(\'\')'">搜索</button>
                                 </div>
                             </div>
                             <div class="screenBot tags">
@@ -486,9 +110,10 @@
                                         <td><input  type="checkbox"></td>
                                         <td th:text="${less.startDateTime}">上课日期</td>
                                         <td th:text="${less.timeInterval}">16:30-18:00时间段</td>
-                                        <td th:if="${less.wayOfTeaching=='1'}" th:text="${less.xbclass.className}+'(一对一)'">
-                                        </td>
-                                        <td th:if="${less.wayOfTeaching=='2'}" th:text="${less.xbclass.className}+'(班课)'">
+                                        <td th:switch="${less.wayOfTeaching}">
+                                            <span th:case="1" th:text="${less.xbclass.className}+'(一对一)'"></span>
+                                            <span th:case="0" th:text="${less.xbclass.className}+'(班课)'"></span>
+                                           <!-- <span th:case="" th:text="未知"></span>-->
                                         </td>
                                         <td th:text="${less.sysemployee.employeeName}">教师</td>
                                         <td th:text="${less.xbclassroom.classroomName}">教室</td>
@@ -570,31 +195,6 @@
                     <!-- 日程冲突 -->
                     <div id="conflict" class="tab-pane fade conflict">
                         <div class="screen">
-                          <!--<div class="conflicDate" style="margin-top: 24px !important;">
-                                <span class="glyphicon glyphicon-menu-left"></span>
-                                <p>2018/10/28 - 2018/11/28</p>
-                                <span class="glyphicon glyphicon-menu-right"></span>
-                            </div>
-                            <div class="screenTop">
-                                <div class="form-group">
-                                    <select class="selectName">
-                                        <option value="AZ">班级/一对一</option>
-                                        <option value="AL">111</option>
-                                        <option value="AK">222</option>
-                                        <option value="AK">333</option>
-                                        <option value="AK">444</option>
-                                    </select>
-                                </div>
-                                <div class="nav-search" id="nav-search">
-                                    <form class="form-search">
-                                        <span class="input-icon">
-                                            <input type="text" placeholder="请输入姓名、支持拼音缩写" class="nav-search-input" id="nav-search-input"
-                                                autocomplete="off">
-                                            <i class="ace-icon fa fa-search nav-search-icon"></i>
-                                        </span>
-                                    </form>
-                                </div>
-                            </div>-->
                         </div>
                         <div class="orderCon ">
                             <div class="orderTable rcct">
@@ -610,9 +210,9 @@
                                     <tr th:each="conf,confSte:${xbAttendConflicList}" id="choose">
                                         <input th:id="${conf.id}+'_ct'"  type="hidden">
                                         <td th:text="${conf.startDateTime} +' '+${conf.timeInterval}">上课时间</td>
-                                        <td th:if="${conf.wayOfTeaching=='1'}" th:text="${conf.xbclass.className}+'(一对一)'">
-                                        </td>
-                                        <td th:if="${conf.wayOfTeaching=='2'}" th:text="${conf.xbclass.className}+'(班课)'">
+                                        <td th:switch="${conf.wayOfTeaching}">
+                                            <span case="1" th:text="${conf.xbclass.className}+'(一对一)'"></span>
+                                            <span case="0" th:text="${conf.xbclass.className}+'(班课)'"></span>
                                         </td>
                                         <td  th:text="${conf.xbclass.xbCourse.courseName}">课程</td>
                                         <td  th:text="${conf.sysemployee.employeeName}">教师</td>
@@ -720,16 +320,16 @@
                             <div class="grounInline">
                                 <div class="form-group">
                                     <label><i>*</i>班级</label>
-                                    <select name="classId" id="classId">
-                                        <!--<option th:each="cla,claSta:${xbClassList}" th:value="${cla.id}" th:text="${cla.xbCourse.courseName}"></option>-->
-                                        <option th:each="cla,claSta:${xbClassList}" th:value="${cla.id}" th:text="'班级：'+${cla.className}+'  课程：'+${cla.xbCourse.courseName}"></option>
+                                    <select id="classId" name="classId" th:onchange="|javascript:classToFindAll()|">
+                                        <option th:each="cla,claSta:${xbClassList}" th:value="${cla.id}"
+                                                th:text="'班级：'+${cla.className}+'  课程：'+${cla.xbCourse.courseName}">
+                                        </option>
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label><i>*</i>上课方式</label>
-                                    <select name="wayOfTeaching" id="wayOfTeaching">
-                                        <option value="1">一对一</option>
-                                        <option value="2">班级</option>
+                                    <label>科目</label>
+                                    <select name="subjectId" id="subjectId" >
+                                        <option th:each="sub,subSta:${xbSubjectList}" th:value="${sub.id}" th:text="${sub.subjectName}"></option>
                                     </select>
                                 </div>
                                 <div id="scheduleModediv" class="form-group">
@@ -760,54 +360,54 @@
                                 <input type="checkbox" name="weekType" value="6" ><span>周六</span>
                                 <input type="checkbox" name="weekType" value="7" ><span>周日</span>
                             </div>
-                            <div class="form-group">
-                                <label><i>*</i>上课时段</label>
-                                <select name="timeInterval" id="timeInterval">
-                                    <option value="">选择时段</option>
-                                    <option value="9:30-10:30">9:30-10:30</option>
-                                    <option value="10:30-11:20">10:30-11:20</option>
-                                    <option value="14:00-15:30">14:00-15:30</option>
-                                    <option value="15:30-17:00">15:30-17:00</option>
-                                    <option value="17:00-18:30">17:00-18:30</option>
-                                    <option value="18:30-20:00">18:30-20:00</option>
-                                </select>
-                                <span>自定义时间</span>
-                            </div>
-                            <div class="grounInline">
+                            <div  class="grounInline">
                                 <div class="form-group">
-                                    <label><i>*</i>教师</label>
-                                    <select name="teacherId" id="teacherId">
-                                        <option value="">请选择教师</option>
-                                        <option th:each="employ,employSta:${sysEmployeeList}" th:value="${employ.id}" th:text="${employ.employeeName}"></option>
+                                    <label><i>*</i>上课时段</label>
+                                    <select name="timeInterval" id="timeInterval">
+                                        <option value="">选择时段</option>
+                                        <option value="9:30-10:30">9:30-10:30</option>
+                                        <option value="10:30-11:20">10:30-11:20</option>
+                                        <option value="14:00-15:30">14:00-15:30</option>
+                                        <option value="15:30-17:00">15:30-17:00</option>
+                                        <option value="17:00-18:30">17:00-18:30</option>
+                                        <option value="18:30-20:00">18:30-20:00</option>
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label>助教</label>
-                                    <select name="tutorId" id="tutorId">
-                                        <option value="">请选择助教</option>
-                                        <option th:each="employ,employSta:${sysEmployeeList}" th:value="${employ.id}" th:text="${employ.employeeName}"></option>
-                                    </select>
+                                    <label for="">上课主题</label>
+                                    <input id="classTheme" name="classTheme" type="text">
                                 </div>
                             </div>
-                            <div class="grounInline">
-                                <div class="form-group">
-                                    <label><i>*</i>教室</label>
-                                    <select name="classRoomId" id="classRoomId">
-                                        <option value="">请选择教室</option>
-                                        <option th:each="room,roomSta:${xbClassroomList}" th:value="${room.id}" th:text="${room.classroomName}"></option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label>科目</label>
-                                    <select name="subjectId" id="subjectId" >
-                                        <option th:each="sub,subSta:${xbSubjectList}" th:value="${sub.id}" th:text="${sub.subjectName}"></option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="">上课主题</label>
-                                <input id="classTheme" name="classTheme" type="text">
-                            </div>
+                            <div id="teacherfromgroupid">
+                                <th:block th:if="${XbClass}" th:fragment="teacherfra">
+                                    <div  class="grounInline">
+                                        <div  class="form-group">
+                                                <label><i>*</i>教师</label>
+                                                <input name="teacherId" id="teacherId"  type="hidden" th:value="${XbClass.teacher.id}">
+                                                <input name="teacherName" id="teacherName" type="text"  disabled="disabled" th:value="${XbClass.teacher.employeeName}">
+                                        </div>
+                                        <div  class="form-group">
+                                                <label><i>*</i>助教</label>
+                                                <input name="tutorId" id="tutorId"  type="hidden" th:value="${XbClass.teacher.id}">
+                                                <input name="tutorName" id="tutorName" type="text"  disabled="disabled" th:value="${XbClass.teacher.employeeName}">
+                                        </div>
+                                    </div>
+                                    <div class="grounInline">
+                                        <div class="form-group">
+                                            <label><i>*</i>教室</label>
+                                            <input name="classRoomId" id="classRoomId"  type="hidden" th:value="${XbClass.xbClassroom.id}">
+                                            <input name="classRoomName" id="classRoomName" type="text"  disabled="disabled" th:value="${XbClass.xbClassroom.classroomName}">
+                                        </div>
+                                        <div class="form-group">
+                                            <label><i>*</i>上课方式</label>
+                                            <input name="wayOfTeaching" id="wayOfTeaching"  type="hidden" th:value="${XbClass.xbCourse.type}">
+                                            <input th:if="${XbClass.xbCourse.type} eq '0'" name="wayOfTeachingName" id="wayOfTeachingName" type="text"  disabled="disabled" th:value="一对一">
+                                            <input th:if="${XbClass.xbCourse.type} eq '1'" name="wayOfTeachingName" id="wayOfTeachingName" type="text"  disabled="disabled" th:value="班课">
+                                        </div>
+                                    </div>
+                                </th:block>
+                        </  </div>
+
                         </div>
                     </div>
                     <div class="modal-footer no-margin-top">
@@ -937,41 +537,39 @@
         $("#id").val("");
         $("#classId").val("");
         $("#wayOfTeaching").val("");
-        //$(":radio[name='scheduleMode'][value='" + scheduleMode + "']").prop("checked", "checked");
+        $("#wayOfTeachingName").val("");
         $("#scheduleMode").removeAttr("checked");
         $("#scheduleModediv").show();
-        //$(":radio[name='scheduleMode']").prop("disabled", true);
         $("#startDateTime").val("");
         if(endDateTime!=''){
             $("#endDateTime").val("");
         }
         $("#timeInterval").val("");
-        $("#teacherId").val("");
-        $("#tutorId").val("");
         $("#classRoomId").val("");
+        $("#classRoomName").val("");
         $("#subjectId").val("");
         $("#classTheme").val("");
+        $("#teacherId").val("");
+        $("#tutorId").val("");
+        $("#teacherName").val("");
+        $("#tutorName").val("");
+
     }
     //日程编辑
     function attendClassEdit(id,xbclassid,wayOfTeaching,scheduleMode,startDateTime,endDateTime,timeInterval,
                              teacherid,tutorid,classRoomid,subjectid,classTheme){
         $("#id").val(id);
         $("#classId").val(xbclassid);
-        $("#wayOfTeaching").val(wayOfTeaching);
         $(":radio[name='scheduleMode'][value='" + scheduleMode + "']").prop("checked", "checked");
-        //$(":radio[name='scheduleMode']").prop("disabled", true);
         $("#scheduleModediv").hide();
         $("#startDateTime").val(startDateTime);
         if(endDateTime!=''){
                $("#endDateTime").val(endDateTime);
         }
         $("#timeInterval").val(timeInterval);
-        $("#teacherId").val(teacherid);
-        $("#tutorId").val(tutorid);
-        $("#classRoomId").val(classRoomid);
         $("#subjectId").val(subjectid);
         $("#classTheme").val(classTheme);
-
+        classToFindAll();
     }
 
     //新建日程
@@ -1003,9 +601,7 @@
                 var sysemployee = rsxbAttendClass.sysemployee;//教师
                 if(status=="00"){
                     alert(msg);
-                    attendClassLoad(rsxbAttendClass.id,rsxbAttendClass.startDateTime,rsxbAttendClass.timeInterval,
-                        xbclass.className,sysemployee.employeeName,xbclassroom.classroomName,
-                        rsxbAttendClass.wayOfTeaching,subject.subjectName);
+                    window.location.href = basePath + '/jw_center_arranging_course/to_arranging_course';
                 }else if(status=="01") {
                     alert(msg);
                     window.location.href = basePath + '/jw_center_arranging_course/to_arranging_course';
@@ -1105,6 +701,26 @@
         }
     });
     }
+    //班级下拉级联
+    function classToFindAll(){
+       var calssId = $("#classId option:selected").val();
+        $.ajax({
+            url: basePath + '/jw_center_arranging_course/classToFindAll',
+            type: 'get',
+            contentType: 'application/json',
+            data: {id: calssId},
+            async: true,
+            success: function (data) {
+                console.log("查询班级级联信息成功");
+                $("#teacherfromgroupid").html("");
+                $("#teacherfromgroupid").append(data);
+            },
+            error: function () {
+                console.log("查询班级级联信息失败")
+            }
+
+        });
+    }
     function serializeObject(form){
         var o = {};
         var a = $(form).serializeArray();
@@ -1120,6 +736,7 @@
         });
         return o;
     };
+
 </script>
     <script>
         ! function () {
@@ -1209,7 +826,7 @@
                $("#manyWeek").show();
            }
        }
-
+        //排课日程表
         $(function () {
             var date = new Date();
             var d = date.getDate();
