@@ -29,40 +29,32 @@
     <div class="main-content">
         <div class="breadcrumbs" id="breadcrumbs">
             <img src="../static/pages/img/line1.png">
-            <span>停课</span>
+            <span>转班</span>
             <img src="../static/pages/img/line.png">
         </div>
-        <div class="enrollCon">
-            <div class="chooseInfo" id= "chooseUser" style="display:none">
-                <p><span id="name">学员姓名：</span>张三</p>
-                <p><span id="phone">联系方式：</span></p>
-                <button href="#modal-table" data-toggle="modal" oninput="getCourseList()">重新选择</button>
-            </div>
+        <div class="enrollCon" id="changeClassId">
             <button class="choiceStu" href="#modal-table" data-toggle="modal" id="chooseid" onclick="getCourseList()">选择学员</button>
+            <th:block th:if="${xbStudent}" th:fragment="changeClassFragment">
+            <div class="chooseInfo">
+                <p><span>学员姓名：</span><th:block th:text="${xbStudent.studentName}"></th:block></p>
+                <p><span>联系方式：</span><th:block th:text="${xbStudent.contactPhone}"></th:block></p>
+                <button href="#modal-table" data-toggle="modal" type="button" oninput="getCourseList()">重新选择</button>
+            </div>
             <div class="stopClass">
                 <div class="form-group">
-                    <label>选择课程</label>
+                    <label>选择班级</label>
                     <select name="courseName" id="courseName">
+                        <option th:each="cla:${xbClassList}" th:value="${cla.xbClass.id}" th:text="${cla.xbClass.className}"></option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>学费剩余</label>
-                    <span>总学费：0.00（0.00课时）</span>
-                    <span>剩余：0.00（0.00课时）</span>
-                </div>
-                <div class="form-group">
-                    <label for="">实际剩余</label>
-                    <input type="text" value="0.00"><span>元</span><span>转到学员账户</span>
-                </div>
-                <div class="form-group">
-                    <label for="">对内备注</label>
-                    <input type="text" placeholder="该备注只有内部操作人员可见" class="remark">
-                </div>
-                <div class="form-group">
-                    <label for="">对外备注</label>
-                    <input type="text" placeholder="该备注将会被打印且会在校宝家中显示" class="remark">
+                    <label>转到班级</label>
+                    <select name="courseName" id="courseName">
+                        <option th:each="cla:${xbQbClassList}" th:value="${cla.xbClass.id}" th:text="${cla.xbClass.className}"></option>
+                    </select>
                 </div>
             </div>
+            </th:block>
         </div>
         <div class="enrollCon handleInfo subInfo">
             <h3>经办信息</h3>
@@ -150,16 +142,16 @@
                         </tr>-->
                         </tbody>
                         <tbody th:id ="userchoose">
-                            <th:block th:if="${xbStudentPage}" th:fragment="studentList">
-                                <tr  th:each="stu : ${xbStudentPage.content}" >
-                                    <td>
-                                        <input name="form-field-checkbox" name="studio" type="radio" th:value="${stu.id}">
-                                    </td>
-                                    <td th:text="${stu.studentName}"><img src="../static/pages/img/boy.png"></td>
-                                    <td th:text="${stu.contactPhone}"></td>
-                                    <td ></td>
-                                    <!--<td><img src="../static/pages/img/ke.png">在读课程</td>-->
-                                </tr>
+                        <th:block th:if="${xbStudentPage}" th:fragment="studentList">
+                            <tr  th:each="stu : ${xbStudentPage.content}" >
+                                <td>
+                                    <input name="form-field-checkbox" name="studio" type="radio" th:value="${stu.id}">
+                                </td>
+                                <td th:text="${stu.studentName}"><img src="../static/pages/img/boy.png"></td>
+                                <td th:text="${stu.contactPhone}"></td>
+                                <td ></td>
+                                <!--<td><img src="../static/pages/img/ke.png">在读课程</td>-->
+                            </tr>
                         </th:block>
                         </tbody>
                     </table>
@@ -190,7 +182,7 @@
         $.ajax({
             type: 'get',
             //dataType: 'json',
-            url: basePath + '/student/getStudentList',
+            url: basePath + '/feeRelated/getStudentList',
             data: {studentName:$("#studentName").val()},
             contentType:"application/json;charset=UTF-8",
             cache: false,
@@ -211,14 +203,15 @@
         }
         $.ajax({
             type: 'get',
-            dataType: 'json',
-            url: basePath + '/student/chooseStudent',
+            dataType: 'text',
+            url: basePath + '/feeRelated/chooseStudent',
             data: {studentId:val},
             contentType:"application/json;charset=UTF-8",
             cache: false,
             async: true,
             success: function (data) {
-                alert(data.msg);
+                console.log(data);
+                $("#changeClassId").html(data);
                 /*$("#chooseUser").show();
                 $('#modal-table').modal('hide')
                 $("#chooseid").hide();

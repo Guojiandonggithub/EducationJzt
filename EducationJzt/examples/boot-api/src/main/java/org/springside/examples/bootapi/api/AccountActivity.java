@@ -46,7 +46,7 @@ public class AccountActivity {
 			jsonObject.put("data", com.alibaba.fastjson.JSONObject.toJSON(organs1));
 			jsonObject.put("msg", "机构编辑成功");
 			logger.info("编辑机构返回json参数="+jsonObject.toString());
-			resp.setContentType("application/json;charset=UTF-8");
+			resp.setContentType("application/x-www-form-urlencoded");
 			resp.getWriter().println(jsonObject.toJSONString());
 			resp.getWriter().close();
 		} catch (IOException e) {

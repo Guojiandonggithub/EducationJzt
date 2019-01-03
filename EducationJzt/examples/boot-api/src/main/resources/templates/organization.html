@@ -20,8 +20,10 @@
     <script src="../static/pages/js/bootstrap.min.js"> </script>
     <script src="../static/pages/js/ace-elements.min.js"></script>
     <script src="../static/pages/js/ace.min.js"> </script>
- 
-    
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script src="http://static.runoob.com/assets/jquery-validation-1.14.0/lib/jquery.js"></script>
+    <script src="http://static.runoob.com/assets/jquery-validation-1.14.0/dist/jquery.validate.min.js"></script>
+    <script src="http://static.runoob.com/assets/jquery-validation-1.14.0/dist/localization/messages_zh.js"></script>
 
 </head>
 <body>
@@ -46,7 +48,7 @@
                         <div class="orderTable">
                             <div class="tableTitle">
                                 <div>
-                                    <span class="name">名称</span>
+                                    <span class="address">名称</span>
                                     <span class="type">校区类型</span>
                                     <span class="tel1">电话1</span>
                                     <span class="tel2">电话2</span>
@@ -58,7 +60,7 @@
                                 <ol>
                                     <li th:each="organs,organsStat:${organsPage.content}">
                                         <div data-handle="" class="tree-handle">
-                                            <span class="tree-titleWrap" th:text="${organs.organName}">
+                                            <span class="tree-titleWrap" class="cols-120" th:text="${organs.organName}">
                                             </span>
                                             <span th:switch="${organs.campusType}">
                                                 <span class="cols-80" th:case="0">直营</span>
@@ -68,7 +70,7 @@
                                             </span>
                                             <span title="0472-5208800" class="cols-120" th:text="${organs.phone1}"></span>
                                             <span title="0472-5208801" class="cols-120" th:text="${organs.phone2}"></span>
-                                            <span title="昆区市府西路科源大厦西门四楼" class="cols-240" th:text="${organs.adds}"></span>
+                                            <span title="昆区市府西路科源大厦西门四楼" style="text-align: center" class="cols-240" th:text="${organs.adds}"></span>
                                             <span class="tree-fr">
                                                 <!--<span class="tree-btn-wrap">
                                                     <a href="javascript:;">添加子集</a>
@@ -196,7 +198,7 @@
                         <button class="btn pull-left" data-dismiss="modal">
                             取消
                         </button>
-                        <button class="btn pull-right" onclick="saveOrganization();" data-dismiss="modal">
+                        <button class="btn pull-right" onclick="saveOrganization();" type="button">
                             保存
                         </button>
                     </div>
@@ -217,6 +219,50 @@ $(function(){
     if(a!=20){
         $("#size").val(a);
     }
+    $("#iform").validate({
+        rules : {
+            organName : {
+                required:true,
+                minlength:2,
+                maxlength:10
+            },
+            phone1 : {
+                required:true,
+                minlength:2,
+                maxlength:12
+            },
+            phone2 : {
+                required:true
+            },
+            layOrder : {
+                required:true,
+                digits:true
+            },
+            adds : {
+                required:true,
+                minlength:2,
+                maxlength:15
+            },
+            messages: {
+                phone1: "电话1不能为空",
+                phone2: "电话2不能为空",
+                organName: {
+                    required: "名称不能为空",
+                    minlength: "用户名最少由两个字符组成",
+                    maxlength:"用户名不能超过10个字符"
+                },
+                layOrder: {
+                    required: "排序不能为空",
+                    digits: "必须输入数字"
+                },
+                adds: {
+                    required: "请输入密码",
+                    minlength: "地址最少由两个字符组成",
+                    maxlength:"地址不能超过10个字符"
+                }
+            }
+        }
+    });
 });
 
 $(".down").click(function(){
@@ -242,29 +288,31 @@ function selectAll(){
     var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/;
 
     function saveOrganization(){
-        var data= serializeObject("#iform");
-        $.ajax({
-            type: 'post',
-            dataType: 'json',
-            url: basePath + '/accounts/save/organs',
-            data: JSON.stringify(data),
-            contentType:"application/json;charset=UTF-8",
-            cache: false,
-            async: true,
-            success: function (data) {
-                var status = data.status;
-                var msg = data.msg;
-                alert("编辑成功！");
-                window.location.href = basePath + '/accounts/getOrgansList';
-                /*if(status=="0"){
-                    if (confirm(msg)) {
-                        window.location.href(basePath + '/accounts/getOrgansList');
-                    }
-                }else{
+        if ($("#iform").valid()) {
+            var data= serializeObject("#iform");
+            $.ajax({
+                type: 'post',
+                dataType: 'json',
+                url: basePath + '/accounts/save/organs',
+                data: JSON.stringify(data),
+                contentType:"application/json;charset=UTF-8",
+                cache: false,
+                async: true,
+                success: function (data) {
+                    var status = data.status;
+                    var msg = data.msg;
+                    alert("编辑成功！");
+                    window.location.href = basePath + '/accounts/getOrgansList';
+                    /*if(status=="0"){
+                        if (confirm(msg)) {
+                            window.location.href(basePath + '/accounts/getOrgansList');
+                        }
+                    }else{
 
-                }*/
-            }
-        });
+                    }*/
+                }
+            });
+        }
     }
 
 
@@ -295,7 +343,6 @@ function selectAll(){
 
     //机构编辑赋值
     function sourceEdit(id,organName,organType,phone1,phone2,adds,layOrder,campusType){
-        alert(adds);
         $("#organsid").val(id);
         $("#organName").val(organName);
         //$("#organType").val(organType);
@@ -308,23 +355,25 @@ function selectAll(){
 
     //删除课程类别
     function sourceRemove(id){
-        $.ajax({
-            url: basePath + '/accounts/delete/organs',
-            type: 'get',
-            dataType: 'json',
-            contentType: 'application/json',
-            data: {id:id},
-            async: true,
-            success: function(data) {
-                var status = data.status;
-                var msg = data.msg;
-                alert("删除成功！");
-                window.location.href = basePath + '/accounts/getOrgansList';
-            },
-            error:function(){
-                console.log("回调失败")
-            }
-        });
+        if(confirm("确定要删除该校区?")){
+            $.ajax({
+                url: basePath + '/accounts/delete/organs',
+                type: 'get',
+                dataType: 'json',
+                contentType: 'application/json',
+                data: {id:id},
+                async: true,
+                success: function(data) {
+                    var status = data.status;
+                    var msg = data.msg;
+                    alert("删除成功！");
+                    window.location.href = basePath + '/accounts/getOrgansList';
+                },
+                error:function(){
+                    console.log("回调失败")
+                }
+            });
+        }
     }
 
 </script>

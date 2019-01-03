@@ -26,8 +26,11 @@
 
 </head>
 <body>
+<div th:replace="layout::top"></div>
 <div class="main-container" id="main-container">
-    <div class="main-content" layout:fragment="content">
+    <div th:replace="layout::left('13','36')">
+    </div>
+    <div class="main-content">
         <div class="breadcrumbs" id="breadcrumbs">
             <img src="../static/pages/img/line1.png">
             <span>记上课</span>
@@ -38,12 +41,12 @@
                 <li class="active">
                     <a data-toggle="tab" href="#studentList">记上课</a>
                 </li>
-                <li>
+                <!--<li>
                     <a data-toggle="tab" href="#divideList">上课记录</a>
                 </li>
                 <li>
                     <a data-toggle="tab" href="#expiryStu">补课管理</a>
-                </li>
+                </li>-->
             </ul>
             <div class="tab-content student attendClass">
                 <!-- 记上课 -->
@@ -54,24 +57,27 @@
                             <span>记上课列表</span>
                         </div>
                         <div class="screenTop">  
-                            <select class="selectName">
+                           <!-- <select class="selectName">
                                 <option value="AZ">班级/一对一</option>
                                 <option value="AL">111</option>
                                 <option value="AK">222</option>
-                            </select>
+                            </select>-->
                             <div class="nav-search" id="nav-search">
-                                <form class="form-search">
-                                    <span class="input-icon">
-                                        <input type="text" placeholder="请输入姓名、支持拼音缩写" class="nav-search-input" id="nav-search-input" autocomplete="off">
-                                        <i class="ace-icon fa fa-search nav-search-icon"></i>
-                                    </span>
-                                </form>
-                            </div>                               
+                            <form class="form-search">
+                                <span>
+                                    <input type="text" id="classesName" name="classesName" th:value="${classesName}"  placeholder="请输入班级名称">
+                                    <i class="ace-icon fa fa-search nav-search-icon"></i>
+                                </span>
+                            </form>
+                        </div>
+                            <div class="form-group" style="display: inline;">
+                                <button type="button" th:onclick="'javascript:getClassListPage(\'\')'">搜索</button>
+                            </div>
                         </div>
                     </div>
                     <div class="orderCon">
                         <div class="result">
-                            当前结果：共<span>111</span>条记录
+                            当前结果：共<span th:text="${classPage.getTotalElements()}"></span>条记录
                         </div>
                         <div class="orderTable">
                             <table class="table table-hover">
@@ -80,63 +86,39 @@
                                     <th>班级/一对一</th>
                                     <th>教师</th>
                                     <th>课程</th>
-                                    <th>开班/课日期
+                                    <!--<th>开班/课日期
                                         <div class="sort">
                                             <span class="glyphicon glyphicon-triangle-top"></span>
                                             <span class="glyphicon glyphicon-triangle-bottom"></span>
                                         </div>                                       
-                                    </th>
+                                    </th>-->
                                     <th>校区</th>
                                     <th>教室</th>
                                     <th>操作</th>
                                 </tr>
-                                <tr id="choose">
+                                <tr id="choose" th:each="cls:${classPage}">
                                     <td>
                                         <span class="glyphicon glyphicon-star-empty"></span>
                                     </td>
-                                    <td><img src="../static/pages/img/ban.png">昆区分校作文张三1班</td>
-                                    <td>李四</td>
-                                    <td>作文1</td>
-                                    <td>2018-05-20</td>
-                                    <td>昆区分校</td>
-                                    <td>昆5号教室</td>
-                                    <td><a href="classEdit.html"><img src="../static/pages/img/jsk.jpg">记上课</a></td>
-                                </tr>
-                                <tr id="choose">
-                                    <td>
-                                        <span class="glyphicon glyphicon-star-empty"></span>
-                                    </td>
-                                    <td><img src="../static/pages/img/ban1.png">昆区分校作文张三1班</td>
-                                    <td>李四</td>
-                                    <td>作文1</td>
-                                    <td>2018-05-20</td>
-                                    <td>昆区分校</td>
-                                    <td>昆5号教室</td>
-                                    <td><a href="classEdit.html"><img src="../static/pages/img/jsk.jpg">记上课</a></td>
-                                </tr>
-                                <tr id="choose">
-                                    <td>
-                                        <span class="glyphicon glyphicon-star-empty"></span>
-                                    </td>
-                                    <td><img src="../static/pages/img/ban1.png">昆区分校作文张三1班</td>
-                                    <td>李四</td>
-                                    <td>作文1</td>
-                                    <td>2018-05-20</td>
-                                    <td>昆区分校</td>
-                                    <td>昆5号教室</td>
-                                    <td><a href="classEdit.html"><img src="../static/pages/img/jsk.jpg">记上课</a></td>
+                                    <td th:text="${cls.className}"><img src="../static/pages/img/ban.png">昆区分校作文张三1班</td>
+                                    <td th:text="${cls.teacher.employeeName}">李四</td>
+                                    <td th:text="${cls.xbCourse.courseName}">作文1</td>
+                                    <!--<td>2018-05-20</td>-->
+                                    <td th:text="${cls.sysOrgans.organName}">昆区分校</td>
+                                    <td th:text="${cls.xbClassroom.classroomName}">昆5号教室</td>
+                                    <td><a th:href="@{'/recordClass/classEdit?classesId='+${cls.id}}"><img src="../static/pages/img/jsk.jpg">记上课</a></td>
                                 </tr>
                             </table>
                             <div class="orderPage">
                                 <div class="page">
                                     单页显示：
-                                    <select>
-                                        <option>20条/页</option>
-                                        <option>50条/页</option>
-                                        <option>100条/页</option>
+                                    <select id="size" onchange="getClassListPage('')">
+                                        <option value="20">20条/页</option>
+                                        <option value="50">50条/页</option>
+                                        <option value="100">100条/页</option>
                                     </select>
                                 </div>
-                                <ul class="pagination">
+                                <!--<ul class="pagination">
                                     <li class="disabled">
                                         <a href="#">首页</a>
                                     </li>
@@ -173,7 +155,7 @@
                                     <li class="">
                                         <a href="#">尾页</a>
                                     </li>
-                                </ul>
+                                </ul>-->
                             </div>
                         </div>    
                     </div>
@@ -972,7 +954,20 @@ function chooseAll1(){
         this.checked = isCheck;       //循环赋值给每个复选框是否选中
     });   
 };
-
-</script> 
+</script>
+<script type="text/javascript" th:inline="javascript">
+    var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/;
+    function getClassListPage(page){
+        var classrsName = $("#classesName").val();
+        if(!classrsName){
+            return false;
+        }
+        var size = $('#size option:selected').val();//选中的值
+        /*if(page){
+            page = page -1;
+        }*/
+        window.location.href = basePath + '/recordClass/getRecordClassList?size='+size+'&classesName='+classrsName;
+    }
+</script>
 </body>
 </html>

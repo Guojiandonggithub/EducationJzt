@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -112,18 +113,18 @@
         </div>     
         <div class="enrollCon">
             <h2>班级信息</h2>
-            <div class="stopClass newClass">     
+            <div class="stopClass newClass" id="jlfind">
                 <div class="form-group">
                     <label><span>*</span>校区</label>
-                    <select name="organId" >
+                    <select name="organId" id="organId" onchange="getXbClassJl();">
                         <!--<option value="">选择校区</option>-->
                         <option th:each="orgs:${organsList}" th:selected="${xbClass.organId == orgs.id}" th:value="${orgs.id}" th:text="${orgs.organName}"></option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label><span>*</span>课程</label>
-                    <select name="courseId" >
-                        <option th:each="course:${xbCourseList}" th:selected="${xbClass.courseId == course.id}" th:value="${course.id}" th:text="${course.courseName}"></option>
+                    <select name="courseId" id="courseId" >
+                        <option th:each="course:${xbCourseList}" th:selected="${xbClass.courseId == course.xbCourse.id}" th:value="${course.xbCourse.id}" th:text="${course.xbCourse.courseName}"></option>
                     </select>
                     <Span>请先选择校区再选择课程</Span>
                 </div>
@@ -174,7 +175,7 @@
                 <div style="display: block; margin-top:20px;">
                     <div class="form-group">
                         <label>教室</label>
-                        <select name="classroomId" >
+                        <select name="classroomId" id="classroomId" th:value="${xbClass.classroomId}">
                             <!--<option value="">选择教室</option>-->
                             <option th:each="classroom:${xbClassroomList}" th:selected="${xbClass.classroomId == classroom.id}" th:value="${classroom.id}" th:text="${classroom.classroomName}"></option>
                         </select>
@@ -256,6 +257,45 @@ laydate({elem: '#demo'});//绑定元素
         });
         return o;
     };
+
+    function getXbClassJl(){
+        var orgid = $("#organId").val();
+        $.ajax({
+            type: 'get',
+            dataType: 'json',
+            url: basePath + '/student/getXbClassJl',
+            data: {organId:orgid},
+            contentType:"application/json;charset=UTF-8",
+            cache: false,
+            async: true,
+            success: function (data) {
+                console.log(data.xbCourseList)
+                $('#classroomId').empty();
+                $('#courseId').empty();
+                for (var i = 0; i < data.xbClassroomList.length; i++) {
+                    //先创建好select里面的option元素
+                    var option = document.createElement("option");
+                    //转换DOM对象为JQ对象,好用JQ里面提供的方法 给option的value赋值
+                    $(option).val(data.xbClassroomList[i].id);
+                    //给option的text赋值,这就是你点开下拉框能够看到的东西
+                    $(option).text(data.xbClassroomList[i].classroomName);
+                    //获取select 下拉框对象,并将option添加进select
+                    $('#classroomId').append(option);
+                }
+                for (var i = 0; i < data.xbCourseList.length; i++) {
+                    //先创建好select里面的option元素
+                    var option = document.createElement("option");
+                    //转换DOM对象为JQ对象,好用JQ里面提供的方法 给option的value赋值
+                    $(option).val(data.xbCourseList[i].xbCourse.id);
+                    //给option的text赋值,这就是你点开下拉框能够看到的东西
+                    $(option).text(data.xbCourseList[i].xbCourse.courseName);
+                    //获取select 下拉框对象,并将option添加进select
+                    $('#courseId').append(option);
+                }
+            }
+        });
+    };
+
 </script>
 </body>
 </html>
