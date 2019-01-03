@@ -44,8 +44,8 @@
                 </li>
             </ul>
             <!-- 上课列表 -->
-            <form id="searchform">
-                <div id="studentList" class="tab-pane fade in active student course">
+            <div class="tab-pane fade in active student course" id="studentList" >
+                <form id="searchform">
                     <!-- 学员列表 -->
                         <div class="screen">
                             <a class="stdEnroll" th:href="@{/jwcentercourse/goaddcourse}" >新建课程</a>
@@ -70,26 +70,11 @@
                             </div>
                         <div class="control-position">
                             <div class="control-group">
-                                <label class="control-label">校区</label>
-                                <input  th:attr ="checked=${organId == '0'?true:false}"
-                                        name="organId" type="radio" th:value="0" class="ace"
-                                        th:onclick="'javascript:getOrgansListPage(\'\')'">
-                                <span class="lbl" th:text="全部校区"></span>
-                                <div class="checkbox" th:each="orgs:${organsList}">
-                                    <label>
-                                        <input th:attr ="checked=${organId == orgs.id?true:false}"
-                                               name="organId" type="radio" th:value="${orgs.id}" class="ace"
-                                               th:onclick="'javascript:getOrgansListPage(\'\')'">
-                                        <span class="lbl" th:text="${orgs.organName}"></span>
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="control-group">
                                 <label class="control-label">课程类别</label>
                                 <input  th:attr ="checked=${typeId == '0'?true:false}"
                                         name="typeId" type="radio" th:value="0" class="ace"
                                         th:onclick="'javascript:getOrgansListPage(\'\')'">
-                                <span class="lbl" th:text="全部校区"></span>
+                                <span class="lbl" th:text="全部"></span>
                                 <div class="checkbox" th:each="types:${coursetypelist}">
                                     <label>
                                         <input th:attr ="checked=${typeId == types.id?true:false}"
@@ -99,19 +84,56 @@
                                     </label>
                                 </div>
                             </div>
+                            <div class="control-group">
+                                <label class="control-label">授课模式</label>
+                                <input  th:attr ="checked=${courtype == '-1'?true:false}"
+                                        name="courtype" type="radio" th:value="-1" class="ace"
+                                        th:onclick="'javascript:getOrgansListPage(\'\')'">
+                                <span class="lbl" th:text="全部"></span>
+                                <div class="checkbox"><label>
+                                <input  th:attr ="checked=${courtype == '0'?true:false}"
+                                        name="courtype" type="radio" th:value="0" class="ace"
+                                        th:onclick="'javascript:getOrgansListPage(\'\')'">
+                                <span class="lbl" th:text="班课"></span>
+                                </label></div>
+                                <div class="checkbox"><label>
+                                <input  th:attr ="checked=${courtype == '1'?true:false}"
+                                        name="courtype" type="radio" th:value="1" class="ace"
+                                        th:onclick="'javascript:getOrgansListPage(\'\')'">
+                                <span class="lbl" th:text="一对一"></span>
+                                </label></div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">校区</label>
+                                <input  th:attr ="checked=${organId == '0'?true:false}"
+                                        name="organId" type="radio" th:value="0" class="ace"
+                                        th:onclick="'javascript:getOrgansListPage(\'\')'">
+                                <span class="lbl" th:text="全部"></span>
+                                <div class="checkbox" th:each="orgs:${organsList}">
+                                    <label>
+                                        <input th:attr ="checked=${organId == orgs.id?true:false}"
+                                               name="organId" type="radio" th:value="${orgs.id}" class="ace"
+                                               th:onclick="'javascript:getOrgansListPage(\'\')'">
+                                        <span class="lbl" th:text="${orgs.organName}"></span>
+                                    </label>
+                                </div>
+                            </div>
                             <div class="orderCon">
                                 <!--<div class="export">
                                     <button type="button" class="btn btn-primary">批量下载</button>
                                     <button type="button" class="btn btn-primary">批量删除</button>
                                 </div>-->
                                 <div class="result">
-                                    当前结果：共计<span th:text="${prelistsize}"></span>个课程，<span>13</span>个课程正在开课/班
+                                    当前结果：共计<span th:text="${prelist.getTotalElements()}"></span>个课程，<span>13</span>个课程正在开课/班
                                 </div>
                                 <div class="orderTable">
                                     <table  class="table table-hover">
                                         <tr>
                                             <th>
                                                 <input type="checkbox" id="sel_1" onchange="selectAll()">
+                                            </th>
+                                            <th>
+                                                序号
                                             </th>
                                             <th>课程名称
                                                 <div class="sort">
@@ -143,6 +165,7 @@
                                             <tr id="choose" class="choose" th:each="obj,iterStat:${prelist.content}" th:if="${prelist.content} != null">
                                                 <td><input type="checkbox"></td>
                                                 <input th:id="${obj.id}" type="hidden" >
+                                                <td th:text="${iterStat.count}+${prelist.getNumber()}*10"></td>
                                                 <td th:text="${obj.xbCourse.courseName}"></td>
                                                 <td th:text="${obj.xbCourse.xbcoursetype.courseTypeName}"></td>
                                                 <td th:switch="${obj.xbCourse.type}">
@@ -190,13 +213,13 @@
                                     <div class="orderPage">
                                         <div class="page">
                                             单页显示：
-                                            <select id="size" name="size" onchange="getOrgansListPage('');>
-                                                <option value="20">20条/页</option>
+                                            <select id="size" name="size" onchange="getOrgansListPage('')">
                                                 <option value="5">5条/页</option>
+                                                <option value="20">20条/页</option>
                                                 <option value="10">10条/页</option>
                                                 <option value="15">15条/页</option>
                                             </select>
-                                            <input type="hidden" id="currentzise" th:value="${currentzise}"/>
+                                            <input type="hidden" id="prelistsize" th:value="${prelistsize}"/>
                                         </div>
                                         <ul class="pagination" th:if="${prelist.getTotalPages() gt 0}" >
                                             <li class="disabled">
@@ -207,7 +230,7 @@
                                                     <i class="ace-icon fa fa-angle-double-left"></i>
                                                 </a>
                                             </li>
-                                            <li class="active" th:each="i:${#numbers.sequence(1,prelist.getTotalPages())}">
+                                            <li th:class="${i} eq ${prelist.getNumber()+1}?'active':''" th:each="i:${#numbers.sequence(1,prelist.getTotalPages())}">
                                                 <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${i}+'\')'" th:text="${i}"></a>
                                             </li>
                                             <li th:if="${prelist.getTotalPages()} ge ${prelist.getNumber()+2} ">
@@ -221,11 +244,11 @@
                             </div>
                         </div>
                     </div>
-                </div>
-            </form>
+
+                </form>
+            </div>
             <!-- 课程类别列表 -->
             <div id="divideList" class="tab-pane fade student course">
-                <div>
                     <div class="screen" style="height:84px;">
                         <a class="stdEnroll" href="#modal-table1"  data-toggle="modal">新建课程类别</a>
                     </div>
@@ -265,7 +288,6 @@
                             </table>
                         </div>
                     </div>
-                </div>
             </div>
             <!-- 科目列表 -->
             <div id="expiryStu" class="tab-pane fade student course">
@@ -313,54 +335,6 @@
                                     </th:block>
                                 </tbody>
                             </table>
-                            <div class="orderPage">
-                                <div class="page">
-                                    单页显示：
-                                    <select>
-                                        <option>20条/页</option>
-                                        <option>50条/页</option>
-                                        <option>100条/页</option>
-                                    </select>
-                                </div>
-                                <ul class="pagination">
-                                    <li class="disabled">
-                                        <a href="#">首页</a>
-                                    </li>
-                                    <li class="disabled">
-                                        <a href="#">
-                                            <i class="ace-icon fa fa-angle-double-left"></i>
-                                        </a>
-                                    </li>
-                                    <li class="active">
-                                        <a href="#">1</a>
-                                    </li>
-
-                                    <li>
-                                        <a href="#">2</a>
-                                    </li>
-
-                                    <li>
-                                        <a href="#">3</a>
-                                    </li>
-
-                                    <li>
-                                        <a href="#">4</a>
-                                    </li>
-
-                                    <li>
-                                        <a href="#">5</a>
-                                    </li>
-
-                                    <li>
-                                        <a href="#">
-                                            <i class="ace-icon fa fa-angle-double-right"></i>
-                                        </a>
-                                    </li>
-                                    <li class="">
-                                        <a href="#">尾页</a>
-                                    </li>
-                                </ul>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -442,7 +416,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header no-padding">
-                    <div class="table-header">新建科目1</div>
+                    <div class="table-header">新建科目</div>
                 </div>
                 <div class="modal-body" style="padding:15px !important">
                     <input id="subjectId" type="hidden" value=""/>
@@ -467,8 +441,8 @@
 <script type="text/javascript" th:inline="javascript">
     var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/;
     $(function(){
-        var a = $("#currentzise").val();
-        if(a!=20){
+        var a = $("#prelistsize").val();
+        if(a!=5){
             $("#size").val(a);
         }
     });
@@ -480,7 +454,7 @@
             method: 'POST',
             data: {"courseId":courseId},
             success: function(data) {
-            console.log("回调成功")
+            console.log("回调成功");
             var status = data.status;
             var msg = data.msg;
             if(status=="0"){
@@ -496,23 +470,25 @@
      });
     }
     //删除课程
-    function sourceRemove(id){
-        $.ajax({
-            url: basePath+'/jwcentercourse/removecourse',
-            type: 'get',
-            contentType: 'application/json',
-            data: {id:id},
-            async: true,
-            success: function(data) {
-            console.log("回调成功")
-                alert("删除成功")
-               $("#courseList_tbodyid").html("");
-               $("#courseList_tbodyid").append(data);
-        },
-        error:function(){
-            console.log("回调失败")
+    function sourceRemove(id) {
+        if (confirm("确定要删除该课程?")) {
+            $.ajax({
+                url: basePath + '/jwcentercourse/removecourse',
+                type: 'get',
+                contentType: 'application/json',
+                data: {id: id},
+                async: true,
+                success: function (data) {
+                    console.log("回调成功")
+                    alert("删除成功")
+                    $("#courseList_tbodyid").html("");
+                    $("#courseList_tbodyid").append(data);
+                },
+                error: function () {
+                    console.log("回调失败")
+                }
+            });
         }
-    });
     }
 </script>
 <script>
@@ -535,22 +511,35 @@
                 this.checked = isCheck;       //循环赋值给每个复选框是否选中
             });
         };
+        studentlistShow();
         $(".studentList").click(function () {
-            $("#studentList").show();
-            $("#divideList").hide();
-            $("#expiryStu").hide();
+            studentlistShow();
         });
+
         $(".divideList").click(function () {
-            $("#divideList").show();
-            $("#studentList").hide();
-            $("#expiryStu").hide();
+            dividelistShow();
         });
+
         $(".expiryStu").click(function () {
-            $("#expiryStu").show();
-            $("#divideList").hide();
-            $("#studentList").hide();
+            expiryStulistShow();
         });
+        //getOrgansListPage('');
     });
+    function studentlistShow(){
+        $("#studentList").show();
+        $("#divideList").hide();
+        $("#expiryStu").hide();
+    }
+    function dividelistShow(){
+        $("#divideList").show();
+        $("#studentList").hide();
+        $("#expiryStu").hide();
+    }
+    function expiryStulistShow(){
+        $("#expiryStu").show();
+        $("#divideList").hide();
+        $("#studentList").hide();
+    }
 </script>
 <!--课程类别函数群-->
 <script type="text/javascript" th:inline="javascript">
@@ -624,22 +613,24 @@
     }
     //删除课程类别
     function sourceTypeRemove(id){
-        $.ajax({
-            url: basePath+'/jwcentercourse/removecoursetype',
-            type: 'get',
-            contentType: 'application/json',
-            data: {id:id},
-            async: true,
-            success: function(data) {
-                console.log("回调成功")
-                alert("删除类别成功")
-                $("#coursetype_tbody_id").html("");
-                $("#coursetype_tbody_id").append(data);
-            },
-            error:function(){
-                console.log("回调失败")
-            }
-        });
+        if(confirm("确定要删除该课程类别?")) {
+            $.ajax({
+                url: basePath + '/jwcentercourse/removecoursetype',
+                type: 'get',
+                contentType: 'application/json',
+                data: {id: id},
+                async: true,
+                success: function (data) {
+                    console.log("回调成功")
+                    alert("删除类别成功")
+                    $("#coursetype_tbody_id").html("");
+                    $("#coursetype_tbody_id").append(data);
+                },
+                error: function () {
+                    console.log("回调失败")
+                }
+            });
+        }
     }
 
 </script>
@@ -745,22 +736,25 @@
     }
     //删除课程类别
     function subjectRemove(id){
-        $.ajax({
-            url: basePath+'/jwcentercourse/removesubject',
-            type: 'get',
-            contentType: 'application/json',
-            data: {id:id},
-            async: true,
-            success: function(data) {
-            console.log("删除科目回调成功");
-            alert("删除科目成功")
-            $("#subject_tbody_id").html("");
-            $("#subject_tbody_id").append(data);
-        },
-        error:function(){
-            console.log("删除科目回调失败")
+        if(confirm("确定要删除该课程类别?")) {
+            $.ajax({
+                url: basePath + '/jwcentercourse/removesubject',
+                type: 'get',
+                contentType: 'application/json',
+                data: {id: id},
+                async: true,
+                success: function (data) {
+                    console.log("删除科目回调成功");
+                    alert("删除科目成功")
+                    $("#subject_tbody_id").html("");
+                    $("#subject_tbody_id").append(data);
+                },
+                error: function () {
+                    console.log("删除科目回调失败")
+                }
+
+            });
         }
-    });
     }
 </script>
 <script type="text/javascript" th:inline="javascript">
@@ -771,10 +765,12 @@
         if(page){
             page = page -1;
         }
-        window.location.href = basePath + '/jwcentercourse/tocourse?page='+page+'&size='+size+'&data='+JSON.stringify(data);
+        if(size){
+            size = "10";
+        }
+        window.location.href = basePath + '/jwcentercourse/tocourse?page='+page+'&size='+size+'sort=xbCourse.createDate,DESC&sort=xbCourse.createTime,DESC&data='+JSON.stringify(data);
     }
-    function serializeObject(form)
-    {
+    function serializeObject(form){
         var o = {};
         var a = $(form).serializeArray();
         $.each(a, function() {

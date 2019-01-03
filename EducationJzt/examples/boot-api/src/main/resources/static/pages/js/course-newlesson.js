@@ -20,7 +20,7 @@ function schoolType(type,courseId){
             $(this).prop('checked', true);
         });
         //不显示
-        $("#zhidingSchool").hide();
+        $("#zhidingSchool span").hide();
         dingJiaBiaoZunAll(courseId,charging)
 
     //指定校区
@@ -28,7 +28,7 @@ function schoolType(type,courseId){
         $('#zhidingSchool input:checkbox').each(function() {
             $(this).prop('checked',false);
         });
-        $("#zhidingSchool").show();
+        $("#zhidingSchool span").show();
     }
 }
 

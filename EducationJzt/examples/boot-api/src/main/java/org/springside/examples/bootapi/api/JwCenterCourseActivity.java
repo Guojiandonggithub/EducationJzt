@@ -10,6 +10,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -54,7 +56,8 @@ public class JwCenterCourseActivity {
      */
     @RequestMapping("/tocourse")
     public String toCourse(ModelMap model,
-                           @RequestParam(required=false) String data,Pageable pageable){
+                           @RequestParam(required=false) String data,@PageableDefault(value = 10) Pageable pageable){
+
         logger.info("跳转到课程列表主页data="+data);
         getXbCorusePresetListPage(model,pageable,data);
         Map<String,Object> searhtypeMap = new HashMap<>();
@@ -99,12 +102,26 @@ public class JwCenterCourseActivity {
         }else if(!typeId.equals("0")){
             searhMap.put("EQ_xbCourse.xbcoursetype.id",typeId);
         }
+        //授课模式
+        String courtype = (String)resultMap.get("courtype");
+        if(null==courtype){
+            courtype = "-1";
+        }else if(!courtype.equals("-1")){
+            searhMap.put("EQ_xbCourse.type",courtype);
+        }
         Page<XbCoursePreset> prelist =xbCoursePresetService.getXbCoursePresetList(pageable,searhMap);
         model.addAttribute("prelist",prelist);
+        System.out.println("1="+prelist.getTotalPages());
+        System.out.println("2="+prelist.getTotalElements());
+        System.out.println("3="+prelist.getNumber());
+        System.out.println("4="+prelist.getNumberOfElements());
+        System.out.println("5="+prelist.getSize());
+        System.out.println("6="+prelist.getSort());
         model.addAttribute("prelistsize",prelist.getSize());
         model.addAttribute("searhname",searhname);
         model.addAttribute("organId",organId);
         model.addAttribute("typeId",typeId);
+        model.addAttribute("courtype",courtype);
     }
 
     /**
@@ -191,6 +208,7 @@ public class JwCenterCourseActivity {
             //开始存课时
             XbCoursePreset pre = new XbCoursePreset();
             pre.setId((String)map.get("id"));
+            pre.deleteStatus = "1";
             pre.setCourseId(entity.getId());
             pre.setOrganIds((String)map.get("organIds") );
             pre.setMoney(BigDecimal.valueOf(Double.parseDouble((String)map.get("money"))));
@@ -207,17 +225,19 @@ public class JwCenterCourseActivity {
      * save课程
      */
     private boolean designatedCampus(List<Map<String,String >> list,XbCourse xbcourse,boolean app){
+        //开始存课程
+        Date date  = new Date();
+        xbcourse.setCreateDate(DateUtil.getDateStr(date));
+        xbcourse.setCreateTime(DateUtil.getTimeStr(date));
         for(Map map:list){
-            //开始存课程
-            Date date  = new Date();
-            xbcourse.setCreateDate(DateUtil.getDateStr(date));
-            xbcourse.setCreateTime(DateUtil.getTimeStr(date));
             XbCourse xbcnew = new XbCourse();
             BeanUtils.copyProperties(xbcourse,xbcnew);
+            xbcnew.deleteStatus = "1";
             XbCourse entity =  xbCourseService.saveXbCourse(xbcnew);
             //开始存课时
             XbCoursePreset pre = new XbCoursePreset();
             pre.setCourseId(entity.getId());
+            pre.deleteStatus ="1";
             pre.setOrganIds((String)map.get("organIds") );
             pre.setMoney(BigDecimal.valueOf(Double.parseDouble((String)map.get("money"))));
             pre.setPeriodNum(Integer.parseInt((String)map.get("periodNum")));
