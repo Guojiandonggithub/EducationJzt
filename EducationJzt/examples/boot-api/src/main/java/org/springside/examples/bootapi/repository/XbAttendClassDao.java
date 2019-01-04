@@ -1,10 +1,12 @@
 package org.springside.examples.bootapi.repository;
 
 
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springside.examples.bootapi.domain.SysOrgans;
 import org.springside.examples.bootapi.domain.XbAttendClass;
+import org.springside.examples.bootapi.domain.XbCoursePreset;
 
 import java.util.List;
 
@@ -15,8 +17,8 @@ import java.util.List;
  * 
  * Spring Data JPA 还会解释新增方法名生成新方法的实现.
  */
-public interface XbAttendClassDao extends PagingAndSortingRepository<XbAttendClass, String> {
+public interface XbAttendClassDao extends PagingAndSortingRepository<XbAttendClass, String>,JpaSpecificationExecutor<XbAttendClass> {
     XbAttendClass findById(String id);
-    @Query(value="SELECT * FROM xb_attend_class a WHERE (a.id) IN  (SELECT t.id FROM xb_attend_class t GROUP BY t.class_id,t.start_date_time,t.time_interval HAVING COUNT(*) > 1)",nativeQuery = true)
+    @Query(value="SELECT * FROM xb_attend_class a WHERE (a.id) IN  (SELECT t.id FROM xb_attend_class t WHERE t.delete_status = 1 GROUP BY t.class_id,t.start_date_time,t.time_interval HAVING COUNT(*) > 1)",nativeQuery = true)
     List<XbAttendClass> findXbAttendConflictList();
 }

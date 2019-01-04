@@ -38,7 +38,9 @@ public class XbAttendClass {
     public String createUserId;
     public String createUserName;
     public String createDate;
+    public String createTime;
     public String timeInterval;
+    public String deleteStatus;
     @Transient
     public String weekType;
     @Column(name = "schedule_mode", nullable = true, columnDefinition ="char(1)")

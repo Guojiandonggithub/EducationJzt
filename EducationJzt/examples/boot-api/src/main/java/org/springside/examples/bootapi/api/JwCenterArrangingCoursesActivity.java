@@ -6,6 +6,9 @@ import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -22,9 +25,7 @@ import org.springside.examples.bootapi.service.XbSubjectService;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * 排课
@@ -60,12 +61,11 @@ public class JwCenterArrangingCoursesActivity {
      * @return
      */
     @RequestMapping("/to_arranging_course")
-    public String toArrangingCourse(ModelMap model){
+    public String toArrangingCourse(ModelMap model, @RequestParam(required=false) String data,
+                                    @PageableDefault(value = 10) Pageable pageable){
         logger.info("跳转到排课");
-        List<XbAttendClass> xbAttendClassList = xbAttendClassService.findXbAttendClassAll();
-        model.addAttribute("xbAttendList",xbAttendClassList);
+        findXbAttendClassPageListAll(model,pageable,data);
         model.addAttribute("xbAttendConflicList",xbAttendClassService.findXbAttendConflictList());
-        model.addAttribute("xbattendTotal",xbAttendClassList.size());
         model.addAttribute("xbSubjectList",xbSubjectService.findSubjectAll());
         model.addAttribute("xbClassList",xbStudentService.findXbClassListAll());
         model.addAttribute("xbClassroomList",xbStudentService.findXbClassRoomListAll());
@@ -73,6 +73,53 @@ public class JwCenterArrangingCoursesActivity {
         return "courseArray";
     }
 
+    /**
+     * 查询所有的排课信息
+     */
+    private void findXbAttendClassPageListAll(ModelMap model,Pageable pageable,String data){
+        Map<String,Object> resultMap = new HashMap<>();
+        Map<String,Object> searhMap = new HashMap<>();
+        if(null!=data){
+            resultMap = com.alibaba.fastjson.JSONObject.parseObject(data,searhMap.getClass());
+        }
+       String type = (String)resultMap.get("type");//下拉查询
+        if(StringUtils.isEmpty(type)){
+            type = "class_search";
+        }
+       String searhname = (String)resultMap.get("searhname");//下拉查询
+        if(StringUtils.isNotEmpty(searhname)){
+            if(type.equals("class_search")){
+                searhMap.put("LIKE_xbclass.className",searhname);
+            }else if(type.equals("less_search")){
+                searhMap.put("LIKE_xbclass.xbCourse.courseName",searhname);
+            }else if(type.equals("teacher_search")){
+                searhMap.put("LIKE_sysemployee.employeeName",searhname);
+            }else if(type.equals("class_room_search")){
+                searhMap.put("LIKE_xbclassroom.classroomName",searhname);
+            }
+        }
+        //授课模式
+        String courtype = (String)resultMap.get("courtype");
+        if(null==courtype){
+            courtype = "-1";
+        }else if(!courtype.equals("-1")){
+            searhMap.put("EQ_wayOfTeaching",courtype);
+        }
+        //授课模式
+        String subjectId = (String)resultMap.get("subjectId");
+        if(null==subjectId){
+            subjectId = "0";
+        }else if(!subjectId.equals("0")){
+            searhMap.put("EQ_subjectId",subjectId);
+        }
+       Page<XbAttendClass> xbAttendList = xbAttendClassService.findXbAttendClassPageAll(pageable,searhMap);
+        model.addAttribute("xbAttendList",xbAttendList);
+        model.addAttribute("xbAttendListsize",xbAttendList.getSize());
+        model.addAttribute("searhname",searhname);
+        model.addAttribute("type",type);
+        model.addAttribute("courtype",courtype);
+        model.addAttribute("subjectId",subjectId);
+    }
     /**
      * 保存排课
      * @return
@@ -158,7 +205,8 @@ public class JwCenterArrangingCoursesActivity {
             @RequestParam(value="start",defaultValue = "") String start,
             @RequestParam(value="fend",defaultValue = "") String fend){
         logger.info("跳转到排课");
-        List<XbAttendClass> listentity = xbAttendClassService.findXbAttendClassAll();
+        Map<String, Object> searchParams = new HashMap<>();
+        List<XbAttendClass> listentity = xbAttendClassService.findXbAttendClassAll(searchParams);
         for(XbAttendClass xba:listentity){
             XbClass xbclass = xbStudentService.getXbClassById(xba.getClassId());
             XbClass responxbclass = new XbClass();
@@ -178,21 +226,27 @@ public class JwCenterArrangingCoursesActivity {
         HttpServletUtil.reponseWriter(jsonObject,resp);
         return "courseArray";
     }
-    @PostMapping("/remove_xbAttend_class")
-    public void removeCourse(@RequestBody XbAttendClass xbattendclass, HttpServletResponse resp){
-        logger.info("删除课程");
-        boolean rs = xbAttendClassService.removeXbAttendClass(xbattendclass);
-        JSONObject jsonObject = new JSONObject();
-        if(rs){
-            jsonObject.put("msg", "删除课程成功");
-            jsonObject.put("xbattendclass", com.alibaba.fastjson.JSONObject.toJSON(xbattendclass));
-            jsonObject.put("status","0");
-        }else{
-            jsonObject.put("status","1");
-            jsonObject.put("msg", "删除课程失败");
-        }
-        logger.info("删除课程返回json参数="+jsonObject.toString());
-        HttpServletUtil.reponseWriter(jsonObject,resp);
-        logger.info("新建课程结束");
+    @RequestMapping("/remove_xbAttend_class")
+    public String removeCourse(@RequestParam String id, HttpServletResponse resp,ModelMap model,@PageableDefault(value=10) Pageable pageable){
+        logger.info("删除排课开始");
+        XbAttendClass xbac = xbAttendClassService.findById(id);
+        xbac.deleteStatus = "0";
+        xbAttendClassService.saveXbAttendClass(xbac);
+        Map<String,Object> searmap = new HashMap<>();
+        model.addAttribute("xbAttendList",xbAttendClassService.findXbAttendClassPageAll(pageable,searmap));
+        logger.info("删除排课结束");
+        return "courseArray::xbAttendListFra";
+    }
+
+    @RequestMapping("/remove_xbAttendconfilic_class")
+    public String removeXbAttendConfilic(@RequestParam String id, HttpServletResponse resp,ModelMap model,@PageableDefault(value=10) Pageable pageable){
+        logger.info("删除排课冲突开始");
+        XbAttendClass xbac = xbAttendClassService.findById(id);
+        xbac.deleteStatus = "0";
+        xbAttendClassService.saveXbAttendClass(xbac);
+        Map<String,Object> searmap = new HashMap<>();
+        model.addAttribute("xbAttendConflicList",xbAttendClassService.findXbAttendConflictList());
+        logger.info("删除排课冲突结束");
+        return "courseArray::xbAttendConflicListFra";
     }
 }

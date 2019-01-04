@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="../static/pages/css/index.css">
     <link rel="stylesheet" href="../static/pages/css/management.css">
     <link rel="stylesheet" href="../static/pages/css/student.css">
+    <link rel="stylesheet" href="../static/pages/css/newStudent.css"/>
     <link rel="stylesheet" href="../static/pages/css/madal.css">
     <link rel="stylesheet" href="../static/pages/css/bootstrap.min.css">
     <link rel="stylesheet" href="../static/pages/css/font-awesome.min.css" />
@@ -45,156 +46,188 @@
             <div class="tabbable">
                 <ul class="nav nav-tabs" id="myTab">
                     <li class="active">
-                        <a data-toggle="tab" href="#schedule">日程列表</a>
+                        <a data-toggle="tab" href="#schedule" class="schedule">日程列表</a>
                     </li>
                     <li>
-                        <a data-toggle="tab" href="#conflict">日程冲突</a>
+                        <a data-toggle="tab" href="#conflict" class="conflict">日程冲突</a>
                     </li>
                 </ul>
                 <div class="tab-content student">
-                    <!-- 日程列表 -->
-                    <div id="schedule" class="tab-pane fade in active">
-                        <div class="screen">
-                            <a class="stdEnroll" th:onclick="|javascript:cecalAttendClass()|" href="#modal-table" role="button"
-                                data-toggle="modal">新建日程</a>
-                            <div class="screenTop">
-                                <select class="selectName">
-                                    <option value="AZ">学员姓名</option>
-                                    <option value="AL">手机尾号</option>
-                                    <option value="AK">微信号</option>
-                                </select>
-                                <div class="nav-search" id="nav-search">
-                                    <form class="form-search">
-                                        <span class="input-icon">
-                                            <input type="text" placeholder="请输入姓名、支持拼音缩写" class="nav-search-input" id="nav-search-input"
-                                                autocomplete="off">
-                                            <i class="ace-icon fa fa-search nav-search-icon"></i>
-                                        </span>
-                                    </form>
-                                </div>
-                                <div class="form-group" style="display: inline;">
-                                    <button type="button" th:onclick="'javascript:getOrgansListPage(\'\')'">搜索</button>
-                                </div>
-                            </div>
-                            <div class="screenBot tags">
-                                上课日期：
-                                <span class="tag">开始时间18:00-结束时间19:00<button type="button" class="close">×</button></span>
-                                <p>清空筛选</p>
-                            </div>
-                        </div>
-                        <div class="orderCon">
-                            <!--<div class="export">
-                                <button type="button" class="btn btn-primary">批量删除</button>
-                            </div>-->
-                            <div class="result">
-                                当前结果：共计<span th:text="${xbattendTotal}"></span>条排课
-                            </div>
-                            <div class="orderTable">
-                                <table id="attendClassList" class="table table-hover" th:fragment="attendClassList">
-                                    <tr>
-                                        <th>
-                                            <input type="checkbox" id="sel_3" onchange="chooseAll()">
-                                        </th>
-                                        <th>上课日期</th>
-                                        <th>时间段</th>
-                                        <th>班级/一对一</th>
-                                        <th>教师</th>
-                                        <th>教室</th>
-                                        <th>科目</th>
-                                        <th>记上课状态</th>
-                                        <th>实到/应到</th>
-                                        <th>操作</th>
-                                    </tr>
-                                    <tr id="choose" th:each="less,lessSta:${xbAttendList}">
-                                        <input th:id="${less.id}+'_kc'" type="hidden">
-                                        <td><input type="checkbox"></td>
-                                        <td th:text="${less.startDateTime}">上课日期</td>
-                                        <td th:text="${less.timeInterval}">16:30-18:00时间段</td>
-                                        <td th:switch="${less.wayOfTeaching}">
-                                            <span th:case="1" th:text="${less.xbclass.className}+'(一对一)'"></span>
-                                            <span th:case="0" th:text="${less.xbclass.className}+'(班课)'"></span>
-                                            <!-- <span th:case="" th:text="未知"></span>-->
-                                        </td>
-                                        <td th:text="${less.sysemployee.employeeName}">教师</td>
-                                        <td th:text="${less.xbclassroom.classroomName}">教室</td>
-                                        <td th:text="${less.xbsubject.subjectName}">科目</td>
-                                        <td>/</td>
-                                        <td>/</td>
-                                        <td>
-                                            <div class="btn-group">
-                                                <p data-toggle="dropdown" class="down">
-                                                    操作
-                                                    <span class="ace-icon fa fa-caret-down icon-on-right"></span>
-                                                </p>
-                                                <ul class="dropdown-menu dropdown-default">
-                                                    <li>
-                                                        <a href="#modal-table" data-toggle="modal" th:onclick="|javascript:attendClassEdit('${less.id}',
-                                                           '${less.xbclass.id}','${less.wayOfTeaching}','${less.scheduleMode}',
-                                                           '${less.startDateTime}','${less.endDateTime}','${less.timeInterval}',
-                                                           '${less.teacherId}','${less.tutorId}','${less.classRoomId}',
-                                                           '${less.subjectId}','${less.classTheme}')|">编辑</a>
-                                                        <a style="cursor:pointer" th:onclick="|javascript:attendClassRemove('${less.id}','1')|">删除</a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </table>
-                                <div class="orderPage">
-                                    <div class="page">
-                                        单页显示：
-                                        <select>
-                                            <option>20条/页</option>
-                                            <option>50条/页</option>
-                                            <option>100条/页</option>
-                                        </select>
+                    <form id="searchform">
+                        <!-- 日程列表 -->
+                        <div id="schedule" class="tab-pane fade in active">
+                            <div class="screen">
+                                <a class="stdEnroll" th:onclick="|javascript:cecalAttendClass()|"
+                                   href="#modal-table" role="button" data-toggle="modal">新建日程</a>
+                                <div class="screenTop">
+                                    <select class="selectName" name="type">
+                                        <option value="class_search" selected="selected" th:selected="${type eq 'class_search'}">班级</option>
+                                        <option value="less_search" th:selected="${type eq 'less_search'}">课程</option>
+                                        <option value="teacher_search" th:selected="${type eq 'teacher_search'}">教师</option>
+                                        <option value="class_room_search" th:selected="${type eq 'class_room_search'}">教室</option>
+                                    </select>
+                                    <div class="nav-search" id="nav-search">
+                                        <form class="form-search">
+                                            <span class="input-icon">
+                                                <input type="text" placeholder="请输入要搜索的关键字"
+                                                       name="searhname" th:value="${searhname}"
+                                                       class="nav-search-input" id="nav-search-input"
+                                                    autocomplete="off">
+                                                <i class="ace-icon fa fa-search nav-search-icon"></i>
+                                            </span>
+                                        </form>
                                     </div>
-                                    <ul class="pagination">
-                                        <li class="disabled">
-                                            <a href="#">首页</a>
-                                        </li>
-                                        <li class="disabled">
-                                            <a href="#">
-                                                <i class="ace-icon fa fa-angle-double-left"></i>
-                                            </a>
-                                        </li>
-                                        <li class="active">
-                                            <a href="#">1</a>
-                                        </li>
-
-                                        <li>
-                                            <a href="#">2</a>
-                                        </li>
-
-                                        <li>
-                                            <a href="#">3</a>
-                                        </li>
-
-                                        <li>
-                                            <a href="#">4</a>
-                                        </li>
-
-                                        <li>
-                                            <a href="#">5</a>
-                                        </li>
-
-                                        <li>
-                                            <a href="#">
-                                                <i class="ace-icon fa fa-angle-double-right"></i>
-                                            </a>
-                                        </li>
-                                        <li class="">
-                                            <a href="#">尾页</a>
-                                        </li>
-                                    </ul>
+                                    <div class="form-group" style="display: inline;">
+                                        <button type="button" th:onclick="'javascript:getOrgansListPage(\'\')'">搜索</button>
+                                    </div>
+                                </div>
+                               <!-- <div class="screenBot tags">
+                                    上课日期：
+                                    <span class="tag">开始时间18:00-结束时间19:00<button type="button" class="close">×</button></span>
+                                    <p>清空筛选</p>
+                                </div>-->
+                            </div>
+                            <div class="control-position">
+                                <div class="control-group">
+                                    <label class="control-label">授课模式</label>
+                                    <input  th:attr ="checked=${courtype == '-1'?true:false}"
+                                            name="courtype" type="radio" th:value="-1" class="ace"
+                                            th:onclick="'javascript:getOrgansListPage(\'\')'">
+                                    <span class="lbl" th:text="全部"></span>
+                                    <div class="checkbox"><label>
+                                        <input  th:attr ="checked=${courtype == '0'?true:false}"
+                                                name="courtype" type="radio" th:value="0" class="ace"
+                                                th:onclick="'javascript:getOrgansListPage(\'\')'">
+                                        <span class="lbl" th:text="班课"></span>
+                                    </label></div>
+                                    <div class="checkbox"><label>
+                                        <input  th:attr ="checked=${courtype == '1'?true:false}"
+                                                name="courtype" type="radio" th:value="1" class="ace"
+                                                th:onclick="'javascript:getOrgansListPage(\'\')'">
+                                        <span class="lbl" th:text="一对一"></span>
+                                    </label></div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label">科目</label>
+                                    <input  th:attr ="checked=${subjectId == '0'?true:false}"
+                                            name="subjectId" type="radio" th:value="0" class="ace"
+                                            th:onclick="'javascript:getOrgansListPage(\'\')'">
+                                    <span class="lbl" th:text="全部"></span>
+                                    <div class="checkbox" th:each="orgs:${xbSubjectList}">
+                                        <label>
+                                            <input th:attr ="checked=${subjectId == orgs.id?true:false}"
+                                                   name="subjectId" type="radio" th:value="${orgs.id}" class="ace"
+                                                   th:onclick="'javascript:getOrgansListPage(\'\')'">
+                                            <span class="lbl" th:text="${orgs.subjectName}"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="orderCon">
+                                <!--<div class="export">
+                                    <button type="button" class="btn btn-primary">批量删除</button>
+                                </div>-->
+                                <div class="result">
+                                   当前结果：共计<span th:text="${xbAttendList.getTotalElements()}"></span>条排课
+                                </div>
+                                <div  class="orderTable">
+                                    <table id="attendClassList" class="table table-hover" th:fragment="attendClassList">
+                                        <tr>
+                                            <th>
+                                                <input type="checkbox" id="sel_3" onchange="chooseAll()">
+                                            </th>
+                                            <th>序号</th>
+                                            <th>上课日期</th>
+                                            <th>时间段</th>
+                                            <th>班级/一对一</th>
+                                            <th>课程</th>
+                                            <th>教师</th>
+                                            <th>教室</th>
+                                            <th>科目</th>
+                                            <th>记上课状态</th>
+                                            <th>实到/应到</th>
+                                            <th>操作</th>
+                                        </tr>
+                                        <tbody id="xbAttendList_tbodyid">
+                                        <th:block th:if="${xbAttendList.content}" th:fragment="xbAttendListFra">
+                                            <tr id="choose" th:each="less,lessSta:${xbAttendList.content}" >
+                                                <input th:id="${less.id}+'_kc'"  type="hidden">
+                                                <td><input  type="checkbox"></td>
+                                                <td th:text="${lessSta.count}+${xbAttendList.getNumber()*10}">序号</td>
+                                                <td th:text="${less.startDateTime}">上课日期</td>
+                                                <td th:text="${less.timeInterval}">16:30-18:00时间段</td>
+                                                <td th:switch="${less.wayOfTeaching}">
+                                                    <span th:case="1" th:text="${less.xbclass.className}+'(一对一)'"></span>
+                                                    <span th:case="0" th:text="${less.xbclass.className}+'(班课)'"></span>
+                                                   <!-- <span th:case="" th:text="未知"></span>-->
+                                                </td>
+                                                <td th:text="${less.xbclass.xbCourse.courseName}">课程</td>
+                                                <td th:text="${less.sysemployee.employeeName}">教师</td>
+                                                <td th:text="${less.xbclassroom.classroomName}">教室</td>
+                                                <td th:text="${less.xbsubject.subjectName}">科目</td>
+                                                <td>/</td>
+                                                <td>/</td>
+                                                <td>
+                                                    <div class="btn-group">
+                                                        <p data-toggle="dropdown" class="down">
+                                                            操作
+                                                            <span class="ace-icon fa fa-caret-down icon-on-right"></span>
+                                                        </p>
+                                                        <ul class="dropdown-menu dropdown-default">
+                                                            <li>
+                                                                <a href="#modal-table"  data-toggle="modal"
+                                                                   th:onclick="|javascript:attendClassEdit('${less.id}',
+                                                                   '${less.xbclass.id}','${less.wayOfTeaching}','${less.scheduleMode}',
+                                                                   '${less.startDateTime}','${less.endDateTime}','${less.timeInterval}',
+                                                                   '${less.teacherId}','${less.tutorId}','${less.classRoomId}',
+                                                                   '${less.subjectId}','${less.classTheme}')|">编辑</a>
+                                                                <a style="cursor:pointer" th:onclick="|javascript:attendClassRemove('${less.id}','1')|">删除</a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </th:block>
+                                        </tbody>
+                                    </table>
+                                    <div class="orderPage">
+                                        <div class="page">
+                                            单页显示：
+                                            <select id="size" name="size" onchange="getOrgansListPage('')">
+                                                <option value="5">5条/页</option>
+                                                <option value="20">20条/页</option>
+                                                <option value="10">10条/页</option>
+                                                <option value="15">15条/页</option>
+                                            </select>
+                                            <input type="hidden" id="xbAttendListsize" th:value="${xbAttendListsize}"/>
+                                        </div>
+                                        <ul class="pagination" th:if="${xbAttendList.getTotalPages() gt 0}" >
+                                            <li class="disabled">
+                                                <a href="#" th:onclick="'javascript:getOrgansListPage(\''+0+'\')'">首页</a>
+                                            </li>
+                                            <li class="disabled" th:if="${xbAttendList.getNumber()-1} ge 0">
+                                                <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${xbAttendList.getNumber()-1}+'\')'">
+                                                    <i class="ace-icon fa fa-angle-double-left"></i>
+                                                </a>
+                                            </li>
+                                            <li th:class="${i} eq ${xbAttendList.getNumber()+1}?'active':''" th:each="i:${#numbers.sequence(1,xbAttendList.getTotalPages())}">
+                                                <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${i}+'\')'" th:text="${i}"></a>
+                                            </li>
+                                            <li th:if="${xbAttendList.getTotalPages()} ge ${xbAttendList.getNumber()+2} ">
+                                                <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${xbAttendList.getNumber()+2}+'\')'">
+                                                    <i class="ace-icon fa fa-angle-double-right"></i>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
+                            </div>
                         </div>
-                    </div>
+                    </form>
                     <!-- 日程冲突 -->
-                    <div id="conflict" class="tab-pane fade conflict">
-                        <!-- <div class="screen">
-                        </div> -->
+                    <div id="conflict" class="tab-pane fade conflict" style="display: none">
+                        <div class="screen">
+                        </div>
                         <div class="orderCon ">
                             <div class="orderTable rcct">
                                 <table class="table table-hover">
@@ -206,28 +239,32 @@
                                         <th>教室</th>
                                         <th>操作</th>
                                     </tr>
-                                    <tr th:each="conf,confSte:${xbAttendConflicList}" id="choose">
-                                        <input th:id="${conf.id}+'_ct'" type="hidden">
-                                        <td th:text="${conf.startDateTime} +' '+${conf.timeInterval}">上课时间</td>
-                                        <td th:switch="${conf.wayOfTeaching}">
-                                            <span case="1" th:text="${conf.xbclass.className}+'(一对一)'"></span>
-                                            <span case="0" th:text="${conf.xbclass.className}+'(班课)'"></span>
-                                        </td>
-                                        <td th:text="${conf.xbclass.xbCourse.courseName}">课程</td>
-                                        <td th:text="${conf.sysemployee.employeeName}">教师</td>
-                                        <td th:text="${conf.xbclassroom.classroomName}">教室</td>
-                                        <td>
-                                            <a href="#modal-table" role="button" data-toggle="modal" th:onclick="|javascript:attendClassEdit('${conf.id}',
-                                                           '${conf.xbclass.id}','${conf.wayOfTeaching}','${conf.scheduleMode}',
-                                                           '${conf.startDateTime}','${conf.endDateTime}','${conf.timeInterval}',
-                                                           '${conf.teacherId}','${conf.tutorId}','${conf.classRoomId}',
-                                                           '${conf.subjectId}','${conf.classTheme}')|"><img
-                                                    src="../static/pages/img/edit.png">编辑</a>
-                                            <a style="cursor:pointer" th:onclick="|javascript:attendClassRemove('${conf.id}','2')|">
-                                                <img src="../static/pages/img/del.png">删除</a>
-
-                                        </td>
-                                    </tr>
+                                    <tbody id="xbAttendConflicList_tbodyid">
+                                        <th:block th:if="${xbAttendConflicList}" th:fragment="xbAttendConflicListFra">
+                                            <tr th:each="conf,confSte:${xbAttendConflicList}" id="choose">
+                                                <input th:id="${conf.id}+'_ct'"  type="hidden">
+                                                <td th:text="${conf.startDateTime} +' '+${conf.timeInterval}">上课时间</td>
+                                                <td th:switch="${conf.wayOfTeaching}">
+                                                    <span th:case="1" th:text="${conf.xbclass.className}+'(一对一)'"></span>
+                                                    <span th:case="0" th:text="${conf.xbclass.className}+'(班课)'"></span>
+                                                </td>
+                                                <td  th:text="${conf.xbclass.xbCourse.courseName}">课程</td>
+                                                <td  th:text="${conf.sysemployee.employeeName}">教师</td>
+                                                <td  th:text="${conf.xbclassroom.classroomName}">教室</td>
+                                                <td>
+                                                    <a href="#modal-table" role="button" data-toggle="modal"
+                                                       th:onclick="|javascript:attendClassEdit('${conf.id}',
+                                                                   '${conf.xbclass.id}','${conf.wayOfTeaching}','${conf.scheduleMode}',
+                                                                   '${conf.startDateTime}','${conf.endDateTime}','${conf.timeInterval}',
+                                                                   '${conf.teacherId}','${conf.tutorId}','${conf.classRoomId}',
+                                                                   '${conf.subjectId}','${conf.classTheme}')|"
+                                                    ><img src="../static/pages/img/edit.png">编辑</a>
+                                                    <a  style="cursor:pointer" th:onclick="|javascript:attendClassConflicRemove('${conf.id}','2')|">
+                                                        <img src="../static/pages/img/del.png">删除</a>
+                                                </td>
+                                            </tr>
+                                        </th:block>
+                                    </tbody>
                                 </table>
                                 <!-- 删除弹窗 -->
                                 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -245,54 +282,36 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="orderPage">
+                                <!--<div class="orderPage">
                                     <div class="page">
                                         单页显示：
-                                        <select>
-                                            <option>20条/页</option>
-                                            <option>50条/页</option>
-                                            <option>100条/页</option>
+                                        <select id="size" name="size" onchange="getOrgansListPage('')">
+                                            <option value="5">5条/页</option>
+                                            <option value="20">20条/页</option>
+                                            <option value="10">10条/页</option>
+                                            <option value="15">15条/页</option>
                                         </select>
+                                        <input type="hidden" id="xbAttendListsize" th:value="${xbAttendListsize}"/>
                                     </div>
-                                    <ul class="pagination">
+                                    <ul class="pagination" th:if="${xbAttendList.getTotalPages() gt 0}" >
                                         <li class="disabled">
-                                            <a href="#">首页</a>
+                                            <a href="#" th:onclick="'javascript:getOrgansListPage(\''+0+'\')'">首页</a>
                                         </li>
-                                        <li class="disabled">
-                                            <a href="#">
+                                        <li class="disabled" th:if="${xbAttendList.getNumber()-1} ge 0">
+                                            <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${xbAttendList.getNumber()-1}+'\')'">
                                                 <i class="ace-icon fa fa-angle-double-left"></i>
                                             </a>
                                         </li>
-                                        <li class="active">
-                                            <a href="#">1</a>
+                                        <li th:class="${i} eq ${xbAttendList.getNumber()+1}?'active':''" th:each="i:${#numbers.sequence(1,xbAttendList.getTotalPages())}">
+                                            <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${i}+'\')'" th:text="${i}"></a>
                                         </li>
-
-                                        <li>
-                                            <a href="#">2</a>
-                                        </li>
-
-                                        <li>
-                                            <a href="#">3</a>
-                                        </li>
-
-                                        <li>
-                                            <a href="#">4</a>
-                                        </li>
-
-                                        <li>
-                                            <a href="#">5</a>
-                                        </li>
-
-                                        <li>
-                                            <a href="#">
+                                        <li th:if="${xbAttendList.getTotalPages()} ge ${xbAttendList.getNumber()+2} ">
+                                            <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${xbAttendList.getNumber()+2}+'\')'">
                                                 <i class="ace-icon fa fa-angle-double-right"></i>
                                             </a>
                                         </li>
-                                        <li class="">
-                                            <a href="#">尾页</a>
-                                        </li>
                                     </ul>
-                                </div>
+                                </div>-->
                             </div>
                         </div>
                     </div>
@@ -528,10 +547,31 @@
             </div>
         </div>
     </div>
-    <!--新建日程函数群-->
-    <script type="text/javascript" th:inline="javascript">
-        var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/ ;
-
+<!--新建日程函数群-->
+<script type="text/javascript" th:inline="javascript">
+    var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/;
+    $(function(){
+        var a = $("#xbAttendListsize").val();
+        if(a!=5){
+            $("#size").val(a);
+        }
+        $(".schedule").click(function(){
+            schedulelistShow()
+        });
+        $(".conflict").click(function(){
+            conflictlistShow()
+        });
+    });
+    //显示排课列表
+    function schedulelistShow(){
+        $("#schedule").show();
+        $("#conflict").hide();
+    }
+    //显示冲突列表
+    function conflictlistShow(){
+        $("#conflict").show();
+        $("#schedule").hide();
+    }
         function cecalAttendClass() {
             $("#id").val("");
             $("#classId").val("");
@@ -650,109 +690,116 @@
             $("#attendClassList").append(html.join(""))
         }
 
-        function isRemove(id) {
-            var html = [];
-            html.push(
-                '<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"> '
-            );
-            html.push(
-                '	<div class="modal-dialog" role="document">                                                      '
-            );
-            html.push('		<div class="modal-content">                                                                 ');
-            html.push('			<div class="modal-header">                                                              ');
-            html.push('				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span   ');
-            html.push('						aria-hidden="true">&times;</span></button>                                  ');
-            html.push('				<h4 class="modal-title" id="myModalLabel">请确认是否删除</h4>                       ');
-            html.push('			</div>                                                                                  ');
-            html.push('			<div class="modal-footer">                                                              ');
-            html.push('				<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>    ');
-            html.push('				<button type="button" class="btn btn-primary"                                       ');
-            html.push('						tonclick="attendClassRemove(' + id + ')>好</button>       ‘；                   ');
-            html.push('			</div>                                                                                  ');
-            html.push('		</div>                                                                                      ');
-            html.push(
-                '	</div>                                                                                          '
-            );
-            html.push(
-                '</div>                                                                                           '
-            );
-            $(".orderTable .rcct").append(html.join(""));
-        }
-        //删除课程类别
-        function attendClassRemove(id, type) {
+    function isRemove(id){
+        var html = [];
+        html.push('<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"> ');
+        html.push('	<div class="modal-dialog" role="document">                                                      ');
+        html.push('		<div class="modal-content">                                                                 ');
+        html.push('			<div class="modal-header">                                                              ');
+        html.push('				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span   ');
+        html.push('						aria-hidden="true">&times;</span></button>                                  ');
+        html.push('				<h4 class="modal-title" id="myModalLabel">请确认是否删除</h4>                       ');
+        html.push('			</div>                                                                                  ');
+        html.push('			<div class="modal-footer">                                                              ');
+        html.push('				<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>    ');
+        html.push('				<button type="button" class="btn btn-primary"                                       ');
+        html.push('						tonclick="attendClassRemove('+id+')>好</button>       ‘；                   ');
+        html.push('			</div>                                                                                  ');
+        html.push('		</div>                                                                                      ');
+        html.push('	</div>                                                                                          ');
+        html.push('</div>                                                                                           ');
+        $(".orderTable .rcct").append(html.join(""));
+    }
+    //删除排课
+    function attendClassRemove(id,type){
+        if(confirm("确定要删除这条排课信息?")) {
             $.ajax({
-                url: [
-                    [@ {
-                        /jw_center_arranging_course/remove_xbAttend_class
-                    }]
-                ],
-                type: 'post',
-                dataType: 'json',
-                contentType: 'application/json',
-                data: JSON.stringify({
-                    id: id
-                }),
-                async: true,
-                success: function (data) {
-                    console.log("回调成功")
-                    var status = data.status;
-                    var msg = data.msg;
-                    if (status == "0") {
-                        var id = data.xbattendclass.id;
-                        if (type == "1") {
-                            $("#" + id + "_kc").parent().remove();
-                        } else if (type == "2") {
-                            $("#" + id + "_ct").parent().remove();
-                        }
-
-                        alert(msg);
-                    } else {
-                        alert(msg);
-                    }
-                },
-                error: function () {
-                    console.log("回调失败")
-                }
-            });
-        }
-        //班级下拉级联
-        function classToFindAll() {
-            var calssId = $("#classId option:selected").val();
-            $.ajax({
-                url: basePath + '/jw_center_arranging_course/classToFindAll',
+                url: basePath+ '/jw_center_arranging_course/remove_xbAttend_class',
                 type: 'get',
                 contentType: 'application/json',
-                data: {
-                    id: calssId
-                },
+                data: {id:id},
                 async: true,
-                success: function (data) {
-                    console.log("查询班级级联信息成功");
-                    $("#teacherfromgroupid").html("");
-                    $("#teacherfromgroupid").append(data);
+                success: function(data) {
+                console.log("删除排课回调成功")
+                alert("删除排课成功");
+                $("#xbAttendList_tbodyid").html("");
+                $("#xbAttendList_tbodyid").append(data);
                 },
-                error: function () {
-                    console.log("查询班级级联信息失败")
+                error:function(){
+                    console.log("删除排课回调失败")
                 }
-
             });
         }
-
-        function serializeObject(form) {
-            var o = {};
-            var a = $(form).serializeArray();
-            $.each(a, function () {
-                if (o[this.name]) {
-                    if (!o[this.name].push) {
-                        o[this.name] = [o[this.name]];
-                    }
-                    o[this.name].push(this.value || '');
-                } else {
-                    o[this.name] = this.value || '';
+    };
+    //删除排课冲突
+    function attendClassConflicRemove(id,type){
+        if(confirm("确定要删除这条排课冲突?")) {
+            $.ajax({
+                url: basePath+ '/jw_center_arranging_course/remove_xbAttendconfilic_class',
+                type: 'get',
+                contentType: 'application/json',
+                data: {id:id},
+                async: true,
+                success: function(data) {
+                    console.log("删除排课回调成功")
+                    alert("删除排课成功");
+                    $("#xbAttendConflicList_tbodyid").html("");
+                    $("#xbAttendConflicList_tbodyid").append(data);
+                },
+                error:function(){
+                    console.log("删除排课回调失败")
                 }
             });
-            return o;
-        };
+        }
+    }
+    //班级下拉级联
+    function classToFindAll(){
+       var calssId = $("#classId option:selected").val();
+        $.ajax({
+            url: basePath + '/jw_center_arranging_course/classToFindAll',
+            type: 'get',
+            contentType: 'application/json',
+            data: {id: calssId},
+            async: true,
+            success: function (data) {
+                console.log("查询班级级联信息成功");
+                $("#teacherfromgroupid").html("");
+                $("#teacherfromgroupid").append(data);
+            },
+            error: function () {
+                console.log("查询班级级联信息失败")
+            }
+
+        });
+    }
+    //搜索
+    function getOrgansListPage(page){
+        var data= serializeObject("#searchform");
+        var size = $('#size option:selected').val();//选中的值
+        if(page){
+            page = page -1;
+        }
+        if(size){
+            size = "10";
+        }
+        window.location.href = basePath + '/jw_center_arranging_course/to_arranging_course?page='+page
+            +'&size='+size+'&sort=createDate,DESC&sort=createTime,DESC&data='+JSON.stringify(data);
+    };
+    function serializeObject(form){
+        var o = {};
+        var a = $(form).serializeArray();
+        $.each(a, function() {
+            if (o[this.name]) {
+                if (!o[this.name].push) {
+                    o[this.name] = [o[this.name]];
+                }
+                o[this.name].push(this.value || '');
+            } else {
+                o[this.name] = this.value || '';
+            }
+        });
+        return o;
+    };
     </script>
     <script>
         ! function () {

@@ -27,15 +27,13 @@
     border: 0;
     padding: 0;
 }
-
-.student .screen {
-    margin-top: 0;
-}
-
-.student .screen .stdEnroll {
-    width: 96px;
-    height: 30px;
-    background: #55a7fb;
+/*.student .screen{
+    margin-top:0;
+}*/
+.student .screen .stdEnroll{
+    width:96px;
+    height:30px;
+    background:#55a7fb;
     border-radius: 4px;
     border: 0;
     color: #fff;

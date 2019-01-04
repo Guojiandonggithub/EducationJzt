@@ -56,7 +56,8 @@ public class JwCenterCourseActivity {
      */
     @RequestMapping("/tocourse")
     public String toCourse(ModelMap model,
-                           @RequestParam(required=false) String data,@PageableDefault(value = 10) Pageable pageable){
+                           @RequestParam(required=false) String data,
+                           @PageableDefault(value = 10) Pageable pageable){
 
         logger.info("跳转到课程列表主页data="+data);
         getXbCorusePresetListPage(model,pageable,data);
