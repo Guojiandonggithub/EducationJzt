@@ -32,10 +32,10 @@
 
 <body>
 
-<div th:replace="layout::top"></div>
-<div class="main-container" id="main-container">
-    <div th:replace="layout::left('13','34')">
-    </div>
+    <div th:replace="layout::top"></div>
+    <div class="main-container" id="main-container">
+        <div th:replace="layout::left('13','34')">
+        </div>
         <div class="main-content">
             <div class="breadcrumbs" id="breadcrumbs">
                 <img src="../static/pages/img/line1.png">
@@ -55,8 +55,8 @@
                     <!-- 日程列表 -->
                     <div id="schedule" class="tab-pane fade in active">
                         <div class="screen">
-                            <a class="stdEnroll" th:onclick="|javascript:cecalAttendClass()|"
-                               href="#modal-table" role="button" data-toggle="modal">新建日程</a>
+                            <a class="stdEnroll" th:onclick="|javascript:cecalAttendClass()|" href="#modal-table" role="button"
+                                data-toggle="modal">新建日程</a>
                             <div class="screenTop">
                                 <select class="selectName">
                                     <option value="AZ">学员姓名</option>
@@ -89,7 +89,7 @@
                             <div class="result">
                                 当前结果：共计<span th:text="${xbattendTotal}"></span>条排课
                             </div>
-                            <div  class="orderTable">
+                            <div class="orderTable">
                                 <table id="attendClassList" class="table table-hover" th:fragment="attendClassList">
                                     <tr>
                                         <th>
@@ -105,15 +105,15 @@
                                         <th>实到/应到</th>
                                         <th>操作</th>
                                     </tr>
-                                    <tr id="choose" th:each="less,lessSta:${xbAttendList}" >
-                                        <input th:id="${less.id}+'_kc'"  type="hidden">
-                                        <td><input  type="checkbox"></td>
+                                    <tr id="choose" th:each="less,lessSta:${xbAttendList}">
+                                        <input th:id="${less.id}+'_kc'" type="hidden">
+                                        <td><input type="checkbox"></td>
                                         <td th:text="${less.startDateTime}">上课日期</td>
                                         <td th:text="${less.timeInterval}">16:30-18:00时间段</td>
                                         <td th:switch="${less.wayOfTeaching}">
                                             <span th:case="1" th:text="${less.xbclass.className}+'(一对一)'"></span>
                                             <span th:case="0" th:text="${less.xbclass.className}+'(班课)'"></span>
-                                           <!-- <span th:case="" th:text="未知"></span>-->
+                                            <!-- <span th:case="" th:text="未知"></span>-->
                                         </td>
                                         <td th:text="${less.sysemployee.employeeName}">教师</td>
                                         <td th:text="${less.xbclassroom.classroomName}">教室</td>
@@ -128,8 +128,7 @@
                                                 </p>
                                                 <ul class="dropdown-menu dropdown-default">
                                                     <li>
-                                                        <a href="#modal-table"  data-toggle="modal"
-                                                           th:onclick="|javascript:attendClassEdit('${less.id}',
+                                                        <a href="#modal-table" data-toggle="modal" th:onclick="|javascript:attendClassEdit('${less.id}',
                                                            '${less.xbclass.id}','${less.wayOfTeaching}','${less.scheduleMode}',
                                                            '${less.startDateTime}','${less.endDateTime}','${less.timeInterval}',
                                                            '${less.teacherId}','${less.tutorId}','${less.classRoomId}',
@@ -194,8 +193,8 @@
                     </div>
                     <!-- 日程冲突 -->
                     <div id="conflict" class="tab-pane fade conflict">
-                        <div class="screen">
-                        </div>
+                        <!-- <div class="screen">
+                        </div> -->
                         <div class="orderCon ">
                             <div class="orderTable rcct">
                                 <table class="table table-hover">
@@ -208,24 +207,23 @@
                                         <th>操作</th>
                                     </tr>
                                     <tr th:each="conf,confSte:${xbAttendConflicList}" id="choose">
-                                        <input th:id="${conf.id}+'_ct'"  type="hidden">
+                                        <input th:id="${conf.id}+'_ct'" type="hidden">
                                         <td th:text="${conf.startDateTime} +' '+${conf.timeInterval}">上课时间</td>
                                         <td th:switch="${conf.wayOfTeaching}">
                                             <span case="1" th:text="${conf.xbclass.className}+'(一对一)'"></span>
                                             <span case="0" th:text="${conf.xbclass.className}+'(班课)'"></span>
                                         </td>
-                                        <td  th:text="${conf.xbclass.xbCourse.courseName}">课程</td>
-                                        <td  th:text="${conf.sysemployee.employeeName}">教师</td>
-                                        <td  th:text="${conf.xbclassroom.classroomName}">教室</td>
+                                        <td th:text="${conf.xbclass.xbCourse.courseName}">课程</td>
+                                        <td th:text="${conf.sysemployee.employeeName}">教师</td>
+                                        <td th:text="${conf.xbclassroom.classroomName}">教室</td>
                                         <td>
-                                            <a href="#modal-table" role="button" data-toggle="modal"
-                                               th:onclick="|javascript:attendClassEdit('${conf.id}',
+                                            <a href="#modal-table" role="button" data-toggle="modal" th:onclick="|javascript:attendClassEdit('${conf.id}',
                                                            '${conf.xbclass.id}','${conf.wayOfTeaching}','${conf.scheduleMode}',
                                                            '${conf.startDateTime}','${conf.endDateTime}','${conf.timeInterval}',
                                                            '${conf.teacherId}','${conf.tutorId}','${conf.classRoomId}',
-                                                           '${conf.subjectId}','${conf.classTheme}')|"
-                                            ><img src="../static/pages/img/edit.png">编辑</a>
-                                            <a  style="cursor:pointer" th:onclick="|javascript:attendClassRemove('${conf.id}','2')|">
+                                                           '${conf.subjectId}','${conf.classTheme}')|"><img
+                                                    src="../static/pages/img/edit.png">编辑</a>
+                                            <a style="cursor:pointer" th:onclick="|javascript:attendClassRemove('${conf.id}','2')|">
                                                 <img src="../static/pages/img/del.png">删除</a>
 
                                         </td>
@@ -307,121 +305,121 @@
         </div>
 
         <!-- 新建日程弹窗 -->
-    <form id="iform" th:action="@{/accounts/save/organs}" th:method="post">
-        <div id="modal-table" class="modal fade in pk" tabindex="-1" aria-hidden="false">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header no-padding">
-                        <div class="table-header">新建日程</div>
-                    </div>
-                    <input id="id" name="id" type="hidden" value=""/>
-                    <div class="modal-body no-padding">
-                        <div id="classl" class="tab-pane fade in active">
-                            <div class="grounInline">
-                                <div class="form-group">
-                                    <label><i>*</i>班级</label>
-                                    <select id="classId" name="classId" th:onchange="|javascript:classToFindAll()|">
-                                        <option th:each="cla,claSta:${xbClassList}" th:value="${cla.id}"
-                                                th:text="'班级：'+${cla.className}+'  课程：'+${cla.xbCourse.courseName}">
-                                        </option>
-                                    </select>
+        <form id="iform" th:action="@{/accounts/save/organs}" th:method="post">
+            <div id="modal-table" class="modal fade in pk" tabindex="-1" aria-hidden="false">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header no-padding">
+                            <div class="table-header">新建日程</div>
+                        </div>
+                        <input id="id" name="id" type="hidden" value="" />
+                        <div class="modal-body no-padding">
+                            <div id="classl" class="tab-pane fade in active">
+                                <div class="grounInline">
+                                    <div class="form-group">
+                                        <label><i>*</i>班级</label>
+                                        <select id="classId" name="classId" th:onchange="|javascript:classToFindAll()|">
+                                            <option th:each="cla,claSta:${xbClassList}" th:value="${cla.id}" th:text="'班级：'+${cla.className}+'  课程：'+${cla.xbCourse.courseName}">
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>科目</label>
+                                        <select name="subjectId" id="subjectId">
+                                            <option th:each="sub,subSta:${xbSubjectList}" th:value="${sub.id}" th:text="${sub.subjectName}"></option>
+                                        </select>
+                                    </div>
+                                    <div id="scheduleModediv" class="form-group">
+                                        <label><i>*</i>排课日程方式</label>
+                                        <input name="scheduleMode" type="radio" class="ace" value="1" th:onclick="|paikeFan('1')|"><span
+                                            class="lbl">单次</span>
+                                        <input name="scheduleMode" type="radio" class="ace" value="2" th:onclick="|paikeFan('2')|"><span
+                                            class="lbl">重复</span>
+                                    </div>
                                 </div>
-                                <div class="form-group">
-                                    <label>科目</label>
-                                    <select name="subjectId" id="subjectId" >
-                                        <option th:each="sub,subSta:${xbSubjectList}" th:value="${sub.id}" th:text="${sub.subjectName}"></option>
-                                    </select>
+                                <div id="singleStrarDate" class="form-group">
+                                    <label><i>*</i>上课日期</label>
+                                    <input class="laydate-icon" id="startDateTime" name="startDateTime">
+                                    <span id="manyStrarDate" style="display: none;">
+                                        至
+                                        <input class="laydate-icon" id="endDateTime" name="endDateTime">
+                                    </span>
                                 </div>
-                                <div id="scheduleModediv" class="form-group">
-                                    <label><i>*</i>排课日程方式</label>
-                                    <input name="scheduleMode" type="radio" class="ace" value="1"
-                                           th:onclick="|paikeFan('1')|"><span class="lbl">单次</span>
-                                    <input name="scheduleMode" type="radio" class="ace" value="2"
-                                           th:onclick="|paikeFan('2')|"><span class="lbl">重复</span>
-                                </div>
-                            </div>
-                            <div id="singleStrarDate" class="form-group">
-                                <label><i>*</i>上课日期</label>
-                                <input class="laydate-icon" id="startDateTime" name="startDateTime">
-                                <span id="manyStrarDate"  style="display: none;">
-                                    至
-                                    <input class="laydate-icon" id="endDateTime" name="endDateTime">
-                                </span>
-                            </div>
 
-                            <div id="manyWeek" class="manyWeek" style="display: none;">
-                                <label><i>*</i>重复设置</label>
-                                <input type="checkbox" name="weekType" value="0" ><span>全选</span>
-                                <input type="checkbox" name="weekType" value="1" ><span>周一</span>
-                                <input type="checkbox" name="weekType" value="2" ><span>周二</span>
-                                <input type="checkbox" name="weekType" value="3" ><span>周三</span>
-                                <input type="checkbox" name="weekType" value="4" ><span>周四</span>
-                                <input type="checkbox" name="weekType" value="5" ><span>周五</span>
-                                <input type="checkbox" name="weekType" value="6" ><span>周六</span>
-                                <input type="checkbox" name="weekType" value="7" ><span>周日</span>
-                            </div>
-                            <div  class="grounInline">
-                                <div class="form-group">
-                                    <label><i>*</i>上课时段</label>
-                                    <select name="timeInterval" id="timeInterval">
-                                        <option value="">选择时段</option>
-                                        <option value="9:30-10:30">9:30-10:30</option>
-                                        <option value="10:30-11:20">10:30-11:20</option>
-                                        <option value="14:00-15:30">14:00-15:30</option>
-                                        <option value="15:30-17:00">15:30-17:00</option>
-                                        <option value="17:00-18:30">17:00-18:30</option>
-                                        <option value="18:30-20:00">18:30-20:00</option>
-                                    </select>
+                                <div id="manyWeek" class="manyWeek" style="display: none;">
+                                    <label><i>*</i>重复设置</label>
+                                    <input type="checkbox" name="weekType" value="0"><span>全选</span>
+                                    <input type="checkbox" name="weekType" value="1"><span>周一</span>
+                                    <input type="checkbox" name="weekType" value="2"><span>周二</span>
+                                    <input type="checkbox" name="weekType" value="3"><span>周三</span>
+                                    <input type="checkbox" name="weekType" value="4"><span>周四</span>
+                                    <input type="checkbox" name="weekType" value="5"><span>周五</span>
+                                    <input type="checkbox" name="weekType" value="6"><span>周六</span>
+                                    <input type="checkbox" name="weekType" value="7"><span>周日</span>
                                 </div>
-                                <div class="form-group">
-                                    <label for="">上课主题</label>
-                                    <input id="classTheme" name="classTheme" type="text">
+                                <div class="grounInline">
+                                    <div class="form-group">
+                                        <label><i>*</i>上课时段</label>
+                                        <select name="timeInterval" id="timeInterval">
+                                            <option value="">选择时段</option>
+                                            <option value="9:30-10:30">9:30-10:30</option>
+                                            <option value="10:30-11:20">10:30-11:20</option>
+                                            <option value="14:00-15:30">14:00-15:30</option>
+                                            <option value="15:30-17:00">15:30-17:00</option>
+                                            <option value="17:00-18:30">17:00-18:30</option>
+                                            <option value="18:30-20:00">18:30-20:00</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="">上课主题</label>
+                                        <input id="classTheme" name="classTheme" type="text">
+                                    </div>
                                 </div>
-                            </div>
-                            <div id="teacherfromgroupid">
-                                <th:block th:if="${XbClass}" th:fragment="teacherfra">
-                                    <div  class="grounInline">
-                                        <div  class="form-group">
+                                <div id="teacherfromgroupid">
+                                    <th:block th:if="${XbClass}" th:fragment="teacherfra">
+                                        <div class="grounInline">
+                                            <div class="form-group">
                                                 <label><i>*</i>教师</label>
-                                                <input name="teacherId" id="teacherId"  type="hidden" th:value="${XbClass.teacher.id}">
-                                                <input name="teacherName" id="teacherName" type="text"  disabled="disabled" th:value="${XbClass.teacher.employeeName}">
-                                        </div>
-                                        <div  class="form-group">
+                                                <input name="teacherId" id="teacherId" type="hidden" th:value="${XbClass.teacher.id}">
+                                                <input name="teacherName" id="teacherName" type="text" disabled="disabled"
+                                                    th:value="${XbClass.teacher.employeeName}">
+                                            </div>
+                                            <div class="form-group">
                                                 <label><i>*</i>助教</label>
-                                                <input name="tutorId" id="tutorId"  type="hidden" th:value="${XbClass.teacher.id}">
-                                                <input name="tutorName" id="tutorName" type="text"  disabled="disabled" th:value="${XbClass.teacher.employeeName}">
+                                                <input name="tutorId" id="tutorId" type="hidden" th:value="${XbClass.teacher.id}">
+                                                <input name="tutorName" id="tutorName" type="text" disabled="disabled"
+                                                    th:value="${XbClass.teacher.employeeName}">
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="grounInline">
-                                        <div class="form-group">
-                                            <label><i>*</i>教室</label>
-                                            <input name="classRoomId" id="classRoomId"  type="hidden" th:value="${XbClass.xbClassroom.id}">
-                                            <input name="classRoomName" id="classRoomName" type="text"  disabled="disabled" th:value="${XbClass.xbClassroom.classroomName}">
+                                        <div class="grounInline">
+                                            <div class="form-group">
+                                                <label><i>*</i>教室</label>
+                                                <input name="classRoomId" id="classRoomId" type="hidden" th:value="${XbClass.xbClassroom.id}">
+                                                <input name="classRoomName" id="classRoomName" type="text" disabled="disabled"
+                                                    th:value="${XbClass.xbClassroom.classroomName}">
+                                            </div>
+                                            <div class="form-group">
+                                                <label><i>*</i>上课方式</label>
+                                                <input name="wayOfTeaching" id="wayOfTeaching" type="hidden" th:value="${XbClass.xbCourse.type}">
+                                                <input th:if="${XbClass.xbCourse.type} eq '0'" name="wayOfTeachingName"
+                                                    id="wayOfTeachingName" type="text" disabled="disabled" th:value="一对一">
+                                                <input th:if="${XbClass.xbCourse.type} eq '1'" name="wayOfTeachingName"
+                                                    id="wayOfTeachingName" type="text" disabled="disabled" th:value="班课">
+                                            </div>
                                         </div>
-                                        <div class="form-group">
-                                            <label><i>*</i>上课方式</label>
-                                            <input name="wayOfTeaching" id="wayOfTeaching"  type="hidden" th:value="${XbClass.xbCourse.type}">
-                                            <input th:if="${XbClass.xbCourse.type} eq '0'" name="wayOfTeachingName" id="wayOfTeachingName" type="text"  disabled="disabled" th:value="一对一">
-                                            <input th:if="${XbClass.xbCourse.type} eq '1'" name="wayOfTeachingName" id="wayOfTeachingName" type="text"  disabled="disabled" th:value="班课">
-                                        </div>
-                                    </div>
-                                </th:block>
-                        </  </div>
-
+                                    </th:block>
+                                    </ </div> </div> </div> <div class="modal-footer no-margin-top">
+                                    <button class="btn pull-left" data-dismiss="modal" onclick="cecalAttendClass()">
+                                        取消
+                                    </button>
+                                    <button class="btn pull-right" data-dismiss="modal" onclick="saveAttendClass()">
+                                        保存
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="modal-footer no-margin-top">
-                        <button class="btn pull-left" data-dismiss="modal" onclick="cecalAttendClass()">
-                            取消
-                        </button>
-                        <button class="btn pull-right" data-dismiss="modal" onclick="saveAttendClass()">
-                            保存
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </form>
+        </form>
         <!-- 编辑日程弹窗 -->
         <div id="modal-table2" class="modal fade in pk" tabindex="-1" aria-hidden="false" style="display:none;">
             <div class="modal-dialog">
@@ -530,214 +528,232 @@
             </div>
         </div>
     </div>
-<!--新建日程函数群-->
-<script type="text/javascript" th:inline="javascript">
-    var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/;
-    function cecalAttendClass(){
-        $("#id").val("");
-        $("#classId").val("");
-        $("#wayOfTeaching").val("");
-        $("#wayOfTeachingName").val("");
-        $("#scheduleMode").removeAttr("checked");
-        $("#scheduleModediv").show();
-        $("#startDateTime").val("");
-        if(endDateTime!=''){
-            $("#endDateTime").val("");
-        }
-        $("#timeInterval").val("");
-        $("#classRoomId").val("");
-        $("#classRoomName").val("");
-        $("#subjectId").val("");
-        $("#classTheme").val("");
-        $("#teacherId").val("");
-        $("#tutorId").val("");
-        $("#teacherName").val("");
-        $("#tutorName").val("");
+    <!--新建日程函数群-->
+    <script type="text/javascript" th:inline="javascript">
+        var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/ ;
 
-    }
-    //日程编辑
-    function attendClassEdit(id,xbclassid,wayOfTeaching,scheduleMode,startDateTime,endDateTime,timeInterval,
-                             teacherid,tutorid,classRoomid,subjectid,classTheme){
-        $("#id").val(id);
-        $("#classId").val(xbclassid);
-        $(":radio[name='scheduleMode'][value='" + scheduleMode + "']").prop("checked", "checked");
-        $("#scheduleModediv").hide();
-        $("#startDateTime").val(startDateTime);
-        if(endDateTime!=''){
-               $("#endDateTime").val(endDateTime);
-        }
-        $("#timeInterval").val(timeInterval);
-        $("#subjectId").val(subjectid);
-        $("#classTheme").val(classTheme);
-        classToFindAll();
-    }
-
-    //新建日程
-    function saveAttendClass(){
-        var data= serializeObject("#iform");
-       var  strgetSelectValue = "";
-        var getSelectValueMenbers = $("input[name='weekType']:checked").each(function(j) {
-            if (j >= 0) {
-                strgetSelectValue += $(this).val() + ","
+        function cecalAttendClass() {
+            $("#id").val("");
+            $("#classId").val("");
+            $("#wayOfTeaching").val("");
+            $("#wayOfTeachingName").val("");
+            $("#scheduleMode").removeAttr("checked");
+            $("#scheduleModediv").show();
+            $("#startDateTime").val("");
+            if (endDateTime != '') {
+                $("#endDateTime").val("");
             }
-        });
-        data.weekType  = strgetSelectValue;
-        $.ajax({
-            type: 'post',
-            dataType: 'json',
-            url: basePath + '/jw_center_arranging_course/save_xbAttend_class',
-            data: JSON.stringify(data),
-            contentType:"application/json;charset=UTF-8",
-            cache: false,
-            async: true,
-            success: function (data) {
-                //console.log("新建排课表回调数据data="+data)
-                var status = data.status;
-                var msg = data.msg;
-                var rsxbAttendClass = data.rsxbAttendClass;//排课表
-                var subject = rsxbAttendClass.xbsubject;//科目
-                var xbclass = rsxbAttendClass.xbclass;//班级
-                var xbclassroom = rsxbAttendClass.xbclassroom;//教室
-                var sysemployee = rsxbAttendClass.sysemployee;//教师
-                if(status=="00"){
-                    alert(msg);
-                    window.location.href = basePath + '/jw_center_arranging_course/to_arranging_course';
-                }else if(status=="01") {
-                    alert(msg);
-                    window.location.href = basePath + '/jw_center_arranging_course/to_arranging_course';
-                }else{
-                    alert(msg);
+            $("#timeInterval").val("");
+            $("#classRoomId").val("");
+            $("#classRoomName").val("");
+            $("#subjectId").val("");
+            $("#classTheme").val("");
+            $("#teacherId").val("");
+            $("#tutorId").val("");
+            $("#teacherName").val("");
+            $("#tutorName").val("");
+
+        }
+        //日程编辑
+        function attendClassEdit(id, xbclassid, wayOfTeaching, scheduleMode, startDateTime, endDateTime, timeInterval,
+            teacherid, tutorid, classRoomid, subjectid, classTheme) {
+            $("#id").val(id);
+            $("#classId").val(xbclassid);
+            $(":radio[name='scheduleMode'][value='" + scheduleMode + "']").prop("checked", "checked");
+            $("#scheduleModediv").hide();
+            $("#startDateTime").val(startDateTime);
+            if (endDateTime != '') {
+                $("#endDateTime").val(endDateTime);
+            }
+            $("#timeInterval").val(timeInterval);
+            $("#subjectId").val(subjectid);
+            $("#classTheme").val(classTheme);
+            classToFindAll();
+        }
+
+        //新建日程
+        function saveAttendClass() {
+            var data = serializeObject("#iform");
+            var strgetSelectValue = "";
+            var getSelectValueMenbers = $("input[name='weekType']:checked").each(function (j) {
+                if (j >= 0) {
+                    strgetSelectValue += $(this).val() + ","
                 }
+            });
+            data.weekType = strgetSelectValue;
+            $.ajax({
+                type: 'post',
+                dataType: 'json',
+                url: basePath + '/jw_center_arranging_course/save_xbAttend_class',
+                data: JSON.stringify(data),
+                contentType: "application/json;charset=UTF-8",
+                cache: false,
+                async: true,
+                success: function (data) {
+                    //console.log("新建排课表回调数据data="+data)
+                    var status = data.status;
+                    var msg = data.msg;
+                    var rsxbAttendClass = data.rsxbAttendClass; //排课表
+                    var subject = rsxbAttendClass.xbsubject; //科目
+                    var xbclass = rsxbAttendClass.xbclass; //班级
+                    var xbclassroom = rsxbAttendClass.xbclassroom; //教室
+                    var sysemployee = rsxbAttendClass.sysemployee; //教师
+                    if (status == "00") {
+                        alert(msg);
+                        window.location.href = basePath + '/jw_center_arranging_course/to_arranging_course';
+                    } else if (status == "01") {
+                        alert(msg);
+                        window.location.href = basePath + '/jw_center_arranging_course/to_arranging_course';
+                    } else {
+                        alert(msg);
+                    }
 
-            },
-            error:function(){
-                console.log("错误")
-            }
-        });
-    }
-
-    //动态日程列表
-    function attendClassLoad(id,startDateTime,timeInterval,className,
-                             teacherName,classRoomName,way_of_teaching,subjectName){
-        var html = [];
-        html.push('<tr id="choose"  >');
-        html.push('<input id="'+id+'"  type="hidden">');
-        html.push('		<td><input type="checkbox"></td>');
-        html.push('		<td >'+startDateTime+'</td>');
-        html.push('		<td>'+timeInterval+'</td>');
-        if(way_of_teaching=="1"){
-            html.push('		<td ><img src="../static/pages/img/1v1.png">'+className+'</td>');
-        }else{
-            html.push('		<td ><img src="../static/pages/img/ban.png">'+className+'</td>');
-        }
-        html.push('		<td >'+teacherName+'</td>');
-        html.push('		<td >'+classRoomName+'</td>');
-        html.push('		<td>'+subjectName+'</td>');
-        html.push('		<td>/</td><td>/</td>');
-        html.push(' 	<td>');
-        html.push(' 	    <div class="btn-group">');
-        html.push('			    <p data-toggle="dropdown" class="down">操作');
-        html.push('			    	<span class="ace-icon fa fa-caret-down icon-on-right"></span>');
-        html.push('			    </p>');
-        html.push('			    <ul class="dropdown-menu dropdown-default">');
-        html.push('				    <li>');
-        html.push('				    	<a href="">编辑</a>');
-        html.push('				    	<a onclick="attendClassRemove(\''+id+'\')">删除</a>');
-        html.push('				    </li>');
-        html.push('			    </ul>');
-        html.push('		    </div>');
-        html.push('		</td>');
-        html.push('</tr>');
-        $("#attendClassList").append(html.join(""))
-    }
-    function isRemove(id){
-        var html = [];
-        html.push('<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"> ');
-        html.push('	<div class="modal-dialog" role="document">                                                      ');
-        html.push('		<div class="modal-content">                                                                 ');
-        html.push('			<div class="modal-header">                                                              ');
-        html.push('				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span   ');
-        html.push('						aria-hidden="true">&times;</span></button>                                  ');
-        html.push('				<h4 class="modal-title" id="myModalLabel">请确认是否删除</h4>                       ');
-        html.push('			</div>                                                                                  ');
-        html.push('			<div class="modal-footer">                                                              ');
-        html.push('				<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>    ');
-        html.push('				<button type="button" class="btn btn-primary"                                       ');
-        html.push('						tonclick="attendClassRemove('+id+')>好</button>       ‘；                   ');
-        html.push('			</div>                                                                                  ');
-        html.push('		</div>                                                                                      ');
-        html.push('	</div>                                                                                          ');
-        html.push('</div>                                                                                           ');
-        $(".orderTable .rcct").append(html.join(""));
-    }
-    //删除课程类别
-    function attendClassRemove(id,type){
-        $.ajax({
-            url: [[@{/jw_center_arranging_course/remove_xbAttend_class}]],
-        type: 'post',
-            dataType: 'json',
-            contentType: 'application/json',
-            data: JSON.stringify({id:id}),
-            async: true,
-            success: function(data) {
-            console.log("回调成功")
-            var status = data.status;
-            var msg = data.msg;
-            if(status=="0"){
-                var id = data.xbattendclass.id;
-                if(type=="1"){
-                    $("#"+id+"_kc").parent().remove();
-                }else if(type=="2"){
-                    $("#"+id+"_ct").parent().remove();
+                },
+                error: function () {
+                    console.log("错误")
                 }
-
-                alert(msg);
-            }else{
-                alert(msg);
-            }
-        },
-        error:function(){
-            console.log("回调失败")
+            });
         }
-    });
-    }
-    //班级下拉级联
-    function classToFindAll(){
-       var calssId = $("#classId option:selected").val();
-        $.ajax({
-            url: basePath + '/jw_center_arranging_course/classToFindAll',
-            type: 'get',
-            contentType: 'application/json',
-            data: {id: calssId},
-            async: true,
-            success: function (data) {
-                console.log("查询班级级联信息成功");
-                $("#teacherfromgroupid").html("");
-                $("#teacherfromgroupid").append(data);
-            },
-            error: function () {
-                console.log("查询班级级联信息失败")
-            }
 
-        });
-    }
-    function serializeObject(form){
-        var o = {};
-        var a = $(form).serializeArray();
-        $.each(a, function() {
-            if (o[this.name] ) {
-                if (!o[this.name].push) {
-                    o[this.name] = [o[this.name]];
-                }
-                o[this.name].push(this.value || '');
+        //动态日程列表
+        function attendClassLoad(id, startDateTime, timeInterval, className,
+            teacherName, classRoomName, way_of_teaching, subjectName) {
+            var html = [];
+            html.push('<tr id="choose"  >');
+            html.push('<input id="' + id + '"  type="hidden">');
+            html.push('		<td><input type="checkbox"></td>');
+            html.push('		<td >' + startDateTime + '</td>');
+            html.push('		<td>' + timeInterval + '</td>');
+            if (way_of_teaching == "1") {
+                html.push('		<td ><img src="../static/pages/img/1v1.png">' + className + '</td>');
             } else {
-                o[this.name] = this.value || '';
+                html.push('		<td ><img src="../static/pages/img/ban.png">' + className + '</td>');
             }
-        });
-        return o;
-    };
+            html.push('		<td >' + teacherName + '</td>');
+            html.push('		<td >' + classRoomName + '</td>');
+            html.push('		<td>' + subjectName + '</td>');
+            html.push('		<td>/</td><td>/</td>');
+            html.push(' 	<td>');
+            html.push(' 	    <div class="btn-group">');
+            html.push('			    <p data-toggle="dropdown" class="down">操作');
+            html.push('			    	<span class="ace-icon fa fa-caret-down icon-on-right"></span>');
+            html.push('			    </p>');
+            html.push('			    <ul class="dropdown-menu dropdown-default">');
+            html.push('				    <li>');
+            html.push('				    	<a href="">编辑</a>');
+            html.push('				    	<a onclick="attendClassRemove(\'' + id + '\')">删除</a>');
+            html.push('				    </li>');
+            html.push('			    </ul>');
+            html.push('		    </div>');
+            html.push('		</td>');
+            html.push('</tr>');
+            $("#attendClassList").append(html.join(""))
+        }
 
-</script>
+        function isRemove(id) {
+            var html = [];
+            html.push(
+                '<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"> '
+            );
+            html.push(
+                '	<div class="modal-dialog" role="document">                                                      '
+            );
+            html.push('		<div class="modal-content">                                                                 ');
+            html.push('			<div class="modal-header">                                                              ');
+            html.push('				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span   ');
+            html.push('						aria-hidden="true">&times;</span></button>                                  ');
+            html.push('				<h4 class="modal-title" id="myModalLabel">请确认是否删除</h4>                       ');
+            html.push('			</div>                                                                                  ');
+            html.push('			<div class="modal-footer">                                                              ');
+            html.push('				<button type="button" class="btn btn-default" data-dismiss="modal">取消</button>    ');
+            html.push('				<button type="button" class="btn btn-primary"                                       ');
+            html.push('						tonclick="attendClassRemove(' + id + ')>好</button>       ‘；                   ');
+            html.push('			</div>                                                                                  ');
+            html.push('		</div>                                                                                      ');
+            html.push(
+                '	</div>                                                                                          '
+            );
+            html.push(
+                '</div>                                                                                           '
+            );
+            $(".orderTable .rcct").append(html.join(""));
+        }
+        //删除课程类别
+        function attendClassRemove(id, type) {
+            $.ajax({
+                url: [
+                    [@ {
+                        /jw_center_arranging_course/remove_xbAttend_class
+                    }]
+                ],
+                type: 'post',
+                dataType: 'json',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    id: id
+                }),
+                async: true,
+                success: function (data) {
+                    console.log("回调成功")
+                    var status = data.status;
+                    var msg = data.msg;
+                    if (status == "0") {
+                        var id = data.xbattendclass.id;
+                        if (type == "1") {
+                            $("#" + id + "_kc").parent().remove();
+                        } else if (type == "2") {
+                            $("#" + id + "_ct").parent().remove();
+                        }
+
+                        alert(msg);
+                    } else {
+                        alert(msg);
+                    }
+                },
+                error: function () {
+                    console.log("回调失败")
+                }
+            });
+        }
+        //班级下拉级联
+        function classToFindAll() {
+            var calssId = $("#classId option:selected").val();
+            $.ajax({
+                url: basePath + '/jw_center_arranging_course/classToFindAll',
+                type: 'get',
+                contentType: 'application/json',
+                data: {
+                    id: calssId
+                },
+                async: true,
+                success: function (data) {
+                    console.log("查询班级级联信息成功");
+                    $("#teacherfromgroupid").html("");
+                    $("#teacherfromgroupid").append(data);
+                },
+                error: function () {
+                    console.log("查询班级级联信息失败")
+                }
+
+            });
+        }
+
+        function serializeObject(form) {
+            var o = {};
+            var a = $(form).serializeArray();
+            $.each(a, function () {
+                if (o[this.name]) {
+                    if (!o[this.name].push) {
+                        o[this.name] = [o[this.name]];
+                    }
+                    o[this.name].push(this.value || '');
+                } else {
+                    o[this.name] = this.value || '';
+                }
+            });
+            return o;
+        };
+    </script>
     <script>
         ! function () {
             laydate({
@@ -754,7 +770,8 @@
         $(".calendarTime").click(function () {
             calendarTimeShow();
         });
-        function calendarTimeShow(){
+
+        function calendarTimeShow() {
             $("#calendarTime").show();
             $("#calendarRoom").hide();
             $("#calendarTeacher").hide();
@@ -762,7 +779,8 @@
         $(".calendarRoom").click(function () {
             calendarRoomShow();
         });
-        function calendarRoomShow(){
+
+        function calendarRoomShow() {
             $("#calendarRoom").show();
             $("#calendarTime").hide();
             $("#calendarTeacher").hide();
@@ -770,7 +788,8 @@
         $(".calendarTeacher").click(function () {
             calendarTeacherShow();
         });
-        function calendarTeacherShow(){
+
+        function calendarTeacherShow() {
             $("#calendarTeacher").show();
             $("#calendarTime").hide();
             $("#calendarRoom").hide();
@@ -788,18 +807,21 @@
                 this.checked = isCheck; //循环赋值给每个复选框是否选中
             });
         };
+
         function selectAll2() {
             var isCheck = $("#sel_2").is(':checked'); //获得全选复选框是否选中
             $(".checkList input[type='checkbox']").each(function () {
                 this.checked = isCheck; //循环赋值给每个复选框是否选中
             });
         };
+
         function selectAll3() {
             var isCheck = $("#sel_3").is(':checked'); //获得全选复选框是否选中
             $(".checkList input[type='checkbox']").each(function () {
                 this.checked = isCheck; //循环赋值给每个复选框是否选中
             });
         };
+
         function chooseAll() {
             var isCheck = $("#sel_3").is(':checked'); //获得全选复选框是否选中
             $("#choose input[type='checkbox']").each(function () {
@@ -807,126 +829,129 @@
             });
         };
 
-       /* $(".skList").hover(function () {
-            $(this).siblings(".infoShow").toggle(300);
-        });
-        $(".ctList").hover(function () {
-            $(this).siblings(".infoShow").toggle(300);
-        });*/
+        /* $(".skList").hover(function () {
+             $(this).siblings(".infoShow").toggle(300);
+         });
+         $(".ctList").hover(function () {
+             $(this).siblings(".infoShow").toggle(300);
+         });*/
         //排课方式
-       function paikeFan(){
-          var scheduleMode =  $('input:radio[name="scheduleMode"]:checked').val();
-           $("[name='weekType']").removeAttr("checked");//取消全选
-           $("#startDateTime #endDateTime").val("");
-           if(scheduleMode=='1'){
-               $("#manyStrarDate").hide();
-               $("#manyWeek").hide();
-           }else{
-               $("#manyStrarDate").show();
-               $("#manyWeek").show();
-           }
-       }
+        function paikeFan() {
+            var scheduleMode = $('input:radio[name="scheduleMode"]:checked').val();
+            $("[name='weekType']").removeAttr("checked"); //取消全选
+            $("#startDateTime #endDateTime").val("");
+            if (scheduleMode == '1') {
+                $("#manyStrarDate").hide();
+                $("#manyWeek").hide();
+            } else {
+                $("#manyStrarDate").show();
+                $("#manyWeek").show();
+            }
+        }
         //排课日程表
         $(function () {
             var date = new Date();
             var d = date.getDate();
             var m = date.getMonth();
             var y = date.getFullYear();
-            var url = basePath+"/jw_center_arranging_course/to_arranging_course_fullcalendar";
-                $('#calendarTime #calendar').fullCalendar({
-                    header: {
-                        right: '',
-                        center: 'prev,title,next,today',
-                        left: 'agendaDay,agendaWeek,month'
-                    },
-                    defaultView:'agendaWeek',
-                    firstDay: 1,
-                    editable: true,
-                    timeFormat: 'H:mm',
-                    axisFormat: 'H:mm',
-                    events: function(start, end, callback) {
-                        var fstart = $.fullCalendar.formatDate(start, "yyyy-MM-dd");
-                        var fend = $.fullCalendar.formatDate(end, "yyyy-MM-dd");
-                        $.ajax({
-                            type: "post",
-                            url: url,//我是用ajax获取后台数据的，这里填写地址
-                            dataType: "json",
-                            data: {
-                                start: fstart,
-                                end: fend
-                            },
-                            success: function(data) {
-                                if (data) {
-                                    var event = [];
-                                    var listentity = data.listentity;
-                                    $.each(listentity, function(i) {
-                                        var d = listentity[i];
-                                        var id = d.id;
-                                        var time = d.timeInterval.split("-");
-                                        var date = d.startDateTime.split("-");
-                                        var className =d.xbclass.className;
-                                        var y = date[0];
-                                        var m = date[1];
-                                        var d = date[2];
-                                        var starthhtime = time[0].split(":")[0];
-                                        var startmmtime = time[0].split(":")[1];
-                                        var endhhtime = time[1].split(":")[0];
-                                        var endtmmtime = time[1].split(":")[1];
-                                        event.push({
-                                            _id: id,
-                                            title:className,
-                                            start: new Date(y, m-1, d ,starthhtime,startmmtime),
-                                            end: new Date(y, m-1, d ,endhhtime,endtmmtime),
-                                            allDay: false
-                                        });
+            var url = basePath + "/jw_center_arranging_course/to_arranging_course_fullcalendar";
+            $('#calendarTime #calendar').fullCalendar({
+                header: {
+                    right: '',
+                    center: 'prev,title,next,today',
+                    left: 'agendaDay,agendaWeek,month'
+                },
+                defaultView: 'agendaWeek',
+                firstDay: 1,
+                editable: true,
+                timeFormat: 'H:mm',
+                axisFormat: 'H:mm',
+                events: function (start, end, callback) {
+                    var fstart = $.fullCalendar.formatDate(start, "yyyy-MM-dd");
+                    var fend = $.fullCalendar.formatDate(end, "yyyy-MM-dd");
+                    $.ajax({
+                        type: "post",
+                        url: url, //我是用ajax获取后台数据的，这里填写地址
+                        dataType: "json",
+                        data: {
+                            start: fstart,
+                            end: fend
+                        },
+                        success: function (data) {
+                            if (data) {
+                                var event = [];
+                                var listentity = data.listentity;
+                                $.each(listentity, function (i) {
+                                    var d = listentity[i];
+                                    var id = d.id;
+                                    var time = d.timeInterval.split("-");
+                                    var date = d.startDateTime.split("-");
+                                    var className = d.xbclass.className;
+                                    var y = date[0];
+                                    var m = date[1];
+                                    var d = date[2];
+                                    var starthhtime = time[0].split(":")[0];
+                                    var startmmtime = time[0].split(":")[1];
+                                    var endhhtime = time[1].split(":")[0];
+                                    var endtmmtime = time[1].split(":")[1];
+                                    event.push({
+                                        _id: id,
+                                        title: className,
+                                        start: new Date(y, m - 1, d,
+                                            starthhtime,
+                                            startmmtime),
+                                        end: new Date(y, m - 1, d,
+                                            endhhtime, endtmmtime),
+                                        allDay: false
                                     });
-                                    callback(event);
-                                }
-                            },
-                            error:function(){
-                                alert("错了")
+                                });
+                                callback(event);
                             }
-                        });
-                    },
-                    //点击事件
-                    eventClick: function(event) {
-                        if (event.url) {
-                            window.open(event.url);
-                            return false;
+                        },
+                        error: function () {
+                            alert("错了")
                         }
-                    },
-                    loading: function (bool) {
-                        if (bool) $('#loading').show();
-                        else $('#loading').hide();
-                    },
-                    //#region 鼠标放上去显示信息
-                    eventMouseover: function (calEvent, jsEvent, view) {
-                        var fstart = $.fullCalendar.formatDate(calEvent.start, "yyyy/MM/dd HH:mm");
-                        var fend = $.fullCalendar.formatDate(calEvent.end, "yyyy/MM/dd HH:mm");
-                        $(this).attr('title', fstart + " - " + fend + " " + calEvent.title);
-                      //  鼠标悬浮到title的时候可以设置展现哪些信息
-                       // $(this).attr('title', calEvent.fullname);
-                        //$(this).attr('title', "哈哈哈");
-                        $(this).css('font-weight', 'normal');
-                        //            $(this).tooltip({
-                        //                effect: 'toggle',
-                        //                cancelDefault: true
-                        //            });
-                        var evtcontent = '<div class="tanchu">                  ';
-                        evtcontent += '		<span>开始：2018-10-29 08:00</span>        ';
-                        evtcontent += '		<span>结束：2018-10-29 17:00</span>        ';
-                        evtcontent += '		<span>教室：5号教室</span>                 ';
-                        evtcontent += '		<span>班课/一对一：青山分校2018届4班</span>';
-                        evtcontent += '		<span>教师：汪大东</span>                  ';
-                        evtcontent += '		<span>助教：张三</span>                    ';
-                        evtcontent += '</div>								       ';
-                        //$(this).html(evtcontent);
-                        //$(this).parent().append(evtcontent);
-                    },
-                    eventMouseout: function (event, jsEvent, view) {
-                        console.log('out');
-                        calendar.fullCalendar('removeEvents', bgEvent.id);
-                    },
+                    });
+                },
+                //点击事件
+                eventClick: function (event) {
+                    if (event.url) {
+                        window.open(event.url);
+                        return false;
+                    }
+                },
+                loading: function (bool) {
+                    if (bool) $('#loading').show();
+                    else $('#loading').hide();
+                },
+                //#region 鼠标放上去显示信息
+                eventMouseover: function (calEvent, jsEvent, view) {
+                    var fstart = $.fullCalendar.formatDate(calEvent.start, "yyyy/MM/dd HH:mm");
+                    var fend = $.fullCalendar.formatDate(calEvent.end, "yyyy/MM/dd HH:mm");
+                    $(this).attr('title', fstart + " - " + fend + " " + calEvent.title);
+                    //  鼠标悬浮到title的时候可以设置展现哪些信息
+                    // $(this).attr('title', calEvent.fullname);
+                    //$(this).attr('title', "哈哈哈");
+                    $(this).css('font-weight', 'normal');
+                    //            $(this).tooltip({
+                    //                effect: 'toggle',
+                    //                cancelDefault: true
+                    //            });
+                    var evtcontent = '<div class="tanchu">                  ';
+                    evtcontent += '		<span>开始：2018-10-29 08:00</span>        ';
+                    evtcontent += '		<span>结束：2018-10-29 17:00</span>        ';
+                    evtcontent += '		<span>教室：5号教室</span>                 ';
+                    evtcontent += '		<span>班课/一对一：青山分校2018届4班</span>';
+                    evtcontent += '		<span>教师：汪大东</span>                  ';
+                    evtcontent += '		<span>助教：张三</span>                    ';
+                    evtcontent += '</div>								       ';
+                    //$(this).html(evtcontent);
+                    //$(this).parent().append(evtcontent);
+                },
+                eventMouseout: function (event, jsEvent, view) {
+                    console.log('out');
+                    calendar.fullCalendar('removeEvents', bgEvent.id);
+                },
             });
             $('#calendarRoom #calendar').fullCalendar({
                 header: {
@@ -934,16 +959,16 @@
                     center: 'prev,title,next,today',
                     left: 'agendaWeek'
                 },
-                defaultView:'agendaWeek',
+                defaultView: 'agendaWeek',
                 firstDay: 1,
                 editable: true,
                 timeFormat: 'H:mm',
                 axisFormat: 'H:mm',
                 events: [{
-                    title: '科源校区诶诶我惹人\r\n张三\n5号教室',
-                    start: new Date(y, m, 1),
-                    backgroundColor: '#33a299;'
-                },
+                        title: '科源校区诶诶我惹人\r\n张三\n5号教室',
+                        start: new Date(y, m, 1),
+                        backgroundColor: '#33a299;'
+                    },
                     {
                         title: '科源校区诶诶我惹人\r\n张三\n5号教室',
                         start: new Date(y, m, d - 5),
@@ -983,8 +1008,8 @@
                         backgroundColor: '#3967a3;'
                     },
                 ],
-                dayClick: function(date) {
-                    var selDate =$.fullCalendar.formatDate(date,'yyyy-MM-dd');//格式化日期
+                dayClick: function (date) {
+                    var selDate = $.fullCalendar.formatDate(date, 'yyyy-MM-dd'); //格式化日期
                     console.log('dayClick触发的时间为：', date);
                 }
             });
@@ -996,7 +1021,7 @@
                     center: 'prev,title,next,today',
                     left: 'agendaDay,agendaWeek,month'
                 },
-                defaultView:'agendaWeek',
+                defaultView: 'agendaWeek',
                 firstDay: 1,
                 editable: true,
                 timeFormat: 'H:mm',
@@ -1052,20 +1077,21 @@
     </script>
 </body>
 <style>
-
     .tanchu {
         background: #66b8b2;
         color: #fff;
         text-align: left;
-        padding:0 5px;
+        padding: 0 5px;
         margin: 5px;
         height: 22px;
         font-size: 12px;
         overflow: hidden;
     }
-    .manyWeek input{
+
+    .manyWeek input {
         width: 30px;
         height: 15px;
     }
 </style>
+
 </html>

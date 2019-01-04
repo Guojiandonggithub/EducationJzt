@@ -53,4 +53,6 @@ public class OrgansService {
 
 	public List<SysOrgans> getOrgansListAll(){return (List)organsDao.findAll();};
 
+	public SysOrgans checkOrganName(String name){return organsDao.findAllByOrganName(name);};
+
 }

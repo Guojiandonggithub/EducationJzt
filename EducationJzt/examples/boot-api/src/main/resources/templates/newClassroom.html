@@ -18,92 +18,16 @@
     <script src="../static/pages/js/ace.min.js"> </script>
     <script src="../static/pages/js/ace-elements.min.js"></script>
     <script src="../static/pages/laydate/laydate.js"></script>
-
+    <script src="../static/pages/js/jquery.validate17.min.js"></script>
+    <script src="../static/pages/js/additiona17l-methods.min.js"></script>
+    <script src="../static/pages/js/messages_zh.min.js"></script>
 </head>
 <body>
-<div id="navbar" class="eduNav">
-    <div class="navbar-header pull-left">
-        <a href="index.html" class="navbar-brand">
-            <small>
-                <img src="../static/pages/img/logo.png" alt="">
-            </small>
-        </a>
-    </div>
-    <div class="pull-right eduName">
-        <!--<span>万某 [管理员]</span>
-        <span>机构中心</span>
-        <span>退出</span>  -->
-    </div>
-</div>
+<div th:replace="layout::top"></div>
 <form id="roomform">
-<div class="main-container" id="main-container">
-    <div id="sidebar" class="sidebar responsive">
-        <ul class="nav nav-list" style="top: 0px;">
-            <li class="">
-                <a href="/forward/index"><span class="menu-text"> 工作台 </span></a>
-                <b class="arrow"></b>
-            </li>
-            <li class="">
-                <a href="/student/getManagementList"><span class="menu-text"> 办理中心 </span></a>
-                <b class="arrow"></b>
-            </li>
-            <li class="active open">
-                <a href="#" class="dropdown-toggle">
-                    <span class="menu-text">教务中心</span>
-                    <b class="arrow fa fa-angle-down"></b>
-                </a>
-                <b class="arrow"></b>
-                <ul class="submenu">
-                    <li class="">
-                        <a href="/student/getXbStudentList"><i class="menu-icon fa fa-caret-right"></i>学员</a>
-                        <b class="arrow"></b>
-                    </li>
-                    <li class="active">
-                        <a href="/student/getXbClassroomList"><i class="menu-icon fa fa-caret-right"></i>班级</a>
-                        <b class="arrow"></b>
-                    </li>
-                    <li class="">
-                        <a href="/student/getOneToOneList">
-                            <i class="menu-icon fa fa-caret-right"></i>一对一</a>
-                        <b class="arrow"></b>
-                    </li>
-                    <li class="">
-                        <a href="/jw_center_arranging_course/to_arranging_course"><i class="menu-icon fa fa-caret-right"></i>排课</a>
-                        <b class="arrow"></b>
-                    </li>
-                    <li class="">
-                        <a href="/forward/lessonTable"><i class="menu-icon fa fa-caret-right"></i>课程表</a>
-                        <b class="arrow"></b>
-                    </li>
-                    <li class="">
-                        <a href="/forward/attendClass"><i class="menu-icon fa fa-caret-right"></i>记上课</a>
-                        <b class="arrow"></b>
-                    </li>
-                    <li class="">
-                        <a href="/jwcentercourse/tocourse"><i class="menu-icon fa fa-caret-right"></i>课程</a>
-                        <b class="arrow"></b>
-                    </li>
-                </ul>
-            </li>
-            <li class="">
-                <a href="#" class="dropdown-toggle">
-                    <span class="menu-text"> 内部管理 </span>
-                    <b class="arrow fa fa-angle-down"></b>
-                </a>
-                <b class="arrow"></b>
-                <ul class="submenu">
-                    <li class="">
-                        <a href="/accounts/getOrgansList"><i class="menu-icon fa fa-caret-right"></i>组织架构</a>
-                        <b class="arrow"></b>
-                    </li>
-                    <li class="">
-                        <a href="/accounts/getEmployeeList"><i class="menu-icon fa fa-caret-right"></i>员工信息</a>
-                        <b class="arrow"></b>
-                    </li>
-                </ul>
-            </li>
-        </ul>
-    </div>
+    <div class="main-container" id="main-container">
+        <div th:replace="layout::left('13','32')">
+        </div>
         <div class="main-content">
             <div class="breadcrumbs" id="breadcrumbs">
                 <img src="../static/pages/img/line1.png">
@@ -114,12 +38,12 @@
                 <h2>教室信息</h2>
                 <div class="stopClass newClass">
                     <div class="form-group" style="display: block;">
-                        <label><span>*</span>教室名称</label>
-                        <input type="hidden" name="id" th:value="${xbClassroom.id}">
-                        <input type="text" placeholder="" th:value="${xbClassroom.classroomName}" name="classroomName" class="remark">
+                        <label for="classroomName"><span>*</span>教室名称</label>
+                        <input type="text" placeholder="" required th:value="${xbClassroom.classroomName}" name="classroomName" id="classroomName" class="remark">
                     </div>
+                    <input type="hidden" name="id" th:value="${xbClassroom.id}">
                     <div class="form-group">
-                        <label><span>*</span>校区</label>
+                        <label for="organId" style="width:130px;"><span>*</span>校区</label>
                         <select name="organId" >
                             <!--<option value="">选择校区</option>-->
                             <option th:each="orgs:${organsList}" th:selected="${xbClassroom.organId == orgs.id}" th:value="${orgs.id}" th:text="${orgs.organName}"></option>
@@ -131,40 +55,95 @@
                 <button class="save" type="button" onclick="saveRoom();">保存</button>
             </div>
         </div>
-</div>
+    </div>
 </form>
 
 <script>
 !function(){
 laydate({elem: '#demo'});//绑定元素
 }();
+
+$(function(){
+    $("#roomform").validate({
+        rules : {
+            classroomName : {
+                required:true,
+                minlength:2,
+                checkName:true,
+                maxlength:15
+            },
+            organId : {
+                required:true
+            },
+            messages: {
+                classroomName: {
+                    required: "教室名称名称不能为空",
+                    minlength: "用户名最少由两个字符组成",
+                    maxlength:"用户名不能超过10个字符"
+                },
+                organId: "校区不能为空"
+            },
+            errorPlacement: function(error, element) {
+                if ( element.is(":radio") )
+                    error.appendTo( element.parent().next().next() );
+                else if ( element.is(":checkbox") )
+                    error.appendTo ( element.next() );
+                else
+                    error.appendTo( element.parent().next() );
+            }
+        }
+    });
+    jQuery.validator.addMethod('checkName', function (value, element) {
+        var msgcode=null;
+        $.ajax({
+            url: basePath + "/student/checkClassRoom",
+            type: "get",
+            dataType: 'json',
+            async:false,
+            contentType:"application/json;charset=UTF-8",
+            data: {"name":value},
+            success: function(result){
+                msgcode= result.code;
+            }
+        })
+        if(msgcode==1001){
+            $(element).data('error-msg','该教室名称已存在！');
+            return false;
+        }
+        return true;
+    }, function(params, element) {
+        return $(element).data('error-msg');
+    });
+});
 </script>
 <script type="text/javascript" th:inline="javascript">
 var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/;
 function saveRoom(){
-    var data= serializeObject("#roomform");
-    $.ajax({
-        type: 'post',
-        dataType: 'json',
-        url: basePath + '/student/save/classroom',
-        data: JSON.stringify(data),
-        contentType:"application/json;charset=UTF-8",
-        cache: false,
-        async: true,
-        success: function (data) {
-            //var status = data.status;
-            var msg = data.msg;
-            alert("编辑成功！");
-            window.location.href = basePath + '/student/getXbClassroomList?room=0';
-            /*if(status=="0"){
-                if (confirm(msg)) {
-                    window.location.href(basePath + '/accounts/getOrgansList');
-                }
-            }else{
+    if ($("#roomform").valid()) {
+        var data= serializeObject("#roomform");
+        $.ajax({
+            type: 'post',
+            dataType: 'json',
+            url: basePath + '/student/save/classroom',
+            data: JSON.stringify(data),
+            contentType:"application/json;charset=UTF-8",
+            cache: false,
+            async: true,
+            success: function (data) {
+                //var status = data.status;
+                var msg = data.msg;
+                alert("编辑成功！");
+                window.location.href = basePath + '/student/getXbClassroomList?room=0';
+                /*if(status=="0"){
+                    if (confirm(msg)) {
+                        window.location.href(basePath + '/accounts/getOrgansList');
+                    }
+                }else{
 
-            }*/
-        }
-    });
+                }*/
+            }
+        });
+    }
 }
 
 function serializeObject(form)

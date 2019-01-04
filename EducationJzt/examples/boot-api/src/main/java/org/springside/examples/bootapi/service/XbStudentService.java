@@ -169,4 +169,12 @@ public class XbStudentService {
 	public XbRecordClass saveXbRecordClass(XbRecordClass xbRecordClass){
 		return xbRecordClassDao.save(xbRecordClass);
 	}
+	@Transactional
+	public XbClassroom checkClassroomName(String classroomName){
+		return xbClassroomDao.findAllByClassroomName(classroomName);
+	}
+	@Transactional
+	public XbStudent checkStudentName(String name,String contactPhone){
+		return studentDao.findAllByStudentNameAndContactPhone(name,contactPhone);
+	}
 }

@@ -72,6 +72,25 @@ public class AccountActivity {
 		return "login";
 	}
 
+	@RequestMapping("/checkOrganName")
+	public void checkOrganName(@RequestParam String name, HttpServletResponse resp){
+		try {
+			String code = "1000";
+			SysOrgans sysOrgans = organsService.checkOrganName(name);
+			if(null!=sysOrgans){
+				code = "1001";
+			}
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("status","1");
+			jsonObject.put("code",code);
+			resp.setContentType("text/html;charset=UTF-8");
+			resp.getWriter().println(jsonObject.toJSONString());
+			resp.getWriter().close();
+		} catch (IOException e) {
+			logger.info(e.toString());
+		}
+	}
+
 	@RequestMapping("/delete/organs")
 	public void removeCourseType(@RequestParam String id, HttpServletResponse resp){
 

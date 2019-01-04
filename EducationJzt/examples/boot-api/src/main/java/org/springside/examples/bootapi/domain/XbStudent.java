@@ -44,6 +44,7 @@ public class XbStudent {
     public Date handleDate;
     public String handlePerson;
     public String salesPerson;
+    public String deleteStatus;
 
     public XbStudent() {
 

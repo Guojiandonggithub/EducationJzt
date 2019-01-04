@@ -1,389 +1,465 @@
-.enrollCon{
-    width:100%;
-    padding:26px 15px; 
-    background:#fff;
+.enrollCon {
+    width: 100%;
+    padding: 22px;
+    background: #fff;
     border-radius: 6px;
-    margin-bottom:26px;
+    margin-bottom: 26px;
     overflow: hidden;
     position: relative;
 }
-.enrollCon h2{
-    font-size:16px;
-    border-left:4px solid #5597e5;
-    padding-left:10px;
-    margin:0;
+
+.enrollCon h2 {
+    font-size: 16px;
+    border-left: 4px solid #5597e5;
+    padding-left: 10px;
+    margin: 0;
 }
-.enrollCon .openMore{
+
+.enrollCon .openMore {
     float: right;
 }
-.enrollCon .openMore button{
-    width:90px;
-    height:30px;
-    border:1px solid #b9bec4;
-    background:#fff;
+
+.enrollCon .openMore button {
+    width: 90px;
+    height: 30px;
+    border: 1px solid #b9bec4;
+    background: #fff;
     border-radius: 4px;
 }
-.enrollCon .openMore .choice{
-    width:120px;
-    background:#5597e5;
-    color:#fff;
+
+.enrollCon .openMore .choice {
+    width: 120px;
+    background: #5597e5;
+    color: #fff;
 }
-.headPic{
-    margin:26px 0;
-    padding-left:26px;
+
+.headPic {
+    margin: 22px 0;
+    padding-left: 26px;
 }
-.headPic img{
-    margin-left:10px;
+
+.headPic img {
+    margin-left: 10px;
 }
-.enrollCon .form-group{
-    margin:0 0 20px 0!important;
-    line-height:30px;
+
+.enrollCon .form-group {
+    margin: 0 0 20px 0 !important;
+    line-height: 30px;
 }
-.enrollCon .form-group .col-sm-1{
-    width:68px;
-    margin:0;
-    padding:0;
+
+.enrollCon .form-group .col-sm-1 {
+    width: 68px;
+    margin: 0;
+    padding: 0;
     font-weight: normal !important;
 }
-.enrollCon .form-group input,.enrollCon .form-group select{
-    width:270px;
-    height:30px;
+
+.enrollCon .form-group input,
+.enrollCon .form-group select {
+    width: 270px;
+    height: 30px;
     border-radius: 4px !important;
-    border:1px solid #a0a0a0 !important;
+    border: 1px solid #a0a0a0 !important;
 }
-.enrollCon .enrollNum input{
-    width:160px;
+
+.enrollCon .enrollNum input {
+    width: 160px;
 }
-.enrollCon .enrollNum select{
-    width:107px;
+
+.enrollCon .enrollNum select {
+    width: 107px;
     border-radius: 4px !important;
-    border:1px solid #a0a0a0 !important;
+    border: 1px solid #a0a0a0 !important;
 }
-.enrollCon .form-group .sex{
-    margin-right:15px;
+
+.enrollCon .form-group .sex {
+    margin-right: 15px;
 }
-.choose{
+
+.choose {
     display: flex;
     justify-content: space-between;
-    margin-top:26px;
+    margin-top: 26px;
 }
-.choose div{
-    width:49%;
-    height:230px;
-    background:#f3f8fc;
+
+.choose div {
+    width: 49%;
+    height: 230px;
+    background: #f3f8fc;
     border-radius: 6px;
     text-align: center;
 }
-.choose div .blue{
-    width:124px; 
-    height:30px;
-    line-height:30px;
+
+.choose div .blue {
+    width: 124px;
+    height: 30px;
+    line-height: 30px;
     border-radius: 4px;
-    background:#5597e5;
-    color:#fff !important;
-    display:inline-block;
-    margin:86px 0 10px 0;
+    background: #5597e5;
+    color: #fff !important;
+    display: inline-block;
+    margin: 86px 0 10px 0;
 }
-.choose div .blue:hover{
-    text-decoration:none;
+
+.choose div .blue:hover {
+    text-decoration: none;
 }
-.payInfo .alert-info{
-    height:40px;
-    line-height:40px;
-    background:#e4eefa;
-    border:1px solid #a9cffc;
+
+.payInfo .alert-info {
+    height: 40px;
+    line-height: 40px;
+    background: #e4eefa;
+    border: 1px solid #a9cffc;
     border-radius: 4px;
-    padding-left:10px;
-    margin:26px 0;
+    padding-left: 10px;
+    margin: 26px 0;
 }
-.payInfo .income{
+
+.payInfo .income {
     display: flex;
-    justify-content: space-between; 
-    line-height:40px;
-    border-bottom:1px solid #d4dfe5;
+    justify-content: space-between;
+    line-height: 40px;
+    border-bottom: 1px solid #d4dfe5;
 }
-.income .incomeAll img{
-    margin-right:10px;
+
+.income .incomeAll img {
+    margin-right: 10px;
 }
-.income .incomeNum b{
-    margin-right:10px;
-    font-size:16px;
-    color:#5898e0;
+
+.income .incomeNum b {
+    margin-right: 10px;
+    font-size: 16px;
+    color: #5898e0;
 }
-.payInfo .actual{
-    border-bottom:0;
+
+.payInfo .actual {
+    border-bottom: 0;
 }
-.actual .incomeNum b{
-    color:#555;
+
+.actual .incomeNum b {
+    color: #555;
 }
-.cash{
+
+.cash {
     display: flex;
-    justify-content: space-between;     
+    justify-content: space-between;
 }
-.cash select,.cash input{
-    width:120px;
-    border:1px solid #b9bec4;
+
+.cash select,
+.cash input {
+    width: 120px;
+    border: 1px solid #b9bec4;
     border-radius: 4px;
 }
-.cash input{
-    width:80px;
-    height:30px;
+
+.cash input {
+    width: 80px;
+    height: 30px;
     text-align: right;
 }
-.handleInfo .form-group{
-    margin:26px 96px 0 0 !important; 
-    display: inline-block;   
+
+.handleInfo .form-group {
+    margin: 26px 96px 0 0 !important;
+    display: inline-block;
 }
-.handleInfo .form-group input,.handleInfo .form-group select{
-    width:160px;
-    padding-left:8px;
+
+.handleInfo .form-group input,
+.handleInfo .form-group select {
+    width: 160px;
+    padding-left: 8px;
 }
-.save{
-    width:80px;
-    height:30px;
-    background:#5597e5;
+
+.save {
+    width: 80px;
+    height: 30px;
+    background: #5597e5;
     border-radius: 4px;
-    color:#fff;
-    border:0;
-    float:right;
+    color: #fff;
+    border: 0;
+    float: right;
 }
 
 
 
 /* 展开更多  内容 */
-.openInfo{
+.openInfo {
     border-top: 1px solid #ccc;
     padding-top: 26px;
     display: none;
 }
-.openInfo .form-group{
+
+.openInfo .form-group {
     display: inline-block;
     margin-right: 120px !important;
 }
-.openInfo .form-group label{
-    width:70px !important;
+
+.openInfo .form-group label {
+    width: 70px !important;
     text-align: right;
-    margin-right:10px !important;
+    margin-right: 10px !important;
 }
 
 /* 办理中心编辑页面 */
-.edit p{
+.edit p {
     display: inline-block;
-    width:350px;
-    margin:26px 0 0 0;
-}
-.edit p label{
-    color:#b6bdc5;
-    width:60px;
-    text-align: right;
-    font-weight:normal !important;
-    margin-right:30px;
-}
-.handle{
-    position: relative;
-}
-.handle .handleChoice{
-    position: absolute;
-    top:20px;
-    right:20px;
-}
-.handle .handleChoice a{
-    width:120px;
-    height:30px;
-    text-align: center;
-    background:#5597e5;
-    color:#fff !important;
-    display: inline-block;
-    border-radius: 4px;
-    line-height:30px;
-}
-.handle .modify {
-    margin-top:26px;
-    border-top:2px solid #5597e5;
-    padding:20px 0;
-    border-bottom:1px solid #ccc;
+    width: 350px;
+    margin: 26px 0 0 0;
 }
 
-.handle .modify .modifyList1 img{
-    margin-right:10px;
+.edit p label {
+    color: #b6bdc5;
+    width: 60px;
+    text-align: right;
+    font-weight: normal !important;
+    margin-right: 30px;
 }
-.handle .modify .modifyList2 i{
-    width:5px;
-    height:5px;
+
+.handle {
+    position: relative;
+}
+
+.handle .handleChoice {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+
+.handle .handleChoice a {
+    width: 120px;
+    height: 30px;
+    text-align: center;
+    background: #5597e5;
+    color: #fff !important;
+    display: inline-block;
+    border-radius: 4px;
+    line-height: 30px;
+}
+
+.handle .modify {
+    margin-top: 26px;
+    border-top: 2px solid #5597e5;
+    padding: 20px 0;
+    border-bottom: 1px solid #ccc;
+}
+
+.handle .modify .modifyList1 img {
+    margin-right: 10px;
+}
+
+.handle .modify .modifyList2 i {
+    width: 5px;
+    height: 5px;
     border-radius: 50%;
-    background:#fdb336;
+    background: #fdb336;
     display: inline-block;
     margin: 0px 10px 0 15px;
 }
-.handle .tuition{
+
+.handle .tuition {
     display: flex;
     justify-content: space-between;
-    padding:24px 0 0 0;
+    padding: 24px 0 0 0;
 }
-.handle .tuition input{
-    width:80px;
-    height:30px;
-    border-radius: 4px !important; 
-    margin-right:10px;
+
+.handle .tuition input {
+    width: 80px;
+    height: 30px;
+    border-radius: 4px !important;
+    margin-right: 10px;
 }
-.handle .tuition label{
-    margin:0 10px 0 56px;
+
+.handle .tuition label {
+    margin: 0 10px 0 56px;
     font-weight: normal;
 }
-.handle .tuition span{
-    color:#c6cbd1;
+
+.handle .tuition span {
+    color: #c6cbd1;
     display: inline-block;
-    margin-right:40px;
+    margin-right: 40px;
 }
-.handle .tuition  .tuiMoney{
-    margin-top:6px;
+
+.handle .tuition .tuiMoney {
+    margin-top: 6px;
 }
-.handle .tuition  .tuiMoney b{
-    margin-right:10px;
+
+.handle .tuition .tuiMoney b {
+    margin-right: 10px;
 }
-.handle .cost{
-    border-bottom:1px solid #ccc;
+
+.handle .cost {
+    border-bottom: 1px solid #ccc;
 }
-.handle .cost p{
+
+.handle .cost p {
     display: inline-block;
-    margin-right:208px;
+    margin-right: 208px;
 }
-.handle .cost p img{
-    margin-right:10px;
+
+.handle .cost p img {
+    margin-right: 10px;
 }
-.revenue .tuiMoney b{
-    color:#5597e5;
+
+.revenue .tuiMoney b {
+    color: #5597e5;
 }
-.remark{
-    width:100%;
-    height:74px;
-    background:#f3f8fc;
-    margin-top:20px;
-    padding:0 24px;
+
+.remark {
+    width: 100%;
+    height: 74px;
+    background: #f3f8fc;
+    margin-top: 20px;
+    padding: 0 24px;
 }
-.remark label{
+
+.remark label {
     font-weight: normal;
-    line-height:74px;
-    margin-right:10px;
+    line-height: 74px;
+    margin-right: 10px;
 }
-.remark input{
-    width:40%;
-    height:30px;
+
+.remark input {
+    width: 40%;
+    height: 30px;
     border-radius: 4px !important;
 }
-input::-webkit-input-placeholder, textarea::-webkit-input-placeholder { 
-    color: #b3bac2 !important; 
+
+input::-webkit-input-placeholder,
+textarea::-webkit-input-placeholder {
+    color: #b3bac2 !important;
 }
-.payInfo .incomeNum input{
+
+.payInfo .incomeNum input {
     width: 100px;
-    height:30px;
+    height: 30px;
     border-radius: 4px;
     text-align: right;
-    margin-right:10px;
+    margin-right: 10px;
 }
-.payInfo .incomeAll select{
-    width:170px;
+
+.payInfo .incomeAll select {
+    width: 170px;
     margin-left: 30px;
     border-radius: 4px;
 }
 
 /* 补费页面 */
-button.choiceStu{
-    width:100px;
-    height:30px; 
-    background:#5597e5;
-    border:0;
-    color:#fff;  
+button.choiceStu {
+    width: 100px;
+    height: 30px;
+    background: #5597e5;
+    border: 0;
+    color: #fff;
     border-radius: 4px;
 }
-.subInfo{
-    padding:0;
+
+.subInfo {
+    padding: 0;
 }
-.subInfo h3{
-    width:100%;
-    height:38px;
-    line-height:38px;
-    font-size:16px;
-    background:#77b9fc;
-    color:#fff;
+
+.subInfo h3 {
+    width: 100%;
+    height: 38px;
+    line-height: 38px;
+    font-size: 16px;
+    background: #77b9fc;
+    color: #fff;
     text-align: center;
-    margin:0;
+    margin: 0;
     border-radius: 4px;
 }
-.subInfo .pad{
-    padding:0 15px 15px 26px;
+
+.subInfo .pad {
+    padding: 0 22px 28px 22px;
 }
-.subsidy .modalFrom .form-search,.subsidy .modalFrom .form-group,.subsidy .modalFrom select{
-    float:none !important;
+
+.subsidy .modalFrom .form-search,
+.subsidy .modalFrom .form-group,
+.subsidy .modalFrom select {
+    float: none !important;
 }
-.subsidy table{
-    border:1px solid #ccc;
+
+.subsidy table {
+    border: 1px solid #ccc;
 }
-.subsidy table tbody tr.click{
-    border-left:4px solid #6aa8f1;
-    background:#dee7ee;
+
+.subsidy table tbody tr.click {
+    border-left: 4px solid #6aa8f1;
+    background: #dee7ee;
 }
 
 /* 复课页面内容 */
-.repeat .income{
+.repeat .income {
     justify-content: flex-start !important;
 }
-.repeat .income .incomeAll{
-    width:152px;
+
+.repeat .income .incomeAll {
+    width: 152px;
 }
-.repeat .form-group{
-    margin-left:116px !important;
+
+.repeat .form-group {
+    margin-left: 116px !important;
 }
-.repeat .form-group select{
-    width:170px;
+
+.repeat .form-group select {
+    width: 170px;
 }
-.repeat .form-group input{
-    width:86px;
-    margin:0 10px; 
+
+.repeat .form-group input {
+    width: 86px;
+    margin: 0 10px;
 }
 
 /* 停课页面内容 */
-.stopClass{
-    margin-top:24px;
+.stopClass {
+    margin-top: 24px;
 }
-.stopClass label{
-    width:80px;
+
+.stopClass label {
+    width: 130px;
     font-weight: normal !important
 }
-.stopClass select{
-    width:356px !important;
-    border:1px solid #ddd;
+
+.stopClass select {
+    width: 356px !important;
+    border: 1px solid #ddd;
 }
-.stopClass span{
-    color:#b9c0c8;
-    margin-right:20px; 
+
+.stopClass span {
+    color: #b9c0c8;
+    margin-right: 20px;
 }
-.stopClass input{
-    width:108px !important;
-    margin-right:10px;
-    border:1px solid #ddd;
+
+.stopClass input {
+    width: 108px !important;
+    margin-right: 10px;
+    border: 1px solid #ddd;
 }
-.stopClass .remark{
-    width:800px !important;
+
+.stopClass .remark {
+    width: 700px !important;
 }
-.chooseInfo{
+
+.chooseInfo {
     padding: 10px;
     border: #a8ceff 1px solid;
     background-color: #eaf8ff;
     display: flex;
-    margin-bottom:20px;
+    margin-bottom: 20px;
 }
-.chooseInfo span{
+
+.chooseInfo span {
     font-size: 14px;
     color: #889bb0;
 }
-.chooseInfo p{
+
+.chooseInfo p {
     font-size: 14px;
     color: #344c67;
-    margin:0 60px 0 0;
+    margin: 0 60px 0 0;
 }
-.chooseInfo button
-{
+
+.chooseInfo button {
     display: inline-block;
     height: 22px;
     line-height: 20px;
@@ -395,43 +471,53 @@ button.choiceStu{
     border-radius: 2px;
     outline: none;
 }
+
 /* 新建班级 */
-.newClass .form-group{
-    display:inline-block;
-    margin-bottom:6px !important;
+.newClass .form-group {
+    display: inline-block;
+    margin-bottom: 6px !important;
 }
-.newClass .form-group label{
+
+.newClass .form-group label {
     text-align: right;
-    margin-right:10px;
+    margin-right: 10px;
 }
-.newClass .form-group select{
-    width:250px !important;
+
+.newClass .form-group select {
+    width: 250px !important;
 }
-.newClass .form-group label span{
-    color:#da4558;
-    margin-right:4px;
+
+.newClass .form-group label span {
+    color: #da4558;
+    margin-right: 4px;
 }
-.newClass .classDate{
-    margin:18px 0 0 11px;
+
+.newClass .classDate {
+    margin: 18px 0 0 11px;
     display: inline-block;
 }
-.newClass .classDate .laydate-icon{
-    width:250px !important;
-    height:30px;
+
+.newClass .classDate .laydate-icon {
+    width: 250px !important;
+    height: 30px;
     border-radius: 4px;
     border: 1px solid #a0a0a0;
 }
-.newClass .check{
-    width:14px !important;
+
+.newClass .check {
+    width: 14px !important;
     height: 14px !important;
 }
-.newClass span{
-    color:#666;
+
+.newClass span {
+    color: #666;
 }
-.newClass .teacher select{
-    width:160px !important;
+
+.newClass .teacher select {
+    width: 160px !important;
 }
-.newClass .teacher i{
+
+.newClass .teacher i {
     width: 16px;
     height: 16px;
     border-radius: 50%;
@@ -444,78 +530,88 @@ button.choiceStu{
 }
 
 /* 课程编辑页面 */
-.courseEdit .enrollCon .moneyAll{
-    background:#eaf9ff;
-    border:1px solid #a9cffc;
+.courseEdit .enrollCon .moneyAll {
+    background: #eaf9ff;
+    border: 1px solid #a9cffc;
     text-align: center;
-    padding:8px;
-    margin-top:15px;
+    padding: 8px;
+    margin-top: 15px;
 }
-.courseEdit .enrollCon .table{
-    margin-top:-10px;
+
+.courseEdit .enrollCon .table {
+    margin-top: -10px;
 }
-.courseEdit .enrollCon{
+
+.courseEdit .enrollCon {
     overflow: inherit;
 }
-.courseEdit .enrollCon .table thead tr{
-    background:#e9ecf1;
+
+.courseEdit .enrollCon .table thead tr {
+    background: #e9ecf1;
 }
-.courseEdit .enrollCon .table thead tr th{
+
+.courseEdit .enrollCon .table thead tr th {
     text-align: center;
 }
-.courseEdit .enrollCon .table tbody tr td{
+
+.courseEdit .enrollCon .table tbody tr td {
     text-align: center;
 }
-.courseEdit .enrollCon .table .none{
+
+.courseEdit .enrollCon .table .none {
     position: relative;
     height: 200px;
     background: none;
 }
-.courseEdit .enrollCon .table .none td{
+
+.courseEdit .enrollCon .table .none td {
     border: 0 !important;
     background: none !important;
     position: absolute;
     top: 38%;
     margin-left: 42%;
 }
-.courseEdit .enrollCon .table .none td span{
+
+.courseEdit .enrollCon .table .none td span {
     display: block;
 }
 
-.courseEdit .form-group label{
+.courseEdit .form-group label {
     text-align: right;
-    margin-right:10px;
+    margin-right: 10px;
 }
 
-.courseEdit .form-group label span{
-    color:#da4558;
-    margin-right:4px;
+.courseEdit .form-group label span {
+    color: #da4558;
+    margin-right: 4px;
 }
-.courseEdit .form-group i{
+
+.courseEdit .form-group i {
     font-style: normal;
 }
 
 
 /* 报名信息 */
 
-.apply .alert-info{
-    background:none;
-    border:0;
-    border-top: 4px solid #5295e7;    
+.apply .alert-info {
+    background: none;
+    border: 0;
+    border-top: 4px solid #5295e7;
     padding-top: 20px;
 }
 
-.apply h2 a{
-    float:right;
-    margin-left:10px;
-    background:#5597e5;
-    color:#fff !important;
-    padding:5px 10px;
+.apply h2 a {
+    float: right;
+    margin-left: 10px;
+    background: #5597e5;
+    color: #fff !important;
+    padding: 5px 10px;
     border-radius: 4px;
-    font-size:14px;
+    font-size: 14px;
 }
-.select-selection{
-    
+
+.select-selection {
+
     height: 30px;
     position: relative;
     display: block;
@@ -533,9 +629,10 @@ button.choiceStu{
     -webkit-transition: all .2s ease-in-out;
     transition: all .2s ease-in-out;
 }
-.select-selection input{
+
+.select-selection input {
     display: inline-block;
-    width:180px;
+    width: 180px;
     height: 30px;
     line-height: 30px;
     padding: 0 24px 0 8px;
@@ -549,44 +646,49 @@ button.choiceStu{
     position: relative;
     cursor: pointer;
 }
-.select-dropdown{
-    width: 800px!important;
-    left: 360px!important;
+
+.select-dropdown {
+    width: 800px !important;
+    left: 360px !important;
     height: 200px;
-    overflow-y:auto;
-    box-shadow: 0 0 20px rgba(53,83,158,.3);
+    overflow-y: auto;
+    box-shadow: 0 0 20px rgba(53, 83, 158, .3);
     overflow: auto;
     margin: 5px 0;
     padding: 10px 0;
     background-color: #fff;
     box-sizing: border-box;
     border-radius: 4px;
-    -webkit-box-shadow: 0 1px 6px rgba(0,0,0,.2);
-    position: absolute!important;
+    -webkit-box-shadow: 0 1px 6px rgba(0, 0, 0, .2);
+    position: absolute !important;
     z-index: 900;
     display: none;
 }
-.select-item-disabled{
+
+.select-item-disabled {
     color: #ccc !important;
     cursor: not-allowed !important;
 }
-.select-item{
+
+.select-item {
     margin: 0;
     line-height: normal;
     padding: 7px 16px;
     clear: both;
     color: #30404f;
-    font-size: 14px!important;
+    font-size: 14px !important;
     white-space: nowrap;
     list-style: none;
     cursor: pointer;
     transition: background .2s ease-in-out;
     border: 0 !important;
 }
-.select-dropdown-list{
-    margin:0;
+
+.select-dropdown-list {
+    margin: 0;
 }
-.select-item .row{
+
+.select-item .row {
     position: relative;
     margin-left: 0;
     margin-right: 0;
@@ -594,11 +696,12 @@ button.choiceStu{
     zoom: 1;
     display: block;
 }
-.select-item .row div{
-    float:left;
+
+.select-item .row div {
+    float: left;
 }
 
-.btn-ghost{
+.btn-ghost {
     width: 100px;
     margin-right: 10px;
     background: #fff;
@@ -607,39 +710,45 @@ button.choiceStu{
     line-height: 30px;
     color: #555;
 }
-.income input,.income select{
-    width:150px;
-    height:30px;
-    border:1px solid #ccc;
+
+.income input,
+.income select {
+    width: 150px;
+    height: 30px;
+    border: 1px solid #ccc;
 }
-.income label{
+
+.income label {
     font-weight: normal;
 }
-.normal-ul{
+
+.normal-ul {
     padding: 20px 12px;
     border-radius: 4px;
     background: #f3f8fd;
     display: table;
     width: 100%;
 }
-.normal-ul li{
+
+.normal-ul li {
     display: table-cell;
     width: 50%;
     padding: 0 12px;
 }
-.normal-input-inner{
+
+.normal-input-inner {
     position: relative;
     display: inline-block;
     text-align: left;
 }
-.input-wrapper{
+
+.input-wrapper {
     display: inline-block;
     width: 100%;
     position: relative;
     vertical-align: middle;
 }
-.input-wrapper input{
-    width:100%;
+
+.input-wrapper input {
+    width: 100%;
 }
-
-

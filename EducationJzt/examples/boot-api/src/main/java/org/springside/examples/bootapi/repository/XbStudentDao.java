@@ -14,4 +14,5 @@ import org.springside.examples.bootapi.domain.XbStudent;
  */
 public interface XbStudentDao extends PagingAndSortingRepository<XbStudent, String>,JpaSpecificationExecutor<XbStudent> {
     XbStudent findAllById(String id);
+    XbStudent findAllByStudentNameAndContactPhone(String name,String contactPhone);
 }

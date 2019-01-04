@@ -66,7 +66,47 @@ public class StudentActivity {
 		return "enroll";
 	}
 
+    @RequestMapping("/checkClassRoom")
+    public void checkClassRoom(@RequestParam(required = false) String name,HttpServletResponse resp) {
+        Map<String, Object> map  =  new HashMap<>();
+        try {
+            String code = "1000";
+            XbClassroom xbClassroom = studentService.checkClassroomName(name);
+            if(null!=xbClassroom){
+                code = "1001";
+            }
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("status","1");
+			jsonObject.put("code",code);
+			logger.info("编辑机构返回json参数="+jsonObject.toString());
+			resp.setContentType("text/html;charset=UTF-8");
+			resp.getWriter().println(jsonObject.toJSONString());
+			resp.getWriter().close();
+		} catch (IOException e) {
+			logger.info(e.toString());
+        }
+    }
 
+    @RequestMapping("/checkStudentName")
+    public void checkStudentName(@RequestParam(required = false) String name,@RequestParam(required = false) String phone,HttpServletResponse resp) {
+        Map<String, Object> map  =  new HashMap<>();
+        try {
+            String code = "1000";
+			XbStudent xbStudent = studentService.checkStudentName(name,phone);
+            if(null!=xbStudent){
+                code = "1001";
+            }
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("status","1");
+			jsonObject.put("code",code);
+			logger.info("编辑机构返回json参数="+jsonObject.toString());
+			resp.setContentType("text/html;charset=UTF-8");
+			resp.getWriter().println(jsonObject.toJSONString());
+			resp.getWriter().close();
+		} catch (IOException e) {
+			logger.info(e.toString());
+        }
+    }
 
 	@PostMapping("/save/classroom")
 	public void saveclassroom(@RequestBody XbClassroom classroom, HttpServletResponse resp) {

@@ -18,13 +18,10 @@
 
     <script src="../static/pages/js/jquery.min.js"></script>
     <script src="../static/pages/js/bootstrap.min.js"> </script>
-    <script src="../static/pages/js/ace-elements.min.js"></script>
-    <script src="../static/pages/js/ace.min.js"> </script>
     <script src="http://code.jquery.com/jquery-latest.js"></script>
-    <script src="http://static.runoob.com/assets/jquery-validation-1.14.0/lib/jquery.js"></script>
-    <script src="http://static.runoob.com/assets/jquery-validation-1.14.0/dist/jquery.validate.min.js"></script>
-    <script src="http://static.runoob.com/assets/jquery-validation-1.14.0/dist/localization/messages_zh.js"></script>
-
+    <script src="../static/pages/js/jquery.validate17.min.js"></script>
+    <script src="../static/pages/js/additiona17l-methods.min.js"></script>
+    <script src="../static/pages/js/messages_zh.min.js"></script>
 </head>
 <body>
 <div th:replace="layout::top"></div>
@@ -161,28 +158,28 @@
                                 <input type="radio" checked class="ace"><span class="lbl">校区</span>
                             </div>
                             <div class="form-group">
-                                <label><i>*</i>名称</label>
+                                <label for="organName"><i>*</i>名称</label>
                                 <input type="text" id="organName" name="organName">
                             </div>
                             <div class="form-group">
-                                <label><i>*</i>电话1</label>
+                                <label for="phone1"><i>*</i>电话1</label>
                                 <input type="text" id="phone1" name="phone1">
                             </div>
                             <div class="form-group">
-                                <label><i>*</i>电话2</label>
+                                <label for="phone2"><i>*</i>电话2</label>
                                 <input type="text" id="phone2" name="phone2" value="">
                             </div>
                             <div class="form-group">
-                                <label><i>*</i>地址</label>
+                                <label for="adds"><i>*</i>地址</label>
                                 <textarea name="adds" id="adds" cols="50" rows="1"></textarea>
                             </div>
                             <div class="grounInline">
                                 <div class="form-group">
-                                    <label><i>*</i>校区排序</label>
+                                    <label for="layOrder"><i>*</i>校区排序</label>
                                     <input type="text" id="layOrder" name="layOrder">
                                 </div>
                                 <div class="form-group">
-                                    <label><i>*</i>校区类型</label>
+                                    <label for="campusType"><i>*</i>校区类型</label>
                                     <select name="campusType" id="campusType">
                                         <option value="0">直营</option>
                                         <option value="1">合作</option>
@@ -224,6 +221,7 @@ $(function(){
             organName : {
                 required:true,
                 minlength:2,
+                checkName:true,
                 maxlength:10
             },
             phone1 : {
@@ -260,8 +258,37 @@ $(function(){
                     minlength: "地址最少由两个字符组成",
                     maxlength:"地址不能超过10个字符"
                 }
+            },
+            errorPlacement: function(error, element) {
+                if ( element.is(":radio") )
+                    error.appendTo( element.parent().next().next() );
+                else if ( element.is(":checkbox") )
+                    error.appendTo ( element.next() );
+                else
+                    error.appendTo( element.parent().next() );
             }
         }
+    });
+    jQuery.validator.addMethod('checkName', function (value, element) {
+        var msgcode=null;
+        $.ajax({
+            url: basePath + "/accounts/checkOrganName",
+            type: "get",
+            dataType: 'json',
+            async:false,
+            contentType:"application/json;charset=UTF-8",
+            data: {"name":value},
+            success: function(result){
+                msgcode= result.code;
+            }
+        })
+        if(msgcode==1001){
+            $(element).data('error-msg','该校区名称已存在！');
+            return false;
+        }
+        return true;
+    }, function(params, element) {
+        return $(element).data('error-msg');
     });
 });
 

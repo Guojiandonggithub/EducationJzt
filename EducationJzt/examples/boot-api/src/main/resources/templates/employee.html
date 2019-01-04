@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -25,169 +25,200 @@
     <script src="http://static.runoob.com/assets/jquery-validation-1.14.0/dist/localization/messages_zh.js"></script>
 
 </head>
+
 <body>
-<div th:replace="layout::top"></div>
-<form id="iform">
-<div class="main-container" id="main-container">
-    <div th:replace="layout::left('14','42')">
-    </div>
-        <div class="main-content">
-            <div class="breadcrumbs" id="breadcrumb">
-                <img src="../static/pages/img/line1.png">
-                <span>员工信息</span>
-                <img src="../static/pages/img/line.png">
+    <div th:replace="layout::top"></div>
+    <form id="iform">
+        <div class="main-container" id="main-container">
+            <div th:replace="layout::left('14','42')">
             </div>
+            <div class="main-content">
+                <div class="breadcrumbs" id="breadcrumb">
+                    <img src="../static/pages/img/line1.png">
+                    <span>员工信息</span>
+                    <img src="../static/pages/img/line.png">
+                </div>
                 <div class="enrollCon">
-                    <div class="uploadHead">
+                    <!-- <div class="uploadHead">
                         <div class="con4">
-                            <!--<canvas id="cvs" width="150" height="150" style="border:1px solid #ccc;"></canvas>
-                            <span class="btn upload">上传头像<input type="file" class="upload_pic" id="upload" /></span>-->
+                            <canvas id="cvs" width="150" height="150" style="border:1px solid #ccc;"></canvas>
+                            <span class="btn upload">上传头像<input type="file" class="upload_pic" id="upload" /></span>
                         </div>
-                    </div>
-                    <div class="stopClass newClass employee">
+                    </div> -->
+                    <div class="stopClass newClass employee" style="margin-top:0;">
                         <div class="form-group">
-                            <label ><span>*</span>姓名</label>
+                            <label><span>*</span>姓名</label>
                             <input type="text" name="employeeName" th:value="${employee.employeeName}" placeholder="">
                             <input type="hidden" name="id" th:value="${employee.id}">
                             <input type="hidden" name="employeeSubid" th:value="${employeeSub.id}">
                         </div>
                         <div class="form-group">
-                            <label ><span>*</span>手机号码</label>
+                            <label><span>*</span>手机号码</label>
                             <input type="text" name="mobilePhone" th:value="${employee.mobilePhone}" placeholder="">
                         </div>
                         <div class="form-group" style="display:block; margin-top:20px !important;">
                             <label><span>*</span>性别</label>
-                            <input th:attr ="checked=${employee.sex == 0?true:false}" name="form-field-radio" type="radio" name="sex" value="0" class="ace"><span class="lbl">男</span>
-                            <input th:attr ="checked=${employee.sex == 1?true:false}" name="form-field-radio" type="radio" name="sex" value="1" class="ace"><span class="lbl">女</span>
+                            <input th:attr="checked=${employee.sex == 0?true:false}" name="form-field-radio" type="radio"
+                                name="sex" value="0" class="ace"><span class="lbl">男</span>
+                            <input th:attr="checked=${employee.sex == 1?true:false}" name="form-field-radio" type="radio"
+                                name="sex" value="1" class="ace"><span class="lbl">女</span>
                         </div>
                         <div class="form-group" style="display:block; margin-top:20px !important;">
                             <label><span>*</span>是否为上课教师</label>
-                            <input th:attr ="checked=${employee.isAttendClass == 0?true:false}" name="form-field-radio" type="radio" name="isAttendClass" value="0" class="ace"><span class="lbl">是</span>
-                            <input th:attr ="checked=${employee.isAttendClass == 1?true:false}" name="form-field-radio" type="radio" name="isAttendClass" value="1" class="ace"><span class="lbl">否</span>
-                            <span>设置上课教师，便于设置班级和排课时选择教师。</span>
+                            <input th:attr="checked=${employee.isAttendClass == 0?true:false}" name="form-field-radio"
+                                type="radio" name="isAttendClass" value="0" class="ace"><span class="lbl">是</span>
+                            <input th:attr="checked=${employee.isAttendClass == 1?true:false}" name="form-field-radio"
+                                type="radio" name="isAttendClass" value="1" class="ace"><span class="lbl">否</span>
+                            <span style="color:#ccc;">设置上课教师，便于设置班级和排课时选择教师。</span>
                         </div>
                     </div>
                 </div>
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <a href="#faq-1-1" data-parent="#faq-list-1" data-toggle="collapse" class="accordion-toggle collapsed">
-                        <i class="ace-icon fa fa-chevron-left pull-right" data-icon-hide="ace-icon fa fa-chevron-down" data-icon-show="ace-icon fa fa-chevron-left"></i>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <a href="#faq-1-1" data-parent="#faq-list-1" data-toggle="collapse" class="accordion-toggle collapsed">
+                            <i class="ace-icon fa fa-chevron-left pull-right" data-icon-hide="ace-icon fa fa-chevron-down"
+                                data-icon-show="ace-icon fa fa-chevron-left"></i>
 
-                        <i class="ace-icon fa fa-user bigger-130"></i>
-                        &nbsp;填写更多人事信息
-                    </a>
-                </div>
-                <div class="panel-collapse collapse" id="faq-1-1">
-                    <div class="panel-body">
-                        <ul class="normal-ul" id="hrInfo" style="display: block;">
-                            <li>
-                                <label class="normal-label">身份证</label>
-                                <input type="text" name="subSfz" th:value="${employeeSub.subSfz}" class="normal-input" id="txtIdNumber"></li>
-                            <li>
-                                <label class="normal-label">生日</label>
-                                <input class="laydate-icon" th:if="${employeeSub.subZzrq!=null}" th:value="${#dates.format(employeeSub.subSr, 'yyyy-MM-dd')}" name="subSr" id="demo" style="width:356px; height:30px;">
-                                <input class="laydate-icon" th:if="${employeeSub.subZzrq==null}" th:value="${employeeSub.subSr}" name="subSr" id="demo" style="width:356px; height:30px;">
-                            </li>
-                            <li><label class="normal-label">英文名</label> <input type="text" th:value="${employeeSub.subYwm}" class="normal-input" name="subYwm" id="txtEName"></li>
-                            <li><label class="normal-label">邮箱</label> <input type="text" th:value="${employeeSub.subYoux}" class="normal-input" name="subYoux" id="txtEmail"></li>
-                            <li><label class="normal-label">籍贯</label> <input type="text" th:value="${employeeSub.subJg}" class="normal-input" name="subJg" id="txtOrigin">  </li>
-                            <li><label class="normal-label">民族</label><input type="text" th:value="${employeeSub.subMz}" class="normal-input" name="subMz" id="txtNationality" size="11" maxlength="5">   </li>
-                            <li>
-                                <label class="normal-label">政治</label>
-                                <select name="subZz" id="subZz" th:value="${employeeSub.subZz}" class="normal-input">
-                                    <option value="群众">群众</option>
-                                    <option value="团员">团员</option>
-                                    <option value="预备党员">预备党员</option>
-                                    <option value="党员">党员</option>
-                                </select>
-                            </li>
-                            <li>
-                                <label class="normal-label">婚姻</label>
-                                <select name="subHy" id="subHy" th:value="${employeeSub.subHy}" class="normal-input">
-                                    <option value="未婚">未婚</option>
-                                    <option value="已婚未育">已婚未育</option>
-                                    <option value="已婚已育">已婚已育</option>
-                                </select>
-                            </li>
-                            <li><label class="normal-label">院校</label> <input type="text" name="subYuanx" th:value="${employeeSub.subYuanx}" class="normal-input" id="txtAcademy">  </li>
-                            <li><label class="normal-label">专业</label> <input type="text" name="subZy" th:value="${employeeSub.subZy}" class="normal-input" id="txtMajor">  </li>
-                            <li><label class="normal-label">学历</label> <input type="text" name="subXl" th:value="${employeeSub.subXl}" class="normal-input" id="txtDegree">  </li>
-                            <li><label class="normal-label">培训经历</label> <input type="text" name="subPxjl" th:value="${employeeSub.subPxjl}" class="normal-input" id="txtTrainExp">  </li>
-                            <li><label class="normal-label">其他</label> <input type="text" name="subQt" th:value="${employeeSub.subQt}"class="normal-input Other-input" id="txtOtherInfo">  </li>
-                            <li><label class="normal-label">标记</label> <input type="text" name="subBj" th:value="${employeeSub.subBj}" class="normal-input" id="txtMarker">  </li>
-                            <li>
-                                <label class="normal-label">合同日期</label>
-                                <ul style="display: inline-block;">
-                                    <input class="inline laydate-icon" id="start" name="subHtrqks" th:if="${employeeSub.subZzrq!=null}" th:value="${#dates.format(employeeSub.subHtrqks, 'yyyy-MM-dd')}" style="width:150px; height:30px; margin-right:10px;"></input>
-                                    <input class="inline laydate-icon" id="start" name="subHtrqks" th:if="${employeeSub.subZzrq==null}" th:value="${employeeSub.subHtrqks}" style="width:150px; height:30px; margin-right:10px;"></input>
-                                    <input class="inline laydate-icon" id="end" name="subHtrqjs"   th:if="${employeeSub.subZzrq!=null}" th:value="${#dates.format(employeeSub.subHtrqjs, 'yyyy-MM-dd')}" style="width:150px; height:30px;"></input>
-                                    <input class="inline laydate-icon" id="end" name="subHtrqjs"   th:if="${employeeSub.subZzrq==null}" th:value="${employeeSub.subHtrqjs}" style="width:150px; height:30px;"></input>
-                                </ul>
-                            </li>
-                            <li>
-                                <label class="normal-label">劳动合同</label>
-                                <select name="subLdht" id="subLdht" th:value="1" class="normal-input">
-                                    <option value="0">未签</option>
-                                    <option value="1">已签</option>
-                                </select>
-                            </li>
-                            <li>
-                                <label class="normal-label">劳动关系</label>
-                                <select name="subLdgx" id="subLdgx" th:value="${employeeSub.subLdgx}" class="normal-input">
-                                    <option value="0">全职</option>
-                                    <option value="1">兼职</option>
-                                    <option value="2">合作</option>
-                                </select>
-                            </li>
-                            <li>
-                                <label class="normal-label">转正日期</label>
-                                <input class="laydate-icon" id="demo1" th:if="${employeeSub.subZzrq!=null}" th:value="${#dates.format(employeeSub.subZzrq, 'yyyy-MM-dd')}"  name="subZzrq" style="width:356px; height:30px;">
-                                <input class="laydate-icon" id="demo1" th:if="${employeeSub.subZzrq==null}" th:value="${employeeSub.subZzrq}"  name="subZzrq" style="width:356px; height:30px;">
-                            </li>
-                            <li><label class="normal-label">工资卡开户行</label>
-                                <input type="text" name="subGzkkhh" th:value="${employeeSub.subGzkkhh}" class="normal-input" placeholder="开户行" id="txtBankBranch">
-                            </li>
-                            <li><label class="normal-label">工资卡卡号</label>
-                                <input type="text" name="subGzkkh" th:value="${employeeSub.subGzkkh}" placeholder="卡号" class="normal-input" id="txtBankAccount">  </li>
-                            </li>
+                            <i class="ace-icon fa fa-user bigger-130"></i>
+                            &nbsp;填写更多人事信息
+                        </a>
+                    </div>
+                    <div class="panel-collapse collapse" id="faq-1-1" style="padding:22px;">
+                        <div class="panel-body" style="padding:0;">
+                            <ul class="normal-ul" id="hrInfo" style="display: block; background:none;">
+                                <li>
+                                    <label class="normal-label">身份证</label>
+                                    <input type="text" name="subSfz" th:value="${employeeSub.subSfz}" class="normal-input"
+                                        id="txtIdNumber"></li>
+                                <li>
+                                    <label class="normal-label">生日</label>
+                                    <input class="laydate-icon" th:if="${employeeSub.subZzrq!=null}" th:value="${#dates.format(employeeSub.subSr, 'yyyy-MM-dd')}"
+                                        name="subSr" id="demo" style="width:356px; height:30px;">
+                                     <input class="laydate-icon" th:if="${employeeSub.subZzrq==null}" th:value="${employeeSub.subSr}"
+                                        name="subSr" id="demo" style="width:356px; height:30px;">
+                                </li>
+                                <li><label class="normal-label">英文名</label> <input type="text" th:value="${employeeSub.subYwm}"
+                                        class="normal-input" name="subYwm" id="txtEName"></li>
+                                <li><label class="normal-label">邮箱</label> <input type="text" th:value="${employeeSub.subYoux}"
+                                        class="normal-input" name="subYoux" id="txtEmail"></li>
+                                <li><label class="normal-label">籍贯</label> <input type="text" th:value="${employeeSub.subJg}"
+                                        class="normal-input" name="subJg" id="txtOrigin"> </li>
+                                <li><label class="normal-label">民族</label><input type="text" th:value="${employeeSub.subMz}"
+                                        class="normal-input" name="subMz" id="txtNationality" size="11" maxlength="5">
+                                </li>
+                                <li>
+                                    <label class="normal-label">政治</label>
+                                    <select name="subZz" id="subZz" th:value="${employeeSub.subZz}" class="normal-input">
+                                        <option value="群众">群众</option>
+                                        <option value="团员">团员</option>
+                                        <option value="预备党员">预备党员</option>
+                                        <option value="党员">党员</option>
+                                    </select>
+                                </li>
+                                <li>
+                                    <label class="normal-label">婚姻</label>
+                                    <select name="subHy" id="subHy" th:value="${employeeSub.subHy}" class="normal-input">
+                                        <option value="未婚">未婚</option>
+                                        <option value="已婚未育">已婚未育</option>
+                                        <option value="已婚已育">已婚已育</option>
+                                    </select>
+                                </li>
+                                <li><label class="normal-label">院校</label> <input type="text" name="subYuanx" th:value="${employeeSub.subYuanx}"
+                                        class="normal-input" id="txtAcademy"> </li>
+                                <li><label class="normal-label">专业</label> <input type="text" name="subZy" th:value="${employeeSub.subZy}"
+                                        class="normal-input" id="txtMajor"> </li>
+                                <li><label class="normal-label">学历</label> <input type="text" name="subXl" th:value="${employeeSub.subXl}"
+                                        class="normal-input" id="txtDegree"> </li>
+                                <li><label class="normal-label">培训经历</label> <input type="text" name="subPxjl" th:value="${employeeSub.subPxjl}"
+                                        class="normal-input" id="txtTrainExp"> </li>
+                                <li><label class="normal-label">其他</label> <input type="text" name="subQt" th:value="${employeeSub.subQt}"
+                                        class="normal-input Other-input" id="txtOtherInfo"> </li>
+                                <li><label class="normal-label">标记</label> <input type="text" name="subBj" th:value="${employeeSub.subBj}"
+                                        class="normal-input" id="txtMarker"> </li>
+                                <li>
+                                    <label class="normal-label">合同日期</label>
+                                    <ul style="display: inline-block;">
+                                        <input class="inline laydate-icon" id="start" name="subHtrqks" th:if="${employeeSub.subZzrq!=null}"
+                                            th:value="${#dates.format(employeeSub.subHtrqks, 'yyyy-MM-dd')}" style="width:150px; height:30px; margin-right:10px;"></input>
+                                        <input class="inline laydate-icon" id="start" name="subHtrqks" th:if="${employeeSub.subZzrq==null}"
+                                            th:value="${employeeSub.subHtrqks}" style="width:150px; height:30px; margin-right:10px;"></input>
+                                        <input class="inline laydate-icon" id="end" name="subHtrqjs" th:if="${employeeSub.subZzrq!=null}"
+                                            th:value="${#dates.format(employeeSub.subHtrqjs, 'yyyy-MM-dd')}" style="width:150px; height:30px;"></input>
+                                        <input class="inline laydate-icon" id="end" name="subHtrqjs" th:if="${employeeSub.subZzrq==null}"
+                                            th:value="${employeeSub.subHtrqjs}" style="width:150px; height:30px;"></input>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <label class="normal-label">劳动合同</label>
+                                    <select name="subLdht" id="subLdht" th:value="1" class="normal-input">
+                                        <option value="0">未签</option>
+                                        <option value="1">已签</option>
+                                    </select>
+                                </li>
+                                <li>
+                                    <label class="normal-label">劳动关系</label>
+                                    <select name="subLdgx" id="subLdgx" th:value="${employeeSub.subLdgx}" class="normal-input">
+                                        <option value="0">全职</option>
+                                        <option value="1">兼职</option>
+                                        <option value="2">合作</option>
+                                    </select>
+                                </li>
+                                <li>
+                                    <label class="normal-label">转正日期</label>
+                                    <input class="laydate-icon" id="demo1" th:if="${employeeSub.subZzrq!=null}"
+                                        th:value="${#dates.format(employeeSub.subZzrq, 'yyyy-MM-dd')}" name="subZzrq"
+                                        style="width:356px; height:30px;">
+                                    <input class="laydate-icon" id="demo1" th:if="${employeeSub.subZzrq==null}"
+                                        th:value="${employeeSub.subZzrq}" name="subZzrq" style="width:356px; height:30px;">
+                                </li>
+                                <li><label class="normal-label">工资卡开户行</label>
+                                    <input type="text" name="subGzkkhh" th:value="${employeeSub.subGzkkhh}" class="normal-input"
+                                        placeholder="开户行" id="txtBankBranch">
+                                </li>
+                                <li><label class="normal-label">工资卡卡号</label>
+                                    <input type="text" name="subGzkkh" th:value="${employeeSub.subGzkkh}" placeholder="卡号"
+                                        class="normal-input" id="txtBankAccount"> </li>
+                                </li>
                                 <label class="normal-label">社保</label>
                                 <select name="subSb" id="subSb" th:value="${employeeSub.subSb}" class="normal-input">
                                     <option value="未办理">未办理</option>
                                     <option value="已办理">已办理</option>
                                 </select>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="breadcrumbs" id="breadcrumbs">
-                <img src="../static/pages/img/line1.png">
-                <span>机构账号</span>
-                <img src="../static/pages/img/line.png">
-            </div>
-            <div class="enrollCon">
-                <div class="none">
-                    <img src="../static/pages/img/fk.png">
-                    <p>该员工还没有登录系统的账号</p>
-                    <button class="create" type="button">创建账号</button>
-                </div>
-                <div class="agency-account" style="display:none;">
-                    <div class="form-group">
-                        <label><span>*</span>登录系统</label>
-                        <input th:attr ="checked=${employee.isAllow == 1?true:false}"  type="radio" name="isAllow" value="1" class="ace"><span class="lbl">允许</span>
-                        <input th:attr ="checked=${employee.isAllow == 0?true:false}"  type="radio" name="isAllow" value="0" class="ace"><span class="lbl">禁止</span>
-                    </div>
-                    <div>
-                        <div class="form-group">
-                            <label><span>*</span>登录名</label>
-                            <input type="text" th:value="${employee.userName}" name="userName">
-                        </div>
-                        <div class="form-group">
-                            <label><span>*</span>密码</label>
-                            <input type="password" th:value="${employee.password}" name="password">
+                                </li>
+                            </ul>
                         </div>
                     </div>
-                    <!--<div class="">
+                </div>
+                <div class="breadcrumbs" id="breadcrumbs">
+                    <img src="../static/pages/img/line1.png">
+                    <span>机构账号</span>
+                    <img src="../static/pages/img/line.png">
+                </div>
+                <div class="enrollCon">
+                    <div class="none">
+                        <img src="../static/pages/img/fk.png">
+                        <p>该员工还没有登录系统的账号</p>
+                        <button class="create" type="button">创建账号</button>
+                    </div>
+                    <div class="agency-account" style="display:none;">
+                        <div class="form-group">
+                            <label><span>*</span>登录系统</label>
+                            <input  type="radio" checked name="isAllow"
+                                value="1" class="ace"><span class="lbl">允许</span>
+                            <input th:attr="checked=${employee.isAllow == 0?true:false}" type="radio" name="isAllow"
+                                value="0" class="ace"><span class="lbl">禁止</span>
+                        </div>
+                        <div>
+                            <div class="form-group">
+                                <label><span>*</span>登录名</label>
+                                <input type="text" th:value="${employee.userName}" name="userName">
+                            </div>
+                            <div class="form-group">
+                                <label><span>*</span>密码</label>
+                                <input type="password" th:value="${employee.password}" name="password">
+                            </div>
+                        </div>
+                        <!--<div class="">
                         <label><span>*</span>登录日期</label>
                         <p><input type="checkbox">周一</p>
                         <p><input type="checkbox">周二</p>
@@ -197,223 +228,244 @@
                         <p><input type="checkbox">周六</p>
                         <p><input type="checkbox">周日</p>
                     </div>  -->
-                    <div class="">
-                        <label><span>*</span>管辖校区</label>
-                        <!--<p><input type="checkbox" name="organId" value="all">全部校区</p>-->
-                        <p th:each="orgs:${organsList}"><input type="radio" th:attr ="checked=${employee.organId == orgs.id?true:false}" name="organId" th:value="${orgs.id}" th:text="${orgs.organName}"/></p>
+                        <div class="">
+                            <label><span>*</span>管辖校区</label>
+                            <!--<p><input type="checkbox" name="organId" value="all">全部校区</p>-->
+                            <p th:each="orgs:${organsList}"><input type="radio" th:attr="checked=${employee.organId == orgs.id?true:false}"
+                                    name="organId" th:value="${orgs.id}" th:text="${orgs.organName}" /></p>
+                        </div>
                     </div>
+                </div>
+
+
+                <div class="enrollCon" style="margin-top:30px;">
+                    <button class="save" type="button" onclick="saveEmployee()">保存</button>
                 </div>
             </div>
 
-
-            <div class="enrollCon" style="margin-top:30px;">
-                <button class="save" type="button" onclick="saveEmployee()">保存</button>
-            </div>
         </div>
+    </form>
+    <script>
+        ! function () {
+            laydate({
+                elem: '#demo'
+            }); //绑定元素
+        }();
 
-</div>
-</form>
-<script>
-!function(){
-laydate({elem:'#demo'});//绑定元素
-}();
+        ! function () {
+            laydate({
+                elem: '#demo1'
+            }); //绑定元素
+        }();
 
-!function(){
-laydate({elem:'#demo1'});//绑定元素
-}();
-
-$(".create").click(function(){
-    $(this).parent(".none").hide();
-    $(".agency-account").show(500)
-});
-//日期范围限制
-var start = {
-    elem: '#start',
-    format: 'YYYY-MM-DD',
-    min: laydate.now(), //设定最小日期为当前日期
-    max: '2099-06-16', //最大日期
-    istime: true,
-    istoday: false,
-    choose: function(datas){
-         end.min = datas; //开始日选好后，重置结束日的最小日期
-         end.start = datas //将结束日的初始值设定为开始日
-    }
-};
-var end = {
-    elem: '#end',
-    format: 'YYYY-MM-DD',
-    min: laydate.now(),
-    max: '2099-06-16',
-    istime: true,
-    istoday: false,
-    choose: function(datas){
-        start.max = datas; //结束日选好后，充值开始日的最大日期
-    }
-};
-laydate(start);
-laydate(end);
-
-
-//获取上传按钮
-var input1 = document.getElementById("upload");
-
-if(typeof FileReader==='undefined'){
-
-        input1.setAttribute('disabled','disabled');
-}else{
-        input1.addEventListener('change',readFile,false);
-
-}
-function readFile(){
-    var file = this.files[0];//获取上传文件列表中第一个文件
-    if(!/image\/\w+/.test(file.type)){
-    //图片文件的type值为image/png或image/jpg
-        alert("文件必须为图片！");
-        return false;
-    }
-    // console.log(file);
-    var reader = new FileReader();//实例一个文件对象
-    reader.readAsDataURL(file);//把上传的文件转换成url
-    //当文件读取成功便可以调取上传的接口
-    reader.onload = function(e){
-        var image = new Image();
-        // 设置src属性
-        image.src = e.target.result;
-        var max=200;
-        // 绑定load事件处理器，加载完成后执行，避免同步问题
-        image.onload = function(){
-            // 获取 canvas DOM 对象
-            var canvas = document.getElementById("cvs");
-            // 如果高度超标 宽度等比例缩放 *=
-            /*if(image.height > max) {
-                image.width *= max / image.height;
-                image.height = max;
-            } */
-            // 获取 canvas的 2d 环境对象,
-            var ctx = canvas.getContext("2d");
-            // canvas清屏
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            // 重置canvas宽高
-            /*canvas.width = image.width;
-            canvas.height = image.height;
-            if (canvas.width>max) {canvas.width = max;}*/
-            // 将图像绘制到canvas上
-            // ctx.drawImage(image, 0, 0, image.width, image.height);
-            ctx.drawImage(image, 0, 0, 200, 200);
-            // 注意，此时image没有加入到dom之中
+        $(".create").click(function () {
+            $(this).parent(".none").hide();
+            $(".agency-account").show(500)
+        });
+        //日期范围限制
+        var start = {
+            elem: '#start',
+            format: 'YYYY-MM-DD',
+            min: laydate.now(), //设定最小日期为当前日期
+            max: '2099-06-16', //最大日期
+            istime: true,
+            istoday: false,
+            choose: function (datas) {
+                end.min = datas; //开始日选好后，重置结束日的最小日期
+                end.start = datas //将结束日的初始值设定为开始日
+            }
         };
-    }
-};
-</script>
+        var end = {
+            elem: '#end',
+            format: 'YYYY-MM-DD',
+            min: laydate.now(),
+            max: '2099-06-16',
+            istime: true,
+            istoday: false,
+            choose: function (datas) {
+                start.max = datas; //结束日选好后，充值开始日的最大日期
+            }
+        };
+        laydate(start);
+        laydate(end);
 
-<script type="text/javascript" th:inline="javascript">
-    var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/;
 
-    function saveEmployee(){
-        if ($("#iform").valid()) {
-            var data= serializeObject("#iform");
-            $.ajax({
-                type: 'get',
-                dataType: 'json',
-                url: basePath + '/accounts/save/employee',
-                data: {employeeEntity:JSON.stringify(data)},
-                contentType:"application/json;charset=UTF-8",
-                cache: false,
-                async: true,
-                success: function (data) {
-                    var status = data.status;
-                    var msg = data.msg;
-                    alert("编辑成功！");
-                    window.location.href = basePath + '/accounts/getEmployeeList';
+        //获取上传按钮
+        var input1 = document.getElementById("upload");
+
+        if (typeof FileReader === 'undefined') {
+
+            input1.setAttribute('disabled', 'disabled');
+        } else {
+            ///input1.addEventListener('change', readFile, false);
+
+        }
+
+        function readFile() {
+            var file = this.files[0]; //获取上传文件列表中第一个文件
+            if (!/image\/\w+/.test(file.type)) {
+                //图片文件的type值为image/png或image/jpg
+                alert("文件必须为图片！");
+                return false;
+            }
+            // console.log(file);
+            var reader = new FileReader(); //实例一个文件对象
+            reader.readAsDataURL(file); //把上传的文件转换成url
+            //当文件读取成功便可以调取上传的接口
+            reader.onload = function (e) {
+                var image = new Image();
+                // 设置src属性
+                image.src = e.target.result;
+                var max = 200;
+                // 绑定load事件处理器，加载完成后执行，避免同步问题
+                image.onload = function () {
+                    // 获取 canvas DOM 对象
+                    var canvas = document.getElementById("cvs");
+                    // 如果高度超标 宽度等比例缩放 *=
+                    /*if(image.height > max) {
+                        image.width *= max / image.height;
+                        image.height = max;
+                    } */
+                    // 获取 canvas的 2d 环境对象,
+                    var ctx = canvas.getContext("2d");
+                    // canvas清屏
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    // 重置canvas宽高
+                    /*canvas.width = image.width;
+                    canvas.height = image.height;
+                    if (canvas.width>max) {canvas.width = max;}*/
+                    // 将图像绘制到canvas上
+                    // ctx.drawImage(image, 0, 0, image.width, image.height);
+                    ctx.drawImage(image, 0, 0, 200, 200);
+                    // 注意，此时image没有加入到dom之中
+                };
+            }
+        };
+    </script>
+
+    <script type="text/javascript" th:inline="javascript">
+        var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/ ;
+
+        function saveEmployee() {
+            if ($("#iform").valid()) {
+                var data = serializeObject("#iform");
+                $.ajax({
+                    type: 'get',
+                    dataType: 'json',
+                    url: basePath + '/accounts/save/employee',
+                    data: {
+                        employeeEntity: JSON.stringify(data)
+                    },
+                    contentType: "application/json;charset=UTF-8",
+                    cache: false,
+                    async: true,
+                    success: function (data) {
+                        var status = data.status;
+                        var msg = data.msg;
+                        alert("编辑成功！");
+                        window.location.href = basePath + '/accounts/getEmployeeList';
+                    }
+                });
+            }else{
+                var len=$("input[name='organId']:checked").length;
+                if(len==0){
+                    alert("请填写机构账号！");
+                }
+            }
+        }
+
+
+        function getOrgansListPage(page) {
+            var size = $('#size option:selected').val(); //选中的值
+            if (page) {
+                page = page - 1;
+            }
+            window.location.href = basePath + '/accounts/getOrgansList?page=' + page + '&size=' + size;
+        }
+
+        function serializeObject(form) {
+            var o = {};
+            var a = $(form).serializeArray();
+            $.each(a, function () {
+                if (o[this.name]) {
+                    if (!o[this.name].push) {
+                        o[this.name] = [o[this.name]];
+                    }
+                    o[this.name].push(this.value || '');
+                } else {
+                    o[this.name] = this.value || '';
                 }
             });
-        }
-    }
+            return o;
+        };
 
 
-    function getOrgansListPage(page){
-        var size = $('#size option:selected').val();//选中的值
-        if(page){
-            page = page -1;
-        }
-        window.location.href = basePath + '/accounts/getOrgansList?page='+page+'&size='+size;
-    }
-
-    function serializeObject(form)
-    {
-        var o = {};
-        var a = $(form).serializeArray();
-        $.each(a, function() {
-            if (o[this.name]) {
-                if (!o[this.name].push) {
-                    o[this.name] = [o[this.name]];
+        $(function () {
+            $("#iform").validate({
+                rules: {
+                    userName: {
+                        required: true,
+                        minlength: 2,
+                        maxlength: 12
+                    },
+                    password: {
+                        required: true,
+                        minlength: 2,
+                        maxlength: 12
+                    },
+                    employeeName: {
+                        required: true,
+                        minlength: 2,
+                        maxlength: 5
+                    },
+                    mobilePhone: {
+                        required: true,
+                        minlength: 2,
+                        maxlength: 12
+                    },
+                    sex: {
+                        required: true
+                    },
+                    organId: {
+                        required: true
+                    },
+                    isAttendClass: {
+                        required: true
+                    },
+                    messages: {
+                        mobilePhone: "手机号码不能为空",
+                        isAttendClass: "请选择是否教室",
+                        organId: "请选择校区",
+                        sex: "请选择性别",
+                        employeeName: {
+                            required: "名称不能为空",
+                            minlength: "用户名最少由2字符组成",
+                            maxlength: "用户名不能超过5个字符"
+                        },
+                        userName: {
+                            required: "登录名不能为空",
+                            minlength: "登录名最少由2字符组成",
+                            maxlength: "登录名不能超过12个字符"
+                        },
+                        password: {
+                            required: "请输入密码",
+                            minlength: "密码最少由两个字符组成",
+                            maxlength: "密码不能超过10个字符"
+                        }
+                    },
+                    errorPlacement: function(error, element) {
+                        if ( element.is(":radio") )
+                            error.appendTo( element.parent().next().next() );
+                        else if ( element.is(":checkbox") )
+                            error.appendTo ( element.next() );
+                        else
+                            error.appendTo( element.parent().next() );
+                    }
                 }
-                o[this.name].push(this.value || '');
-            } else {
-                o[this.name] = this.value || '';
-            }
-        });
-        return o;
-    };
-
-
-$(function(){
-    $("#iform").validate({
-        rules : {
-            userName : {
-                required:true,
-                minlength:2,
-                maxlength:12
-            },
-            password : {
-                required:true,
-                minlength:2,
-                maxlength:12
-            },
-            employeeName : {
-                required:true,
-                minlength:2,
-                maxlength:5
-            },
-            mobilePhone : {
-                required:true,
-                minlength:2,
-                maxlength:12
-            },
-            sex : {
-                required:true
-            },
-            organId : {
-                required:true
-            },
-            isAttendClass : {
-                required:true
-            },
-            messages: {
-                mobilePhone: "手机号码不能为空",
-                isAttendClass: "请选择是否教室",
-                organId: "请选择校区",
-                sex: "请选择性别",
-                employeeName: {
-                    required: "名称不能为空",
-                    minlength: "用户名最少由2字符组成",
-                    maxlength:"用户名不能超过5个字符"
-                },
-                userName: {
-                    required: "登录名不能为空",
-                    minlength: "登录名最少由2字符组成",
-                    maxlength:"登录名不能超过12个字符"
-                },
-                password: {
-                    required: "请输入密码",
-                    minlength: "密码最少由两个字符组成",
-                    maxlength:"密码不能超过10个字符"
-                }
-            }
-        }
-    });
-})
-</script>
+            });
+        })
+    </script>
 
 </body>
+
 </html>

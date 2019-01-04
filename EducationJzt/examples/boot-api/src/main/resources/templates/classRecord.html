@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
-    
+
     <link rel="stylesheet" href="../static/pages/css/ace.min.css" id="main-ace-style" />
     <link rel="stylesheet" href="../static/pages/css/index.css">
     <link rel="stylesheet" href="../static/pages/css/management.css">
@@ -19,282 +20,285 @@
     <script src="../static/pages/js/ace-elements.min.js"></script>
     <script src="../static/pages/laydate/laydate.js"></script>
 
-    
+
 
 </head>
+
 <body>
-<div id="navbar" class="eduNav">
-    <div class="navbar-header pull-left">
-        <a href="index.html" class="navbar-brand">
-            <small>
-                <img src="../static/pages/img/logo.png" alt="">
-            </small>
-        </a>
-    </div>
-    <div class="pull-right eduName">
-        <!--<span>万某 [管理员]</span>
+    <div id="navbar" class="eduNav">
+        <div class="navbar-header pull-left">
+            <a href="index.html" class="navbar-brand">
+                <small>
+                    <img src="../static/pages/img/logo.png" alt="">
+                </small>
+            </a>
+        </div>
+        <div class="pull-right eduName">
+            <!--<span>万某 [管理员]</span>
         <span>机构中心</span>
         <span>退出</span>  -->
-    </div>
-</div>  
-<div class="main-container" id="main-container">
-    <div id="sidebar" class="sidebar responsive">
-        <ul class="nav nav-list" style="top: 0px;">
-            <li class="">
-                <a href="/forward/index"><span class="menu-text"> 工作台 </span></a>
-                <b class="arrow"></b>
-            </li>
-            <li class="">
-                <a href="/student/getManagementList"><span class="menu-text"> 办理中心 </span></a>
-                <b class="arrow"></b>
-            </li>
-            <li class="">
-                <a href="#" class="dropdown-toggle">
-                    <span class="menu-text">教务中心</span>
-                    <b class="arrow fa fa-angle-down"></b>
-                </a>
-                <b class="arrow"></b>
-                <ul class="submenu">
-                    <li class="">
-                        <a href="/student/getXbStudentList"><i class="menu-icon fa fa-caret-right"></i>学员</a>
-                        <b class="arrow"></b>
-                    </li>
-                    <li class="">
-                        <a href="/student/getXbClassroomList"><i class="menu-icon fa fa-caret-right"></i>班级</a>
-                        <b class="arrow"></b>
-                    </li>
-                    <li class="">
-                        <a href="/student/getOneToOneList">
-                            <i class="menu-icon fa fa-caret-right"></i>一对一</a>
-                        <b class="arrow"></b>
-                    </li>
-                    <li class="">
-                        <a href="/jw_center_arranging_course/to_arranging_course"><i class="menu-icon fa fa-caret-right"></i>排课</a>
-                        <b class="arrow"></b>
-                    </li>
-                    <li class="">
-                        <a href="/forward/lessonTable"><i class="menu-icon fa fa-caret-right"></i>课程表</a>
-                        <b class="arrow"></b>
-                    </li>
-                    <li class="">
-                        <a href="/forward/attendClass"><i class="menu-icon fa fa-caret-right"></i>记上课</a>
-                        <b class="arrow"></b>
-                    </li>
-                    <li class="">
-                        <a href="/jwcentercourse/tocourse"><i class="menu-icon fa fa-caret-right"></i>课程</a>
-                        <b class="arrow"></b>
-                    </li>
-                </ul>
-            </li>
-            <li class="active open">
-                <a href="#" class="dropdown-toggle">
-                    <span class="menu-text"> 内部管理 </span>
-                    <b class="arrow fa fa-angle-down"></b>
-                </a>
-                <b class="arrow"></b>
-                <ul class="submenu">
-                    <li class="">
-                        <a href="/accounts/getOrgansList"><i class="menu-icon fa fa-caret-right"></i>组织架构</a>
-                        <b class="arrow"></b>
-                    </li>
-                    <li class="active">
-                        <a href="/accounts/getEmployeeList"><i class="menu-icon fa fa-caret-right"></i>员工信息</a>
-                        <b class="arrow"></b>
-                    </li>
-                </ul>
-            </li>
-        </ul>
-    </div>
-    <div class="main-content recordCon">
-        <div class="breadcrumbs" id="breadcrumbs">
-            <img src="../static/pages/img/line1.png">
-            <span>上课记录</span>
-            <img src="../static/pages/img/line.png">
-        </div> 
-        <div class="screen">
-            <div class="record">
-                <p><img src="../static/pages/img/ban.png">科源分校</p>
-                <p><img src="../static/pages/img/ke.png">珠心算1</p>
-                <p><img src="../static/pages/img/ban1.png">张三珠心算1（1对1）</p>
-            </div>
-            <div class="groupList">
-                <div class="kq">
-                    <a href="classEdit.html" target="_blank">记上课</a>
-                    <button>考勤记录</button>
-                    <button>导出记录</button>
-                </div>
-                <div class="shdate">
-                    <select name="" id="">
-                        <option value="">上课日期</option>
-                        <option value="">11</option>
-                        <option value="">222</option>
-                    </select>
-                    <li class="inline laydate-icon" id="start" style="margin-right:10px;"></li>
-                    <li class="inline laydate-icon" id="end"></li>
-                    <button class="btn btn-primary">
-                        <i class="glyphicon glyphicon-search"></i>
-                        查询
-                    </button>
-                </div>
-            </div>
         </div>
-        <div class="orderCon">
-            <div class="export">
-                
-            </div> 
-            <div class="result">
-                当前结果：学员课时总计<span>0</span>课时
-            </div>
-            <div class="orderTable">
-                <table class="table table-hover">
-                    <tr>
-                        <th>上课日期
-                            <div class="sort">
-                                <span class="glyphicon glyphicon-triangle-top"></span>
-                                <span class="glyphicon glyphicon-triangle-bottom"></span>
-                            </div>
-                        </th>
-                        <th>教师</th>
-                        <th>助教</th>
-                        <th>科目</th>
-                        <th>上课</th>
-                        <th>请假</th>
-                        <th>旷课</th>
-                        <th>补课</th>
-                        <th>学员课时</th>
-                        <th>上课内容</th>
-                        <th>创建日期
-                            <div class="sort">
-                                <span class="glyphicon glyphicon-triangle-top"></span>
-                                <span class="glyphicon glyphicon-triangle-bottom"></span>
-                            </div>
-                        </th>
-                        <th>操作</th>
-                    </tr>
-                    <tr>
-                        <td>2018-10-11</td>
-                        <td>张三</td>
-                        <td>张三</td>
-                        <td>识字1</td>
-                        <td>11</td>
-                        <td>111</td>
-                        <td>11</td>
-                        <td>11</td>
-                        <td>11</td>
-                        <td>11</td>
-                        <td>2017-11-11</td>
-                        <td>
-                            <a href="classEdit.html" target="_blank">修改</a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>2018-10-11</td>
-                        <td>张三</td>
-                        <td>张三</td>
-                        <td>识字1</td>
-                        <td>11</td>
-                        <td>111</td>
-                        <td>11</td>
-                        <td>11</td>
-                        <td>11</td>
-                        <td>11</td>
-                        <td>2017-11-11</td>
-                        <td>
-                            <a href="classEdit.html" target="_blank">修改</a>
-                        </td>
-                    </tr>
-                </table>
-                <div class="orderPage">
-                    <div class="page">
-                        单页显示：
-                        <select>
-                            <option>20条/页</option>
-                            <option>50条/页</option>
-                            <option>100条/页</option>
-                        </select>
-                    </div>
-                    <ul class="pagination">
-                        <li class="disabled">
-                            <a href="#">首页</a>
-                        </li>
-                        <li class="disabled">
-                            <a href="#">
-                                <i class="ace-icon fa fa-angle-double-left"></i>
-                            </a>
-                        </li>  
-                        <li class="active">
-                            <a href="#">1</a>
-                        </li>
-
-                        <li>
-                            <a href="#">2</a>
-                        </li>
-
-                        <li>
-                            <a href="#">3</a>
-                        </li>
-
-                        <li>
-                            <a href="#">4</a>
-                        </li>
-
-                        <li>
-                            <a href="#">5</a>
-                        </li>
-
-                        <li>
-                            <a href="#">
-                                <i class="ace-icon fa fa-angle-double-right"></i>
-                            </a>
+    </div>
+    <div class="main-container" id="main-container">
+        <div id="sidebar" class="sidebar responsive">
+            <ul class="nav nav-list" style="top: 0px;">
+                <li class="">
+                    <a href="/forward/index"><span class="menu-text"> 工作台 </span></a>
+                    <b class="arrow"></b>
+                </li>
+                <li class="">
+                    <a href="/student/getManagementList"><span class="menu-text"> 办理中心 </span></a>
+                    <b class="arrow"></b>
+                </li>
+                <li class="">
+                    <a href="#" class="dropdown-toggle">
+                        <span class="menu-text">教务中心</span>
+                        <b class="arrow fa fa-angle-down"></b>
+                    </a>
+                    <b class="arrow"></b>
+                    <ul class="submenu">
+                        <li class="">
+                            <a href="/student/getXbStudentList"><i class="menu-icon fa fa-caret-right"></i>学员</a>
+                            <b class="arrow"></b>
                         </li>
                         <li class="">
-                            <a href="#">尾页</a>
+                            <a href="/student/getXbClassroomList"><i class="menu-icon fa fa-caret-right"></i>班级</a>
+                            <b class="arrow"></b>
+                        </li>
+                        <li class="">
+                            <a href="/student/getOneToOneList">
+                                <i class="menu-icon fa fa-caret-right"></i>一对一</a>
+                            <b class="arrow"></b>
+                        </li>
+                        <li class="">
+                            <a href="/jw_center_arranging_course/to_arranging_course"><i class="menu-icon fa fa-caret-right"></i>排课</a>
+                            <b class="arrow"></b>
+                        </li>
+                        <li class="">
+                            <a href="/forward/lessonTable"><i class="menu-icon fa fa-caret-right"></i>课程表</a>
+                            <b class="arrow"></b>
+                        </li>
+                        <li class="">
+                            <a href="/forward/attendClass"><i class="menu-icon fa fa-caret-right"></i>记上课</a>
+                            <b class="arrow"></b>
+                        </li>
+                        <li class="">
+                            <a href="/jwcentercourse/tocourse"><i class="menu-icon fa fa-caret-right"></i>课程</a>
+                            <b class="arrow"></b>
                         </li>
                     </ul>
+                </li>
+                <li class="active open">
+                    <a href="#" class="dropdown-toggle">
+                        <span class="menu-text"> 内部管理 </span>
+                        <b class="arrow fa fa-angle-down"></b>
+                    </a>
+                    <b class="arrow"></b>
+                    <ul class="submenu">
+                        <li class="">
+                            <a href="/accounts/getOrgansList"><i class="menu-icon fa fa-caret-right"></i>组织架构</a>
+                            <b class="arrow"></b>
+                        </li>
+                        <li class="active">
+                            <a href="/accounts/getEmployeeList"><i class="menu-icon fa fa-caret-right"></i>员工信息</a>
+                            <b class="arrow"></b>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <div class="main-content recordCon">
+            <div class="breadcrumbs" id="breadcrumbs">
+                <img src="../static/pages/img/line1.png">
+                <span>上课记录</span>
+                <img src="../static/pages/img/line.png">
+            </div>
+            <div class="screen">
+                <div class="record">
+                    <p><img src="../static/pages/img/ban.png">科源分校</p>
+                    <p><img src="../static/pages/img/ke.png">珠心算1</p>
+                    <p><img src="../static/pages/img/ban1.png">张三珠心算1（1对1）</p>
+                </div>
+                <div class="groupList">
+                    <div class="kq">
+                        <a href="classEdit.html" target="_blank">记上课</a>
+                        <button>考勤记录</button>
+                        <button>导出记录</button>
+                    </div>
+                    <div class="shdate">
+                        <select name="" id="" style="margin-right:15px;">
+                            <option value="">上课日期</option>
+                            <option value="">11</option>
+                            <option value="">222</option>
+                        </select>
+                        <li class="inline laydate-icon" id="start" style="margin-right:15px;"></li>
+                        <li class="inline laydate-icon" id="end" style="margin-right:15px;"></li>
+                        <button class="btn btn-primary">
+                            <i class="glyphicon glyphicon-search"></i>
+                            查询
+                        </button>
+                    </div>
                 </div>
             </div>
-            
+            <div class="orderCon">
+                <div class="export">
+
+                </div>
+                <div class="result">
+                    当前结果：学员课时总计<span>0</span>课时
+                </div>
+                <div class="orderTable">
+                    <table class="table table-hover">
+                        <tr>
+                            <th>上课日期
+                                <div class="sort">
+                                    <span class="glyphicon glyphicon-triangle-top"></span>
+                                    <span class="glyphicon glyphicon-triangle-bottom"></span>
+                                </div>
+                            </th>
+                            <th>教师</th>
+                            <th>助教</th>
+                            <th>科目</th>
+                            <th>上课</th>
+                            <th>请假</th>
+                            <th>旷课</th>
+                            <th>补课</th>
+                            <th>学员课时</th>
+                            <th>上课内容</th>
+                            <th>创建日期
+                                <div class="sort">
+                                    <span class="glyphicon glyphicon-triangle-top"></span>
+                                    <span class="glyphicon glyphicon-triangle-bottom"></span>
+                                </div>
+                            </th>
+                            <th>操作</th>
+                        </tr>
+                        <tr>
+                            <td>2018-10-11</td>
+                            <td>张三</td>
+                            <td>张三</td>
+                            <td>识字1</td>
+                            <td>11</td>
+                            <td>111</td>
+                            <td>11</td>
+                            <td>11</td>
+                            <td>11</td>
+                            <td>11</td>
+                            <td>2017-11-11</td>
+                            <td>
+                                <a href="classEdit.html" target="_blank">修改</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>2018-10-11</td>
+                            <td>张三</td>
+                            <td>张三</td>
+                            <td>识字1</td>
+                            <td>11</td>
+                            <td>111</td>
+                            <td>11</td>
+                            <td>11</td>
+                            <td>11</td>
+                            <td>11</td>
+                            <td>2017-11-11</td>
+                            <td>
+                                <a href="classEdit.html" target="_blank">修改</a>
+                            </td>
+                        </tr>
+                    </table>
+                    <div class="orderPage">
+                        <div class="page">
+                            单页显示：
+                            <select>
+                                <option>20条/页</option>
+                                <option>50条/页</option>
+                                <option>100条/页</option>
+                            </select>
+                        </div>
+                        <ul class="pagination">
+                            <li class="disabled">
+                                <a href="#">首页</a>
+                            </li>
+                            <li class="disabled">
+                                <a href="#">
+                                    <i class="ace-icon fa fa-angle-double-left"></i>
+                                </a>
+                            </li>
+                            <li class="active">
+                                <a href="#">1</a>
+                            </li>
+
+                            <li>
+                                <a href="#">2</a>
+                            </li>
+
+                            <li>
+                                <a href="#">3</a>
+                            </li>
+
+                            <li>
+                                <a href="#">4</a>
+                            </li>
+
+                            <li>
+                                <a href="#">5</a>
+                            </li>
+
+                            <li>
+                                <a href="#">
+                                    <i class="ace-icon fa fa-angle-double-right"></i>
+                                </a>
+                            </li>
+                            <li class="">
+                                <a href="#">尾页</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
         </div>
     </div>
-</div> 
 
-<script>
-!function(){
-laydate({elem: '#demo'});//绑定元素
-}();
+    <script>
+        ! function () {
+            laydate({
+                elem: '#demo'
+            }); //绑定元素
+        }();
 
-$(".btn-down").click(function(){
-  $(this).siblings(".dropdown-menu").toggle();
-});
-$(".tag .close").click(function(){
-  $(this).parent(".tag").hide();
-});
-var start = {
-    elem: '#start',
-    format: 'YYYY-MM-DD',
-    min: laydate.now(), //设定最小日期为当前日期
-    max: '2099-06-16', //最大日期
-    istime: true,
-    istoday: false,
-    choose: function(datas){
-         end.min = datas; //开始日选好后，重置结束日的最小日期
-         end.start = datas //将结束日的初始值设定为开始日
-    }
-};
-var end = {
-    elem: '#end',
-    format: 'YYYY-MM-DD',
-    min: laydate.now(),
-    max: '2099-06-16',
-    istime: true,
-    istoday: false,
-    choose: function(datas){
-        start.max = datas; //结束日选好后，充值开始日的最大日期
-    }
-};
-laydate(start);
-laydate(end);
-
-</script> 
+        $(".btn-down").click(function () {
+            $(this).siblings(".dropdown-menu").toggle();
+        });
+        $(".tag .close").click(function () {
+            $(this).parent(".tag").hide();
+        });
+        var start = {
+            elem: '#start',
+            format: 'YYYY-MM-DD',
+            min: laydate.now(), //设定最小日期为当前日期
+            max: '2099-06-16', //最大日期
+            istime: true,
+            istoday: false,
+            choose: function (datas) {
+                end.min = datas; //开始日选好后，重置结束日的最小日期
+                end.start = datas //将结束日的初始值设定为开始日
+            }
+        };
+        var end = {
+            elem: '#end',
+            format: 'YYYY-MM-DD',
+            min: laydate.now(),
+            max: '2099-06-16',
+            istime: true,
+            istoday: false,
+            choose: function (datas) {
+                start.max = datas; //结束日选好后，充值开始日的最大日期
+            }
+        };
+        laydate(start);
+        laydate(end);
+    </script>
 </body>
+
 </html>

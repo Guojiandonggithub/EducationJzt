@@ -1,189 +1,204 @@
-.managementIcon{
-    padding:20px;
-    background:#fff;
+.managementIcon {
+    padding: 20px;
+    background: #fff;
     border-radius: 6px;
-    overflow:hidden;
+    overflow: hidden;
 }
-.managementIcon li{
-    float:left;
+
+.managementIcon li {
+    float: left;
     text-align: center;
-    margin-right:60px;
-    
-}
-.managementIcon li span{
-    display: block;
-    height:60px;
-}
-.screen{
-    width:100%; 
-    height:150px;
-    background:#fff;
-    margin-top:30px;
-    padding:0 20px;
-}
-.screenTop{
-    float:right;
-    padding:26px 0; 
+    margin-right: 60px;
 
 }
-.screenTop .nav-search{
+
+.managementIcon li span {
+    display: block;
+    height: 60px;
+}
+
+.screen {
+    width: 100%;
+    height: 150px;
+    background: #fff;
+    margin-top: 22px;
+    padding: 0 22px;
+}
+
+.screenTop {
+    float: right;
+    padding: 22px 0;
+
+}
+
+.screenTop .nav-search {
     display: inline-block;
     position: inherit;
     right: 0;
 }
-.screenTop .nav-search input{
-    width:260px;
-    height:30px !important;
-    border:1px solid #a0a0a0;
+
+.screenTop .nav-search input {
+    width: 260px;
+    height: 30px !important;
+    border: 1px solid #a0a0a0;
 }
-.screenTop .selectName{
-    border-radius: 4px; 
-    border:1px solid #a0a0a0;
-    color:#666;
+
+.screenTop .selectName {
+    border-radius: 4px;
+    border: 1px solid #a0a0a0;
+    color: #666;
 }
-.screenTop .btn-group{
-    margin-left:24px;
+
+.screenTop .btn-group {
+    margin-left: 24px;
 }
-.screenTop .btn-group .btn{
+
+.screenTop .btn-group .btn {
     width: 98px;
-    height:30px;
-    line-height:30px;
-    padding:0 5px;
-    background-color:#fff !important;
-    color:#a0a0a0 !important;
-    border:1px solid #a0a0a0;
-    border-radius: 4px !important; 
+    height: 30px;
+    line-height: 30px;
+    padding: 0 5px;
+    background-color: #fff !important;
+    color: #a0a0a0 !important;
+    border: 1px solid #a0a0a0;
+    border-radius: 4px !important;
 }
-.screenTop .btn-group .btn i{
-    width:15px;
-    height:15px;
-    line-height:15px;
-    border-radius: 50%; 
-    background:#fa9092;
+
+.screenTop .btn-group .btn i {
+    width: 15px;
+    height: 15px;
+    line-height: 15px;
+    border-radius: 50%;
+    background: #fa9092;
     font-style: normal;
     display: inline-block;
-    color:#fff;
+    color: #fff;
 }
-.screenTop .dropdown-menu{
-    right:0;
+
+.screenTop .dropdown-menu {
+    right: 0;
     left: inherit;
-    width:360px;
-    padding:0 30px;
-    
+    width: 360px;
+    padding: 0 30px;
+
 }
-.orderCon .open>.dropdown-menu{
-    min-width:100px !important;
+
+.orderCon .open>.dropdown-menu {
+    min-width: 100px !important;
 }
-.screenData{
-    padding:20px 0;
-    border-bottom:1px solid #e5e5e5;
+
+.screenData {
+    padding: 20px 0;
+    border-bottom: 1px solid #e5e5e5;
 }
-.screenData .laydate-icon ,.screenData select{
+
+.screenData .laydate-icon,
+.screenData select {
     height: 30px;
     padding: 0 10px;
     border-radius: 4px;
     width: 140px;
-    border:1px solid #a0a0a0;
+    border: 1px solid #a0a0a0;
 }
-.screenData select{
-    margin-left:14px;
-    color:#b3bac2 ;
+
+.screenData select {
+    margin-left: 14px;
+    color: #b3bac2;
 }
-.screenCourse{
-    padding-top:20px;
-    border-bottom:1px solid #e5e5e5;
+
+.screenCourse {
+    padding-top: 20px;
+    border-bottom: 1px solid #e5e5e5;
 }
-.screenCourse input,.screenCourse select{
-    width:100%;
-    height:30px; 
+
+.screenCourse input,
+.screenCourse select {
+    width: 100%;
+    height: 30px;
     border-radius: 4px !important;
-    border:1px solid #a0a0a0;
-    padding:0 10px;
-    margin-bottom:20px;
-    color:#b3bac2 ;
+    border: 1px solid #a0a0a0;
+    padding: 0 10px;
+    margin-bottom: 20px;
+    color: #b3bac2;
 }
-input::-webkit-input-placeholder, textarea::-webkit-input-placeholder { 
-    color: #b3bac2 !important; 
+
+input::-webkit-input-placeholder,
+textarea::-webkit-input-placeholder {
+    color: #b3bac2 !important;
 }
-.screen .tags{
-    border:0;
+
+.screen .tags {
+    border: 0;
     border-top: 1px solid #ccc;
     width: 100%;
-    padding-top:18px;
+    padding-top: 18px;
 }
-.orderCon{
-    width:100%;
-    padding:26px 0;
-    background:#fff;
+
+.orderCon {
+    width: 100%;
+    padding: 26px 0;
+    background: #fff;
     border-radius: 6px;
-    margin-top:30px;
+    margin-top: 22px;
 }
-.orderCon .export{
-    padding-left:16px;
+
+.orderCon .export {
+    padding-left: 22px;
 }
-.result{
-    height:40px; 
-    line-height:40px;
-    background:#f6fafd;
-    border-top:1px solid #e5e5e5;
-    border-bottom:1px solid #e5e5e5;
-    padding-left:16px;
+
+.result {
+    height: 40px;
+    line-height: 40px;
+    background: #f6fafd;
+    border-top: 1px solid #e5e5e5;
+    border-bottom: 1px solid #e5e5e5;
+    padding-left: 16px;
 }
-.result span{
-    color:#5597e5;
+
+.result span {
+    color: #5597e5;
 }
-.orderTable{
-    padding:0 16px;
+
+.orderTable {
+    padding: 0 16px;
 }
-.orderTable td .glyphicon-question-sign{
-    color:#fdb336;
+
+.orderTable td .glyphicon-question-sign {
+    color: #fdb336;
 }
-.orderTable td .glyphicon-ok-sign{
-    color:#5ebf70;
+
+.orderTable td .glyphicon-ok-sign {
+    color: #5ebf70;
 }
-.orderTable .btn-group .down{
+
+.orderTable .btn-group .down {
     cursor: pointer;
 }
-.orderTable tr th,.orderTable tr td{
+
+.orderTable tr th,
+.orderTable tr td {
     text-align: center;
 }
-.orderTable tr .orderTxt{
-    width:200px;
-    word-break: break-all; 
-    word-wrap:break-word;
-}
-.orderPage{
-    overflow:hidden;
-}
-.orderPage .page{
-    float:left;
-}
-.orderPage .pagination{
-    float:right;
-    margin:0;
+
+.className {
+    text-align: left !important;
 }
 
+.orderTable tr .orderTxt {
+    width: 200px;
+    word-break: break-all;
+    word-wrap: break-word;
+}
 
+.orderPage {
+    overflow: hidden;
+}
 
+.orderPage .page {
+    float: left;
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+.orderPage .pagination {
+    float: right;
+    margin: 0;
+}

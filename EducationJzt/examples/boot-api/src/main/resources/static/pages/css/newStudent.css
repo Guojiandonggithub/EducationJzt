@@ -1,89 +1,103 @@
-.control-position{
-    background:#fff;
-    padding:0 12px;
-    margin-top:15px;
+.control-position {
+    background: #fff;
+    padding: 0 12px;
+    margin-top: 15px;
 }
-.control-position .control-group .control-label{
+
+.control-position .control-group .control-label {
     width: 80px;
     line-height: 1.5;
     color: #b9bfc6;
     font-size: 12px;
 }
-.control-position .control-group{
-    
-}
-.control-position .control-group ~ .control-group{
+
+.control-position .control-group {}
+
+.control-position .control-group~.control-group {
     border-top: 1px #adb4bc dashed;
 }
-.control-position .control-group .checkbox{
+
+.control-position .control-group .checkbox {
     display: inline-block;
 }
-.control-position .control-group .lbl{
-    font-size:12px;
-    margin-left:6px;
+
+.control-position .control-group .lbl {
+    font-size: 12px;
+    margin-left: 6px;
 }
 
 /* 员工信息 */
-.uploadHead{
-    float:left;
+.uploadHead {
+    float: left;
 }
-.uploadHead .con4{
-     width: 250px;
-     height: auto;
-     overflow: hidden;
-     margin: 20px auto;
-     color: #FFFFFF;
+
+.uploadHead .con4 {
+    width: 250px;
+    height: auto;
+    overflow: hidden;
+    margin: 20px auto;
+    color: #FFFFFF;
 }
-.uploadHead .con4 .btn{
-     width: 150px;
-     height: 30px;
-     line-height: 30px;
-     text-align: center;
-     background: #d8b49c;
-     display: block;
-     font-size: 16px;
-     border-radius: 5px;
-     padding:0 !important;
-     margin-left:50px;
+
+.uploadHead .con4 .btn {
+    width: 150px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    background: #d8b49c;
+    display: block;
+    font-size: 16px;
+    border-radius: 5px;
+    padding: 0 !important;
+    margin-left: 50px;
 }
-.uploadHead .upload{
-     float: left;
-     position: relative;
+
+.uploadHead .upload {
+    float: left;
+    position: relative;
 }
-.uploadHead .upload_pic{
-     display: block;
-     width: 150px;
-     height: 30px;
-     position: absolute;
-     left: 0;
-     top: 0;
-     opacity: 0;
-     border-radius: 5px;
+
+.uploadHead .upload_pic {
+    display: block;
+    width: 150px;
+    height: 30px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+    border-radius: 5px;
 }
-.uploadHead #cvs{
-	border: 1px solid #000 !important;
-	margin:20px 0 20px 50px;
+
+.uploadHead #cvs {
+    border: 1px solid #000 !important;
+    margin: 20px 0 20px 50px;
 }
+
 /* 新建员工 */
-.employee{
-    float:left;
-    margin-top:40px;
+.employee {
+    float: left;
+    margin-top: 40px;
 }
-.employee .form-group label{
-    text-align: left !important;
-    width:112px;
+
+.employee .form-group label {
+    text-align: right !important;
+    width: 112px;
 }
-.employee .form-group input{
-    width:300px !important;
+
+.employee .form-group input {
+    width: 300px !important;
 }
+
 /* 填写更多人事信息 */
-.panel-body{
-    padding:0;
+.panel-body {
+    padding: 0;
 }
-.panel-body ul{
-    margin:0;
+
+.panel-body ul {
+    margin: 0;
 }
-.normal-ul > li {
+
+.normal-ul>li {
     display: inline-block;
     min-width: 520px;
     min-height: 30px;
@@ -92,6 +106,7 @@
     list-style: none;
     box-sizing: border-box;
 }
+
 .normal-label {
     display: inline-block;
     margin-right: 16px;
@@ -100,6 +115,7 @@
     color: #30404f;
     font-weight: normal;
 }
+
 .normal-input {
     width: 356px;
     height: 30px;
@@ -111,6 +127,7 @@
     box-sizing: border-box;
     vertical-align: middle;
 }
+
 .li-drop-list {
     position: relative;
     height: 28px;
@@ -122,6 +139,7 @@
     background: #fff;
     border-radius: 3px;
 }
+
 .input-correct {
     position: absolute;
     bottom: -25px;
@@ -131,14 +149,17 @@
     display: inline-block;
     min-width: 230px;
 }
-.enrollCon .none{
+
+.enrollCon .none {
     text-align: center;
 }
-.enrollCon .none p{
-    color:#888;
-    margin:10px;
+
+.enrollCon .none p {
+    color: #888;
+    margin: 10px;
 }
-.enrollCon .none button{
+
+.enrollCon .none button {
     height: 30px;
     line-height: 28px;
     padding: 0 20px 0;
@@ -151,23 +172,25 @@
     outline: none;
 }
 
-.agency-account label{
+.agency-account label {
     font-weight: normal;
     text-align: right;
-    width:80px;
-    margin-right:20px;
+    width: 80px;
+    margin-right: 20px;
 }
-.agency-account label span{
+
+.agency-account label span {
     color: #da4558;
     margin-right: 4px;
 }
-.agency-account p{
+
+.agency-account p {
     display: inline-block;
-    margin-right:15px;
+    margin-right: 15px;
 }
 
 /* 新建课程 */
-.main-form{
+.main-form {
     width: 400px;
     height: 100%;
     padding: 20px;
@@ -175,7 +198,8 @@
     background-color: #fff;
     margin-right: 20px;
 }
-.main-form h3{
+
+.main-form h3 {
     border-left: 4px solid #5094e7;
     padding-left: 10px;
     font-size: 16px;
@@ -185,21 +209,25 @@
     line-height: 1;
     text-align: left;
 }
-.main-form .form-group label{
+
+.main-form .form-group label {
     font-weight: normal;
-    width:70px;
-    text-align:right;
-    margin-right:15px;
+    width: 70px;
+    text-align: right;
+    margin-right: 15px;
 }
-.main-form .form-group label span{
+
+.main-form .form-group label span {
     color: #da4558;
-    margin-right: 4px; 
+    margin-right: 4px;
 }
-.main-form .form-group p{
+
+.main-form .form-group p {
     display: inline-block;
-    margin-right:10px;
+    margin-right: 10px;
 }
-.extend-form{
+
+.extend-form {
     -webkit-box-flex: 1;
     -ms-flex: 1;
     flex: 1;
@@ -208,10 +236,12 @@
     overflow: auto;
     background-color: #fff;
 }
-.form-box{
+
+.form-box {
     display: flex;
 }
-.form-box h3{
+
+.form-box h3 {
     border-left: 4px solid #5094e7;
     padding-left: 10px;
     font-size: 16px;
@@ -221,63 +251,64 @@
     line-height: 1;
     text-align: left;
 }
-.extend-form table tr th,.extend-form table tr td{
-    padding:10px;
-}
-.extend-list{
-    overflow:hidden;
-    margin-bottom:10px;
+
+.extend-form table tr th,
+.extend-form table tr td {
+    padding: 10px;
 }
 
-.extend-list .form-group .numCon{
-    float:left;
-    width:100px;
+.extend-list {
+    overflow: hidden;
+    margin-bottom: 10px;
 }
-.extend-list .form-group label{
-    float:left;
-    margin-top:8px;
+
+.extend-list .form-group .numCon {
+    float: left;
+    width: 100px;
+}
+
+.extend-list .form-group label {
+    float: left;
+    margin-top: 8px;
     font-weight: normal;
-    margin-right:10px;
+    margin-right: 10px;
 }
-.extend-list .form-group input{
-    width:100px;
+
+.extend-list .form-group input {
+    width: 100px;
 }
-.extend-list .txt{
-    float:left;
+
+.extend-list .txt {
+    float: left;
     margin: 8px 10px 0 10px;
 }
-.numCon{
+
+.numCon {
     position: relative;
 }
-.numCon .count{
+
+.numCon .count {
     position: absolute;
-    top:0;
-    right:10px;
+    top: 0;
+    right: 10px;
 }
-.numCon .count span{
+
+.numCon .count span {
     display: block;
     cursor: pointer;
-    color:#ccc;
+    color: #ccc;
 }
-.glyphicon-remove-sign{
+
+.glyphicon-remove-sign {
     font-weight: normal !important;
     color: #999;
-    margin:8px 0 0 10px;
-    cursor: pointer;
-}
-.glyphicon-plus-sign{
-    font-weight: normal !important;
-    color: #999;
-    margin:8px 0 0 20px;
+    margin: 8px 0 0 10px;
     cursor: pointer;
 }
 
-
-
-
-
-
-
-
-
-
+.glyphicon-plus-sign {
+    font-weight: normal !important;
+    color: #999;
+    margin: 8px 0 0 20px;
+    cursor: pointer;
+}

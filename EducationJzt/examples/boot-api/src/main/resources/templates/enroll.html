@@ -47,7 +47,7 @@
                 </div>
                 <form class="form-horizontal" role="form">
                     <div class="form-group">
-                        <label class="col-sm-1">学员姓名</label>
+                        <label class="col-sm-1" for="studentName">学员姓名</label>
                         <input type="text" name="studentName" id="studentName" placeholder="请输入学生姓名">
                     </div>
                     <div class="form-group enrollNum">
@@ -521,6 +521,7 @@
                 contactPhone : {
                     required:true,
                     minlength:2,
+                    checkName:true,
                     maxlength:12
                 },
                 classIds : {
@@ -537,24 +538,54 @@
                 },
                 messages: {
                     classIds: "还没有选择班级",
-                    phone2: "电话2不能为空",
                     studentName: {
                         required: "名称不能为空",
                         minlength: "用户名最少由两个字符组成",
                         maxlength:"用户名不能超过10个字符"
                     },
                     contactPhone: {
-                        required: "请输入密码",
+                        required: "请输入电话号码",
                         minlength: "地址最少由两个字符组成",
+
                         maxlength:"地址不能超过10个字符"
                     },
                     paymentMoney: {
                         required: "请输入实收金额",
                         digits: "必须输入数字"
                     }
+                },
+                errorPlacement: function(error, element) {
+                    if ( element.is(":radio") )
+                        error.appendTo( element.parent().next().next() );
+                    else if ( element.is(":checkbox") )
+                        error.appendTo ( element.next() );
+                    else
+                        error.appendTo( element.parent().next() );
                 }
             }
         });
+        jQuery.validator.addMethod('checkName', function (value, element) {
+            var msgcode=null;
+            $.ajax({
+                url: basePath + "/student/checkStudentName",
+                type: "get",
+                dataType: 'json',
+                async:false,
+                contentType:"application/json;charset=UTF-8",
+                data: {"name":$("#studentName").val(),"phone":value},
+                success: function(result){
+                    msgcode= result.code;
+                }
+            })
+            if(msgcode==1001){
+                $(element).data('error-msg','该用户已存在！');
+                return false;
+            }
+            return true;
+        }, function(params, element) {
+            return $(element).data('error-msg');
+        });
+
     });
 
     $(".btn-down").click(function(){

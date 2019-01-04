@@ -1,80 +1,98 @@
-.classInfo{
-    padding:20px;
-    background:#fff;
-    margin-top:30px;
+.classInfo {
+    padding: 22px;
+    background: #fff;
+    margin-top: 22px;
     border-radius: 4px;
-    overflow:hidden;
+    overflow: hidden;
 }
-.classInfo .info1{
-    border-bottom:1px solid #ccc;
-    padding-bottom:15px;
+
+.classInfo .info1 {
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 15px;
 }
-.classInfo .info1 p{
+
+.classInfo .info1 p {
     display: inline-block;
-    margin:0 50px 0 0;
+    margin: 0 50px 0 0;
 }
-.classInfo .info1 p span{
-    color:#b1b8c0;
+
+.classInfo .info1 p span {
+    color: #b1b8c0;
 }
-.classInfo .info2 .form-group{
+
+.classInfo .info2 .form-group {
     display: inline-block;
-    margin:20px 50px 0 0;
+    margin: 22px 50px 0 0;
 }
-.classInfo .info2 .form-group label{
+
+.classInfo .info2 .form-group label {
     font-weight: normal;
-    color:#b1b8c0;
+    color: #b1b8c0;
 }
-.classInfo .info2 .form-group input{
-    width:140px;
-    height:30px;
+
+.classInfo .info2 .form-group input {
+    width: 140px;
+    height: 30px;
     border-radius: 4px !important;
 }
-.classCon{
-    padding:20px;
-    background:#fff;
-    margin-top:30px;
+
+.classCon {
+    padding: 22px;
+    background: #fff;
+    margin-top: 22px;
     border-radius: 4px;
 }
-.classCon .people{
-    border-bottom:1px solid #ccc;
-    padding-bottom:20px;
+
+.classCon .people {
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 20px;
 }
-.classCon .people span{
-    color:#fc6f77;
+
+.classCon .people span {
+    color: #fc6f77;
 }
-.operate{
-    background:#f3f8fc;
-    padding:10px;
+
+.operate {
+    background: #f3f8fc;
+    padding: 10px;
 }
-.operate .form-group{
+
+.operate .form-group {
     display: inline-block;
     margin: 0;
 }
-.operate .form-group label{
+
+.operate .form-group label {
     font-weight: normal;
-    margin-right:10px;
+    margin-right: 10px;
 }
-.operate .form-group .lbl{
-    margin-right:20px !important;
+
+.operate .form-group .lbl {
+    margin-right: 20px !important;
 }
-.operate .form-group input{
-    height:30px;
+
+.operate .form-group input {
+    height: 30px;
     border-radius: 4px !important;
 }
-.infoList{
+
+.infoList {
     display: flex;
-    padding:20px 0;
-    border-bottom:1px solid #ccc;
+    /* padding: 20px 0; */
+    border-bottom: 1px solid #ccc;
     position: relative;
 }
-.infoList label{
+
+.infoList label {
     font-weight: normal;
 }
-.infoList .headPic{
+
+.infoList .headPic {
     text-align: center;
-    margin-right:30px;
+    margin-right: 30px;
 }
-.infoList .headPic span{
+
+.infoList .headPic span {
     display: block;
     background: #6aa8f1;
     color: #fff;
@@ -85,115 +103,147 @@
     border-radius: 6px;
     margin-left: 10px;
 }
-.infoList .headPic  p{
-    margin-top:5px;
+
+.infoList .headPic p {
+    margin-top: 5px;
 }
-.infoForm,.star{
+
+.infoForm,
+.star {
     display: flex;
 }
-.infoForm div{
-    margin:0;
+
+.infoForm div {
+    margin: 0;
 }
-.infoForm div:nth-of-type(1){
+
+.infoForm div:nth-of-type(1) {
     margin: 4px 20px 0 0;
 }
-.infoForm div:nth-of-type(2) input{
-    width:70px;
-    height:30px;
+
+.infoForm div:nth-of-type(2) input {
+    width: 70px;
+    height: 30px;
     border-radius: 4px !important;
 }
-.infoForm p{
-    margin:6px 0 0 12px;
-    font-size:12px;
+
+.infoForm p {
+    margin: 6px 0 0 12px;
+    font-size: 12px;
 }
-.infoForm p span{
-    color:#fc6f77;
+
+.infoForm p span {
+    color: #fc6f77;
 }
-.infoForm .lbl{
-    margin-right:15px !important;
+
+.infoForm .lbl {
+    margin-right: 15px !important;
 }
-.infoMid{
-    margin-right:20px;
+
+.infoMid {
+    margin-right: 20px;
 }
-.star{
-    margin-top:10px;
+
+.star {
+    margin-top: 10px;
 }
-.star p{
-    margin-right:50px;
+
+.star p {
+    margin-right: 50px;
 }
-.star p span{
-    color:#f3a536;
+
+.star p span {
+    color: #f3a536;
 }
-.msg{
+
+.msg {
     display: flex;
 }
-.msg label{
+
+.msg label {
     margin: 12px 15px 0 0;
 }
-.msg textarea{
-    width:650px;
-    height:50px;
+
+.msg textarea {
+    width: 650px;
+    height: 50px;
     border-radius: 4px;
 }
-.upload{
-    margin-top:45px;
-    margin-left:20px;
+
+.upload {
+    margin-top: 45px;
+    margin-left: 20px;
 }
-.dropzone.dz-clickable{
-    width:50px;
-    min-height:50px;
-    border:1px dashed #ccc;
-    background:#fff;
-    text-align: center; 
-    padding:0;
-    color:#888 !important;
+
+.dropzone.dz-clickable {
+    width: 50px;
+    min-height: 50px;
+    border: 1px dashed #ccc;
+    background: #fff;
+    text-align: center;
+    padding: 0;
+    color: #888 !important;
 }
-.dropzone.dz-clickable h4{
-    margin-top:15px;
+
+.dropzone.dz-clickable h4 {
+    margin-top: 15px;
 }
-.alert{
+
+.alert {
     border-bottom: 1px solid #ccc !important;
 }
-.infoList .close{
+
+.infoList .close {
     position: absolute;
     right: 22px;
     top: 30px;
 }
-.infoList .close i{
-    border:1px solid #fb1d20;
-    color:#fb1d20;
-    background:#ffeded;
-    padding:3px;
+
+.infoList .close i {
+    border: 1px solid #fb1d20;
+    color: #fb1d20;
+    background: #ffeded;
+    padding: 3px;
 }
-.classContent label{
-    width:60px;
+
+.classContent label {
+    width: 60px;
     text-align: right;
     font-weight: normal;
-    margin-right:15px;
+    margin-right: 15px;
 }
-.classContent .form-group{
+
+.classContent .form-group {
     display: flex;
-    margin:30px 0 0 0;
+    margin: 22px 0 0 0;
 }
-.classContent .form-group textarea,.classContent .form-group input{
+
+.classContent .form-group textarea,
+.classContent .form-group input {
     border-radius: 4px !important;
 }
-.classContent .form-group input{
-    height:30px;
+
+.classContent .form-group input {
+    height: 30px;
 }
-.classContent .form-group p{
-    margin:16px 0 0 16px;
+
+.classContent .form-group p {
+    margin: 16px 0 0 16px;
 }
-.found{
+
+.found {
     display: flex;
 }
-.found label{
-    margin-top:5px;
+
+.found label {
+    margin-top: 5px;
 }
-.found .form-group{
-    margin-right:30px;
+
+.found .form-group {
+    margin-right: 30px;
 }
-.save{
+
+.save {
     width: 80px;
     height: 30px;
     background: #5597e5;
@@ -204,73 +254,78 @@
 }
 
 /* 上课记录页面 */
-.record{
-    background:#dde6ef;
-    padding:10px;
+.record {
+    background: #dde6ef;
+    padding: 10px;
 }
-.record p{
+
+.record p {
     display: inline-block;
-    margin:0 20px 0 0;
+    margin: 0 20px 0 0;
 }
-.record p img{
-    margin-right:10px;
+
+.record p img {
+    margin-right: 10px;
 }
-.recordCon .screen{
-    padding:26px 0;
+
+.recordCon .screen {
+    padding: 26px 0;
 }
-.groupList{
+
+.groupList {
     display: flex;
-    justify-content:space-between;
-    padding:0 15px;
+    justify-content: space-between;
+    padding: 0 22px;
     margin-top: 24px;
 }
-.groupList .kq a{
-    width:84px;
-    height:30px;
-    background:#5597e5;
+
+.groupList .kq a {
+    width: 84px;
+    height: 30px;
+    background: #5597e5;
     text-align: center;
-    line-height:30px;
+    line-height: 30px;
     display: inline-block;
-    color:#fff;
+    color: #fff;
 }
-.groupList .kq button{
-    width:96px;
-    height:30px;
-    background:none;
-    border:1px solid #888;
+
+.groupList .kq button {
+    width: 96px;
+    height: 30px;
+    background: none;
+    border: 1px solid #888;
 }
-.groupList .shdate{
+
+.groupList .shdate {
     display: flex;
 }
-.groupList .shdate select,.groupList .shdate li{
-    width:140px;
-    height:30px;
+
+.groupList .shdate select,
+.groupList .shdate li {
+    width: 140px;
+    height: 30px;
     border-radius: 4px;
 }
-.groupList .shdate button{
-    height:30px;
-    background:#5597e5;
+
+.groupList .shdate button {
+    height: 30px;
+    background: #5597e5;
     border-radius: 4px;
-    border:0;
+    border: 0;
 }
-.recordCon .orderCon{
-    padding:0;
-    margin:0;
+
+.recordCon .orderCon {
+    padding: 0;
+    margin: 0;
 }
-.table th .sort{
-    float:right;
+
+.table th .sort {
+    float: right;
     margin-left: -6px;
 }
-.table th .sort span{
+
+.table th .sort span {
     display: block;
-    font-size:6px;
-    color:#888;
+    font-size: 6px;
+    color: #888;
 }
-
-
-
-
-
-
-
-
