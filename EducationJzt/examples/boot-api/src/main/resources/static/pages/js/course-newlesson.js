@@ -4,6 +4,7 @@ $(function(){
 });
 //收费模式选择 按期 按课时
 function chargingModeClick(type){
+    var preid = $("#preid").val();
     $("#dingjiaiform tr:not(:first)").remove();
     //获取校区类型 0全部 1指定
     var openingType = $('input:radio[name="openingType"]:checked').val();
@@ -13,7 +14,7 @@ function chargingModeClick(type){
         $("input[name='openingTypes']:checked").each(function (j) {
             var organIds = $(this).val();
             var  organName = $(this).parent().find("span").text();
-            dingJiaBiaoZunZD('',organName,'',organIds,type);
+            dingJiaBiaoZunZD('',organName,'',organIds,type,preid);
         });
     }
 }
@@ -45,14 +46,14 @@ function schoolType(type,courseId){
 function appointSchool(i,schoolName,courseId,organIds,shi){
     if ( shi.checked == true){
         var chargingMode = $('input[name="chargingMode"]:checked').val();
-        dingJiaBiaoZunZD(i,schoolName,courseId,organIds,chargingMode);
+        dingJiaBiaoZunZD(i,schoolName,courseId,organIds,chargingMode,'');
     }else{
         $("#delete_"+i).remove();
     }
 }
 //校区复选框 i(list坐标) schoolName（校区名称）courseId（课程id） organIds(校区id)
 //chargingMode （收费模式）
-function dingJiaBiaoZunZD(i,schoolName,courseId,organIds,chargingMode){
+function dingJiaBiaoZunZD(i,schoolName,courseId,organIds,chargingMode,id){
     var html = [];
     html.push('<tr id="delete_'+i+'">                                                                          ');
     html.push('	<td>'+schoolName+'</td>                                                            ');
@@ -71,6 +72,7 @@ function dingJiaBiaoZunZD(i,schoolName,courseId,organIds,chargingMode){
         html.push('				<div class="numCon">                                             ');
         html.push('					<input id="XbCoursePresetmoney" name="XbCoursePresetmoney" type="text" value="0"/>   ');
         html.push('				</div>                                                           ');
+        html.push('				<input type="hidden" id="preid" name="id" value="'+id+'" />    ');
         html.push('				<span class="txt">元</span>                                      ');
         html.push('				<span class="glyphicon glyphicon-remove-sign"></span>            ');
     }else if(chargingMode=='2'){
@@ -83,6 +85,7 @@ function dingJiaBiaoZunZD(i,schoolName,courseId,organIds,chargingMode){
         html.push('				<div class="numCon">                                             ');
         html.push('					<input id="XbCoursePresetperiodNum"  name="XbCoursePresetperiodNum" type="text" value="0"/>');
         html.push('				</div>                                                           ');
+        html.push('				<input type="hidden" id="preid" name="id" value="'+id+'" />    ');
         html.push('				<span class="txt">课时</span>                                      ');
         html.push('				<span class="glyphicon glyphicon-remove-sign"></span>            ');
     }

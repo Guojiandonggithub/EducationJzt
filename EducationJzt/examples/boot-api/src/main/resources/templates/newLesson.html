@@ -155,7 +155,7 @@
                                 <td th:text="${pre.sysorgans.organName}"></td>
                                 <input type="hidden" id="XbCoursePresetcourseId" name="courseId" th:value="${pre?.courseId}" />
                                 <input type="hidden" id="XbCoursePresetorganIds" name="organIds" th:value="${pre?.organIds}" />
-                                <td>
+                                <td th:if="${pre.xbCourse.chargingMode} eq '0'">
                                     <div class="extend-list">
                                         <div class="form-group">
                                             <label>按课时</label>
@@ -170,6 +170,24 @@
                                             </div>
                                             <input type="hidden" id="preid" name="id" th:value="${pre?.id}" />
                                             <span class="txt">元</span>
+                                            <span class="glyphicon glyphicon-remove-sign"></span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td th:if="${pre.xbCourse.chargingMode} eq '2'">
+                                    <div class="extend-list">
+                                        <div class="form-group">
+                                            <label>按期数</label>
+                                            <div class="numCon">
+                                                <input id="XbCoursePresetmoney" name="money" type="text" th:value="${pre?.money}" />
+                                            </div>
+                                            <span class="txt">元/期</span>
+                                            <span class="txt">包含</span>
+                                            <div class="numCon">
+                                                <input id="XbCoursePresetperiodNum" name="periodNum" type="text" th:value="${pre?.periodNum}" />
+                                            </div>
+                                            <input type="hidden" id="preid" name="id" th:value="${pre?.id}" />
+                                            <span class="txt">课时</span>
                                             <span class="glyphicon glyphicon-remove-sign"></span>
                                         </div>
                                     </div>
@@ -206,7 +224,17 @@
                     });
                     //指定校区
                 } else {
-                    alert(msg);
+                    $("#dingjiaiform tr:not(:first)").each(function () {
+                        var $ele = $(this);
+                        var obj = {};
+                        var x = $ele.find("input");
+                        obj.courseId = x.eq(0).val();
+                        obj.organIds = x.eq(1).val();
+                        obj.periodNum = x.eq(2).val();
+                        obj.money = x.eq(3).val();
+                        obj.id = x.eq(4).val();
+                        list.push(obj);
+                   });
                 }
                 datafrom.xbcoursepresetlist = list;
                 $.ajax({
@@ -265,9 +293,6 @@
                     }
                 });
             }
-        });
-    };
-
             function serializeObject(form) {
                 var o = {};
                 var a = $(form).serializeArray();
@@ -294,8 +319,6 @@
         $(".glyphicon-remove-sign").click(function () {
             $(this).parent().parent(".extend-list").hide();
         });
-    }
-
     function serializeObject(form) {
         var o = {};
         var a = $(form).serializeArray();

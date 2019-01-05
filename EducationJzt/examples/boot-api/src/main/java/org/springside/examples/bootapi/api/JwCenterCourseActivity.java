@@ -209,11 +209,20 @@ public class JwCenterCourseActivity {
             //开始存课时
             XbCoursePreset pre = new XbCoursePreset();
             pre.setId((String)map.get("id"));
-            pre.deleteStatus = "1";
             pre.setCourseId(entity.getId());
+            pre.deleteStatus ="1";
             pre.setOrganIds((String)map.get("organIds") );
-            pre.setMoney(BigDecimal.valueOf(Double.parseDouble((String)map.get("money"))));
-            pre.setPeriodNum(Integer.parseInt((String)map.get("periodNum")));
+            int periodNum = Integer.parseInt((String)map.get("periodNum"));
+            double money = Double.parseDouble((String)map.get("money"));//金额
+            pre.setPeriodNum(periodNum);//课时
+            String charginMode = entity.chargingMode;
+            if(charginMode.equals("0")){
+                pre.setMoney(BigDecimal.valueOf(money/periodNum));
+            }else if(charginMode.equals("2")){
+                pre.setMoney(BigDecimal.valueOf(money));
+            }else{
+                pre.setMoney(BigDecimal.valueOf(money));
+            }
             XbCoursePreset rs= xbCoursePresetService.saveXbCoursePreset(pre);
             if(StringUtils.isEmpty(rs.getId())){
                 app = false;
