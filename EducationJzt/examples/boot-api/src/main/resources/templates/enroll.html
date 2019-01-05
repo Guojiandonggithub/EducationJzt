@@ -64,7 +64,7 @@
                     <div class="form-group">
                         <label class="col-sm-1">学员性别</label>
                         <label class="sex">
-                            <input name="form-field-radio"  value="0" name="sex" type="radio" class="ace">
+                            <input name="form-field-radio" checked  value="0" name="sex" type="radio" class="ace">
                             <span class="lbl"> 男</span>
                         </label>
                         <label class="sex">
@@ -79,7 +79,7 @@
                     <div class="form-group">
                         <label class="col-sm-1">咨询渠道</label>
                         <label class="sex">
-                            <input name="form-field-radio"  value="家长转介绍" name="advisoryChannel" type="radio" class="ace">
+                            <input name="form-field-radio" checked  value="家长转介绍" name="advisoryChannel" type="radio" class="ace">
                             <span class="lbl">家长转介绍</span>
                         </label>
                         <label class="sex">
@@ -682,8 +682,9 @@
                 success: function (data) {
                     var status = data.status;
                     var msg = data.msg;
-                    $.kd.kdAlert("编辑成功！");
-                    window.location.href = basePath + '/student/getXbStudentList';
+                    $.kd.kdAlert("编辑成功！",function () {
+                        window.location.href = basePath + '/student/getXbStudentList';
+                    });
                 }
             });
         }
@@ -756,7 +757,6 @@
             cache: false,
             async: true,
             success: function (data) {
-                console.log("qqqqqqq"+data);
             $(".apply").show();
             $("#baominginfo").html("");
             $('#baominginfo').html(data);

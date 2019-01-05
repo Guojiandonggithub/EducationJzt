@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springside.examples.bootapi.domain.XbClass;
+import org.springside.examples.bootapi.domain.XbCoursePreset;
 import org.springside.examples.bootapi.domain.XbRecordClass;
 import org.springside.examples.bootapi.domain.XbStudentRelation;
+import org.springside.examples.bootapi.service.XbCoursePresetService;
 import org.springside.examples.bootapi.service.XbStudentService;
 
 import javax.servlet.http.HttpServletResponse;
@@ -35,6 +37,9 @@ public class RecordClassActivity {
 
 	@Autowired
 	private XbStudentService studentService;
+
+	@Autowired
+	public XbCoursePresetService xbCoursePresetService;
 
 	/*
 	 * 跳转到记上课
@@ -76,21 +81,34 @@ public class RecordClassActivity {
 				String studentId = xbRecordClass.studentId;
 				BigDecimal deductPeriod = xbRecordClass.deductPeriod;
 				String classId = xbRecordClass.classId;
+				String organId = xbRecordClass.organId;
 				String courseId = xbRecordClass.courseId;
 				Map<String,Object> searhMap = new HashMap<>();
+				Map<String,Object> courseMap = new HashMap<>();
 				if(null!=classId){
 					searhMap.put("EQ_classId",classId);
 					searhMap.put("EQ_studentId",studentId);
-					//searhMap.put("EQ_courseId",courseId);
+				}
+				courseMap.put("EQ_courseId",courseId);
+				courseMap.put("EQ_organId",organId);
+				BigDecimal money = new BigDecimal(0);
+				List<XbCoursePreset> xbCoursePresetList = xbCoursePresetService.getXbCoursePresets(courseMap);
+				if(xbCoursePresetList.size()>0){
+					String chargingMode = xbCoursePresetList.get(0).xbCourse.chargingMode;
+					money = xbCoursePresetList.get(0).money;
+					if(chargingMode.equals("1")){
+						money.divide(new BigDecimal(xbCoursePresetList.get(0).periodNum));
+					}
 				}
 				Page<XbStudentRelation> xbStudentRelations = studentService.getXbStudentRelationList(pageable,searhMap);
 				XbStudentRelation xbStudentRelation = xbStudentRelations.getContent().get(0);
 				Integer periodNum = xbStudentRelation.periodNum;
 				BigDecimal receivable = xbStudentRelation.receivable;
 				BigDecimal bigDecimal = new BigDecimal(periodNum.toString());
-				//receivable.divide()
+				receivable = receivable.subtract(money);
 				bigDecimal = bigDecimal.subtract(deductPeriod);
 				xbStudentRelation.periodNum = Integer.parseInt(bigDecimal.toString());
+				xbStudentRelation.receivable = receivable;
 				studentService.saveXbStudentRelation(xbStudentRelation);
 				studentService.saveXbRecordClass(xbRecordClass);
 			}

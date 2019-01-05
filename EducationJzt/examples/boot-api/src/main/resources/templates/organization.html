@@ -353,8 +353,9 @@ function selectAll(){
                 success: function (data) {
                     var status = data.status;
                     var msg = data.msg;
-                    $.kd.kdAlert("编辑成功！");
-                    window.location.href = basePath + '/accounts/getOrgansList';
+                    $.kd.kdAlert("编辑成功！",function () {
+                        window.location.href = basePath + '/accounts/getOrgansList';
+                    });
                     /*if(status=="0"){
                         if (confirm(msg)) {
                             window.location.href(basePath + '/accounts/getOrgansList');
@@ -418,8 +419,9 @@ function selectAll(){
                 success: function(data) {
                     var status = data.status;
                     var msg = data.msg;
-                    $.kd.kdAlert("删除成功！");
-                    window.location.href = basePath + '/accounts/getOrgansList';
+                    $.kd.kdAlert("删除成功！",function () {
+                        window.location.href = basePath + '/accounts/getOrgansList';
+                    });
                 },
                 error:function(){
                     console.log("回调失败")

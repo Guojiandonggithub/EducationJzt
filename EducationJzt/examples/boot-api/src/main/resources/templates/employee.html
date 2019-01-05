@@ -58,14 +58,14 @@
                         </div>
                         <div class="form-group" style="display:block; margin-top:20px !important;">
                             <label><span>*</span>性别</label>
-                            <input th:attr="checked=${employee.sex == 0?true:false}" name="form-field-radio" type="radio"
+                            <input checked name="form-field-radio" type="radio"
                                 name="sex" value="0" class="ace"><span class="lbl">男</span>
                             <input th:attr="checked=${employee.sex == 1?true:false}" name="form-field-radio" type="radio"
                                 name="sex" value="1" class="ace"><span class="lbl">女</span>
                         </div>
                         <div class="form-group" style="display:block; margin-top:20px !important;">
                             <label><span>*</span>是否为上课教师</label>
-                            <input th:attr="checked=${employee.isAttendClass == 0?true:false}" name="form-field-radio"
+                            <input checked name="form-field-radio"
                                 type="radio" name="isAttendClass" value="0" class="ace"><span class="lbl">是</span>
                             <input th:attr="checked=${employee.isAttendClass == 1?true:false}" name="form-field-radio"
                                 type="radio" name="isAttendClass" value="1" class="ace"><span class="lbl">否</span>
@@ -363,14 +363,16 @@
                     success: function (data) {
                         var status = data.status;
                         var msg = data.msg;
-                        $.kd.kdAlert("编辑成功！");
-                        window.location.href = basePath + '/accounts/getEmployeeList';
+                        $.kd.kdAlert("编辑成功！",function () {
+                            window.location.href = basePath + '/accounts/getEmployeeList';
+                        });
                     }
                 });
             }else{
                 var len=$("input[name='organId']:checked").length;
                 if(len==0){
-                    $.kd.kdAlert("请填写机构账号！");
+                    $("#jigou").hide();
+                    $(".agency-account").show(500)
                 }
             }
         }

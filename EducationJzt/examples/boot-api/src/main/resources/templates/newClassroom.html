@@ -138,8 +138,9 @@ function saveRoom(){
             success: function (data) {
                 //var status = data.status;
                 var msg = data.msg;
-                $.kd.kdAlert("编辑成功！");
-                window.location.href = basePath + '/student/getXbClassroomList?room=0';
+                $.kd.kdAlert("编辑成功！",function () {
+                    window.location.href = basePath + '/student/getXbClassroomList?room=0';
+                });
                 /*if(status=="0"){
                     if (confirm(msg)) {
                         window.location.href(basePath + '/accounts/getOrgansList');

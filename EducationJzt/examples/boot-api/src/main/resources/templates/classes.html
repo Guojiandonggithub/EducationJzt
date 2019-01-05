@@ -380,11 +380,12 @@
                     success: function (data) {
                         var status = data.status;
                         var msg = data.msg;
-                        $.kd.kdAlert("删除成功！");
-                        window.location.href = basePath + '/student/getXbClassroomList?room=0';
+                        $.kd.kdAlert("删除成功！",function () {
+                            window.location.href = basePath + '/student/getXbClassroomList?room=0';
+                        });
                     },
                     error: function () {
-                        console.log("回调失败")
+                        $.kd.kdAlert("删除失败！");
                     }
                 });
             }
@@ -401,8 +402,9 @@
                     success: function (data) {
                         var status = data.status;
                         var msg = data.msg;
-                        $.kd.kdAlert("删除成功！");
-                        window.location.href = basePath + '/student/getXbClassroomList?room=1';
+                        $.kd.kdAlert("删除成功！",function () {
+                            window.location.href = basePath + '/student/getXbClassroomList?room=1';
+                        });
                     },
                     error: function () {
                         console.log("回调失败")

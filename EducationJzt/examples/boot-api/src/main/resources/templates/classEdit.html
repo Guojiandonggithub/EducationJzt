@@ -36,6 +36,7 @@
                     <p th:text="${classes.className}"><img src="../static/pages/img/ban.png"></p>
                     <span>校区：</span><p th:text="${classes.sysOrgans.organName}" ></p>
                     <span>课程：</span><p th:text="${classes.xbCourse.courseName}"><</p>
+                    <input type="hidden" id="organId" name="organId" th:value="${classes.sysOrgans.id}" />
                     <input type="hidden" id="classId" name="classId" th:value="${classes.id}" />
                     <input type="hidden" id="courseId" name="courseId" th:value="${classes.xbCourse.id}" />
                 </div>
@@ -250,8 +251,9 @@
                     success: function (data) {
                         var status = data.status;
                         var msg = data.msg;
-                        $.kd.kdAlert("编辑成功！");
-                        window.location.href = basePath + '/recordClass/getRecordClassList';
+                        $.kd.kdAlert("编辑成功！",function () {
+                            window.location.href = basePath + '/recordClass/getRecordClassList';
+                        });
                     }
                 });
             }

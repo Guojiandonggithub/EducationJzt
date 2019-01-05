@@ -282,15 +282,16 @@ public class StudentActivity {
 	 */
 	@RequestMapping("/getXbClass")
 	public String getClass(@RequestParam(required = false) String id, ModelMap model, Pageable pageable){
+		String organId = "";
 		XbClass xbClass = new XbClass();
+		List<SysOrgans> organsList = organsService.getOrgansList();
 		if(null!=id){
 			xbClass = studentService.getXbClass(id);
-		}
-		Map<String,Object> xbCoursesearhMap = new HashMap<>();
-		List<SysOrgans> organsList = organsService.getOrgansList();
-		String organId = "";
-		if(organsList.size()>0){
-			organId = organsList.get(0).id;
+			organId = xbClass.organId;
+		}else{
+			if(organsList.size()>0){
+				organId = organsList.get(0).id;
+			}
 		}
 		Map<String,Object> searhMap = new HashMap<>();
 		Map<String,Object> roomsearhMap = new HashMap<>();
@@ -497,7 +498,12 @@ public class StudentActivity {
 					xbClasssearhMap.put("EQ_courseId",xbCoursePreset.getCourseId());
 					Page<XbClass> classPage = studentService.getXbClassList(pageable,xbClasssearhMap);
 					xbCoursePreset.setXbClassList(classPage.getContent());
-					money = money.add(xbCoursePreset.money);
+					BigDecimal totalmoney = xbCoursePreset.money;//每个课程总金额
+					if(xbCoursePreset.xbCourse.chargingMode.equals("0")){
+						totalmoney = xbCoursePreset.money.multiply(new BigDecimal(xbCoursePreset.periodNum));
+						xbCoursePreset.money = totalmoney;
+					}
+					money = money.add(totalmoney);
 					xbCourseList.add(xbCoursePreset);
 				}
 			}

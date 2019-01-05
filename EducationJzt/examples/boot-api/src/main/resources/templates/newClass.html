@@ -62,11 +62,11 @@
                                 class="remark" style="width:514px !important;">
                         </div>
                         <div style="display:block;  margin-bottom:26px;">
-                            <label style="text-align: right">开班日期</label>
+                            <label  style="width:120px; text-align: left;">开班日期</label>
                             <div class="classDate">
                                 <input class="laydate-icon" id="demo" th:if="${xbClass.classBeginDate==null}" th:value="${xbClass.classBeginDate}"
-                                    name="classBeginDate" />
-                                <input class="laydate-icon" id="demo" th:if="${xbClass.classBeginDate!=null}" th:value="${#dates.format(xbClass.classBeginDate, 'yyyy-MM-dd')}"
+                                       name="classBeginDate" />
+                                 <input class="laydate-icon" id="demo" th:if="${xbClass.classBeginDate!=null}" th:value="${#dates.format(xbClass.classBeginDate, 'yyyy-MM-dd')}"
                                     name="classBeginDate" />
                             </div>
                         </div>
@@ -74,10 +74,23 @@
                         <input type="checkbox" class="check">
                         <span class="pend">日期待定</span>
                     </div>-->
-                        <div class="form-group">
-                            <label for="preRecruitNum"><span>*</span>预招人数</label>
-                            <input type="text" name="preRecruitNum" th:value="${xbClass.preRecruitNum}" style="width:140px !important;">
-                            <span>人</span>
+                        <div class="form-group" style="display: block; margin-bottom: 22px !important;">
+                            <label><span>*</span>预招人数</label>
+                            <!-- <input type="text" name="preRecruitNum" th:value="${xbClass.preRecruitNum}" class="num"
+                                style="width:350px !important;">
+                            <div>
+                                <span class="glyphicon glyphicon-chevron-up add"></span>
+                                <span class="glyphicon glyphicon-chevron-down"></span>
+                            </div> -->
+                            <div class="spinner" data-trigger="spinner" id="spinner" style="display:inline-block; position: relative;">
+                                <input type="text" name="preRecruitNum" th:value="${xbClass.preRecruitNum}" class="form-control" value="1" data-max="100" data-min="1" data-step="1"
+                                       style="width:350px !important;">
+                                <div class="" style="position: absolute; left:330px; top:0;">
+                                    <i class="glyphicon glyphicon-chevron-up" data-spin="up" style="display:block; color:#888; cursor: pointer;"></i>
+                                    <i class="glyphicon glyphicon-chevron-down" data-spin="down" style="display:block; color:#888; cursor: pointer;"></i>
+                                </div>
+                            </div>
+
                         </div>
                         <div class="form-group">
                             <label for="establishNum">成班人数</label>
@@ -87,25 +100,25 @@
 
                         <div style="display: block; margin-top:20px;">
                             <div class="form-group">
-                                <label for="studentNum"><span>*</span>每次上课</label>
+                                <label><span>*</span>每次上课</label>
                                 学员
                                 <input type="text" name="studentNum" th:value="${xbClass.studentNum}">
                                 <span>人</span>
                             </div>
                             <div class="form-group">
-                                <label for="teacherNum">教师</label>
+                                教师
                                 <input type="text" name="teacherNum" th:value="${xbClass.teacherNum}">
                                 <span>课时</span>
                             </div>
-                            <div class="form-group">
+
+                        </div>
+                            <div class="form-group" style="display: block; margin-top:20px !important;">
                                 <label>招生状态</label>
                                 <input checked name="form-field-radio"
-                                    name="recruitState" value="0" type="radio" class="ace"><span class="lbl">开放招生</span>
+                                       name="recruitState" value="0" type="radio" class="ace"><span class="lbl">开放招生</span>
                                 <input th:attr="checked=${xbClass.recruitState == '1'?true:false}" name="form-field-radio"
-                                    name="recruitState" value="1" type="radio" class="ace"><span class="lbl">停止招生</span>
+                                       name="recruitState" value="1" type="radio" class="ace"><span class="lbl">停止招生</span>
                             </div>
-                        </div>
-                        <div style="display: block; margin-top:20px;">
                             <div class="form-group">
                                 <label for="classroomId"><span>*</span>教室</label>
                                 <select name="classroomId" id="classroomId" th:value="${xbClass.classroomId}">
@@ -114,21 +127,27 @@
                                         th:value="${classroom.id}" th:text="${classroom.classroomName}"></option>
                                 </select>
                             </div>
-                            <div class="form-group teacher">
-                                <label for="teacherId"><span>*</span>教师</label>
-                                <select name="teacherId" id="teacherId" th:value="${xbClass.teacherId}">
-                                    <!--<option value="">选择教师</option>-->
+                        <!--<div class="form-group teacher" style="display:block;>
+                           <label for="teacherId"><span>*</span>教师</label>
+                           <select name="teacherId" id="teacherId" th:value="${xbClass.teacherId}">
+                               <!--<option value="">选择教师</option>
                                     <option th:each="employee:${employeeList}" th:selected="${xbClass.teacherId == employee.id}"
                                         th:value="${employee.id}" th:text="${employee.employeeName}"></option>
                                 </select>
-                                <!--<select name="" id="">
+                               <select name="" id="">
                             <option value="">选择助教</option>
                             <option value="">222</option>
                             <option value="">333</option>
                         </select>
                         <i>+</i>
-                        <span>以上教师和助教可对班级学员记上课和布置作业(需要拥有相关权限)</span>-->
-                            </div>
+                        <span>以上教师和助教可对班级学员记上课和布置作业(需要拥有相关权限)</span>
+                            </div>-->
+                        <div class="form-group" style="display:block; margin-top:20px !important">
+                            <label for="teacherId"><span>*</span>教师</label>
+                            <select name="teacherId" id="teacherId">
+                                <option th:each="employee:${employeeList}" th:selected="${xbClass.teacherId == employee.id}"
+                                        th:value="${employee.id}" th:text="${employee.employeeName}"></option>
+                            </select>
                         </div>
                         <div class="form-group" style="display: block;">
                             <label for="remarks">备注</label>
@@ -239,8 +258,9 @@
                     success: function (data) {
                         //var status = data.status;
                         var msg = data.msg;
-                        $.kd.kdAlert("编辑成功！");
-                        window.location.href = basePath + '/student/getXbClassroomList?room=1';
+                        $.kd.kdAlert("编辑成功！",function () {
+                            window.location.href = basePath + '/student/getXbClassroomList?room=1';
+                        });
                         /*if(status=="0"){
                             if (confirm(msg)) {
                                 window.location.href(basePath + '/accounts/getOrgansList');
@@ -281,7 +301,7 @@
                 cache: false,
                 async: true,
                 success: function (data) {
-                    console.log(data.employeeList)
+                    console.log(data.xbCourseList)
                     $('#classroomId').empty();
                     $('#courseId').empty();
                     $('#teacherId').empty();

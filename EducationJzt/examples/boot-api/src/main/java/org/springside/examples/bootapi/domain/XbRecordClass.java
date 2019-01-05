@@ -38,6 +38,8 @@ public class XbRecordClass {
     public String classId;
     @Transient
     public String courseId;
+    @Transient
+    public String organId;
 
     public XbRecordClass() {
 

@@ -243,8 +243,9 @@ function deleteEmployee(id){
             success: function(data) {
                 var status = data.status;
                 var msg = data.msg;
-                $.kd.kdAlert("删除成功！");
-                window.location.href = basePath + '/accounts/getEmployeeList';
+                $.kd.kdAlert("删除成功！",function () {
+                    window.location.href = basePath + '/accounts/getEmployeeList';
+                });
             },
             error:function(){
                 console.log("回调失败")
