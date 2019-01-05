@@ -240,6 +240,7 @@
 
                 <div class="enrollCon" style="margin-top:30px;">
                     <button class="save" type="button" onclick="saveEmployee()">保存</button>
+                    <button class="save" type="button" style="margin-right:22px;" onclick="javascript:history.go(-1)">返回</button>
                 </div>
             </div>
 
@@ -369,7 +370,10 @@
             }else{
                 var len=$("input[name='organId']:checked").length;
                 if(len==0){
-                    alert("请填写机构账号！");
+                    $("#jigou").hide();
+                    //$(this).parent(".none").hide();
+                    $(".agency-account").show(500)
+                    /*alert("请填写机构账号！");*/
                 }
             }
         }
@@ -461,9 +465,11 @@
                     },
                     errorPlacement: function(error, element) {
                         if ( element.is(":radio") )
-                            error.appendTo( element.parent().next().next() );
+                            //error.appendTo( element.parent().next().next() );
+                            error.appendTo( element.parent().parent());
                         else if ( element.is(":checkbox") )
-                            error.appendTo ( element.next() );
+                            error.appendTo( element.parent().parent());
+                            //error.appendTo ( element.next() );
                         else
                             error.appendTo( element.parent().next() );
                     }

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
 
 <head>
     <meta charset="UTF-8">
@@ -26,13 +26,16 @@
 </head>
 
 <body>
+<div th:replace="layout::top"></div>
     <div class="main-container" id="main-container">
-        <div class="main-content" layout:fragment="content">
+        <div th:replace="layout::left('13','36')">
+        </div>
+        <div class="main-content">
             <div class="classInfo">
                 <div class="info1">
                     <p th:text="${classes.className}"><img src="../static/pages/img/ban.png"></p>
-                    <p th:text="${classes.sysOrgans.organName}" <span>校区：</span></span></p>
-                    <p th:text="${classes.xbCourse.courseName}"><span>课程：</span></span></p>
+                    <span>校区：</span><p th:text="${classes.sysOrgans.organName}" ></p>
+                    <span>课程：</span><p th:text="${classes.xbCourse.courseName}"><</p>
                     <input type="hidden" id="classId" name="classId" th:value="${classes.id}" />
                     <input type="hidden" id="courseId" name="courseId" th:value="${classes.xbCourse.id}" />
                 </div>
@@ -43,11 +46,11 @@
                     </div>
                     <div class="form-group">
                         <label>教师课时</label>
-                        <input type="text" th:value="${classes.teacherNum}">
+                        <input type="text" disabled="disabled" th:value="${classes.teacherNum}">
                     </div>
                     <div class="form-group">
                         <label>教师</label>
-                        <input type="text" th:value="${classes.teacher.employeeName}">
+                        <input type="text" disabled="disabled" th:value="${classes.teacher.employeeName}">
                     </div>
                     <!--<div class="form-group">
                     <label>科目</label>
@@ -85,7 +88,7 @@
                         <div class="infoMid">
                             <div class="infoForm" style="margin-bottom:22px;">
                                 <div class="form-group">
-                                    <input type="radio" th:name="'state'+${stuindex.index}" value="0" class="ace"><span
+                                    <input type="radio" checked th:name="'state'+${stuindex.index}" value="0" class="ace"><span
                                         class="lbl">上课</span>
                                     <input type="radio" th:name="'state'+${stuindex.index}" value="1" class="ace"><span
                                         class="lbl">请假</span>
@@ -96,7 +99,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label>扣除课时</label>
-                                    <input type="text" name="deductPeriod">
+                                    <input type="text" value="0" name="deductPeriod" >
                                 </div>
                                 <p>剩余<span th:text="${stu.periodNum}"></span>课时</p>
                             </div>

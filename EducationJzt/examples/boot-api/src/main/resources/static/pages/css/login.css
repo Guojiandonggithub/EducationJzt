@@ -33,8 +33,9 @@ body{
     border:0;
     border-bottom:1px solid #ccc;
     line-height:40px;
-    font-size:14px;
+    font-size:16px;
     margin-top:30px;
+    padding-left:15px;
 }
 .loginBox button{
     width:100%;
@@ -45,6 +46,11 @@ body{
     line-height:46px;
     margin-top:30px;
     font-size:16px;
+    cursor: pointer;
+}
+.loginBox button:hover{
+    background:#55a7fb;
+    color:#fff;
 }
 .loginBox a{
     float:right;
