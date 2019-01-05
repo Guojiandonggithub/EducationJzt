@@ -16,6 +16,7 @@ import java.util.List;
  */
 public interface XbClassDao extends PagingAndSortingRepository<XbClass, String>,JpaSpecificationExecutor<XbClass> {
     XbClass getById(String id);
+    XbClass findAllByClassName(String name);
 
     List<XbClass> getXbClassByDeleteStatus(String deleteStatus);
 }

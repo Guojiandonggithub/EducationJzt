@@ -177,4 +177,8 @@ public class XbStudentService {
 	public XbStudent checkStudentName(String name,String contactPhone){
 		return studentDao.findAllByStudentNameAndContactPhone(name,contactPhone);
 	}
+	@Transactional
+	public XbClass checkClassesName(String name){
+		return xbClassDao.findAllByClassName(name);
+	}
 }

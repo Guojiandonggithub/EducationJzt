@@ -49,7 +49,7 @@
                         <div class="form-group">
                             <label><span>*</span>姓名</label>
                             <input type="text" name="employeeName" th:value="${employee.employeeName}" placeholder="">
-                            <input type="hidden" name="id" th:value="${employee.id}">
+                            <input type="hidden" name="id" id="employeeId" th:value="${employee.id}">
                             <input type="hidden" name="employeeSubid" th:value="${employeeSub.id}">
                         </div>
                         <div class="form-group">
@@ -194,8 +194,8 @@
                     <span>机构账号</span>
                     <img src="../static/pages/img/line.png">
                 </div>
-                <div class="enrollCon">
-                    <div class="none">
+                <div class="enrollCon" >
+                    <div class="none" id="jigou">
                         <img src="../static/pages/img/fk.png">
                         <p>该员工还没有登录系统的账号</p>
                         <button class="create" type="button">创建账号</button>
@@ -401,6 +401,12 @@
 
 
         $(function () {
+            var employeeId = $("#employeeId").val();
+            if(employeeId){
+                $("#jigou").hide();
+                //$(this).parent(".none").hide();
+                $(".agency-account").show(500)
+            }
             $("#iform").validate({
                 rules: {
                     userName: {

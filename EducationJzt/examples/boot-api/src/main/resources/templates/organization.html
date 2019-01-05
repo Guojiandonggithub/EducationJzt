@@ -204,6 +204,26 @@
         </form>
     </div>
 
+    <!-- 提示信息 -->
+    <div id="modal-infomation" class="modal fade in pk" tabindex="-1" aria-hidden="false">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header no-padding">
+                        <div class="table-header">提示信息</div>
+                    </div>
+                    <div class="modal-body no-padding" style="padding: 20px 0 !important;" id="infomation">
+
+                    </div>
+                    <div class="modal-footer no-margin-top">
+                        <button class="btn pull-left" data-dismiss="modal">
+                            确定
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
 </div> 
 <script>
 !function(){
@@ -270,6 +290,10 @@ $(function(){
         }
     });
     jQuery.validator.addMethod('checkName', function (value, element) {
+        var organsid = $("#organsid").val();
+        if(organsid){
+            return true;
+        }
         var msgcode=null;
         $.ajax({
             url: basePath + "/accounts/checkOrganName",
@@ -328,7 +352,9 @@ function selectAll(){
                 success: function (data) {
                     var status = data.status;
                     var msg = data.msg;
-                    alert("编辑成功！");
+                    alert("编辑成功");
+                    //$("#infomation").html("编辑成功");
+                    //$('#modal-infomation').modal();
                     window.location.href = basePath + '/accounts/getOrgansList';
                     /*if(status=="0"){
                         if (confirm(msg)) {

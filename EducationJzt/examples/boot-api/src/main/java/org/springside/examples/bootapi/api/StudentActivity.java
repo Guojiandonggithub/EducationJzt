@@ -108,6 +108,27 @@ public class StudentActivity {
         }
     }
 
+    @RequestMapping("/checkClassesName")
+    public void checkClassesName(@RequestParam(required = false) String name,HttpServletResponse resp) {
+        Map<String, Object> map  =  new HashMap<>();
+        try {
+            String code = "1000";
+			XbClass xbClass = studentService.checkClassesName(name);
+            if(null!=xbClass){
+                code = "1001";
+            }
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("status","1");
+			jsonObject.put("code",code);
+			logger.info("编辑机构返回json参数="+jsonObject.toString());
+			resp.setContentType("text/html;charset=UTF-8");
+			resp.getWriter().println(jsonObject.toJSONString());
+			resp.getWriter().close();
+		} catch (IOException e) {
+			logger.info(e.toString());
+        }
+    }
+
 	@PostMapping("/save/classroom")
 	public void saveclassroom(@RequestBody XbClassroom classroom, HttpServletResponse resp) {
 		Map<String, Object> map  =  new HashMap<>();
@@ -300,13 +321,13 @@ public class StudentActivity {
 		List<XbCoursePreset> xbCoursePage = xbCoursePresetService.getXbCoursePresets(searhMap);
 		roomsearhMap.put("EQ_organId",organId);
 		List<XbClassroom> xbClassroomList = studentService.getXbClassroomList(pageable,roomsearhMap).getContent();
-		model.addAttribute("xbClassroomList",xbClassroomList);
-		model.addAttribute("xbCourseList",xbCoursePage);
+		roomsearhMap.put("EQ_isAttendClass",0);
+		List<SysEmployee> employeeList = employeeService.getAccountList(pageable,roomsearhMap).getContent();
 		JSONObject jsonObject = new JSONObject();
-		jsonObject.put("msg", "新建科目成功");
 		jsonObject.put("status","0");
 		jsonObject.put("xbClassroomList",com.alibaba.fastjson.JSONObject.toJSON(xbClassroomList));
 		jsonObject.put("xbCourseList",com.alibaba.fastjson.JSONObject.toJSON(xbCoursePage));
+		jsonObject.put("employeeList",com.alibaba.fastjson.JSONObject.toJSON(employeeList));
 		logger.info("新建科目返回json参数="+jsonObject.toString());
 		resp.setContentType("text/html;charset=UTF-8");
 		try {

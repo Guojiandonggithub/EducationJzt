@@ -41,7 +41,7 @@
                         <label for="classroomName"><span>*</span>教室名称</label>
                         <input type="text" placeholder="" required th:value="${xbClassroom.classroomName}" name="classroomName" id="classroomName" class="remark">
                     </div>
-                    <input type="hidden" name="id" th:value="${xbClassroom.id}">
+                    <input type="hidden" name="id" id="classroomid" th:value="${xbClassroom.id}">
                     <div class="form-group">
                         <label for="organId" style="width:130px;"><span>*</span>校区</label>
                         <select name="organId" >
@@ -53,6 +53,7 @@
             </div>
             <div class="enrollCon">
                 <button class="save" type="button" onclick="saveRoom();">保存</button>
+                <button class="save" type="button" style="margin-right:22px;" onclick="javascript:history.go(-1)">返回</button>
             </div>
         </div>
     </div>
@@ -94,6 +95,10 @@ $(function(){
         }
     });
     jQuery.validator.addMethod('checkName', function (value, element) {
+        var id = $("#classroomid").val();
+        if(id){
+                return true;
+        }
         var msgcode=null;
         $.ajax({
             url: basePath + "/student/checkClassRoom",
