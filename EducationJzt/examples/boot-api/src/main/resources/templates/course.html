@@ -14,14 +14,17 @@
     <link rel="stylesheet" href="../static/pages/css/madal.css">
     <link rel="stylesheet" href="../static/pages/css/bootstrap.min.css">
     <link rel="stylesheet" href="../static/pages/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="../static/pages/css/kd.ui.plugin.css" />
 
     <script src="../static/pages/js/jquery.min.js"></script>
     <script src="../static/pages/js/bootstrap.min.js"> </script>
     <script src="../static/pages/js/ace.min.js"> </script>
     <script src="../static/pages/js/ace-elements.min.js"></script>
     <script src="../static/pages/laydate/laydate.js"></script>
-
-
+    <script src="../static/pages/js/jquery.validate17.min.js"></script>
+    <script src="../static/pages/js/additiona17l-methods.min.js"></script>
+    <script src="../static/pages/js/messages_zh.min.js"></script>
+    <script src="../static/pages/js/kd.ui.plugin.js"></script>
 
 </head>
 <body>
@@ -180,7 +183,11 @@
                                                 </td>
                                                 <td th:text="${obj.sysorgans.organName}">开课校区</td>
                                                 <td th:text="${obj.periodNum}">课时</td>
-                                                <td th:text="${obj.money}">金额</td>
+                                                <td th:switch="${obj.xbCourse.chargingMode}">
+                                                    <span th:case="0" th:text="${obj.money}+'/课时'"></span>
+                                                    <span th:case="2" th:text="${obj.money}+'/期'"></span>
+                                                </td>
+
                                                 <td th:text="${obj.xbCourse.createDate}+' '+${obj.xbCourse.createTime}">创建日期</td>
                                                 <td th:switch="${obj.xbCourse.state}">
                                                     <span th:case="0">正常</span>
@@ -389,22 +396,24 @@
                 <div class="modal-header no-padding">
                     <div class="table-header">新建课程类别</div>
                 </div>
+                <form id="courstypeform">
                     <div class="modal-body" style="padding:15px !important">
-                        <input id="courTypeId" type="hidden" value=""/>
+                        <input id="courTypeId" name="id" type="hidden" value=""/>
                         <div class="form-group" style="display: inline;">
                             <label for="courseTypeLayOrder">序号</label>
-                            <input id="courseTypeLayOrder" type="text" value="" placeholder="建议不要输入重复序号">
+                            <input id="layOrder" name="layOrder" type="text" value="" placeholder="建议不要输入重复序号">
                         </div>
                         <div class="form-group" style="display: inline; margin-left:20px;">
                             <label for="courseTypecourseTypeName">类别名称</label>
-                            <input id="courseTypecourseTypeName" type="text" placeholder="请输入课程类别">
+                            <input id="courseTypecourseTypeName" name="courseTypeName" type="text" placeholder="请输入课程类别">
                         </div>
                     </div>
+                </form>
                 <div class="modal-footer no-margin-top">
                     <button class="btn pull-left" data-dismiss="modal">
                         取消
                     </button>
-                    <button class="btn pull-right" data-dismiss="modal" onclick="saveCoruseType()">
+                    <button class="btn pull-right"  onclick="saveCoruseType()" type="button">
                         确定
                     </button>
                 </div>
@@ -437,6 +446,33 @@
         </div>
     </div>
 </div>
+<script  >
+    $(function(){
+        //课程类别验证非空唯一性
+        $("#courstypeform").validate({
+            rules : {
+                layOrder : {
+                    required:true,
+                    digits:true
+                },
+                messages: {
+                    layOrder: {
+                        required: "排序不能为空",
+                        digits: "必须输入数字"
+                    },
+                },
+                errorPlacement: function(error, element) {
+                    if ( element.is(":radio") )
+                        error.appendTo( element.parent().next().next() );
+                    else if ( element.is(":checkbox") )
+                        error.appendTo ( element.next() );
+                    else
+                        error.appendTo( element.parent().next() );
+                }
+            }
+        });
+    })
+</script>
 <!----------------------------------------------------------课程函数群------------------------------------------------------------->
 <script type="text/javascript" th:inline="javascript">
     var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/;
@@ -458,10 +494,10 @@
             var status = data.status;
             var msg = data.msg;
             if(status=="0"){
-                alert(data.msg);
+                $.kd.kdAlert(data.msg);
                 window.location.href=basePath+"/jwcentercourse/tocourse"
             }else{
-                alert(msg);
+                $.kd.kdAlert(msg);
             }
         },
         error:function(){
@@ -480,7 +516,7 @@
                 async: true,
                 success: function (data) {
                     console.log("回调成功")
-                    alert("删除成功")
+                    $.kd.kdAlert("删除成功")
                     $("#courseList_tbodyid").html("");
                     $("#courseList_tbodyid").append(data);
                 },
@@ -545,23 +581,15 @@
 <script type="text/javascript" th:inline="javascript">
     //新建课程类别
     function saveCoruseType(){
-        var courTypeId =  $("#courTypeId").val();
-        var courseTypeLayOrder =  $("#courseTypeLayOrder").val();
-        var courseTypecourseTypeName =  $("#courseTypecourseTypeName").val();
-        if(courseTypeLayOrder==""){
-            alert("请填写序号")
-            return false;
-        }
-        if(courseTypecourseTypeName==""){
-            alert("请填写课程类别")
-            return false;
-        }
+      if ($("#courstypeform").valid()) {
+        var data= serializeObject("#courstypeform");
+        var courTypeId =  data.id;
         $.ajax({
             url: [[@{/jwcentercourse/savecoursetype}]],
             type: 'post',
             dataType: 'json',
             contentType: 'application/json',
-            data: JSON.stringify({id:courTypeId,layOrder : courseTypeLayOrder,courseTypeName : courseTypecourseTypeName}),
+            data: JSON.stringify(data),
             async: true,
             success: function(data) {
                 console.log("回调成功")
@@ -580,7 +608,8 @@
                         html.push('     <td><div class="btn-group"><p data-toggle="dropdown" class="down" aria-expanded="false">更多<span class="ace-icon fa fa-caret-down icon-on-right"></span></p><ul class="dropdown-menu dropdown-default"><li><a href="#modal-table1"  data-toggle="modal" onclick="javascript:sourceEdit(\''+id+'\',\''+layOrder+'\',\''+courseTypeName+'\')">编辑</a></li><li><a onclick="javascript:sourceTypeRemove(\''+id+'\')">删除</a></li></ul></div></td>');
                         html.push('</tr>');
                         $("#courseTypeList").append(html.join(""))
-                        alert(msg);
+                        $.kd.kdAlert(msg);
+                        
                     }else{
                         $("#"+courTypeId).parent().remove();
                         var html = [];
@@ -594,16 +623,20 @@
                         $("#courTypeId").val("");
                          $("#courseTypeLayOrder").val("");
                          $("#courseTypecourseTypeName").val("");
-                        alert("更新类别成功");
+                        $.kd.kdAlert("更新类别成功");
                     }
                 }else{
-                    alert(msg);
+                    $.kd.kdAlert(msg);
                 }
+              $('#modal-table1').modal('hide')
             },
             error:function(){
                 console.log("回调失败")
             }
         });
+      }else {
+          console.log("验证失败")
+      }
     };
     //课程类别编辑赋值
     function sourceEdit(id,layOrder,courseTypeName){
@@ -613,7 +646,8 @@
     }
     //删除课程类别
     function sourceTypeRemove(id){
-        if(confirm("确定要删除该课程类别?")) {
+        /*if(confirm("")) {*/
+        $.kd.kdConfirm("确定要删除该课程类别?",function(){
             $.ajax({
                 url: basePath + '/jwcentercourse/removecoursetype',
                 type: 'get',
@@ -622,7 +656,7 @@
                 async: true,
                 success: function (data) {
                     console.log("回调成功")
-                    alert("删除类别成功")
+                    $.kd.kd$.kd.kdAlert("删除类别成功");
                     $("#coursetype_tbody_id").html("");
                     $("#coursetype_tbody_id").append(data);
                 },
@@ -630,7 +664,9 @@
                     console.log("回调失败")
                 }
             });
-        }
+        })
+
+        /*}*/
     }
 
 </script>
@@ -682,7 +718,7 @@
                             html.push('</td>');
                             html.push('</tr>');
                             $("#subjectList").append(html.join(""));
-                            alert(msg);
+                            $.kd.kdAlert(msg);
                         }else{
                             $("#"+subjectId).parent().remove();
                             html.push('<tr id="choose" class="choose"   >');
@@ -712,10 +748,10 @@
                             $("#subjectList").append(html.join(""));
                             $("#subjectId").val("");
                             $("#xbSubjectName").val("");
-                            alert("更新类别成功");
+                            $.kd.kdAlert("更新类别成功");
                         }
                     }else{
-                        alert(msg);
+                        $.kd.kdAlert(msg);
                     }
                 },
                 error:function(){
@@ -745,7 +781,7 @@
                 async: true,
                 success: function (data) {
                     console.log("删除科目回调成功");
-                    alert("删除科目成功")
+                    $.kd.kdAlert("删除科目成功")
                     $("#subject_tbody_id").html("");
                     $("#subject_tbody_id").append(data);
                 },

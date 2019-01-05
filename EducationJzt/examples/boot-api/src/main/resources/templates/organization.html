@@ -15,13 +15,14 @@
     <link rel="stylesheet" href="../static/pages/css/Inmanagement.css">
     <link rel="stylesheet" href="../static/pages/css/bootstrap.min.css">
     <link rel="stylesheet" href="../static/pages/css/font-awesome.min.css" />
-
+    <link rel="stylesheet" href="../static/pages/css/kd.ui.plugin.css" />
     <script src="../static/pages/js/jquery.min.js"></script>
     <script src="../static/pages/js/bootstrap.min.js"> </script>
     <script src="http://code.jquery.com/jquery-latest.js"></script>
     <script src="../static/pages/js/jquery.validate17.min.js"></script>
     <script src="../static/pages/js/additiona17l-methods.min.js"></script>
     <script src="../static/pages/js/messages_zh.min.js"></script>
+    <script src="../static/pages/js/kd.ui.plugin.js"></script>
 </head>
 <body>
 <div th:replace="layout::top"></div>
@@ -352,9 +353,7 @@ function selectAll(){
                 success: function (data) {
                     var status = data.status;
                     var msg = data.msg;
-                    alert("编辑成功");
-                    //$("#infomation").html("编辑成功");
-                    //$('#modal-infomation').modal();
+                    $.kd.kdAlert("编辑成功！");
                     window.location.href = basePath + '/accounts/getOrgansList';
                     /*if(status=="0"){
                         if (confirm(msg)) {
@@ -419,7 +418,7 @@ function selectAll(){
                 success: function(data) {
                     var status = data.status;
                     var msg = data.msg;
-                    alert("删除成功！");
+                    $.kd.kdAlert("删除成功！");
                     window.location.href = basePath + '/accounts/getOrgansList';
                 },
                 error:function(){

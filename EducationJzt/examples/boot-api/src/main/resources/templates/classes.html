@@ -14,13 +14,13 @@
     <link rel="stylesheet" href="../static/pages/css/madal.css"/>
     <link rel="stylesheet" href="../static/pages/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="../static/pages/css/font-awesome.min.css" />
-
+    <link rel="stylesheet" href="../static/pages/css/kd.ui.plugin.css" />
     <script src="../static/pages/js/jquery.min.js"></script>
     <script src="../static/pages/js/bootstrap.min.js"> </script>
     <script src="../static/pages/js/ace.min.js"> </script>
     <script src="../static/pages/js/ace-elements.min.js"></script>
     <script src="../static/pages/laydate/laydate.js"></script>
-
+    <script src="../static/pages/js/kd.ui.plugin.js"></script>
 
 
 </head>
@@ -380,7 +380,7 @@
                     success: function (data) {
                         var status = data.status;
                         var msg = data.msg;
-                        alert("删除成功！");
+                        $.kd.kdAlert("删除成功！");
                         window.location.href = basePath + '/student/getXbClassroomList?room=0';
                     },
                     error: function () {
@@ -401,7 +401,7 @@
                     success: function (data) {
                         var status = data.status;
                         var msg = data.msg;
-                        alert("删除成功！");
+                        $.kd.kdAlert("删除成功！");
                         window.location.href = basePath + '/student/getXbClassroomList?room=1';
                     },
                     error: function () {

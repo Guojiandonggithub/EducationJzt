@@ -14,13 +14,14 @@
     <link rel="stylesheet" href="../static/pages/css/newStudent.css">
     <link rel="stylesheet" href="../static/pages/css/bootstrap.min.css">
     <link rel="stylesheet" href="../static/pages/css/font-awesome.min.css" />
-
+    <link rel="stylesheet" href="../static/pages/css/kd.ui.plugin.css" />
     <script src="../static/pages/js/jquery.min.js"></script>
     <script src="../static/pages/js/bootstrap.min.js"> </script>
     <script src="../static/pages/js/ace.min.js"> </script>
     <script src="../static/pages/js/ace-elements.min.js"></script>
     <script src="../static/pages/laydate/laydate.js"></script>
     <script src="../static/pages/js/course-newlesson.js"></script>
+    <script src="../static/pages/js/kd.ui.plugin.js"></script>
 
 </head>
 
@@ -58,33 +59,39 @@
                             <option value="-1">--请选择--</option>
                             <option th:each="cts,userStat:${subjectlist}" th:selected="${cts.id == xbCourse?.subjectId}"
                                     th:value="${cts.id}" th:text="${cts.subjectName}"></option>
-                        </select>
-                        <!-- <a href="#modal-table1"  data-toggle="modal">新建科目</a>-->
-                    </div>
-                    <div class="form-group">
-                        <label><span>*</span>课程名称</label>
-                        <input type="text" name="courseName" id="courseName" th:value="${xbCourse?.courseName}"
-                               placeholder="请输入课程名称">
-                    </div>
-                    <div class="form-group">
-                        <label><span>*</span>授课模式</label>
-                        <input name="type" type="radio" class="ace" value="0" th:checked="${xbCourse?.type=='0'}"><span
-                            class="lbl">班课</span>
-                        <input name="type" type="radio" class="ace" value="1" th:checked="${xbCourse?.type=='1'}"><span
-                            class="lbl">一对一</span>
-                    </div>
-                    <div class="form-group">
-                        <label><span>*</span>收费模式</label>
-                        <p><input type="radio" name="chargingMode" value="0" th:checked="${xbCourse?.chargingMode=='0'}"
-                                  th:onclick="|chargingMode('0')|">按课时</p>
-                        <!--<p><input type="radio" name="chargingMode" value="2" th:checked="${xbCourse?.chargingMode=='2'}"
-                              th:onclick="|chargingMode('2')|">按期</p>
-                    <p><input type="radio" name="chargingMode" value="1" th:checked ="${xbCourse?.chargingMode=='1'}"
-                              th:onclick="|chargingMode('1')|">按时间</p>-->
-                    </div>
-                    <div class="form-group">
-                        <label><span>*</span>开课校区</label>
-                        <span th:if=" ${#strings.isEmpty(xbCourse) }">
+                            </select>
+                            <!-- <a href="#modal-table1"  data-toggle="modal">新建科目</a>-->
+                        </div>
+                        <div class="form-group">
+                            <label><span>*</span>课程名称</label>
+                            <input type="text" name="courseName" id="courseName" th:value="${xbCourse?.courseName}"
+                                placeholder="请输入课程名称">
+                        </div>
+                        <div class="form-group">
+                            <label><span>*</span>授课模式</label>
+                            <input name="type" type="radio" class="ace" value="0" th:checked="${xbCourse?.type=='0'}"><span
+                                class="lbl">班课</span>
+                            <input name="type" type="radio" class="ace" value="1" th:checked="${xbCourse?.type=='1'}"><span
+                                class="lbl">一对一</span>
+                        </div>
+                        <div class="form-group" th:if=" ${#strings.isEmpty(xbCourse) }">
+                            <label><span>*</span>收费模式</label>
+                            <p><input type="radio" checked="checked" name="chargingMode" value="0"
+                                    th:onclick="|chargingModeClick('0')|">按课时</p>
+                            <p><input type="radio" name="chargingMode" value="2"
+                                  th:onclick="|chargingModeClick('2')|">按期</p>
+                        </div>
+                        <div class="form-group" th:if=" ${!#strings.isEmpty(xbCourse) }">
+                            <label><span>*</span>收费模式</label>
+                            <p><input type="radio" checked="checked" name="chargingMode" value="0"
+                                      th:checked="${xbCourse?.chargingMode=='0'}"
+                                      th:onclick="|chargingModeClick('0')|">按课时</p>
+                            <p><input type="radio" name="chargingMode" value="2" th:checked="${xbCourse?.chargingMode=='2'}"
+                                      th:onclick="|chargingModeClick('2')|">按期</p>
+                        </div>
+                        <div class="form-group">
+                            <label><span>*</span>开课校区</label>
+                            <span th:if=" ${#strings.isEmpty(xbCourse) }">
                                 <p><input type="radio" name="openingType" value="0" checked="checked" th:onclick="|schoolType('0',${xbCourse?.id})|">全部校区</p>
                                 <p><input type="radio" name="openingType" value="1" th:onclick="|schoolType('1',${xbCourse?.id})|">指定校区</p>
                             </span>
@@ -96,13 +103,15 @@
                     <div id="zhidingSchool" class="form-group">
                         <p th:each="sorg,sorgSta:${sorganList}">
                                 <span th:if=" ${#strings.isEmpty(xbCourse) }" style="display: none">
-                                    <input type="checkbox" name="openingTypes" checked="checked" th:onclick="|appointSchool('${sorgSta.index}','${sorg.organName}','${xbCourse?.id}','${sorg.id}',this)|"
-                                           th:value="${sorg.id}">
+                                    <input type="checkbox" name="openingTypes" checked="checked"
+                                           th:onclick="|appointSchool('${sorgSta.index}','${sorg.organName}','${xbCourse?.id}','${sorg.id}',this)|"
+                                        th:value="${sorg.id}">
                                     <span th:text="${sorg.organName}"></span>
                                 </span>
-                            <span th:if=" ${!#strings.isEmpty(xbCourse) }" th:if=" ${!#strings.isEmpty(pre) }">
-                                    <input type="checkbox" name="openingTypes" disabled="disabled" th:checked="${sorg.id} == ${pre.organIds}"
-                                           th:value="${sorg.id}">
+                                <span th:if=" ${!#strings.isEmpty(xbCourse) }" th:if=" ${!#strings.isEmpty(pre) }">
+                                    <input type="checkbox" name="openingTypes" disabled="disabled"
+                                           th:checked="${sorg.id} == ${pre.organIds}"
+                                        th:value="${sorg.id}">
                                     <span th:text="${sorg.organName}"></span>
                                 </span>
                         </p>
@@ -178,92 +187,112 @@
             <button class="save" onclick="javascript:history.go(-1)" style="margin-right:22px;">返回</button>
         </div>
     </div>
-</div>
 
-<script type="text/javascript" th:inline="javascript">
-    var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/ ;
-    //--------------------------------------------------------------新建课程---麻烦版本---------------------------------------------------------------------
-    function saveCourse() {
-        var datafrom = serializeObject("#dJFrom");
-        var list = [];
-        //全部校区
-        if (datafrom.openingType == "0") {
-            $("input[name='openingTypes']:checked").each(function (j) {
-                var obj = {};
-                obj.courseId = $("#XbCoursePresetcourseId").val();
-                obj.organIds = $(this).val();
-                obj.periodNum = $("#XbCoursePresetperiodNum").val();
-                obj.money = $("#XbCoursePresetmoney").val();
-                list.push(obj);
-            });
-            //指定校区
-        } else {
-            $("#dingjiaiform tr:not(:first)").each(function () {
-                var $ele = $(this);
-                var obj = {};
-                var x = $ele.find("input");
-                obj.courseId = x.eq(0).val();
-                obj.organIds = x.eq(1).val();
-                obj.periodNum = x.eq(2).val();
-                obj.money = x.eq(3).val();
-                obj.id = x.eq(4).val();
-                list.push(obj);
-            });
-        }
-        datafrom.xbcoursepresetlist = list;
-        $.ajax({
-            url: basePath + '/jwcentercourse/savecourse',
-            type: 'get',
-            dataType: 'json',
-            contentType: "application/json;charset=UTF-8",
-            data: {
-                dataentity: JSON.stringify(datafrom)
-            },
-            cache: false,
-            async: true,
-            success: function (data) {
-                console.log("回调成功")
-                var status = data.status;
-                var msg = data.msg;
-                if (status == "0") {
-                    alert(data.msg);
-                    window.location.href = basePath + "/jwcentercourse/tocourse?sort=xbCourse.createDate,DESC&sort=xbCourse.createTime,DESC"
+    <script type="text/javascript" th:inline="javascript">
+            var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/ ;
+            //--------------------------------------------------------------新建课程---麻烦版本---------------------------------------------------------------------
+            function saveCourse() {
+                var datafrom = serializeObject("#dJFrom");
+                var list = [];
+                //全部校区
+                if (datafrom.openingType == "0") {
+                    $("input[name='openingTypes']:checked").each(function (j) {
+                        var obj = {};
+                        obj.courseId = $("#XbCoursePresetcourseId").val();
+                        obj.organIds = $(this).val();
+                        obj.periodNum = $("#XbCoursePresetperiodNum").val();
+                        obj.money = $("#XbCoursePresetmoney").val();
+                        list.push(obj);
+                    });
+                    //指定校区
                 } else {
                     alert(msg);
                 }
-            },
-            error: function () {
-                console.log("回调失败")
+                datafrom.xbcoursepresetlist = list;
+                $.ajax({
+                    url: basePath + '/jwcentercourse/savecourse',
+                    type: 'get',
+                    dataType: 'json',
+                    contentType: "application/json;charset=UTF-8",
+                    data: {
+                        dataentity: JSON.stringify(datafrom)
+                    },
+                    cache: false,
+                    async: true,
+                    success: function (data) {
+                        console.log("回调成功")
+                        var status = data.status;
+                        var msg = data.msg;
+                        if (status == "0") {
+                                $.kd.kdAlert(data.msg,function(){
+                                    window.location.href = basePath + "/jwcentercourse/tocourse?sort=xbCourse.createDate,DESC&sort=xbCourse.createTime,DESC"
+                                });
+                            } else {
+                            $.kd.kdAlert(msg);
+                        }
+                    },
+                    error: function () {
+                        console.log("回调失败")
+                    }
+                });
+            };
+
+            //删除课程类别
+            function subjectRemove(id) {
+                $.ajax({
+                    url: basePath+'/jwcentercourse/removesubject',
+                    type: 'post',
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        id: id
+                    }),
+                    async: true,
+                    success: function (data) {
+                        console.log("回调成功")
+                        var status = data.status;
+                        var msg = data.msg;
+                        if (status == "0") {
+                            var id = data.cousrtype.id;
+                            $("#" + id).parent().remove();
+                            $.kd.kdAlert(msg);
+                        } else {
+                            $.kd.kdAlert(msg);
+                        }
+                    },
+                    error: function () {
+                        console.log("回调失败")
+                    }
+                });
             }
         });
     };
 
-    //删除课程类别
-    function subjectRemove(id) {
-        $.ajax({
-            url: basePath+'/jwcentercourse/removesubject',
-            type: 'post',
-            dataType: 'json',
-            contentType: 'application/json',
-            data: JSON.stringify({
-                id: id
-            }),
-            async: true,
-            success: function (data) {
-                console.log("回调成功")
-                var status = data.status;
-                var msg = data.msg;
-                if (status == "0") {
-                    var id = data.cousrtype.id;
-                    $("#" + id).parent().remove();
-                    alert(msg);
-                } else {
-                    alert(msg);
-                }
-            },
-            error: function () {
-                console.log("回调失败")
-            }
+            function serializeObject(form) {
+                var o = {};
+                var a = $(form).serializeArray();
+                $.each(a, function () {
+                    if (o[this.name]) {
+                        if (!o[this.name].push) {
+                            o[this.name] = [o[this.name]];
+                        }
+                        o[this.name].push(this.value || '');
+                    } else {
+                        o[this.name] = this.value || '';
+                    }
+                });
+                return o;
+            };
+    </script>
+    <!----------------------------------------------------------科目函数群------------------------------------------------------------->
+    <script>
+        ! function () {
+            laydate({
+                elem: '#demo'
+            }); //绑定元素
+        }();
+        $(".glyphicon-remove-sign").click(function () {
+            $(this).parent().parent(".extend-list").hide();
         });
     }
 

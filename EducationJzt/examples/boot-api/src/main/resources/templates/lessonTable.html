@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="../static/pages/css/lessonTable.css">
     <link rel="stylesheet" href="../static/pages/css/bootstrap.min.css">
     <link rel="stylesheet" href="../static/pages/css/font-awesome.min.css" />
-
+    <link rel="stylesheet" href="../static/pages/css/kd.ui.plugin.css" />
     <script src="../static/pages/js/jquery-1.9.1.min.js"></script>
     <script src="../static/pages/js/bootstrap.min.js"> </script>
     <script src="../static/pages/js/ace.min.js"> </script>
@@ -22,7 +22,7 @@
     <script src="../static/pages/laydate/laydate.js"></script>
     <script src="../static/pages/js/fullcalendar.min.js"></script>
     <script src="../static/pages/js/jquery-ui-1.10.2.custom.min.js"></script>
-
+    <script src="../static/pages/js/kd.ui.plugin.js"></script>
 
 </head>
 
@@ -140,7 +140,7 @@
                             }
                         },
                         error:function(){
-                            alert("错了")
+                            $.kd.kdAlert("错了")
                         }
                     });
                 },

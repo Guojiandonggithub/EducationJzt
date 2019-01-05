@@ -16,13 +16,13 @@
     <link rel="stylesheet" href="../static/pages/css/madal.css"/>
     <link rel="stylesheet" href="../static/pages/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="../static/pages/css/font-awesome.min.css" />
-
+    <link rel="stylesheet" href="../static/pages/css/kd.ui.plugin.css" />
     <script src="../static/pages/js/jquery.min.js"></script>
     <script src="../static/pages/js/bootstrap.min.js"> </script>
     <script src="../static/pages/js/ace.min.js"> </script>
     <script src="../static/pages/js/ace-elements.min.js"></script>
     <script src="../static/pages/laydate/laydate.js"></script>
-
+    <script src="../static/pages/js/kd.ui.plugin.js"></script>
     
 
 </head>
@@ -243,7 +243,7 @@ function deleteEmployee(id){
             success: function(data) {
                 var status = data.status;
                 var msg = data.msg;
-                alert("删除成功！");
+                $.kd.kdAlert("删除成功！");
                 window.location.href = basePath + '/accounts/getEmployeeList';
             },
             error:function(){
@@ -284,7 +284,7 @@ function deleteEmployee(id){
         $(function(){
             /*$("#submenu li").click(function() {
                 $(this).parents('li').addClass('active');  // 删除其他兄弟元素的样式
-                alert($(this).parents('li'));
+                $.kd.kdAlert($(this).parents('li'));
                 $(this).parents('li').addClass('open');  // 删除其他兄弟元素的样式
                 $(this).siblings('li').removeClass('active');  // 删除其他兄弟元素的样式
                 $(this).addClass('active');                            // 添加当前元素的样式

@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="../static/pages/css/madal.css">
     <link rel="stylesheet" href="../static/pages/css/bootstrap.min.css">
     <link rel="stylesheet" href="../static/pages/css/font-awesome.min.css" />
-
+    <link rel="stylesheet" href="../static/pages/css/kd.ui.plugin.css" />
     <script src="../static/pages/js/jquery.min.js"></script>
     <script src="../static/pages/js/bootstrap.min.js"> </script>
     <script src="../static/pages/js/ace.min.js"> </script>
@@ -22,7 +22,7 @@
     <script src="../static/pages/js/jquery.validate17.min.js"></script>
     <script src="../static/pages/js/additiona17l-methods.min.js"></script>
     <script src="../static/pages/js/messages_zh.min.js"></script>
-
+    <script src="../static/pages/js/kd.ui.plugin.js"></script>
 </head>
 
 <body>
@@ -239,7 +239,7 @@
                     success: function (data) {
                         //var status = data.status;
                         var msg = data.msg;
-                        alert("编辑成功！");
+                        $.kd.kdAlert("编辑成功！");
                         window.location.href = basePath + '/student/getXbClassroomList?room=1';
                         /*if(status=="0"){
                             if (confirm(msg)) {
@@ -252,7 +252,6 @@
                 });
             }
         }
-
         function serializeObject(form) {
             var o = {};
             var a = $(form).serializeArray();

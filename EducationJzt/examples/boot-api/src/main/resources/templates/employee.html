@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="../static/pages/css/madal.css">
     <link rel="stylesheet" href="../static/pages/css/bootstrap.min.css">
     <link rel="stylesheet" href="../static/pages/css/font-awesome.min.css" />
-
+    <link rel="stylesheet" href="../static/pages/css/kd.ui.plugin.css" />
     <script src="../static/pages/js/jquery.min.js"></script>
     <script src="../static/pages/js/bootstrap.min.js"> </script>
     <script src="../static/pages/js/ace.min.js"> </script>
@@ -23,7 +23,7 @@
     <script src="http://static.runoob.com/assets/jquery-validation-1.14.0/lib/jquery.js"></script>
     <script src="http://static.runoob.com/assets/jquery-validation-1.14.0/dist/jquery.validate.min.js"></script>
     <script src="http://static.runoob.com/assets/jquery-validation-1.14.0/dist/localization/messages_zh.js"></script>
-
+    <script src="../static/pages/js/kd.ui.plugin.js"></script>
 </head>
 
 <body>
@@ -306,7 +306,7 @@
             var file = this.files[0]; //获取上传文件列表中第一个文件
             if (!/image\/\w+/.test(file.type)) {
                 //图片文件的type值为image/png或image/jpg
-                alert("文件必须为图片！");
+                $.kd.kdAlert("文件必须为图片！");
                 return false;
             }
             // console.log(file);
@@ -363,17 +363,14 @@
                     success: function (data) {
                         var status = data.status;
                         var msg = data.msg;
-                        alert("编辑成功！");
+                        $.kd.kdAlert("编辑成功！");
                         window.location.href = basePath + '/accounts/getEmployeeList';
                     }
                 });
             }else{
                 var len=$("input[name='organId']:checked").length;
                 if(len==0){
-                    $("#jigou").hide();
-                    //$(this).parent(".none").hide();
-                    $(".agency-account").show(500)
-                    /*alert("请填写机构账号！");*/
+                    $.kd.kdAlert("请填写机构账号！");
                 }
             }
         }

@@ -20,7 +20,7 @@
     <link rel="stylesheet" href="../static/pages/css/lessonTable.css">
     <link rel="stylesheet" href="../static/pages/css/syllabus.css">
 
-
+    <link rel="stylesheet" href="../static/pages/css/kd.ui.plugin.css" />
     <script src="../static/pages/js/jquery.min.js"></script>
     <script src="../static/pages/js/bootstrap.min.js"> </script>
     <script src="../static/pages/js/ace.min.js"> </script>
@@ -28,7 +28,7 @@
     <script src="../static/pages/laydate/laydate.js"></script>
     <script src="../static/pages/js/fullcalendar.min.js"></script>
     <script src="../static/pages/js/jquery-ui-1.10.2.custom.min.js"></script>
-
+    <script src="../static/pages/js/kd.ui.plugin.js"></script>
 </head>
 
 <body>
@@ -639,13 +639,13 @@
                     var xbclassroom = rsxbAttendClass.xbclassroom; //教室
                     var sysemployee = rsxbAttendClass.sysemployee; //教师
                     if (status == "00") {
-                        alert(msg);
+                        $.kd.kdAlert(msg);
                         window.location.href = basePath + '/jw_center_arranging_course/to_arranging_course';
                     } else if (status == "01") {
-                        alert(msg);
+                        $.kd.kdAlert(msg);
                         window.location.href = basePath + '/jw_center_arranging_course/to_arranging_course';
                     } else {
-                        alert(msg);
+                        $.kd.kdAlert(msg);
                     }
 
                 },
@@ -721,7 +721,7 @@
                 async: true,
                 success: function(data) {
                 console.log("删除排课回调成功")
-                alert("删除排课成功");
+                $.kd.kdAlert("删除排课成功");
                 $("#xbAttendList_tbodyid").html("");
                 $("#xbAttendList_tbodyid").append(data);
                 },
@@ -742,7 +742,7 @@
                 async: true,
                 success: function(data) {
                     console.log("删除排课回调成功")
-                    alert("删除排课成功");
+                    $.kd.kdAlert("删除排课成功");
                     $("#xbAttendConflicList_tbodyid").html("");
                     $("#xbAttendConflicList_tbodyid").append(data);
                 },
@@ -956,7 +956,7 @@
                             }
                         },
                         error: function () {
-                            alert("错了")
+                            $.kd.kdAlert("错了")
                         }
                     });
                 },
