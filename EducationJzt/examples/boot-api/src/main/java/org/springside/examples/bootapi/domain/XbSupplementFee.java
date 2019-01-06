@@ -34,6 +34,10 @@ public class XbSupplementFee {
     public String orderNumber;
     public String type;
 
+    @Transient
+    public String classId;
+    @Transient
+    public String toClassId;
     public XbSupplementFee() {
 
     }

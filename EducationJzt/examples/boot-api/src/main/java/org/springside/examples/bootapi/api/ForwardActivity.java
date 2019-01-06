@@ -11,8 +11,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springside.examples.bootapi.domain.SysEmployee;
 import org.springside.examples.bootapi.domain.SysEmployeeSub;
 import org.springside.examples.bootapi.domain.SysOrgans;
+import org.springside.examples.bootapi.domain.SysRole;
 import org.springside.examples.bootapi.service.EmployeeService;
 import org.springside.examples.bootapi.service.OrgansService;
+import org.springside.examples.bootapi.service.RoleService;
+
+import javax.servlet.http.HttpSession;
+import java.util.HashMap;
+import java.util.Map;
 
 
 @Controller
@@ -24,10 +30,17 @@ public class ForwardActivity {
 	private EmployeeService accountService;
 	@Autowired
 	private OrgansService organsService;
+	@Autowired
+	private RoleService roleService;
 
 	@RequestMapping("/index")
-	public String index(ModelMap map) {
+	public String index(HttpSession session,ModelMap map) {
 		map.put("title", "你好");
+
+		SysEmployee sysEmployee = (SysEmployee)session.getAttribute("sysEmployee");
+		session.setAttribute("userName",sysEmployee.employeeName);
+		session.setAttribute("organName",sysEmployee.sysOrgans.organName);
+		session.setAttribute("roleName",sysEmployee.sysRole.roleName);
 		return "indexs";
 	}
 
@@ -46,12 +59,15 @@ public class ForwardActivity {
 	}
 
 	@RequestMapping("/employee")
-	public String employee(ModelMap model) {
+	public String employee(Pageable pageable, ModelMap model) {
+		Map<String, Object> searchParams = new HashMap<>();
 		Iterable<SysOrgans> organsList = organsService.getOrgansList();
+		Page<SysRole> sysRolePage = roleService.getRoleList(pageable,searchParams);
 		logger.info("查询到机构organsList="+organsList);
 		model.addAttribute("organsList",organsList);
 		model.addAttribute("employee",new SysEmployee());
 		model.addAttribute("employeeSub",new SysEmployeeSub());
+		model.addAttribute("sysRolePage",sysRolePage.getContent());
 		return "employee";
 	}
 

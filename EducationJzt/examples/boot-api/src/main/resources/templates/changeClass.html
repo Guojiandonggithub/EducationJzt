@@ -24,81 +24,82 @@
 
 <body>
     <div th:replace="layout::top"></div>
+    <form id="changeForm">
     <div class="main-container" id="main-container">
         <div th:replace="layout::left('12','')">
         </div>
-        <div class="main-content">
-            <div class="breadcrumbs" id="breadcrumbs">
-                <img src="../static/pages/img/line1.png">
-                <span>转班</span>
-                <img src="../static/pages/img/line.png">
-            </div>
-            <div class="enrollCon" id="changeClassId">
-                <button class="choiceStu" href="#modal-table" data-toggle="modal" id="chooseid" onclick="getCourseList()"
-                    style="margin-bottom:22px;">选择学员</button>
-                <th:block th:if="${xbStudent}" th:fragment="changeClassFragment">
-                    <div class="chooseInfo">
-                        <p><span>学员姓名：</span>
-                            <th:block th:text="${xbStudent.studentName}"></th:block>
-                        </p>
-                        <p><span>联系方式：</span>
-                            <th:block th:text="${xbStudent.contactPhone}"></th:block>
-                        </p>
-                        <button href="#modal-table" data-toggle="modal" type="button" oninput="getCourseList()">重新选择</button>
-                    </div>
-                    <div class="stopClass">
+            <div class="main-content">
+                <div class="breadcrumbs" id="breadcrumbs">
+                    <img src="../static/pages/img/line1.png">
+                    <span>转班</span>
+                    <img src="../static/pages/img/line.png">
+                </div>
+                <div class="enrollCon" id="changeClassId">
+                    <button class="choiceStu" type="button" href="#modal-table" data-toggle="modal" id="chooseid" onclick="getCourseList()"
+                        style="margin-bottom:22px;">选择学员</button>
+                    <th:block th:if="${xbStudent}" th:fragment="changeClassFragment">
+                        <div class="chooseInfo">
+                            <p><span>学员姓名：</span>
+                                <th:block th:text="${xbStudent.studentName}"></th:block>
+                            </p>
+                            <p><span>联系方式：</span>
+                                <th:block th:text="${xbStudent.contactPhone}"></th:block>
+                                <input type="hidden" name="studentId" th:value="${xbStudent.id}"/>
+                            </p>
+                            <button href="#modal-table" data-toggle="modal" type="button" oninput="getCourseList()">重新选择</button>
+                        </div>
+                        <div class="stopClass">
+                            <div class="form-group">
+                                <label>选择班级</label>
+                                <select name="classId" id="classId">
+                                    <option th:each="cla:${xbClassList}" th:value="${cla.xbClass.id}" th:text="${cla.xbClass.className}"></option>
+                                </select>
+                            </div>
+                            <div class="form-group" style="margin-bottom:0 !important">
+                                <label>转到班级</label>
+                                <select name="toClassId" id="toClassId">
+                                    <option th:each="cla:${xbQbClassList}" th:value="${cla.xbClass.id}" th:text="${cla.xbClass.className}"></option>
+                                </select>
+                            </div>
+                        </div>
+                    </th:block>
+                </div>
+                <div class="enrollCon handleInfo subInfo">
+                    <h3>经办信息</h3>
+                    <div class="pad">
                         <div class="form-group">
-                            <label>选择班级</label>
-                            <select name="courseName" id="courseName">
-                                <option th:each="cla:${xbClassList}" th:value="${cla.xbClass.id}" th:text="${cla.xbClass.className}"></option>
+                            <label class="col-sm-1">经办校区</label>
+                            <select name="organId">
+                                <option th:each="orgs:${sysOrgansList}"  th:value="${orgs.id}" th:text="${orgs.organName}"></option>
                             </select>
                         </div>
-                        <div class="form-group" style="margin-bottom:0 !important">
-                            <label>转到班级</label>
-                            <select name="courseName" id="courseName">
-                                <option th:each="cla:${xbQbClassList}" th:value="${cla.xbClass.id}" th:text="${cla.xbClass.className}"></option>
-                            </select>
+                        <div class="form-group">
+                            <label class="col-sm-1">销售来源</label>
+                            <input type="text" name="salesSource" placeholder="请输入销售来源">
                         </div>
-                    </div>
-                </th:block>
-            </div>
-            <div class="enrollCon handleInfo subInfo">
-                <h3>经办信息</h3>
-                <div class="pad">
-                    <div class="form-group">
-                        <label class="col-sm-1">学员姓名</label>
-                        <select name="" id="">
-                            <option value="">青山分校</option>
-                            <option value="">111</option>
-                            <option value="">222</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-1">销售来源</label>
-                        <input type="text" placeholder="请输入销售来源">
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-1">经办日期</label>
-                        <input class="laydate-icon" id="demo">
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-1">经办人</label>
-                        <input type="text" placeholder="管理员">
-                    </div>
-                    <div class="form-group" style="margin-right:0 !important;">
-                        <label class="col-sm-1">销售员</label>
-                        <select name="" id="">
-                            <option value="">请输入销售员</option>
-                            <option value="">111</option>
-                            <option value="">222</option>
-                        </select>
+                        <div class="form-group">
+                            <label class="col-sm-1">经办日期</label>
+                            <input class="laydate-icon" name="handleDate" id="demo" th:value="${#dates.format(new java.util.Date().getTime(), 'yyyy-MM-dd')}">
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-1">经办人</label>
+                            <input type="text" placeholder="管理员" name="handlePerson">
+                        </div>
+                        <div class="form-group" style="margin-right:0 !important;">
+                            <label class="col-sm-1">销售员</label>
+                            <input type="text" placeholder="" name="salesPerson">
+                            <!--<select name="" id="">
+                                <option value="">请输入销售员</option>
+                                <option value="">111</option>
+                                <option value="">222</option>
+                            </select>-->
+                        </div>
                     </div>
                 </div>
+                <div class="enrollCon">
+                    <button class="save" type="button" onclick="changeClass();">保存</button>
+                </div>
             </div>
-            <div class="enrollCon">
-                <button class="save">保存</button>
-            </div>
-        </div>
         <!-- 选择已有学员 -->
         <div id="modal-table" class="modal fade in subsidy" tabindex="-1" aria-hidden="false">
             <div class="modal-dialog">
@@ -174,7 +175,7 @@
                 </div>
             </div>
         </div>
-
+    </form>
     </div>
 
     <script>
@@ -245,6 +246,47 @@
                 }
             });
         };
+
+        function changeClass(){
+            /*if ($("#changeForm").valid()) {*/
+                var data= serializeObject("#changeForm");
+                console.log(data);
+                $.ajax({
+                    type: 'get',
+                    dataType: 'json',
+                    url: basePath + '/feeRelated/changeClassSave',
+                    data: {studentEntity:JSON.stringify(data)},
+                    contentType:"application/json;charset=UTF-8",
+                    cache: false,
+                    async: true,
+                    success: function (data) {
+                        var status = data.status;
+                        var msg = data.msg;
+                        $.kd.kdAlert("转班成功！",function () {
+                            window.location.href = basePath + '/student/getManagementList';
+                        });
+                    }
+                });
+            //}
+        }
+
+        function serializeObject(form)
+        {
+            var o = {};
+            var a = $(form).serializeArray();
+            $.each(a, function() {
+                if (o[this.name]) {
+                    if (!o[this.name].push) {
+                        o[this.name] = [o[this.name]];
+                    }
+                    o[this.name].push(this.value || '');
+                } else {
+                    o[this.name] = this.value || '';
+                }
+            });
+            return o;
+        };
+
     </script>
 </body>
 

@@ -62,6 +62,7 @@ public class XbCourseTypeService {
 		return xbCourseTypeDao.findAll(spec,page);
 	}
 	public List<XbCourseType> findXbCourseTypeList(Map<String, Object> searchParams){
+
 		searchParams.put("EQ_deleteStatus","1");
 		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
 		Specification<XbCourseType> spec = DynamicSpecifications.bySearchFilter(

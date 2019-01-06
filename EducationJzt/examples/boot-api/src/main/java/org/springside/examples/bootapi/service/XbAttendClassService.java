@@ -11,15 +11,17 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springside.examples.bootapi.ToolUtils.DateUtil;
 import org.springside.examples.bootapi.ToolUtils.common.modules.persistence.DynamicSpecifications;
 import org.springside.examples.bootapi.ToolUtils.common.modules.persistence.SearchFilter;
 import org.springside.examples.bootapi.domain.SysEmployee;
 import org.springside.examples.bootapi.domain.XbAttendClass;
-import org.springside.examples.bootapi.domain.XbCoursePreset;
 import org.springside.examples.bootapi.repository.XbAttendClassDao;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -45,6 +47,11 @@ public class XbAttendClassService {
 
 	@Transactional(readOnly = true)
 	public List<XbAttendClass> findXbAttendClassAll(Map<String, Object> searchParams){
+		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
+		SysEmployee sysEmployee = (SysEmployee)request.getSession().getAttribute("sysEmployee");
+		if("管理员".equals(sysEmployee.sysRole.roleName)){
+			searchParams.put("EQ_xbclass.organId",sysEmployee.organId);
+		}
 		searchParams.put("EQ_deleteStatus","1");
 		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
 		Specification<XbAttendClass> spec = DynamicSpecifications.bySearchFilter(
@@ -54,6 +61,11 @@ public class XbAttendClassService {
 
 	@Transactional(readOnly = true)
 	public Page<XbAttendClass> findXbAttendClassPageAll( Pageable pageable,Map<String, Object> searchParams){
+		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
+		SysEmployee sysEmployee = (SysEmployee)request.getSession().getAttribute("sysEmployee");
+		if("管理员".equals(sysEmployee.sysRole.roleName)){
+			searchParams.put("EQ_xbclass.organId",sysEmployee.organId);
+		}
 		searchParams.put("EQ_deleteStatus","1");
 		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
 		Specification<XbAttendClass> spec = DynamicSpecifications.bySearchFilter(

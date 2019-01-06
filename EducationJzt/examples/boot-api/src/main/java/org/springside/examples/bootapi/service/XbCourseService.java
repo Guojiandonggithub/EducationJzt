@@ -65,6 +65,7 @@ public class XbCourseService {
 
 	@Transactional
 	public Page<XbCourse> getXbCourseList(Pageable pageable, Map<String, Object> searchParams) {
+        searchParams.put("EQ_deleteStatus","1");
 		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
 		Specification<XbCourse> spec = DynamicSpecifications.bySearchFilter(
 				filters.values(), XbCourse.class);

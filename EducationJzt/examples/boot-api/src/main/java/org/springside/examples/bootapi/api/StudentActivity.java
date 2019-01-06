@@ -9,10 +9,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springside.examples.bootapi.ToolUtils.HttpServletUtil;
 import org.springside.examples.bootapi.domain.*;
 import org.springside.examples.bootapi.service.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -58,11 +61,17 @@ public class StudentActivity {
 		Map<String,Object> searhMap = new HashMap<>();
 		Page<XbClass> classPage = studentService.getXbClassList(pageable,searhMap);
 		Iterable<SysOrgans> organsList = organsService.getOrgansList();
+		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
+		SysEmployee sysEmployee = (SysEmployee)request.getSession().getAttribute("sysEmployee");
 		List<XbStudent> xbStudentList = studentService.getXbStudentList(pageable,searhMap).getContent();
+		searhMap.put("EQ_sysRole.roleName","销售员");
+		Page<SysEmployee> employeePage = employeeService.getAccountList(pageable,searhMap);
 		/*model.addAttribute("xbXbStudent",student);*/
 		model.addAttribute("xbStudentList",xbStudentList);
 		model.addAttribute("organsList",organsList);
 		model.addAttribute("flag","1");
+		model.addAttribute("sysEmployee",sysEmployee);
+		model.addAttribute("employeeList",employeePage.getContent());
 		return "enroll";
 	}
 
@@ -109,11 +118,11 @@ public class StudentActivity {
     }
 
     @RequestMapping("/checkClassesName")
-    public void checkClassesName(@RequestParam(required = false) String name,HttpServletResponse resp) {
+    public void checkClassesName(@RequestParam(required = false) String name,@RequestParam(required = false) String organId,HttpServletResponse resp) {
         Map<String, Object> map  =  new HashMap<>();
         try {
             String code = "1000";
-			XbClass xbClass = studentService.checkClassesName(name);
+			XbClass xbClass = studentService.checkClassesName(name,organId);
             if(null!=xbClass){
                 code = "1001";
             }
@@ -541,6 +550,20 @@ public class StudentActivity {
 			model.addAttribute("organName",xbCoursePresetList.get(0).sysorgans.organName);
 		return "enroll::baoming";
 	}
+
+	/**
+	 * 移除布局
+	 * @return
+	 */
+	@RequestMapping("/removechoose")
+	public String removechoose(ModelMap model, Pageable pageable){
+		List<XbCoursePreset> xbCoursePresetList = new ArrayList<>();
+		model.addAttribute("xbCourseLists",xbCoursePresetList);
+		model.addAttribute("money","");
+		model.addAttribute("organName","");
+		return "enroll::baoming";
+	}
+
 
 	/**
 	 * 跳转到查询欠费学员

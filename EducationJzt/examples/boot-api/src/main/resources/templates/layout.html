@@ -17,19 +17,19 @@
                 </a>
             </div>
             <div class="pull-right eduName">
-                <span>测试 [管理员]</span>
-                <span>退出</span>
-                <span>机构中心</span>
+                <span th:text="${session.userName} + [+${session.organName}+]"></span>
+                <span><a href="/accounts/loginOut" style="color: #ffffff">退出</a></span>
+                <!--<span>机构中心</span>-->
             </div>
         </div>
         <div class="main-container" id="main-container">
             <div id="sidebar" class="sidebar responsive" th:fragment="left(tab1,tab2)">
                 <ul class="nav nav-list" style="top: 0px;" id="zhu">
-                    <li th:class="${tab1=='11'}? 'active'">
+                    <li th:class="${tab1=='11'}? 'active'" th:if="${roleName}!='教师'">
                         <a href="/forward/index"><span class="menu-text"> 工作台 </span></a>
                         <b class="arrow"></b>
                     </li>
-                    <li th:class="${tab1=='12'}? 'active'">
+                    <li th:class="${tab1=='12'}? 'active'" th:if="${roleName}!='教师'">
                         <a href="/student/getManagementList"><span class="menu-text"> 办理中心 </span></a>
                         <b class="arrow"></b>
                     </li>
@@ -40,24 +40,24 @@
                         </a>
                         <b class="arrow"></b>
                         <ul class="submenu" id="submenu">
-                            <li th:class="${tab2=='31'}? 'active'">
+                            <li th:class="${tab2=='31'}? 'active'" th:if="${roleName}!='教师'">
                                 <a href="/student/getXbStudentList"><i class="menu-icon fa fa-caret-right"></i>学员</a>
                                 <b class="arrow"></b>
                             </li>
-                            <li th:class="${tab2=='32'}? 'active'">
+                            <li th:class="${tab2=='32'}? 'active'" th:if="${roleName}!='教师'">
                                 <a href="/student/getXbClassroomList"><i class="menu-icon fa fa-caret-right"></i>班级</a>
                                 <b class="arrow"></b>
                             </li>
-                            <li th:class="${tab2=='33'}? 'active'">
+                            <li th:class="${tab2=='33'}? 'active'" th:if="${roleName}!='教师'">
                                 <a href="/student/getOneToOneList">
                                     <i class="menu-icon fa fa-caret-right"></i>一对一</a>
                                 <b class="arrow"></b>
                             </li>
-                            <li th:class="${tab2=='34'}? 'active'">
+                            <li th:class="${tab2=='34'}? 'active'" th:if="${roleName}!='教师'">
                                 <a href="/jw_center_arranging_course/to_arranging_course?sort=createDate,DESC&sort=createTime,DESC"><i class="menu-icon fa fa-caret-right"></i>排课</a>
                                 <b class="arrow"></b>
                             </li>
-                            <li th:class="${tab2=='35'}? 'active'">
+                            <li th:class="${tab2=='35'}? 'active'" >
                                 <a href="/lessonTable/toLessonTable"><i class="menu-icon fa fa-caret-right"></i>课程表</a>
                                 <b class="arrow"></b>
                             </li>
@@ -65,13 +65,13 @@
                                 <a href="/recordClass/getRecordClassList"><i class="menu-icon fa fa-caret-right"></i>记上课</a>
                                 <b class="arrow"></b>
                             </li>
-                            <li th:class="${tab2=='37'}? 'active'">
+                            <li th:class="${tab2=='37'}? 'active'" th:if="${roleName}!='教师'">
                                 <a href="/jwcentercourse/tocourse?sort=xbCourse.createDate,DESC&sort=xbCourse.createTime,DESC"><i class="menu-icon fa fa-caret-right"></i>课程</a>
                                 <b class="arrow"></b>
                             </li>
                         </ul>
                     </li>
-                    <li th:class="${tab1=='14'}? 'active open'">
+                    <li th:class="${tab1=='14'}? 'active open'" th:if="${roleName}!='教师'">
                         <a href="#" class="dropdown-toggle">
                             <span class="menu-text"> 内部管理 </span>
                             <b class="arrow fa fa-angle-down"></b>
@@ -84,6 +84,10 @@
                             </li>
                             <li th:class="${tab2=='42'}? 'active'">
                                 <a href="/accounts/getEmployeeList"><i class="menu-icon fa fa-caret-right"></i>员工信息</a>
+                                <b class="arrow"></b>
+                            </li>
+                            <li th:class="${tab2=='43'}? 'active'">
+                                <a href="/accounts/getRoleList"><i class="menu-icon fa fa-caret-right"></i>角色信息</a>
                                 <b class="arrow"></b>
                             </li>
                         </ul>
@@ -126,5 +130,11 @@
                  </li>&ndash;&gt;
             </ul>
         </div>-->
+        <script type="text/javascript" th:inline="javascript">
+            var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/;
+            function exit(){
+                window.location.href = basePath+"/accounts/loginOut";
+            }
+        </script>
     </body>
 </html>

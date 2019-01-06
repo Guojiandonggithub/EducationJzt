@@ -111,10 +111,11 @@
                                     </th>
                                     <th>联系电话</th>
                                     <th>所属关系</th>
-                                    <th>余额</th>
+                                    <th>账户余额</th>
                                     <th>欠费</th>
                                     <th>报读课程</th>
                                     <th>剩余课时/天数</th>
+                                    <th>课时剩余总金额</th>
                                     <th>报名时间</th>
                                     <th>
                                         <span href="#modal-table"  data-toggle="modal" class="glyphicon glyphicon-option-vertical" aria-hidden="true"></span>
@@ -126,9 +127,10 @@
                                     <td th:text="${studentrelation.xbStudent.contactPhone}"></td>
                                     <td th:text="${studentrelation.xbStudent.contactRelation}"></td>
                                     <td th:text="${studentrelation.xbStudent.surplusMoney}"></td>
-                                    <td th:text="${studentrelation.xbStudent.paymentMoney}"><a href="">补费</a></td>
+                                    <td th:text="${studentrelation.xbStudent.paymentMoney}"><a href="#">补费</a></td>
                                     <td th:text="${studentrelation.xbCourse.courseName}"></td>
                                     <td th:text="${studentrelation.periodNum}">课时</td>
+                                    <td th:text="${studentrelation.receivable}">课时</td>
                                     <td  th:text="${#dates.format(studentrelation.enrollDate, 'yyyy-MM-dd')}"></td>
                                     <td></td>
                                 </tr>

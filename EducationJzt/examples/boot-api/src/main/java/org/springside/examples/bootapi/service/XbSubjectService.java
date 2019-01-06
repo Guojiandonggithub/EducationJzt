@@ -51,6 +51,7 @@ public class XbSubjectService {
 		return list;
 	}
 	public List<XbSubject> findXbSubjectList(Map<String,Object> searchParams){
+
 		searchParams.put("EQ_deleteStatus","1");
 		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
 		Specification<XbSubject> spec = DynamicSpecifications.bySearchFilter(

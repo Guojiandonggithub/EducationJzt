@@ -14,12 +14,16 @@ import org.springframework.web.bind.annotation.*;
 import org.springside.examples.bootapi.domain.SysEmployee;
 import org.springside.examples.bootapi.domain.SysEmployeeSub;
 import org.springside.examples.bootapi.domain.SysOrgans;
+import org.springside.examples.bootapi.domain.SysRole;
 import org.springside.examples.bootapi.service.EmployeeService;
 import org.springside.examples.bootapi.service.OrgansService;
+import org.springside.examples.bootapi.service.RoleService;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -34,6 +38,9 @@ public class AccountActivity {
 
 	@Autowired
 	private OrgansService organsService;
+
+	@Autowired
+	private RoleService roleService;
 
 
 	@PostMapping("/save/organs")
@@ -68,8 +75,29 @@ public class AccountActivity {
 	}
 
 	@RequestMapping("/hello")
-	public String login() {
+	public String hello() {
 		return "login";
+	}
+
+	@RequestMapping("/loginOut")
+	public String loginOut(HttpServletRequest request) {
+		accountService.logout(request);
+		return "login";
+	}
+
+	@RequestMapping("/login")
+	public void login(HttpServletRequest request, @RequestParam String userName, @RequestParam String password, HttpServletResponse resp) {
+		Map<String, Object> map  =  new HashMap<>();
+		try {
+			String msg = accountService.login(userName,password,request);
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("msg",msg);
+			resp.setContentType("text/html;charset=UTF-8");
+			resp.getWriter().println(jsonObject.toJSONString());
+			resp.getWriter().close();
+		} catch (IOException e) {
+			logger.info(e.toString());
+		}
 	}
 
 	@RequestMapping("/checkOrganName")
@@ -78,6 +106,25 @@ public class AccountActivity {
 			String code = "1000";
 			SysOrgans sysOrgans = organsService.checkOrganName(name);
 			if(null!=sysOrgans){
+				code = "1001";
+			}
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("status","1");
+			jsonObject.put("code",code);
+			resp.setContentType("text/html;charset=UTF-8");
+			resp.getWriter().println(jsonObject.toJSONString());
+			resp.getWriter().close();
+		} catch (IOException e) {
+			logger.info(e.toString());
+		}
+	}
+
+	@RequestMapping("/checkUserName")
+	public void checkUserName(@RequestParam String name, HttpServletResponse resp){
+		try {
+			String code = "1000";
+			SysEmployee sysEmployee = accountService.checkUserName(name);
+			if(null!=sysEmployee){
 				code = "1001";
 			}
 			JSONObject jsonObject = new JSONObject();
@@ -156,9 +203,9 @@ public class AccountActivity {
 		}
 		if(null!=nameormobile&&!nameormobile.equals("")){
 			if(type.equals("AZ")){
-				searhMap.put("EQ_employeeName",nameormobile);
+				searhMap.put("LIKE_employeeName",nameormobile);
 			}else{
-				searhMap.put("EQ_mobilePhone",nameormobile);
+				searhMap.put("LIKE_mobilePhone",nameormobile);
 			}
 		}
 		Page<SysEmployee> employeePage = null;
@@ -188,10 +235,31 @@ public class AccountActivity {
 		SysEmployee employee = accountService.getSysEmployee(id);
 		SysEmployeeSub employeeSub = accountService.getSysEmployeeSub(id);
 		Iterable<SysOrgans> organsList = organsService.getOrgansList();
+		Map<String, Object> searchParams = new HashMap<>();
+		List<SysRole> sysRolePage = roleService.getRoleListPage(searchParams);
 		model.addAttribute("organsList",organsList);
 		model.addAttribute("employee",employee);
 		model.addAttribute("employeeSub",employeeSub);
+		model.addAttribute("sysRolePage",sysRolePage);
 		return "employee";
+	}
+
+	@RequestMapping("/getEmployeSession")
+	public void getEmployeSession(HttpServletRequest request,HttpServletResponse resp){
+
+		Map<String, Object> map  =  new HashMap<>();
+		try {
+			SysEmployee employee = (SysEmployee) request.getSession().getAttribute("sysEmployee");
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("organName",employee.sysOrgans.organName);
+			jsonObject.put("userName", employee.employeeName);
+			logger.info("机构删除返回json参数="+jsonObject.toString());
+			resp.setContentType("text/html;charset=UTF-8");
+			resp.getWriter().println(jsonObject.toJSONString());
+			resp.getWriter().close();
+		} catch (IOException e) {
+			logger.info(e.toString());
+		}
 	}
 
 	@RequestMapping("/save/employee")
@@ -208,6 +276,54 @@ public class AccountActivity {
 			jsonObject.put("status","1");
 			jsonObject.put("msg", "员工编辑成功");
 			logger.info("编辑机构返回json参数="+jsonObject.toString());
+			resp.setContentType("text/html;charset=UTF-8");
+			resp.getWriter().println(jsonObject.toJSONString());
+			resp.getWriter().close();
+		} catch (IOException e) {
+			logger.info(e.toString());
+		}
+	}
+
+	/**
+	 * 跳转到角色列表
+	 * @return
+	 */
+	@RequestMapping("/getRoleList")
+	public String getRoleList(ModelMap model,Pageable pageable){
+		Map<String,Object> serchMap = new HashMap<>();
+		Page<SysRole> rolePage = roleService.getRoleList(pageable,serchMap);
+		model.addAttribute("rolePage",rolePage);
+		return "role";
+	}
+
+	@PostMapping("/save/role")
+	public void saveRole(@RequestBody SysRole role,HttpServletResponse resp) {
+		Map<String, Object> map  =  new HashMap<>();
+		try {
+			SysRole sysRole = roleService.saveRole(role);
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("status","1");
+			jsonObject.put("data", com.alibaba.fastjson.JSONObject.toJSON(sysRole));
+			jsonObject.put("msg", "编辑成功");
+			logger.info("编辑机构返回json参数="+jsonObject.toString());
+			resp.setContentType("application/x-www-form-urlencoded");
+			resp.getWriter().println(jsonObject.toJSONString());
+			resp.getWriter().close();
+		} catch (IOException e) {
+			logger.info(e.toString());
+		}
+	}
+
+	@RequestMapping("/delete/role")
+	public void removeRole(@RequestParam String id, HttpServletResponse resp){
+
+		Map<String, Object> map  =  new HashMap<>();
+		try {
+			roleService.delete(id);
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("status","1");
+			jsonObject.put("msg", "删除成功");
+			logger.info("删除返回json参数="+jsonObject.toString());
 			resp.setContentType("text/html;charset=UTF-8");
 			resp.getWriter().println(jsonObject.toJSONString());
 			resp.getWriter().close();

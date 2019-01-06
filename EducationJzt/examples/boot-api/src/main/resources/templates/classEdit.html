@@ -36,7 +36,7 @@
                     <p th:text="${classes.className}"><img src="../static/pages/img/ban.png"></p>
                     <span>校区：</span><p th:text="${classes.sysOrgans.organName}" ></p>
                     <span>课程：</span><p th:text="${classes.xbCourse.courseName}"><</p>
-                    <input type="hidden" id="organId" name="organId" th:value="${classes.sysOrgans.id}" />
+                    <input type="text" id="organId" name="organId" th:value="${classes.sysOrgans.id}" />
                     <input type="hidden" id="classId" name="classId" th:value="${classes.id}" />
                     <input type="hidden" id="courseId" name="courseId" th:value="${classes.xbCourse.id}" />
                 </div>
@@ -202,6 +202,7 @@
         function saveRecordClass() {
             var classId = $("#classId").val();
             var courseId = $("#courseId").val();
+            var organId = $("#organId").val();
             var data = serializeObject("#classForm");
             if (data) {
                 console.log(data);
@@ -213,7 +214,8 @@
                     teacherLeave: "",
                     recordTime: "",
                     classId: "",
-                    courseId: ""
+                    courseId: "",
+                    organId:""
                 };
                 if (data.studentId.length == 32) {
                     aa.studentId = data.studentId;
@@ -223,6 +225,7 @@
                     aa.recordTime = $("#demo").val();
                     aa.classId = classId;
                     aa.courseId = courseId;
+                    aa.organId = organId;
                     list.push(aa);
                 } else {
                     for (var i = 0; i < data.studentId.length; i++) {
@@ -236,6 +239,7 @@
                         aa.recordTime = $("#demo").val();
                         aa.classId = classId;
                         aa.courseId = courseId;
+                        aa.organId = organId;
                         list.push(aa);
                     }
                 }

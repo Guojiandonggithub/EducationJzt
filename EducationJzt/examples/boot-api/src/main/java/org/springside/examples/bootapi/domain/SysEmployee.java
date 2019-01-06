@@ -35,6 +35,11 @@ public class SysEmployee {
     @NotNull(message="校区不能为空")
     public String organId;
     public String deleteStatus;
+    public String roleId;
+    @OneToOne()
+    @JoinColumn(name="roleId",referencedColumnName = "id",insertable = false,updatable = false)
+    public SysRole sysRole;
+
 
     public SysEmployee() {
 

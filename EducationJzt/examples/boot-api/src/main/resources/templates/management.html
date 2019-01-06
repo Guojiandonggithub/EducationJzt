@@ -115,6 +115,7 @@
                         <!--<td>11180</td>-->
                         <td th:text="${ment.xbStudent.studentName}"></td>
                         <td th:if="${ment.type} eq '0'">报名</td>
+                        <td th:if="${ment.type} eq '1'">转班</td>
                         <td th:text="${ment.remarks}" class="orderTxt"></td>
                         <td th:text="${ment.surplusMoney}"></td>
                         <td th:text="${ment.paymentMoney}"></td>

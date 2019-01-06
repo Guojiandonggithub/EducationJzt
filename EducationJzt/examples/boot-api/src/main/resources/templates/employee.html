@@ -234,9 +234,14 @@
                             <p th:each="orgs:${organsList}"><input type="radio" th:attr="checked=${employee.organId == orgs.id?true:false}"
                                     name="organId" th:value="${orgs.id}" th:text="${orgs.organName}" /></p>
                         </div>
+                        <div class="">
+                            <label><span>*</span>角色</label>
+                            <!--<p><input type="checkbox" name="organId" value="all">全部校区</p>-->
+                            <p th:each="role:${sysRolePage}"><input type="radio" th:attr="checked=${employee.roleId == role.id?true:false}"
+                                                                   name="roleId" th:value="${role.id}" th:text="${role.roleName}" /></p>
+                        </div>
                     </div>
                 </div>
-
 
                 <div class="enrollCon" style="margin-top:30px;">
                     <button class="save" type="button" onclick="saveEmployee()">保存</button>
@@ -415,12 +420,13 @@
                     userName: {
                         required: true,
                         minlength: 2,
-                        maxlength: 12
+                        checkName:true,
+                        maxlength: 15
                     },
                     password: {
                         required: true,
                         minlength: 2,
-                        maxlength: 12
+                        maxlength: 32
                     },
                     employeeName: {
                         required: true,
@@ -438,6 +444,9 @@
                     organId: {
                         required: true
                     },
+                    roleId: {
+                        required: true
+                    },
                     isAttendClass: {
                         required: true
                     },
@@ -445,6 +454,7 @@
                         mobilePhone: "手机号码不能为空",
                         isAttendClass: "请选择是否教室",
                         organId: "请选择校区",
+                        roleId: "请选择角色",
                         sex: "请选择性别",
                         employeeName: {
                             required: "名称不能为空",
@@ -454,12 +464,12 @@
                         userName: {
                             required: "登录名不能为空",
                             minlength: "登录名最少由2字符组成",
-                            maxlength: "登录名不能超过12个字符"
+                            maxlength: "登录名不能超过15个字符"
                         },
                         password: {
                             required: "请输入密码",
                             minlength: "密码最少由两个字符组成",
-                            maxlength: "密码不能超过10个字符"
+                            maxlength: "密码不能超过32个字符"
                         }
                     },
                     errorPlacement: function(error, element) {
@@ -473,6 +483,31 @@
                             error.appendTo( element.parent().next() );
                     }
                 }
+            });
+            jQuery.validator.addMethod('checkName', function (value, element) {
+                var id = $("#employeeId").val();
+                if(id){
+                    return true;
+                }
+                var msgcode=null;
+                $.ajax({
+                    url: basePath + "/accounts/checkUserName",
+                    type: "get",
+                    dataType: 'json',
+                    async:false,
+                    contentType:"application/json;charset=UTF-8",
+                    data: {"name":value},
+                    success: function(result){
+                        msgcode= result.code;
+                    }
+                })
+                if(msgcode==1001){
+                    $(element).data('error-msg','该登录名已存在！');
+                    return false;
+                }
+                return true;
+            }, function(params, element) {
+                return $(element).data('error-msg');
             });
         })
     </script>

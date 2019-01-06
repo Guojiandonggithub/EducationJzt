@@ -152,15 +152,15 @@
 <div id="baominginfo">
 <th:block  th:fragment="baoming">
 <div class="enrollCon payInfo apply">
+    <th:block th:if="${xbCourseLists}" th:fragment="baoming">
     <h2>报名信息
         <a href="#modal-table1" role="button" onclick="getClassList();" class="blue" data-toggle="modal">选择班级报名</a>
         <a href="#modal-table" role="button" onclick="getCourseList();" class="blue" data-toggle="modal">选择课程报名</a>
     </h2>
-
-    <th:block th:if="${xbCourseLists}" th:fragment="baoming" th:each="course,courseindex:${xbCourseLists}">
+    <th:block th:each="course,courseindex:${xbCourseLists}">
     <div class="alert-info" >
         <button type="button" class="close" data-dismiss="alert">
-            <span class="glyphicon glyphicon-remove-circle"></span>
+            <span class="glyphicon glyphicon-remove-circle" onclick="remove()"></span>
         </button>
         <div>
             <span style="width:300px; display: inline-block;" id="kecheng" th:text="${course.xbCourse.courseName}" ><img src="../static/pages/img/ke.png" style="margin-right:8px;"/></span>
@@ -210,6 +210,7 @@
             </li>
         </ul>
     </div>
+    </th:block>
     </th:block>
     </div>
 
@@ -263,16 +264,14 @@
     </div>
     <div class="form-group">
         <label class="col-sm-1">经办人</label>
-        <input type="text" placeholder="管理员" name="handlePerson">
+        <input type="text" th:value="${sysEmployee.employeeName}" name="handlePerson" disabled="disabled">
     </div>
     <div class="form-group" style="margin-right:0 !important;">
         <label class="col-sm-1">销售员</label>
-        <input type="text" placeholder="" name="salesPerson">
-        <!--<select name="" id="">
-            <option value="">请输入销售员</option>
-            <option value="">111</option>
-            <option value="">222</option>
-        </select>-->
+        <!--<input type="text" placeholder="" name="">-->
+        <select name="salesPerson">
+            <option th:each="emp:${employeeList}"  th:value="${emp.employeeName}" th:text="${emp.employeeName}"></option>
+        </select>
     </div>
 </div>
 <div class="enrollCon">
@@ -708,7 +707,6 @@
     };
 
     function getCourseList(){
-        $("#enrollCon").hide();
         $.ajax({
             type: 'get',
             //dataType: 'json',
@@ -743,6 +741,7 @@
     };
 
     function chooseCourse(){
+        $("#enrollCon").hide();
         var organName = $("#kechengorgan").find("option:selected").text();
         $("#organName").html(organName);
         var courseIds = $("input:checkbox[name='checkboxname']:checked").map(function(index,elem) {
@@ -765,23 +764,24 @@
     };
 
     function chooseClass(){
+        $("#enrollCon").hide();
         var classIds = $("input:checkbox[name='classcheckboxname']:checked").map(function(index,elem) {
             return $(elem).val();
         }).get().join(',');
         $.ajax({
             type: 'get',
             //dataType: 'json',
-        url: basePath + '/student/chooseClass',
+            url: basePath + '/student/chooseClass',
             data: {classIds:classIds},
-        contentType:"application/json;charset=UTF-8",
+            contentType:"application/json;charset=UTF-8",
             cache: false,
             async: true,
             success: function (data) {
-            $(".apply").show();
-            $("#baominginfo").html("");
-            $('#baominginfo').html(data);
-        }
-    });
+                $(".apply").show();
+                $("#baominginfo").html("");
+                $('#baominginfo').html(data);
+            }
+        });
     };
 
     function kechengbox(){
@@ -793,6 +793,24 @@
         var classsum = $("input[name='classcheckboxname']:checked").length;
         $("#classsum").html(classsum);
     };
+
+    function remove(){
+        $("#enrollCon").hide();
+        $.ajax({
+            type: 'get',
+            //dataType: 'json',
+            url: basePath + '/student/removechoose',
+            data: {},
+            contentType:"application/json;charset=UTF-8",
+            cache: false,
+            async: true,
+            success: function (data) {
+                $(".apply").show();
+                $("#baominginfo").html("");
+                $('#baominginfo').html(data);
+            }
+        });
+    }
     </script>
     </body>
     </html>

@@ -216,6 +216,7 @@
             });
             jQuery.validator.addMethod('checkName', function (value, element) {
                 var id = $("#classId").val();
+                var organId = $("#organId").val();
                 if(id){
                     return true;
                 }
@@ -226,7 +227,7 @@
                     dataType: 'json',
                     async:false,
                     contentType:"application/json;charset=UTF-8",
-                    data: {"name":value},
+                    data: {"name":value,"organId":organId},
                     success: function(result){
                         msgcode= result.code;
                     }

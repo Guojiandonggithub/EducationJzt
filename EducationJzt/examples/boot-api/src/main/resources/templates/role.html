@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    
+    <link rel="stylesheet" href="../static/pages/css/ace.min.css" id="main-ace-style" />
+    <link rel="stylesheet" href="../static/pages/css/index.css">
+    <link rel="stylesheet" href="../static/pages/css/management.css">
+    <link rel="stylesheet" href="../static/pages/css/student.css">
+    <link rel="stylesheet" href="../static/pages/css/madal.css">
+    <link rel="stylesheet" href="../static/pages/css/Inmanagement.css">
+    <link rel="stylesheet" href="../static/pages/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/pages/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="../static/pages/css/kd.ui.plugin.css" />
+    <script src="../static/pages/js/jquery.min.js"></script>
+    <script src="../static/pages/js/bootstrap.min.js"> </script>
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script src="../static/pages/js/jquery.validate17.min.js"></script>
+    <script src="../static/pages/js/additiona17l-methods.min.js"></script>
+    <script src="../static/pages/js/messages_zh.min.js"></script>
+    <script src="../static/pages/js/kd.ui.plugin.js"></script>
+</head>
+<body>
+<div th:replace="layout::top"></div>
+<div class="main-container" id="main-container">
+    <div th:replace="layout::left('14','43')">
+    </div>
+    <div class="main-content">
+        <div class="breadcrumbs" id="breadcrumbs">
+            <img src="../static/pages/img/line1.png">
+            <span>角色</span>
+            <img src="../static/pages/img/line.png">
+        </div> 
+        <div class="tabbable">
+            <div class="tab-content student classes">
+                <div  class="tab-pane fade in active">
+                    <div class="screen">
+                        <a href="#modal-table" role="button"  data-toggle="modal"><button class="stdEnroll">新建</button></a> 
+                    </div>
+                    <div class="orderCon">
+                        <div class="orderTable">
+                            <div class="tableTitle">
+                                <div>
+                                    <span class="address">角色名称</span>
+                                    <span class="operate" style="right: 19px;">操作</span>
+                                </div>
+                            </div>
+                            <div class="info-list">
+                                <ol>
+                                    <li th:each="role,roleStat:${rolePage.content}">
+                                        <div data-handle="" class="tree-handle">
+                                            <span class="tree-titleWrap" class="cols-120" th:text="${role.roleName}">
+                                            </span>
+                                            <span class="tree-fr">
+                                                <span class="tree-btn-wrap guidebtn2">
+                                                    <a href="#modal-table" role="button"  data-toggle="modal"
+                                                       th:onclick="|javascript:sourceEdit('${role.id}','${role.roleName}')|">编辑
+                                                   </a>
+                                                    <div class="ivu-tooltip">
+                                                        <div class="ivu-tooltip-rel"></div>
+                                                    </div>
+                                                </span>
+                                                <span class="tree-btn-wrap">
+                                                     <a  th:onclick="|javascript:sourceRemove('${role.id}')|">删除</a>
+                                                    <div class="ivu-tooltip">
+                                                        <div class="ivu-tooltip-rel"></div>
+                                                    </div>
+                                                </span>
+                                            </span>
+                                        </div>
+                                    </li>
+                                </ol>
+                            </div>
+
+                            <div class="orderPage" style="margin-top:30px;">
+                                <div class="page">
+                                    单页显示：
+                                    <select id="size" name="size" onchange="getOrgansListPage('');">
+                                        <option value="20">20条/页</option>
+                                        <option value="5">5条/页</option>
+                                        <option value="10">10条/页</option>
+                                        <option value="15">15条/页</option>
+                                    </select>
+                                    <input type="hidden" id="currentzise" th:value="${currentzise}"/>
+                                </div>
+                                <ul class="pagination" >
+                                    <li class="disabled">
+                                        <a href="#" th:onclick="'javascript:getOrgansListPage(\''+0+'\')'">首页</a>
+                                    </li>
+                                    <li class="disabled" th:if="${rolePage.getNumber()-1} ge 0">
+                                        <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${rolePage.getNumber()-1}+'\')'">
+                                            <i class="ace-icon fa fa-angle-double-left"></i>
+                                        </a>
+                                    </li>
+                                    <th:block th:each="i:${#numbers.sequence(0,rolePage.getTotalPages())}">
+                                        <li th:if="${i+1} eq ${rolePage.getNumber()} " class="active">
+                                            <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${i+1}+'\')'" th:text="${i+1}"></a>
+                                        </li>
+                                        <li th:if="${i+1} neq ${rolePage.getNumber()} ">
+                                            <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${i+1}+'\')'" th:text="${i+1}"></a>
+                                        </li>
+                                    </th:block>
+                                    <li th:if="${rolePage.getTotalPages()} ge ${rolePage.getNumber()+2} ">
+                                        <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${rolePage.getNumber()+2}+'\')'">
+                                            <i class="ace-icon fa fa-angle-double-right"></i>
+                                        </a>
+                                    </li>
+                                   <!-- <li class="">
+                                        <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${currentnumber}+'\')'">尾页</a>
+                                    </li>-->
+                                </ul>
+                            </div>
+                        </div>    
+                    </div>
+                </div>                
+            </div>
+        </div>
+
+
+        
+    </div>
+
+    <!-- 新建/编辑 -->
+    <div id="modal-table" class="modal fade in pk" tabindex="-1" aria-hidden="false">
+        <form id="iform" th:action="@{/accounts/save/organs}" th:method="post">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header no-padding">
+                        <div class="table-header">新建/编辑</div>
+                    </div>
+                        <div class="modal-body no-padding" style="padding: 20px 0 !important;">
+                            <input type="hidden" id="roleId" name="id"/>
+                            <div class="form-group">
+                                <label for="roleName"><i>*</i>名称</label>
+                                <input type="text" id="roleName" name="roleName">
+                            </div>
+                        </div>
+                    <div class="modal-footer no-margin-top">
+                        <button class="btn pull-left" data-dismiss="modal">
+                            取消
+                        </button>
+                        <button class="btn pull-right" onclick="saveRole();" type="button">
+                            保存
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+$(function(){
+    $("#iform").validate({
+        rules : {
+            roleName : {
+                required:true,
+                minlength:2,
+                checkName:true,
+                maxlength:10
+            },
+            messages: {
+                roleName: {
+                    required: "名称不能为空",
+                    minlength: "名称最少由两个字符组成",
+                    maxlength:"名称不能超过10个字符"
+                }
+            },
+            errorPlacement: function(error, element) {
+                if ( element.is(":radio") )
+                    error.appendTo( element.parent().next().next() );
+                else if ( element.is(":checkbox") )
+                    error.appendTo ( element.next() );
+                else
+                    error.appendTo( element.parent().next() );
+            }
+        }
+    });
+    jQuery.validator.addMethod('checkName', function (value, element) {
+        var msgcode=null;
+        $.ajax({
+            url: basePath + "/accounts/checkRoleName",
+            type: "get",
+            dataType: 'json',
+            async:false,
+            contentType:"application/json;charset=UTF-8",
+            data: {"name":value},
+            success: function(result){
+                msgcode= result.code;
+            }
+        })
+        if(msgcode==1001){
+            $(element).data('error-msg','该角色名称已存在！');
+            return false;
+        }
+        return true;
+    }, function(params, element) {
+        return $(element).data('error-msg');
+    });
+});
+
+$(".down").click(function(){
+  $(this).siblings(".dropdown-menu").toggle();
+});
+$(".tag .close").click(function(){
+  $(this).parent(".tag").hide();
+});
+function selectAll(){
+    var isCheck=$("#sel_1").is(':checked');  //获得全选复选框是否选中
+    $("#choose input[type='checkbox']").each(function() {  
+        this.checked = isCheck;       //循环赋值给每个复选框是否选中
+    });
+
+    var isCheck=$("#sel_2").is(':checked');  //获得全选复选框是否选中
+    $(".checkList input[type='checkbox']").each(function() {  
+        this.checked = isCheck;       //循环赋值给每个复选框是否选中
+    });    
+};
+</script>
+
+<script type="text/javascript" th:inline="javascript">
+    var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/;
+
+    function saveRole(){
+        if ($("#iform").valid()) {
+            var data= serializeObject("#iform");
+            $.ajax({
+                type: 'post',
+                dataType: 'json',
+                url: basePath + '/accounts/save/role',
+                data: JSON.stringify(data),
+                contentType:"application/json;charset=UTF-8",
+                cache: false,
+                async: true,
+                success: function (data) {
+                    $.kd.kdAlert("编辑成功！",function () {
+                        window.location.href = basePath + '/accounts/getRoleList';
+                    });
+                },
+                error:function(){
+                    console.log("编辑失败")
+                }
+            });
+        }
+    }
+
+
+    function getOrgansListPage(page){
+        var size = $('#size option:selected').val();//选中的值
+        if(page){
+            page = page -1;
+        }
+        window.location.href = basePath + '/accounts/getOrgansList?page='+page+'&size='+size;
+    }
+
+    function serializeObject(form)
+    {
+        var o = {};
+        var a = $(form).serializeArray();
+        $.each(a, function() {
+            if (o[this.name]) {
+                if (!o[this.name].push) {
+                    o[this.name] = [o[this.name]];
+                }
+                o[this.name].push(this.value || '');
+            } else {
+                o[this.name] = this.value || '';
+            }
+        });
+        return o;
+    };
+
+    //机构编辑赋值
+    function sourceEdit(id,roleName){
+        $("#roleId").val(id);
+        $("#roleName").val(roleName);
+    }
+
+    //删除课程类别
+    function sourceRemove(id){
+        if(confirm("确定要删除该角色?")){
+            $.ajax({
+                url: basePath + '/accounts/delete/role',
+                type: 'get',
+                dataType: 'json',
+                contentType: 'application/json',
+                data: {id:id},
+                async: true,
+                success: function(data) {
+                    var status = data.status;
+                    var msg = data.msg;
+                    $.kd.kdAlert("删除成功！",function () {
+                        window.location.href = basePath + '/accounts/getRoleList';
+                    });
+                },
+                error:function(){
+                    console.log("删除失败")
+                }
+            });
+        }
+    }
+
+</script>
+</body>
+</html>
