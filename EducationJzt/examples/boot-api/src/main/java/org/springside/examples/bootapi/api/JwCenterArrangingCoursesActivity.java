@@ -130,6 +130,7 @@ public class JwCenterArrangingCoursesActivity {
         XbAttendClass rsxc = new XbAttendClass();
         if(xbAttendClass.getScheduleMode().equals("1") || StringUtils.isNotEmpty(xbAttendClass.getId())){
             xbAttendClass.setWeekDay(DateUtil.dayForWeekChinses(xbAttendClass.getStartDateTime()));
+            xbAttendClass.deleteStatus="1";
              rsxc = xbAttendClassService.saveXbAttendClass(xbAttendClass);
             XbSubject xbsubject = xbSubjectService.findById(rsxc.getSubjectId());
             rsxc.setXbsubject(xbsubject!=null?xbsubject:new XbSubject());
@@ -162,6 +163,7 @@ public class JwCenterArrangingCoursesActivity {
                         BeanUtils.copyProperties(xbAttendClassnew, xbAttendClass);
                         xbAttendClassnew.setStartDateTime(sdf.format(date));
                         xbAttendClassnew.setWeekDay(DateUtil.dayForWeekChinses(xbAttendClass.getStartDateTime()));
+                        xbAttendClassnew.deleteStatus = "1";
                          rsxc = xbAttendClassService.saveXbAttendClass(xbAttendClassnew);
                     }
                 }
