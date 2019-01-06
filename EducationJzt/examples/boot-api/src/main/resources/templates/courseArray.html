@@ -614,6 +614,10 @@
         //新建日程
         function saveAttendClass() {
             var data = serializeObject("#iform");
+            if(data.subjectId==""){
+                $.kd.kdMsg("请选择科目");
+                return false;
+            }
             var strgetSelectValue = "";
             var getSelectValueMenbers = $("input[name='weekType']:checked").each(function (j) {
                 if (j >= 0) {

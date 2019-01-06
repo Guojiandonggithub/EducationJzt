@@ -24,4 +24,5 @@ public interface OrgansDao extends PagingAndSortingRepository<SysOrgans, String>
     List<SysOrgans> findSysOrgansList(String parentId);
 
     SysOrgans findAllByOrganName(String organName);
+    SysOrgans findById(String id);
 }
