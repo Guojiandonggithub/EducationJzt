@@ -219,7 +219,7 @@
 
     <script type="text/javascript" th:inline="javascript">
             var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/ ;
-            //--------------------------------------------------------------新建课程---麻烦版本---------------------------------------------------------------------
+            //-----新建课程---麻烦版本---------------------------------------------------------------------
             function saveCourse() {
                 if ($("#dJFrom").valid()) {
                 var datafrom = serializeObject("#dJFrom");
@@ -229,6 +229,10 @@
                 }
                 if(datafrom.subjectId=="-1"){
                     $.kd.kdMsg("请选择科目");
+                    return false;
+                }
+                if(datafrom.courseName==""){
+                    $.kd.kdMsg("请填写课程名称");
                     return false;
                 }
                 var list = [];
@@ -250,8 +254,13 @@
                         var x = $ele.find("input");
                         obj.courseId = x.eq(0).val();
                         obj.organIds = x.eq(1).val();
-                        obj.periodNum = x.eq(2).val();
-                        obj.money = x.eq(3).val();
+                        if(datafrom.chargingMode=="0"){
+                            obj.periodNum = x.eq(2).val();
+                            obj.money = x.eq(3).val();
+                        }else if(datafrom.chargingMode=="2"){
+                            obj.periodNum = x.eq(3).val();
+                            obj.money = x.eq(2).val();
+                        }
                         obj.id = x.eq(4).val();
                         list.push(obj);
                    });
