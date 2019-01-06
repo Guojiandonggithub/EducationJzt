@@ -71,14 +71,7 @@ public class XbCourseTypeService {
     public XbCourseType saveXbCourseType(XbCourseType xbcoursetype){
          return xbCourseTypeDao.save(xbcoursetype);
     }
-
-    public boolean removeXbCourseType(XbCourseType xbcoursetype){
-		try {
-			xbCourseTypeDao.delete(xbcoursetype);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
-		return true;
+	public XbCourseType checkTypeLayorder(int layorder){
+		return xbCourseTypeDao.findByLayOrderAndDeleteStatus(layorder,"1");
 	}
 }

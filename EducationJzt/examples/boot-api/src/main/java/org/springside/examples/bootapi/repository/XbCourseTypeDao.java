@@ -16,4 +16,5 @@ import java.util.List;
  */
 public interface XbCourseTypeDao extends PagingAndSortingRepository<XbCourseType, String>,JpaSpecificationExecutor<XbCourseType> {
     public List<XbCourseType> findAllByOrderByLayOrderAsc();
+    XbCourseType findByLayOrderAndDeleteStatus(int layorder,String deletestatus);
 }

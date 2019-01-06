@@ -388,5 +388,22 @@ public class JwCenterCourseActivity {
         logger.info("新建课程结束");
         return "course::subjectfralist";
     }
-
+    @RequestMapping("/checkLayOrder")
+    public void checkLayOrder(@RequestParam String layorder, HttpServletResponse resp){
+        try {
+            String code = "1000";
+            XbCourseType xbcoursetype = xbCourseTypeService.checkTypeLayorder(Integer.parseInt(layorder));
+            if(null!=xbcoursetype){
+                code = "1001";
+            }
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("status","1");
+            jsonObject.put("code",code);
+            resp.setContentType("text/html;charset=UTF-8");
+            resp.getWriter().println(jsonObject.toJSONString());
+            resp.getWriter().close();
+        } catch (IOException e) {
+            logger.info(e.toString());
+        }
+    }
 }

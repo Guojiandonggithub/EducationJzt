@@ -25,6 +25,7 @@
     <script src="../static/pages/js/additiona17l-methods.min.js"></script>
     <script src="../static/pages/js/messages_zh.min.js"></script>
     <script src="../static/pages/js/kd.ui.plugin.js"></script>
+    <script src="../static/pages/js/check.parameter.1.0.js"></script>
 
 </head>
 <body>
@@ -281,7 +282,8 @@
                                                     </p>
                                                     <ul class="dropdown-menu dropdown-default">
                                                         <li>
-                                                            <a  href="#modal-table1" data-toggle="modal"   th:onclick="|javascript:sourceEdit('${ctype.id}','${ctype.layOrder}','${ctype.courseTypeName}')|">编辑</a>
+                                                            <a  href="#modal-table1" data-toggle="modal"
+                                                                th:onclick="|javascript:sourceEdit('${ctype.id}','${ctype.layOrder}','${ctype.courseTypeName}')|">编辑</a>
                                                         </li>
                                                         <li>
                                                             <a style="cursor:pointer"  th:onclick="|javascript:sourceTypeRemove('${ctype.id}')|">删除</a>
@@ -394,23 +396,24 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header no-padding">
-                    <div class="table-header">新建课程类别</div>
+                    <div id="courtype_new" class="table-header">新建课程类别</div>
                 </div>
                 <form id="courstypeform">
                     <div class="modal-body" style="padding:15px !important">
                         <input id="courTypeId" name="id" type="hidden" value=""/>
                         <div class="form-group" style="display: inline;">
                             <label for="courseTypeLayOrder">序号</label>
-                            <input id="layOrder" name="layOrder" type="text" value="" placeholder="建议不要输入重复序号">
+                            <input id="layOrder" name="layOrder" type="text" value="" placeholder="请输入序号">
+                            <input id="layOrder_bak" name="layOrder_bak" type="hidden" value="" placeholder="请输入序号">
                         </div>
                         <div class="form-group" style="display: inline; margin-left:20px;">
-                            <label for="courseTypecourseTypeName">类别名称</label>
-                            <input id="courseTypecourseTypeName" name="courseTypeName" type="text" placeholder="请输入课程类别">
+                            <label for="courseTypeName">类别名称</label>
+                            <input id="courseTypeName" name="courseTypeName" type="text" placeholder="请输入课程类别">
                         </div>
                     </div>
                 </form>
                 <div class="modal-footer no-margin-top">
-                    <button class="btn pull-left" data-dismiss="modal">
+                    <button id="courseType_cancel" class="btn pull-left" data-dismiss="modal">
                         取消
                     </button>
                     <button class="btn pull-right"  onclick="saveCoruseType()" type="button">
@@ -446,34 +449,7 @@
         </div>
     </div>
 </div>
-<script  >
-    $(function(){
-        //课程类别验证非空唯一性
-        $("#courstypeform").validate({
-            rules : {
-                layOrder : {
-                    required:true,
-                    digits:true
-                },
-                messages: {
-                    layOrder: {
-                        required: "排序不能为空",
-                        digits: "必须输入数字"
-                    },
-                },
-                errorPlacement: function(error, element) {
-                    if ( element.is(":radio") )
-                        error.appendTo( element.parent().next().next() );
-                    else if ( element.is(":checkbox") )
-                        error.appendTo ( element.next() );
-                    else
-                        error.appendTo( element.parent().next() );
-                }
-            }
-        });
-    })
-</script>
-<!----------------------------------------------------------课程函数群------------------------------------------------------------->
+<!--课程函数群-->
 <script type="text/javascript" th:inline="javascript">
     var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/;
     $(function(){
@@ -527,6 +503,222 @@
         }
     }
 </script>
+<!--课程类别函数群-->
+<script type="text/javascript" th:inline="javascript">
+    //新建课程类别
+    function saveCoruseType(){
+        if ($("#courstypeform").valid()) {
+            var data= serializeObject("#courstypeform");
+            var courTypeId =  data.id;
+            $.ajax({
+                url: [[@{/jwcentercourse/savecoursetype}]],
+            type: 'post',
+                dataType: 'json',
+                contentType: 'application/json',
+                data: JSON.stringify(data),
+                async: true,
+                success: function(data) {
+                console.log("回调成功")
+                var status = data.status;
+                var msg = data.msg;
+                if(status=="0"){
+                    var id = data.cousrtype.id;
+                    var courseTypeName = data.cousrtype.courseTypeName;
+                    var layOrder = data.cousrtype.layOrder;
+                    if(courTypeId==""){
+                        var html = [];
+                        html.push('<tr id="choose" class="choose" >');
+                        html.push('<input type="hidden" id="'+id+'"/>');
+                        html.push('     <td>'+layOrder+'</td>');
+                        html.push('     <td >'+courseTypeName+'</td>');
+                        html.push('     <td><div class="btn-group"><p data-toggle="dropdown" class="down" aria-expanded="false">更多<span class="ace-icon fa fa-caret-down icon-on-right"></span></p><ul class="dropdown-menu dropdown-default"><li><a href="#modal-table1"  data-toggle="modal" onclick="javascript:sourceEdit(\''+id+'\',\''+layOrder+'\',\''+courseTypeName+'\')">编辑</a></li><li><a onclick="javascript:sourceTypeRemove(\''+id+'\')">删除</a></li></ul></div></td>');
+                        html.push('</tr>');
+                        $("#courseTypeList").append(html.join(""))
+                        $.kd.kdAlert(msg);
+
+                    }else{
+                        $("#"+courTypeId).parent().remove();
+                        var html = [];
+                        html.push('<tr id="choose" class="choose" >');
+                        html.push('<input type="hidden" id="'+id+'"/>');
+                        html.push('     <td>'+layOrder+'</td>');
+                        html.push('     <td >'+courseTypeName+'</td>');
+                        html.push('     <td><div class="btn-group"><p data-toggle="dropdown" class="down" aria-expanded="false">更多<span class="ace-icon fa fa-caret-down icon-on-right"></span></p><ul class="dropdown-menu dropdown-default"><li><a href="#modal-table1"  data-toggle="modal" onclick="javascript:sourceEdit(\''+id+'\',\''+layOrder+'\',\''+courseTypeName+'\')">编辑</a></li><li><a  onclick="javascript:sourceTypeRemove(\''+id+'\')">删除</a></li></ul></div></td>');
+                        html.push('</tr>');
+                        $("#courseTypeList").append(html.join(""))
+                        $.kd.kdAlert("更新类别成功");
+                    }
+                }else{
+                    $.kd.kdAlert(msg);
+                }
+                $('#modal-table1').modal('hide')
+            },
+            error:function(){
+                console.log("回调失败")
+            }
+        });
+        }else {
+            console.log("验证失败")
+        }
+    };
+    //课程类别编辑赋值
+    function sourceEdit(id,layOrder,courseTypeName){
+        $("#courtype_new").text("编辑课程类别");
+        $("#courTypeId").val(id);
+        $("#layOrder").val(layOrder);
+        $("#layOrder_bak").val(layOrder);
+        $("#courseTypeName").val(courseTypeName);
+    }
+    //删除课程类别
+    function sourceTypeRemove(id){
+        /*if(confirm("")) {*/
+        $.kd.kdConfirm("确定要删除该课程类别?",function(){
+            $.ajax({
+                url: basePath + '/jwcentercourse/removecoursetype',
+                type: 'get',
+                contentType: 'application/json',
+                data: {id: id},
+                async: true,
+                success: function (data) {
+                    console.log("回调成功")
+                    $.kd.kdAlert("删除类别成功");
+                    $("#coursetype_tbody_id").html("");
+                    $("#coursetype_tbody_id").append(data);
+                },
+                error: function () {
+                    console.log("回调失败")
+                }
+            });
+        })
+
+        /*}*/
+    }
+
+</script>
+<!--科目函数群-->
+<script type="text/javascript" th:inline="javascript">
+    //新建科目
+    function saveSubject(){
+        var xbSubjectName =  $("#xbSubjectName").val();
+        var subjectId =  $("#subjectId").val();
+        $.ajax({
+            url: [[@{/jwcentercourse/savesubject}]],
+        type: 'post',
+            dataType: 'json',
+            contentType: 'application/json',
+            data: JSON.stringify({id:subjectId,subjectName:xbSubjectName}),
+            async: true,
+            success: function(data) {
+            console.log("回调成功")
+            var status = data.status;
+            var msg = data.msg;
+            if(status=="0"){
+                var id = data.cousrtype.id;
+                var subjectName = data.cousrtype.subjectName;
+                var state = data.cousrtype.state;
+                var html = [];
+                if(subjectId==""){
+                    html.push('<tr id="choose" class="choose"  >');
+                    html.push('<input type="hidden" id="'+id+'"/>');
+                    html.push(' <td >'+subjectName+'</td>');
+                    html.push('<td>');
+                    html.push('     <span>正常</span>');
+                    html.push('<td>');
+                    html.push('<div class="btn-group">');
+                    html.push('     <p data-toggle="dropdown" class="down" aria-expanded="false">更多');
+                    html.push('          <span class="ace-icon fa fa-caret-down icon-on-right"></span>');
+                    html.push('     </p>');
+                    html.push('<ul class="dropdown-menu dropdown-default">');
+                    html.push(' <li>');
+                    html.push('     <a href="#modal-table2"  data-toggle="modal" onclick="javascript:subjectEdit(\''+id+'\',\''+subjectName+'\',\''+state+'\')">编辑</a>');
+                    html.push('</li>');
+                    html.push('<li>');
+                    html.push('     <a onclick="javascript:subjectRemove(\''+id+'\')">删除</a>');
+                    html.push('</li>');
+                    html.push('<li>');
+                    html.push('<a href="">停用</a>');
+                    html.push('</li>');
+                    html.push('</ul>');
+                    html.push('</div>');
+                    html.push('</td>');
+                    html.push('</tr>');
+                    $("#subjectList").append(html.join(""));
+                    $.kd.kdAlert(msg);
+                }else{
+                    $("#"+subjectId).parent().remove();
+                    html.push('<tr id="choose" class="choose"   >');
+                    html.push('<input type="hidden" id="'+id+'"/>');
+                    html.push(' <td >'+subjectName+'</td>');
+                    html.push('<td>');
+                    html.push('     <span>正常</span>');
+                    html.push('<td>');
+                    html.push('<div class="btn-group">');
+                    html.push('<p data-toggle="dropdown" class="down" aria-expanded="false">更多');
+                    html.push('<span class="ace-icon fa fa-caret-down icon-on-right"></span>');
+                    html.push('</p>');
+                    html.push('<ul class="dropdown-menu dropdown-default">');
+                    html.push(' <li>');
+                    html.push('     <a href="#modal-table2"  data-toggle="modal" onclick="javascript:subjectEdit(\''+id+'\',\''+subjectName+'\',\''+state+'\')">编辑</a>');
+                    html.push('</li>');
+                    html.push('<li>');
+                    html.push('     <a onclick="javascript:subjectRemove(\''+id+'\')">删除</a>');
+                    html.push('</li>');
+                    html.push('<li>');
+                    html.push('<a href="">停用</a>');
+                    html.push('</li>');
+                    html.push('</ul>');
+                    html.push('</div>');
+                    html.push('</td>');
+                    html.push('</tr>');
+                    $("#subjectList").append(html.join(""));
+                    $("#subjectId").val("");
+                    $("#xbSubjectName").val("");
+                    $.kd.kdAlert("更新类别成功");
+                }
+            }else{
+                $.kd.kdAlert(msg);
+            }
+        },
+        error:function(){
+            console.log("回调失败")
+        }
+    });
+    };
+    //科目编辑赋值
+    function subjectEdit(id,xbSubjectName,state){
+        $("#subjectId").val(id);
+        $("#xbSubjectName").val(xbSubjectName);
+        /*if(state=="0"){
+            $("#xbSubjectState").val("正常");
+        }else{
+            $("#xbSubjectState").val("停用");
+        }*/
+
+    }
+    //删除课程类别
+    function subjectRemove(id){
+        if(confirm("确定要删除该课程类别?")) {
+            $.ajax({
+                url: basePath + '/jwcentercourse/removesubject',
+                type: 'get',
+                contentType: 'application/json',
+                data: {id: id},
+                async: true,
+                success: function (data) {
+                    console.log("删除科目回调成功");
+                    $.kd.kdAlert("删除科目成功")
+                    $("#subject_tbody_id").html("");
+                    $("#subject_tbody_id").append(data);
+                },
+                error: function () {
+                    console.log("删除科目回调失败")
+                }
+
+            });
+        }
+    }
+</script>
+<!--动态样式函数群-->
 <script>
     $(function(){
         laydate({elem: '#demo'});//绑定元素
@@ -577,222 +769,7 @@
         $("#studentList").hide();
     }
 </script>
-<!--课程类别函数群-->
-<script type="text/javascript" th:inline="javascript">
-    //新建课程类别
-    function saveCoruseType(){
-      if ($("#courstypeform").valid()) {
-        var data= serializeObject("#courstypeform");
-        var courTypeId =  data.id;
-        $.ajax({
-            url: [[@{/jwcentercourse/savecoursetype}]],
-            type: 'post',
-            dataType: 'json',
-            contentType: 'application/json',
-            data: JSON.stringify(data),
-            async: true,
-            success: function(data) {
-                console.log("回调成功")
-                var status = data.status;
-                var msg = data.msg;
-                if(status=="0"){
-                    var id = data.cousrtype.id;
-                    var courseTypeName = data.cousrtype.courseTypeName;
-                    var layOrder = data.cousrtype.layOrder;
-                    if(courTypeId==""){
-                        var html = [];
-                        html.push('<tr id="choose" class="choose" >');
-                        html.push('<input type="hidden" id="'+id+'"/>');
-                        html.push('     <td>'+layOrder+'</td>');
-                        html.push('     <td >'+courseTypeName+'</td>');
-                        html.push('     <td><div class="btn-group"><p data-toggle="dropdown" class="down" aria-expanded="false">更多<span class="ace-icon fa fa-caret-down icon-on-right"></span></p><ul class="dropdown-menu dropdown-default"><li><a href="#modal-table1"  data-toggle="modal" onclick="javascript:sourceEdit(\''+id+'\',\''+layOrder+'\',\''+courseTypeName+'\')">编辑</a></li><li><a onclick="javascript:sourceTypeRemove(\''+id+'\')">删除</a></li></ul></div></td>');
-                        html.push('</tr>');
-                        $("#courseTypeList").append(html.join(""))
-                        $.kd.kdAlert(msg);
-                        
-                    }else{
-                        $("#"+courTypeId).parent().remove();
-                        var html = [];
-                        html.push('<tr id="choose" class="choose" >');
-                        html.push('<input type="hidden" id="'+id+'"/>');
-                        html.push('     <td>'+layOrder+'</td>');
-                        html.push('     <td >'+courseTypeName+'</td>');
-                        html.push('     <td><div class="btn-group"><p data-toggle="dropdown" class="down" aria-expanded="false">更多<span class="ace-icon fa fa-caret-down icon-on-right"></span></p><ul class="dropdown-menu dropdown-default"><li><a href="#modal-table1"  data-toggle="modal" onclick="javascript:sourceEdit(\''+id+'\',\''+layOrder+'\',\''+courseTypeName+'\')">编辑</a></li><li><a  onclick="javascript:sourceTypeRemove(\''+id+'\')">删除</a></li></ul></div></td>');
-                        html.push('</tr>');
-                        $("#courseTypeList").append(html.join(""))
-                        $("#courTypeId").val("");
-                         $("#courseTypeLayOrder").val("");
-                         $("#courseTypecourseTypeName").val("");
-                        $.kd.kdAlert("更新类别成功");
-                    }
-                }else{
-                    $.kd.kdAlert(msg);
-                }
-              $('#modal-table1').modal('hide')
-            },
-            error:function(){
-                console.log("回调失败")
-            }
-        });
-      }else {
-          console.log("验证失败")
-      }
-    };
-    //课程类别编辑赋值
-    function sourceEdit(id,layOrder,courseTypeName){
-        $("#courTypeId").val(id);
-        $("#courseTypeLayOrder").val(layOrder);
-        $("#courseTypecourseTypeName").val(courseTypeName);
-    }
-    //删除课程类别
-    function sourceTypeRemove(id){
-        /*if(confirm("")) {*/
-        $.kd.kdConfirm("确定要删除该课程类别?",function(){
-            $.ajax({
-                url: basePath + '/jwcentercourse/removecoursetype',
-                type: 'get',
-                contentType: 'application/json',
-                data: {id: id},
-                async: true,
-                success: function (data) {
-                    console.log("回调成功")
-                    $.kd.kdAlert("删除类别成功");
-                    $("#coursetype_tbody_id").html("");
-                    $("#coursetype_tbody_id").append(data);
-                },
-                error: function () {
-                    console.log("回调失败")
-                }
-            });
-        })
-
-        /*}*/
-    }
-
-</script>
-<!----------------------------------------------------------科目函数群------------------------------------------------------------->
-<script type="text/javascript" th:inline="javascript">
-    //新建科目
-    function saveSubject(){
-            var xbSubjectName =  $("#xbSubjectName").val();
-            var subjectId =  $("#subjectId").val();
-                $.ajax({
-                    url: [[@{/jwcentercourse/savesubject}]],
-                    type: 'post',
-                    dataType: 'json',
-                    contentType: 'application/json',
-                    data: JSON.stringify({id:subjectId,subjectName:xbSubjectName}),
-                    async: true,
-                    success: function(data) {
-                    console.log("回调成功")
-                    var status = data.status;
-                    var msg = data.msg;
-                    if(status=="0"){
-                        var id = data.cousrtype.id;
-                        var subjectName = data.cousrtype.subjectName;
-                        var state = data.cousrtype.state;
-                        var html = [];
-                        if(subjectId==""){
-                            html.push('<tr id="choose" class="choose"  >');
-                            html.push('<input type="hidden" id="'+id+'"/>');
-                            html.push(' <td >'+subjectName+'</td>');
-                            html.push('<td>');
-                            html.push('     <span>正常</span>');
-                            html.push('<td>');
-                            html.push('<div class="btn-group">');
-                            html.push('     <p data-toggle="dropdown" class="down" aria-expanded="false">更多');
-                            html.push('          <span class="ace-icon fa fa-caret-down icon-on-right"></span>');
-                            html.push('     </p>');
-                            html.push('<ul class="dropdown-menu dropdown-default">');
-                            html.push(' <li>');
-                            html.push('     <a href="#modal-table2"  data-toggle="modal" onclick="javascript:subjectEdit(\''+id+'\',\''+subjectName+'\',\''+state+'\')">编辑</a>');
-                            html.push('</li>');
-                            html.push('<li>');
-                            html.push('     <a onclick="javascript:subjectRemove(\''+id+'\')">删除</a>');
-                            html.push('</li>');
-                            html.push('<li>');
-                            html.push('<a href="">停用</a>');
-                            html.push('</li>');
-                            html.push('</ul>');
-                            html.push('</div>');
-                            html.push('</td>');
-                            html.push('</tr>');
-                            $("#subjectList").append(html.join(""));
-                            $.kd.kdAlert(msg);
-                        }else{
-                            $("#"+subjectId).parent().remove();
-                            html.push('<tr id="choose" class="choose"   >');
-                            html.push('<input type="hidden" id="'+id+'"/>');
-                            html.push(' <td >'+subjectName+'</td>');
-                            html.push('<td>');
-                            html.push('     <span>正常</span>');
-                            html.push('<td>');
-                            html.push('<div class="btn-group">');
-                            html.push('<p data-toggle="dropdown" class="down" aria-expanded="false">更多');
-                            html.push('<span class="ace-icon fa fa-caret-down icon-on-right"></span>');
-                            html.push('</p>');
-                            html.push('<ul class="dropdown-menu dropdown-default">');
-                            html.push(' <li>');
-                            html.push('     <a href="#modal-table2"  data-toggle="modal" onclick="javascript:subjectEdit(\''+id+'\',\''+subjectName+'\',\''+state+'\')">编辑</a>');
-                            html.push('</li>');
-                            html.push('<li>');
-                            html.push('     <a onclick="javascript:subjectRemove(\''+id+'\')">删除</a>');
-                            html.push('</li>');
-                            html.push('<li>');
-                            html.push('<a href="">停用</a>');
-                            html.push('</li>');
-                            html.push('</ul>');
-                            html.push('</div>');
-                            html.push('</td>');
-                            html.push('</tr>');
-                            $("#subjectList").append(html.join(""));
-                            $("#subjectId").val("");
-                            $("#xbSubjectName").val("");
-                            $.kd.kdAlert("更新类别成功");
-                        }
-                    }else{
-                        $.kd.kdAlert(msg);
-                    }
-                },
-                error:function(){
-                    console.log("回调失败")
-                }
-            });
-        };
-    //科目编辑赋值
-    function subjectEdit(id,xbSubjectName,state){
-        $("#subjectId").val(id);
-        $("#xbSubjectName").val(xbSubjectName);
-        /*if(state=="0"){
-            $("#xbSubjectState").val("正常");
-        }else{
-            $("#xbSubjectState").val("停用");
-        }*/
-
-    }
-    //删除课程类别
-    function subjectRemove(id){
-        if(confirm("确定要删除该课程类别?")) {
-            $.ajax({
-                url: basePath + '/jwcentercourse/removesubject',
-                type: 'get',
-                contentType: 'application/json',
-                data: {id: id},
-                async: true,
-                success: function (data) {
-                    console.log("删除科目回调成功");
-                    $.kd.kdAlert("删除科目成功")
-                    $("#subject_tbody_id").html("");
-                    $("#subject_tbody_id").append(data);
-                },
-                error: function () {
-                    console.log("删除科目回调失败")
-                }
-
-            });
-        }
-    }
-</script>
+<!--工具函数群-->
 <script type="text/javascript" th:inline="javascript">
     //搜索
     function getOrgansListPage(page){

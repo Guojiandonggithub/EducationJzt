@@ -22,6 +22,10 @@
     <script src="../static/pages/laydate/laydate.js"></script>
     <script src="../static/pages/js/course-newlesson.js"></script>
     <script src="../static/pages/js/kd.ui.plugin.js"></script>
+    <script src="../static/pages/js/jquery.validate17.min.js"></script>
+    <script src="../static/pages/js/additiona17l-methods.min.js"></script>
+    <script src="../static/pages/js/messages_zh.min.js"></script>
+    <script src="../static/pages/js/check.parameter.1.0.js"></script>
 
 </head>
 
@@ -67,37 +71,44 @@
                             <input type="text" name="courseName" id="courseName" th:value="${xbCourse?.courseName}"
                                 placeholder="请输入课程名称">
                         </div>
-                        <div class="form-group">
+                        <div class="form-group" th:if=" ${#strings.isEmpty(xbCourse) }">
                             <label><span>*</span>授课模式</label>
-                            <input name="type" type="radio" class="ace" value="0" th:checked="${xbCourse?.type=='0'}"><span
+                            <input name="type" id="type" type="radio" checked="checked" class="ace" value="0" ><span
                                 class="lbl">班课</span>
-                            <input name="type" type="radio" class="ace" value="1" th:checked="${xbCourse?.type=='1'}"><span
+                            <input name="type" id="type" type="radio" class="ace" value="1" ><span
+                                class="lbl">一对一</span>
+                        </div>
+                        <div class="form-group" th:if=" ${!#strings.isEmpty(xbCourse) }">
+                            <label><span>*</span>授课模式</label>
+                            <input name="type" id="type" type="radio" class="ace" value="0" th:checked="${xbCourse?.type=='0'}"><span
+                                class="lbl">班课</span>
+                            <input name="type" id="type" type="radio" class="ace" value="1" th:checked="${xbCourse?.type=='1'}"><span
                                 class="lbl">一对一</span>
                         </div>
                         <div class="form-group" th:if=" ${#strings.isEmpty(xbCourse) }">
                             <label><span>*</span>收费模式</label>
-                            <p><input type="radio" checked="checked" name="chargingMode" value="0"
+                            <p><input type="radio" checked="checked" name="chargingMode" id="chargingMode" value="0"
                                     th:onclick="|chargingModeClick('0')|">按课时</p>
-                            <p><input type="radio" name="chargingMode" value="2"
+                            <p><input type="radio" name="chargingMode" value="2" id="chargingMode"
                                   th:onclick="|chargingModeClick('2')|">按期</p>
                         </div>
                         <div class="form-group" th:if=" ${!#strings.isEmpty(xbCourse) }">
                             <label><span>*</span>收费模式</label>
-                            <p><input type="radio" checked="checked" name="chargingMode" value="0"
+                            <p><input type="radio" checked="checked" name="chargingMode" id="chargingMode" value="0"
                                       th:checked="${xbCourse?.chargingMode=='0'}"
                                       th:onclick="|chargingModeClick('0')|">按课时</p>
-                            <p><input type="radio" name="chargingMode" value="2" th:checked="${xbCourse?.chargingMode=='2'}"
+                            <p><input type="radio" name="chargingMode" id="chargingMode" value="2" th:checked="${xbCourse?.chargingMode=='2'}"
                                       th:onclick="|chargingModeClick('2')|">按期</p>
                         </div>
                         <div class="form-group">
                             <label><span>*</span>开课校区</label>
                             <span th:if=" ${#strings.isEmpty(xbCourse) }">
-                                <p><input type="radio" name="openingType" value="0" checked="checked" th:onclick="|schoolType('0',${xbCourse?.id})|">全部校区</p>
-                                <p><input type="radio" name="openingType" value="1" th:onclick="|schoolType('1',${xbCourse?.id})|">指定校区</p>
+                                <p><input type="radio" name="openingType" id="openingType" value="0" checked="checked" th:onclick="|schoolType('0',${xbCourse?.id})|">全部校区</p>
+                                <p><input type="radio" name="openingType" id="openingType" value="1" th:onclick="|schoolType('1',${xbCourse?.id})|">指定校区</p>
                             </span>
                         <span th:if=" ${!#strings.isEmpty(xbCourse) }" th:if=" ${!#strings.isEmpty(pre) }">
-                                <p><input type="radio" name="openingType" value="0" disabled="disabled">全部校区</p>
-                                <p><input type="radio" name="openingType" value="1" checked="checked" disabled="disabled">指定校区</p>
+                                <p><input type="radio" name="openingType" id="openingType" value="0" disabled="disabled">全部校区</p>
+                                <p><input type="radio" name="openingType" id="openingType" value="1" checked="checked" disabled="disabled">指定校区</p>
                             </span>
                     </div>
                     <div id="zhidingSchool" class="form-group">
@@ -210,7 +221,16 @@
             var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/ ;
             //--------------------------------------------------------------新建课程---麻烦版本---------------------------------------------------------------------
             function saveCourse() {
+                if ($("#dJFrom").valid()) {
                 var datafrom = serializeObject("#dJFrom");
+                if(datafrom.courseTypeId=="-1"){
+                    $.kd.kdMsg("请选择课程类别");
+                    return false;
+                }
+                if(datafrom.subjectId=="-1"){
+                    $.kd.kdMsg("请选择科目");
+                    return false;
+                }
                 var list = [];
                 //全部校区
                 if (datafrom.openingType == "0") {
@@ -246,23 +266,24 @@
                         dataentity: JSON.stringify(datafrom)
                     },
                     cache: false,
-            async: true,
-                success: function (data) {
-                console.log("回调成功")
-                var status = data.status;
-                var msg = data.msg;
-                if (status == "0") {
-                    $.kd.kdAlert(data.msg,function(){
-                        window.location.href = basePath + "/jwcentercourse/tocourse?sort=xbCourse.createDate,DESC&sort=xbCourse.createTime,DESC"
-                    });
-                } else {
-                    $.kd.kdAlert(msg);
+                    async: true,
+                    success: function (data) {
+                        console.log("回调成功")
+                        var status = data.status;
+                        var msg = data.msg;
+                        if (status == "0") {
+                            $.kd.kdAlert(data.msg,function(){
+                                window.location.href = basePath + "/jwcentercourse/tocourse?sort=xbCourse.createDate,DESC&sort=xbCourse.createTime,DESC"
+                            });
+                        } else {
+                            $.kd.kdAlert(msg);
+                        }
+                    },
+                    error: function () {
+                        console.log("回调失败")
+                    }
+                });
                 }
-            },
-            error: function () {
-                console.log("回调失败")
-            }
-            });
             };
 
             //删除课程类别
@@ -309,7 +330,7 @@
                 return o;
             };
     </script>
-    <!----------------------------------------------------------科目函数群------------------------------------------------------------->
+    <!--工具函数群-->
     <script>
         ! function () {
             laydate({
@@ -334,17 +355,6 @@
         });
         return o;
     };
-</script>
-<!----------------------------------------------------------科目函数群------------------------------------------------------------->
-<script>
-    ! function () {
-        laydate({
-            elem: '#demo'
-        }); //绑定元素
-    }();
-    $(".glyphicon-remove-sign").click(function () {
-        $(this).parent().parent(".extend-list").hide();
-    });
 </script>
 <script>
     $(document).ready(function () {
