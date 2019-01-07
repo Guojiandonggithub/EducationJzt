@@ -334,9 +334,9 @@
                                                     <li>
                                                         <a  th:onclick="|javascript:subjectRemove('${sub.id}')|">删除</a>
                                                     </li>
-                                                    <li>
+                                                    <!--<li>
                                                         <a href="">停用</a>
-                                                    </li>
+                                                    </li>-->
                                                 </ul>
                                             </div>
                                         </td>
@@ -663,9 +663,6 @@
                     html.push('<li>');
                     html.push('     <a onclick="javascript:subjectRemove(\''+id+'\')">删除</a>');
                     html.push('</li>');
-                    html.push('<li>');
-                    html.push('<a href="">停用</a>');
-                    html.push('</li>');
                     html.push('</ul>');
                     html.push('</div>');
                     html.push('</td>');
@@ -690,9 +687,6 @@
                     html.push('</li>');
                     html.push('<li>');
                     html.push('     <a onclick="javascript:subjectRemove(\''+id+'\')">删除</a>');
-                    html.push('</li>');
-                    html.push('<li>');
-                    html.push('<a href="">停用</a>');
                     html.push('</li>');
                     html.push('</ul>');
                     html.push('</div>');
@@ -723,7 +717,7 @@
         }*/
 
     }
-    //删除课程类别
+    //删除科目
     function subjectRemove(id){
         if(confirm("确定要删除该课程类别?")) {
             $.ajax({

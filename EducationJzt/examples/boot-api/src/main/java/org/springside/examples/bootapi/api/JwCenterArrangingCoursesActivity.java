@@ -120,19 +120,49 @@ public class JwCenterArrangingCoursesActivity {
         model.addAttribute("courtype",courtype);
         model.addAttribute("subjectId",subjectId);
     }
+    private boolean checkCourseClassAndTimeInterval(String classId,String timeInterval,String startDateTime,String id){
+        Map<String,Object> searmap = new HashMap<>();
+        searmap.put("EQ_classId",classId);
+        searmap.put("EQ_timeInterval",timeInterval);
+        searmap.put("EQ_startDateTime",startDateTime);
+        searmap.put("EQ_deleteStatus","1");
+        if(StringUtils.isNotEmpty(id)){
+            searmap.put("NEQ_id",id);
+        }
+        List<XbAttendClass> xbalist = xbAttendClassService.findXbAttendClassAll(searmap);
+        if(xbalist!=null && xbalist.size()>0){
+            return true;
+        }
+        return false;
+    }
     /**
      * 保存排课
-     * @return
+     * @return,
      */
     @PostMapping("/save_xbAttend_class")
     public void saveXbAttendClass(@RequestBody XbAttendClass xbAttendClass,HttpServletResponse resp,Model model){
         logger.info("保存排课");
+        String msg = "";
+        String status = "";
         XbAttendClass rsxc = new XbAttendClass();
         if(xbAttendClass.getScheduleMode().equals("1") || StringUtils.isNotEmpty(xbAttendClass.getId())){
-            xbAttendClass.setWeekDay(DateUtil.dayForWeekChinses(xbAttendClass.getStartDateTime()));
-            xbAttendClass.deleteStatus="1";
-             rsxc = xbAttendClassService.saveXbAttendClass(xbAttendClass);
-            XbSubject xbsubject = xbSubjectService.findById(rsxc.getSubjectId());
+            //编辑
+            if(xbAttendClass.getScheduleMode().equals("1") && StringUtils.isNotEmpty(xbAttendClass.getId())
+                    && checkCourseClassAndTimeInterval(xbAttendClass.classId,xbAttendClass.timeInterval,xbAttendClass.startDateTime,xbAttendClass.getId())){
+                XbClass xbc = xbStudentService.getXbClass(xbAttendClass.classId);
+                msg = xbAttendClass.startDateTime+"的班级【"+xbc.getClassName()+"】时间段【"+xbAttendClass.timeInterval+"】已存在，不能重复";
+                status = "01";
+            //新增验证
+            }else if(xbAttendClass.getScheduleMode().equals("1") && StringUtils.isEmpty(xbAttendClass.getId())
+                    && checkCourseClassAndTimeInterval(xbAttendClass.classId,xbAttendClass.timeInterval,xbAttendClass.startDateTime,"")){
+                XbClass xbc = xbStudentService.getXbClass(xbAttendClass.classId);
+                msg = xbAttendClass.startDateTime+"的班级【"+xbc.getClassName()+"】时间段【"+xbAttendClass.timeInterval+"】已存在，不能重复";
+                status = "01";
+            }else {
+                xbAttendClass.setWeekDay(DateUtil.dayForWeekChinses(xbAttendClass.getStartDateTime()));
+                xbAttendClass.deleteStatus="1";
+                rsxc = xbAttendClassService.saveXbAttendClass(xbAttendClass);
+            /*XbSubject xbsubject = xbSubjectService.findById(rsxc.getSubjectId());
             rsxc.setXbsubject(xbsubject!=null?xbsubject:new XbSubject());
             XbClass findxbclass = xbStudentService.getXbClassById(rsxc.getClassId());
             XbClass responxbclass = new XbClass();
@@ -142,60 +172,85 @@ public class JwCenterArrangingCoursesActivity {
             XbClassroom xbclassroom = xbStudentService.getXbClassroomById(rsxc.getClassRoomId());
             rsxc.setXbclassroom(xbclassroom!=null?xbclassroom:new XbClassroom());
             SysEmployee sysemployee = employeeService.getSysEmployeeById(rsxc.getTeacherId());
-            rsxc.setSysemployee(sysemployee!=null?sysemployee:new SysEmployee());
-        }else{
-            Calendar cal = Calendar.getInstance();
-            SimpleDateFormat sdf = null;
-            try {
-                sdf = new SimpleDateFormat("yyyy-MM-dd");
-                Date dBegin = sdf.parse(xbAttendClass.getStartDateTime());
-                Date dEnd = sdf.parse(xbAttendClass.getEndDateTime());
-                List<Date> lDate = DateUtil.findDates(dBegin, dEnd);
-                if(xbAttendClass.weekType.indexOf("0")>-1){
-                    xbAttendClass.weekType = "1,2,3,4,5,6,7";
-                }
-                for (Date date : lDate)
-                {
-                    if(DateUtil.doesItIncludeAWeek(xbAttendClass.weekType,sdf.format(date))){
-                        System.out.println("重复排课日期："+sdf.format(date));
-                        xbAttendClass.setStartDateTime(sdf.format(date));
-                        XbAttendClass xbAttendClassnew = new XbAttendClass();
-                        BeanUtils.copyProperties(xbAttendClassnew, xbAttendClass);
-                        xbAttendClassnew.setStartDateTime(sdf.format(date));
-                        xbAttendClassnew.setWeekDay(DateUtil.dayForWeekChinses(xbAttendClass.getStartDateTime()));
-                        xbAttendClassnew.deleteStatus = "1";
-                         rsxc = xbAttendClassService.saveXbAttendClass(xbAttendClassnew);
+            rsxc.setSysemployee(sysemployee!=null?sysemployee:new SysEmployee());*/
+                //新增
+                if(StringUtils.isEmpty(xbAttendClass.getId())){
+                    //失败
+                    if(StringUtils.isEmpty(rsxc.getId())){
+                        msg = "新建日程失败";
+                        status = "01";
+                    }else {
+                        msg = "新建日程成功";
+                        status = "00";
+                    }
+                }else{
+                    //失败
+                    if(StringUtils.isEmpty(rsxc.getId())){
+                        msg = "编辑日程失败";
+                        status = "01";
+                    }else {
+                        msg = "编辑日程成功";
+                        status = "00";
                     }
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
             }
+
+        }else{
+                Calendar cal = Calendar.getInstance();
+                SimpleDateFormat sdf = null;
+                try {
+                    sdf = new SimpleDateFormat("yyyy-MM-dd");
+                    Date dBegin = sdf.parse(xbAttendClass.getStartDateTime());
+                    Date dEnd = sdf.parse(xbAttendClass.getEndDateTime());
+                    List<Date> lDate = DateUtil.findDates(dBegin, dEnd);
+                    if(xbAttendClass.weekType.indexOf("0")>-1){
+                        xbAttendClass.weekType = "1,2,3,4,5,6,7";
+                    }
+                    boolean is = true;
+                    for (Date date : lDate)
+                    {
+                        if(DateUtil.doesItIncludeAWeek(xbAttendClass.weekType,sdf.format(date))){
+                            if(checkCourseClassAndTimeInterval(xbAttendClass.classId,xbAttendClass.timeInterval,sdf.format(date),"")){
+                                XbClass xbc = xbStudentService.getXbClass(xbAttendClass.classId);
+                                msg = sdf.format(date)+"的班级【"+xbc.getClassName()+"】时间段【"+xbAttendClass.timeInterval+"】已存在，不能重复";
+                                status = "01";
+                                is = false;
+                                break;
+                            }
+                        }
+                    }
+                    if(is){
+                        for (Date date : lDate)
+                        {
+                            if(DateUtil.doesItIncludeAWeek(xbAttendClass.weekType,sdf.format(date))){
+
+                                System.out.println("重复排课日期："+sdf.format(date));
+                                xbAttendClass.setStartDateTime(sdf.format(date));
+                                XbAttendClass xbAttendClassnew = new XbAttendClass();
+                                BeanUtils.copyProperties(xbAttendClassnew, xbAttendClass);
+                                xbAttendClassnew.setStartDateTime(sdf.format(date));
+                                xbAttendClassnew.setWeekDay(DateUtil.dayForWeekChinses(xbAttendClass.getStartDateTime()));
+                                xbAttendClassnew.deleteStatus = "1";
+                                rsxc = xbAttendClassService.saveXbAttendClass(xbAttendClassnew);
+                            }
+                        }
+                        if(StringUtils.isNotEmpty(rsxc.getId())){
+                            msg = "新建日程成功";
+                            status = "00";
+                        }else{
+                            msg = "新建日程失败";
+                            status = "01";
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
         }
         JSONObject jsonObject = new JSONObject();
-        if(!StringUtils.isEmpty(rsxc.getId())){
-            if(StringUtils.isNotEmpty(xbAttendClass.getId())){
-                jsonObject.put("msg", "编辑排课成功");
-                jsonObject.put("status","01");
-            }else{
-                jsonObject.put("status","00");
-                jsonObject.put("msg", "新建排课成功");
-            }
-
-            jsonObject.put("rsxbAttendClass",com.alibaba.fastjson.JSONObject.toJSON(rsxc));
-        }else{
-            if(StringUtils.isNotEmpty(xbAttendClass.getId())){
-                jsonObject.put("msg", "新建排课失败");
-            }else{
-                jsonObject.put("msg", "编辑排课失败");
-            }
-
-            jsonObject.put("status","1");
-        }
+        jsonObject.put("status",status);
+        jsonObject.put("msg",msg);
         HttpServletUtil.reponseWriter(jsonObject,resp);
-       /* model.addAttribute("xbAttendList",xbAttendClassService.findXbAttendClassAll());
-        return "courseArray::attendClassList";*/
-
     }
     /**
      * 跳转到排课日程表

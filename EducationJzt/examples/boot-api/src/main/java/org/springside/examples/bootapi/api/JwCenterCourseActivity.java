@@ -112,12 +112,6 @@ public class JwCenterCourseActivity {
         }
         Page<XbCoursePreset> prelist =xbCoursePresetService.getXbCoursePresetList(pageable,searhMap);
         model.addAttribute("prelist",prelist);
-        System.out.println("1="+prelist.getTotalPages());
-        System.out.println("2="+prelist.getTotalElements());
-        System.out.println("3="+prelist.getNumber());
-        System.out.println("4="+prelist.getNumberOfElements());
-        System.out.println("5="+prelist.getSize());
-        System.out.println("6="+prelist.getSort());
         model.addAttribute("prelistsize",prelist.getSize());
         model.addAttribute("searhname",searhname);
         model.addAttribute("organId",organId);
@@ -136,13 +130,16 @@ public class JwCenterCourseActivity {
                           ModelMap model){
         logger.info("跳转到新建课程");
         //查询所有课程类别
-        List<XbCourseType> coursetypelist = xbCourseTypeService.findCourseTypeAll();
+        Map<String,Object> typesearmap = new HashMap<>();
+        List<XbCourseType> coursetypelist = xbCourseTypeService.findXbCourseTypeList(typesearmap);
         model.addAttribute("coursetypelist",coursetypelist);
         //查询所有科目
-        List<XbSubject> subjectlist = xbSubjectService.findSubjectAll();
+        Map<String,Object> subjectsearmap = new HashMap<>();
+        List<XbSubject> subjectlist = xbSubjectService.findXbSubjectList(subjectsearmap);
         model.addAttribute("subjectlist",subjectlist);
         //查询所有校区
-        List<SysOrgans> sorganList = organsService.getOrgansList();
+        Map<String,Object> sorgsearmap = new HashMap<>();
+        List<SysOrgans> sorganList = organsService.getOrgansListAll(sorgsearmap);
         model.addAttribute("sorganList",sorganList);
         model.addAttribute("xbCourse",null);
         model.addAttribute("pre",null);

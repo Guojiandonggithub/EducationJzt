@@ -6,13 +6,18 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springside.examples.bootapi.ToolUtils.common.modules.persistence.DynamicSpecifications;
+import org.springside.examples.bootapi.ToolUtils.common.modules.persistence.SearchFilter;
 import org.springside.examples.bootapi.domain.SysEmployee;
 import org.springside.examples.bootapi.domain.SysOrgans;
+import org.springside.examples.bootapi.domain.XbCourseType;
 import org.springside.examples.bootapi.repository.OrgansDao;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class OrgansService {
@@ -51,7 +56,14 @@ public class OrgansService {
 		return organsDao.findSysOrgansList("1");
 	}
 
-	public List<SysOrgans> getOrgansListAll(){return (List)organsDao.findAll();};
+	public List<SysOrgans> getOrgansListAll(Map<String,Object> searchParams){
+		searchParams.put("EQ_deleteStatus","1");
+		searchParams.put("EQ_parentId","1");
+		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
+		Specification<SysOrgans> spec = DynamicSpecifications.bySearchFilter(
+				filters.values(), SysOrgans.class);
+		return organsDao.findAll(spec);
+	};
 
 	public SysOrgans checkOrganName(String name){return organsDao.findAllByOrganName(name);};
 	public SysOrgans findOrganbyId(String id){return organsDao.findById(id);};
