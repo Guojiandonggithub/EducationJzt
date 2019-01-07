@@ -150,6 +150,10 @@ public class JwCenterCourseActivity {
             XbCourse xbc = xbCourseService.findById(courseId);
             model.addAttribute("xbCourse",xbc);
             XbCoursePreset pre = xbCoursePresetService.getXbCoursePreset(presetid);
+            if(xbc.chargingMode.equals("0")){
+                BigDecimal bde = new BigDecimal(pre.periodNum);
+                pre.money=pre.money.multiply(bde);
+            }
             model.addAttribute("pre",pre);
 
         }
@@ -377,7 +381,29 @@ public class JwCenterCourseActivity {
         logger.info("删除课程结束");
         return "course::courselist";
     }
-
+    /**
+     * 课程上架下架
+     * @param resp
+     */
+    @RequestMapping("/statecourse")
+    public String stateCourse(@RequestParam(required=false) String id,@RequestParam String state,
+                              HttpServletResponse resp, ModelMap model,Pageable pageable){
+        logger.info("课程上架下架");
+        try {
+            Map<String,Object> xbCoursesearhMap = new HashMap<>();
+            //逻辑删除课程
+            XbCourse xbc = xbCourseService.findById(id);
+            xbc.state = state;
+            xbCourseService.saveXbCourse(xbc);
+            xbCoursesearhMap.put("EQ_deleteStatus","1");
+            Page<XbCoursePreset> prelist = xbCoursePresetService.getXbCoursePresetList(pageable,xbCoursesearhMap);
+            model.addAttribute("prelist",prelist);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        logger.info("课程上架下架结束");
+        return "course::courselist";
+    }
     /**
      * 删除类别
      * @param id

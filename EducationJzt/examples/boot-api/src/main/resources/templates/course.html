@@ -191,8 +191,8 @@
 
                                                 <td th:text="${obj.xbCourse.createDate}+' '+${obj.xbCourse.createTime}">创建日期</td>
                                                 <td th:switch="${obj.xbCourse.state}">
-                                                    <span th:case="0">正常</span>
-                                                    <span th:case="1">下架</span>
+                                                    <span th:case="0">开课中</span>
+                                                    <span th:case="1">停课中</span>
                                                 </td>
                                                 <td>
                                                     <div class="btn-group">
@@ -201,11 +201,12 @@
                                                             <span class="ace-icon fa fa-caret-down icon-on-right"></span>
                                                         </p>
                                                         <ul class="dropdown-menu dropdown-default">
-                                                            <li>
-                                                                <a th:href="@{/jwcentercourse/goaddcourse(courseId=${obj.xbCourse.id},presetid=${obj.id})}"  >编辑</a>
+                                                            <li th:switch="${obj.xbCourse.state}">
+                                                                <a th:case="1" style="cursor:pointer" th:onclick="|kaiketingke('${obj.xbCourse.id}','0')|">开课</a>
+                                                                <a th:case="0" style="cursor:pointer" th:onclick="|kaiketingke('${obj.xbCourse.id}','1')|">停课</a>
                                                             </li>
                                                             <li>
-                                                                <a style="cursor:pointer">复制</a>
+                                                                <a th:href="@{/jwcentercourse/goaddcourse(courseId=${obj.xbCourse.id},presetid=${obj.id})}"  >编辑</a>
                                                             </li>
                                                             <li>
                                                                 <a style="cursor:pointer" th:onclick="|sourceRemove('${obj.id}')|">删除</a>
@@ -252,7 +253,6 @@
                             </div>
                         </div>
                     </div>
-
                 </form>
             </div>
             <!-- 课程类别列表 -->
@@ -483,25 +483,53 @@
     }
     //删除课程
     function sourceRemove(id) {
-        if (confirm("确定要删除该课程?")) {
+            $.kd.kdConfirm("确定要删除该课程?",function(){
+                $.ajax({
+                    url: basePath + '/jwcentercourse/removecourse',
+                    type: 'get',
+                    contentType: 'application/json',
+                    data: {id: id},
+                    async: true,
+                    success: function (data) {
+                        console.log("回调成功")
+                        $.kd.kdAlert("删除成功")
+                        $("#courseList_tbodyid").html("");
+                        $("#courseList_tbodyid").append(data);
+                    },
+                    error: function () {
+                        console.log("回调失败")
+                    }
+                });
+            })
+
+    };
+    //课程上架下架
+    function kaiketingke(id,state) {
+        var msg = "停课";
+        if(state == '0'){
+            msg = "开课";
+        }
+        $.kd.kdConfirm("确定是要"+msg+"吗？",function(){
             $.ajax({
-                url: basePath + '/jwcentercourse/removecourse',
+                url: basePath + '/jwcentercourse/statecourse',
                 type: 'get',
                 contentType: 'application/json',
-                data: {id: id},
+                data: {id: id,state:state},
                 async: true,
                 success: function (data) {
                     console.log("回调成功")
-                    $.kd.kdAlert("删除成功")
-                    $("#courseList_tbodyid").html("");
-                    $("#courseList_tbodyid").append(data);
+                    $.kd.kdAlert(msg+"成功",function(){
+                        $("#courseList_tbodyid").html("");
+                        $("#courseList_tbodyid").append(data);
+                    });
                 },
                 error: function () {
                     console.log("回调失败")
                 }
             });
-        }
-    }
+        })
+
+    };
 </script>
 <!--课程类别函数群-->
 <script type="text/javascript" th:inline="javascript">
