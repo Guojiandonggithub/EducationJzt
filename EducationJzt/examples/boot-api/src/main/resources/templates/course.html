@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="../static/pages/css/bootstrap.min.css">
     <link rel="stylesheet" href="../static/pages/css/font-awesome.min.css" />
     <link rel="stylesheet" href="../static/pages/css/kd.ui.plugin.css" />
+    <link rel="stylesheet" href="../static/pages/css/loading.css" />
 
     <script src="../static/pages/js/jquery.min.js"></script>
     <script src="../static/pages/js/bootstrap.min.js"> </script>
@@ -26,6 +27,7 @@
     <script src="../static/pages/js/messages_zh.min.js"></script>
     <script src="../static/pages/js/kd.ui.plugin.js"></script>
     <script src="../static/pages/js/check.parameter.1.0.js"></script>
+    <script src="../static/pages/js/loading.js"></script>
 
 </head>
 <body>
@@ -34,7 +36,7 @@
 <div class="main-container" id="main-container">
     <div th:replace="layout::left('13','37')">
     </div>
-    <div class="main-content">
+    <div id="main-content" class="main-content">
         <div class="tabbable">
             <ul class="nav nav-tabs" id="myTab">
                 <li class="active">
@@ -72,7 +74,7 @@
                                     <button type="button" th:onclick="'javascript:getOrgansListPage(\'\')'">搜索</button>
                                 </div>
                             </div>
-                        <div class="control-position">
+                        <div id="control-position" class="control-position">
                             <div class="control-group">
                                 <label class="control-label">课程类别</label>
                                 <input  th:attr ="checked=${typeId == '0'?true:false}"
@@ -128,7 +130,7 @@
                                     <button type="button" class="btn btn-primary">批量删除</button>
                                 </div>-->
                                 <div class="result">
-                                    当前结果：共计<span th:text="${prelist.getTotalElements()}"></span>个课程，<span>13</span>个课程正在开课/班
+                                    当前结果：共计<span th:text="${prelist.getTotalElements()}"></span>个课程，<span th:text="${xbcstatesize}"></span>个课程正在开课/班
                                 </div>
                                 <div class="orderTable">
                                     <table  class="table table-hover">
@@ -793,8 +795,14 @@
 </script>
 <!--工具函数群-->
 <script type="text/javascript" th:inline="javascript">
+
     //搜索
     function getOrgansListPage(page){
+        var load = new Loading();
+        load.init({
+            target: "#control-position"
+        });
+        load.start();
         var data= serializeObject("#searchform");
         var size = $('#size option:selected').val();//选中的值
         if(page){

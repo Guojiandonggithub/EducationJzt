@@ -68,7 +68,11 @@ public class JwCenterCourseActivity {
         model.addAttribute("subjectlist",subjectlist);
         Iterable<SysOrgans> organsList = organsService.getOrgansList();
         model.addAttribute("organsList",organsList);
-
+        //查询开课数量
+        Map<String,Object> tatemap = new HashMap<>();
+        tatemap.put("EQ_xbCourse.state","0");
+        List<XbCoursePreset> xbcstate = xbCoursePresetService.getXbCoursePresets(tatemap);
+        model.addAttribute("xbcstatesize",xbcstate.size());
         return "course";
     }
 
