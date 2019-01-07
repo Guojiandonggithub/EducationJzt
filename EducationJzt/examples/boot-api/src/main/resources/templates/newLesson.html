@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="../static/pages/css/bootstrap.min.css">
     <link rel="stylesheet" href="../static/pages/css/font-awesome.min.css" />
     <link rel="stylesheet" href="../static/pages/css/kd.ui.plugin.css" />
+    <link rel="stylesheet" href="../static/pages/css/loading.css" />
     <script src="../static/pages/js/jquery.min.js"></script>
     <script src="../static/pages/js/bootstrap.min.js"> </script>
     <script src="../static/pages/js/ace.min.js"> </script>
@@ -26,7 +27,7 @@
     <script src="../static/pages/js/additiona17l-methods.min.js"></script>
     <script src="../static/pages/js/messages_zh.min.js"></script>
     <script src="../static/pages/js/check.parameter.1.0.js"></script>
-
+    <script src="../static/pages/js/loading.js"></script>
 </head>
 
 <body>
@@ -221,7 +222,12 @@
             var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/ ;
             //-----新建课程---麻烦版本---------------------------------------------------------------------
             function saveCourse() {
+                var load = new Loading();
+                load.init({
+                    target: "#control-position"
+                });
                 if ($("#dJFrom").valid()) {
+                    load.start();
                 var datafrom = serializeObject("#dJFrom");
                 if(datafrom.courseTypeId=="-1"){
                     $.kd.kdMsg("请选择课程类别");
@@ -277,6 +283,7 @@
                     cache: false,
                     async: true,
                     success: function (data) {
+                        load.stop();
                         console.log("回调成功")
                         var status = data.status;
                         var msg = data.msg;
@@ -289,6 +296,7 @@
                         }
                     },
                     error: function () {
+                        load.stop();
                         console.log("回调失败")
                     }
                 });
@@ -297,6 +305,12 @@
 
             //删除课程类别
             function subjectRemove(id) {
+                var load = new Loading();
+                load.init({
+                    target: "#control-position"
+                });
+                load.start();
+
                 $.ajax({
                     url: basePath+'/jwcentercourse/removesubject',
                     type: 'post',
@@ -307,6 +321,7 @@
                     }),
                     async: true,
                     success: function (data) {
+                        load.stop();
                         console.log("回调成功")
                         var status = data.status;
                         var msg = data.msg;
@@ -319,6 +334,7 @@
                         }
                     },
                     error: function () {
+                        load.stop();
                         console.log("回调失败")
                     }
                 });

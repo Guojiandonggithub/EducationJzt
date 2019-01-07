@@ -19,7 +19,7 @@
     <link rel="stylesheet" href="../static/pages/css/fullcalendar.css">
     <link rel="stylesheet" href="../static/pages/css/lessonTable.css">
     <link rel="stylesheet" href="../static/pages/css/syllabus.css">
-
+    <link rel="stylesheet" href="../static/pages/css/loading.css" />
     <link rel="stylesheet" href="../static/pages/css/kd.ui.plugin.css" />
     <script src="../static/pages/js/jquery.min.js"></script>
     <script src="../static/pages/js/bootstrap.min.js"> </script>
@@ -29,6 +29,7 @@
     <script src="../static/pages/js/fullcalendar.min.js"></script>
     <script src="../static/pages/js/jquery-ui-1.10.2.custom.min.js"></script>
     <script src="../static/pages/js/kd.ui.plugin.js"></script>
+    <script src="../static/pages/js/loading.js"></script>
 </head>
 
 <body>
@@ -52,7 +53,7 @@
                         <a data-toggle="tab" href="#conflict" class="conflict">日程冲突</a>
                     </li>
                 </ul>
-                <div class="tab-content student">
+                <div class="tab-content student" id="content_student">
                     <form id="searchform">
                         <!-- 日程列表 -->
                         <div id="schedule" class="tab-pane fade in active">
@@ -327,7 +328,7 @@
         <form id="iformAttendClass"  >
             <div id="modal-table" class="modal fade in pk" tabindex="-1" aria-hidden="false">
                 <div class="modal-dialog">
-                    <div class="modal-content">
+                    <div class="modal-content" id="modal-content">
                         <div class="modal-header no-padding">
                             <div id="newdayattend" class="table-header">新建日程</div>
                         </div>
@@ -478,7 +479,7 @@
         <!-- 冲突编辑 -->
         <div id="modal-table1" class="modal fade in conflictEdit" tabindex="-1" aria-hidden="false">
             <div class="modal-dialog">
-                <div class="modal-content">
+                <div class="modal-content" id="modal-content">
                     <div class="modal-header no-padding">
                         <div class="table-header">冲突编辑</div>
                     </div>
@@ -653,7 +654,11 @@
             $.kd.kdMsg("请选择上课时段");
             return false;
         }
-
+        var load = new Loading();
+        load.init({
+            target: "#schedule"
+        });
+        load.start();
         data.weekType = strgetSelectValue;
         $.ajax({
             type: 'post',
@@ -664,6 +669,7 @@
             cache: false,
             async: true,
             success: function (data) {
+                load.stop();
                 //console.log("新建排课表回调数据data="+data)
                 var status = data.status;
                 var msg = data.msg;
@@ -677,6 +683,7 @@
 
             },
             error: function () {
+                load.stop();
                 console.log("错误")
             }
         });
@@ -722,7 +729,7 @@
         var html = [];
         html.push('<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"> ');
         html.push('	<div class="modal-dialog" role="document">                                                      ');
-        html.push('		<div class="modal-content">                                                                 ');
+        html.push('		<div class="modal-content" id="modal-content">                                                                 ');
         html.push('			<div class="modal-header">                                                              ');
         html.push('				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span   ');
         html.push('						aria-hidden="true">&times;</span></button>                                  ');
@@ -740,7 +747,12 @@
     }
     //删除排课
     function attendClassRemove(id,type){
+        var load = new Loading();
+        load.init({
+            target: "#schedule"
+        });
         if(confirm("确定要删除这条排课信息?")) {
+            load.start();
             $.ajax({
                 url: basePath+ '/jw_center_arranging_course/remove_xbAttend_class',
                 type: 'get',
@@ -748,12 +760,14 @@
                 data: {id:id},
                 async: true,
                 success: function(data) {
+                    load.stop();
                 console.log("删除排课回调成功")
                 $.kd.kdAlert("删除排课成功");
                 $("#xbAttendList_tbodyid").html("");
                 $("#xbAttendList_tbodyid").append(data);
                 },
                 error:function(){
+                    load.stop();
                     console.log("删除排课回调失败")
                 }
             });
@@ -761,7 +775,13 @@
     };
     //删除排课冲突
     function attendClassConflicRemove(id,type){
-        if(confirm("确定要删除这条排课冲突?")) {
+        var load = new Loading();
+        load.init({
+            target: "#content_student"
+        });
+        //if(confirm("确定要删除这条排课冲突?")) {
+        $.kd.kdConfirm("确定要删除这条排课冲突?",function(){
+            load.start();
             $.ajax({
                 url: basePath+ '/jw_center_arranging_course/remove_xbAttendconfilic_class',
                 type: 'get',
@@ -769,19 +789,28 @@
                 data: {id:id},
                 async: true,
                 success: function(data) {
+                    load.stop();
                     console.log("删除排课回调成功")
                     $.kd.kdAlert("删除排课成功");
                     $("#xbAttendConflicList_tbodyid").html("");
                     $("#xbAttendConflicList_tbodyid").append(data);
                 },
                 error:function(){
+                    load.stop();
                     console.log("删除排课回调失败")
                 }
             });
-        }
+        })
+
+       // }
     }
     //班级下拉级联
     function classToFindAll(){
+        var load = new Loading();
+        load.init({
+            target: "#modal-content"
+        });
+        load.start();
        var calssId = $("#classId option:selected").val();
         $.ajax({
             url: basePath + '/jw_center_arranging_course/classToFindAll',
@@ -790,11 +819,13 @@
             data: {id: calssId},
             async: true,
             success: function (data) {
+                load.stop();
                 console.log("查询班级级联信息成功");
                 $("#teacherfromgroupid").html("");
                 $("#teacherfromgroupid").append(data);
             },
             error: function () {
+                load.stop();
                 console.log("查询班级级联信息失败")
             }
 

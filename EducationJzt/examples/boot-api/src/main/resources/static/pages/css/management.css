@@ -136,7 +136,7 @@ textarea::-webkit-input-placeholder {
 
 .orderCon {
     width: 100%;
-    padding: 26px 0;
+    /*padding: 26px 0;*/
     background: #fff;
     border-radius: 6px;
     margin-top: 22px;

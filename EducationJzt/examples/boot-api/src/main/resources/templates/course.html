@@ -462,30 +462,44 @@
     });
     //课程编辑赋值
     function courseEdit(courseId){
+        var load = new Loading();
+        load.init({
+            target: "#control-position"
+        });
+        load.start();
         $.ajax({
             //url: [[@{/jwcentercourse/goaddcourse}]],
             url: basePath+'/jwcentercourse/goaddcourse',
             method: 'POST',
             data: {"courseId":courseId},
             success: function(data) {
+                load.stop();
             console.log("回调成功");
             var status = data.status;
             var msg = data.msg;
             if(status=="0"){
-                $.kd.kdAlert(data.msg);
-                window.location.href=basePath+"/jwcentercourse/tocourse"
+                $.kd.kdAlert(data.msg,function(){
+                    window.location.href=basePath+"/jwcentercourse/tocourse"
+                });
+
             }else{
-                $.kd.kdAlert(msg);
+                $.kd.kdMsg(msg);
             }
         },
         error:function(){
+            load.stop();
             console.log("回调失败")
         }
      });
     }
     //删除课程
     function sourceRemove(id) {
+        var load = new Loading();
+        load.init({
+            target: "#control-position"
+        });
             $.kd.kdConfirm("确定要删除该课程?",function(){
+                load.start();
                 $.ajax({
                     url: basePath + '/jwcentercourse/removecourse',
                     type: 'get',
@@ -493,12 +507,14 @@
                     data: {id: id},
                     async: true,
                     success: function (data) {
+                        load.stop();
                         console.log("回调成功")
                         $.kd.kdAlert("删除成功")
                         $("#courseList_tbodyid").html("");
                         $("#courseList_tbodyid").append(data);
                     },
                     error: function () {
+                        load.stop();
                         console.log("回调失败")
                     }
                 });
@@ -511,7 +527,12 @@
         if(state == '0'){
             msg = "开课";
         }
+        var load = new Loading();
+        load.init({
+            target: "#control-position"
+        });
         $.kd.kdConfirm("确定是要"+msg+"吗？",function(){
+            load.start();
             $.ajax({
                 url: basePath + '/jwcentercourse/statecourse',
                 type: 'get',
@@ -519,6 +540,7 @@
                 data: {id: id,state:state},
                 async: true,
                 success: function (data) {
+                    load.stop();
                     console.log("回调成功")
                     $.kd.kdAlert(msg+"成功",function(){
                         $("#courseList_tbodyid").html("");
@@ -526,6 +548,7 @@
                     });
                 },
                 error: function () {
+                    load.stop();
                     console.log("回调失败")
                 }
             });
@@ -537,7 +560,12 @@
 <script type="text/javascript" th:inline="javascript">
     //新建课程类别
     function saveCoruseType(){
+        var load = new Loading();
+        load.init({
+            target: "#control-position"
+        });
         if ($("#courstypeform").valid()) {
+            load.start();
             var data= serializeObject("#courstypeform");
             var courTypeId =  data.id;
             $.ajax({
@@ -548,6 +576,7 @@
                 data: JSON.stringify(data),
                 async: true,
                 success: function(data) {
+                load.stop();
                 console.log("回调成功")
                 var status = data.status;
                 var msg = data.msg;
@@ -584,6 +613,7 @@
                 $('#modal-table1').modal('hide')
             },
             error:function(){
+                load.stop();
                 console.log("回调失败")
             }
         });
@@ -601,8 +631,12 @@
     }
     //删除课程类别
     function sourceTypeRemove(id){
-        /*if(confirm("")) {*/
+        var load = new Loading();
+        load.init({
+            target: "#control-position"
+        });
         $.kd.kdConfirm("确定要删除该课程类别?",function(){
+            load.start();
             $.ajax({
                 url: basePath + '/jwcentercourse/removecoursetype',
                 type: 'get',
@@ -610,18 +644,18 @@
                 data: {id: id},
                 async: true,
                 success: function (data) {
+                    load.stop();
                     console.log("回调成功")
                     $.kd.kdAlert("删除类别成功");
                     $("#coursetype_tbody_id").html("");
                     $("#coursetype_tbody_id").append(data);
                 },
                 error: function () {
+                    load.stop();
                     console.log("回调失败")
                 }
             });
         })
-
-        /*}*/
     }
 
 </script>
@@ -629,6 +663,11 @@
 <script type="text/javascript" th:inline="javascript">
     //新建科目
     function saveSubject(){
+        var load = new Loading();
+        load.init({
+            target: "#control-position"
+        });
+        load.start();
         var xbSubjectName =  $("#xbSubjectName").val();
         var subjectId =  $("#subjectId").val();
         $.ajax({
@@ -643,6 +682,7 @@
             var status = data.status;
             var msg = data.msg;
             if(status=="0"){
+                load.stop();
                 var id = data.cousrtype.id;
                 var subjectName = data.cousrtype.subjectName;
                 var state = data.cousrtype.state;
@@ -700,10 +740,12 @@
                     $.kd.kdAlert("更新类别成功");
                 }
             }else{
+                load.stop();
                 $.kd.kdAlert(msg);
             }
         },
         error:function(){
+            load.stop();
             console.log("回调失败")
         }
     });
@@ -721,7 +763,12 @@
     }
     //删除科目
     function subjectRemove(id){
-        if(confirm("确定要删除该课程类别?")) {
+        var load = new Loading();
+        load.init({
+            target: "#control-position"
+        });
+        if($.kd.kdConfirm("确定要删除该科目?")) {
+            load.start();
             $.ajax({
                 url: basePath + '/jwcentercourse/removesubject',
                 type: 'get',
@@ -729,12 +776,14 @@
                 data: {id: id},
                 async: true,
                 success: function (data) {
+                    load.stop();
                     console.log("删除科目回调成功");
                     $.kd.kdAlert("删除科目成功")
                     $("#subject_tbody_id").html("");
                     $("#subject_tbody_id").append(data);
                 },
                 error: function () {
+                    load.stop();
                     console.log("删除科目回调失败")
                 }
 
@@ -795,13 +844,12 @@
 </script>
 <!--工具函数群-->
 <script type="text/javascript" th:inline="javascript">
-
+    var load = new Loading();
+    load.init({
+        target: "#control-position"
+    });
     //搜索
     function getOrgansListPage(page){
-        var load = new Loading();
-        load.init({
-            target: "#control-position"
-        });
         load.start();
         var data= serializeObject("#searchform");
         var size = $('#size option:selected').val();//选中的值
