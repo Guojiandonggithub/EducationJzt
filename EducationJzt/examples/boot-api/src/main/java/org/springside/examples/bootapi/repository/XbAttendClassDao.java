@@ -21,4 +21,13 @@ public interface XbAttendClassDao extends PagingAndSortingRepository<XbAttendCla
     XbAttendClass findById(String id);
     @Query(value="SELECT * FROM xb_attend_class a WHERE (a.id) IN  (SELECT t.id FROM xb_attend_class t WHERE t.delete_status = 1 GROUP BY t.class_id,t.start_date_time,t.time_interval HAVING COUNT(*) > 1)",nativeQuery = true)
     List<XbAttendClass> findXbAttendConflictList();
+    /*@Query(value="SELECT t.id FROM xb_attend_class t WHERE t.delete_status = 1 GROUP BY t.class_id,t.start_date_time,t.time_interval HAVING COUNT(*) > 1",nativeQuery = true)
+    List<String> findXbAttendConflictIdList();*/
+    @Query(value="SELECT t.id FROM xb_attend_class t\n" +
+            "INNER JOIN \n" +
+            "(SELECT t.class_id,t.start_date_time,t.time_interval FROM xb_attend_class t \n" +
+            "WHERE t.delete_status = 1 GROUP BY t.class_id,t.start_date_time,t.time_interval HAVING COUNT(*) > 1) t1\n" +
+            "ON (t.class_id = t1.class_id AND t.start_date_time = t1.start_date_time AND t.time_interval = t1.time_interval)",nativeQuery = true)
+    List<String> findXbAttendConflictIdList();
+
 }

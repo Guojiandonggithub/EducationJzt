@@ -233,6 +233,7 @@
                             <div class="orderTable rcct">
                                 <table class="table table-hover">
                                     <tr>
+                                        <th>序号</th>
                                         <th>上课时间</th>
                                         <th>班级/一对一</th>
                                         <th>课程</th>
@@ -242,8 +243,9 @@
                                     </tr>
                                     <tbody id="xbAttendConflicList_tbodyid">
                                         <th:block th:if="${xbAttendConflicList}" th:fragment="xbAttendConflicListFra">
-                                            <tr th:each="conf,confSte:${xbAttendConflicList}" id="choose">
+                                            <tr th:each="conf,confSte:${xbAttendConflicList.content}" id="choose">
                                                 <input th:id="${conf.id}+'_ct'"  type="hidden">
+                                                <td th:text="${confSte.count}+${xbAttendConflicList.getNumber()*10}">序号</td>
                                                 <td th:text="${conf.startDateTime} +' '+${conf.timeInterval}">上课时间</td>
                                                 <td th:switch="${conf.wayOfTeaching}">
                                                     <span th:case="1" th:text="${conf.xbclass.className}+'(一对一)'"></span>
@@ -267,52 +269,36 @@
                                         </th:block>
                                     </tbody>
                                 </table>
-                                <!-- 删除弹窗 -->
-                                <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                                    <div class="modal-dialog" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                                        aria-hidden="true">&times;</span></button>
-                                                <h4 class="modal-title" id="myModalLabel">请确认是否删除</h4>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                                                <button type="button" class="btn btn-primary">好</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!--<div class="orderPage">
+                                <div class="orderPage">
                                     <div class="page">
                                         单页显示：
-                                        <select id="size" name="size" onchange="getOrgansListPage('')">
+                                        <select id="conflicsize" name="conflicsize" onchange="getxbAttendConflicListPage('')">
                                             <option value="5">5条/页</option>
                                             <option value="20">20条/页</option>
                                             <option value="10">10条/页</option>
                                             <option value="15">15条/页</option>
                                         </select>
-                                        <input type="hidden" id="xbAttendListsize" th:value="${xbAttendListsize}"/>
+                                        <input type="hidden" id="xbAttendConflicListsize" th:value="${xbAttendConflicListsize}"/>
                                     </div>
-                                    <ul class="pagination" th:if="${xbAttendList.getTotalPages() gt 0}" >
+                                    <ul class="pagination" th:if="${xbAttendConflicList.getTotalPages() gt 0}" >
                                         <li class="disabled">
-                                            <a href="#" th:onclick="'javascript:getOrgansListPage(\''+0+'\')'">首页</a>
+                                            <a href="#" th:onclick="'javascript:getxbAttendConflicListPage(\''+0+'\')'">首页</a>
                                         </li>
-                                        <li class="disabled" th:if="${xbAttendList.getNumber()-1} ge 0">
-                                            <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${xbAttendList.getNumber()-1}+'\')'">
+                                        <li class="disabled" th:if="${xbAttendConflicList.getNumber()-1} ge 0">
+                                            <a href="#" th:onclick="'javascript:getxbAttendConflicListPage(\''+${xbAttendConflicList.getNumber()-1}+'\')'">
                                                 <i class="ace-icon fa fa-angle-double-left"></i>
                                             </a>
                                         </li>
-                                        <li th:class="${i} eq ${xbAttendList.getNumber()+1}?'active':''" th:each="i:${#numbers.sequence(1,xbAttendList.getTotalPages())}">
-                                            <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${i}+'\')'" th:text="${i}"></a>
+                                        <li  th:class="${i} eq ${xbAttendConflicList.getNumber()+1}?'active':''" th:each="i:${#numbers.sequence(1,xbAttendConflicList.getTotalPages())}">
+                                            <a href="#" th:onclick="'javascript:getxbAttendConflicListPage(\''+${i}+'\')'" th:text="${i}"></a>
                                         </li>
-                                        <li th:if="${xbAttendList.getTotalPages()} ge ${xbAttendList.getNumber()+2} ">
-                                            <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${xbAttendList.getNumber()+2}+'\')'">
+                                        <li th:if="${xbAttendConflicList.getTotalPages()} ge ${xbAttendConflicList.getNumber()+2} ">
+                                            <a href="#" th:onclick="'javascript:getxbAttendConflicListPage(\''+${xbAttendConflicList.getNumber()+2}+'\')'">
                                                 <i class="ace-icon fa fa-angle-double-right"></i>
                                             </a>
                                         </li>
                                     </ul>
-                                </div>-->
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -427,14 +413,16 @@
                                                     id="wayOfTeachingName" type="text" disabled="disabled" th:value="班课">
                                             </div>
                                         </div>
+                                        <div class="modal-footer no-margin-top">
+                                            <button class="btn pull-left" data-dismiss="modal" onclick="cecalAttendClass()">
+                                                取消
+                                            </button>
+                                            <button class="btn pull-right"  onclick="saveAttendClass()" type="button">
+                                                保存
+                                            </button>
+                                        </div>
                                     </th:block>
-                                    </ </div> </div> </div> <div class="modal-footer no-margin-top">
-                                    <button class="btn pull-left" data-dismiss="modal" onclick="cecalAttendClass()">
-                                        取消
-                                    </button>
-                                    <button class="btn pull-right"  onclick="saveAttendClass()" type="button">
-                                        保存
-                                    </button>
+
                                 </div>
                             </div>
                         </div>
@@ -556,6 +544,10 @@
         if(a!=5){
             $("#size").val(a);
         }
+        var a1 = $("#xbAttendConflicListsize").val();
+        if(a1!=5){
+            $("#conflicsize").val(a1);
+        }
         $(".schedule").click(function(){
             schedulelistShow()
         });
@@ -652,7 +644,7 @@
         }
         if(data.timeInterval=="" ){
             $.kd.kdMsg("请选择上课时段");
-            return false;
+            return false;/**/
         }
         var load = new Loading();
         load.init({
@@ -762,9 +754,10 @@
                 success: function(data) {
                     load.stop();
                 console.log("删除排课回调成功")
-                $.kd.kdAlert("删除排课成功");
-                $("#xbAttendList_tbodyid").html("");
-                $("#xbAttendList_tbodyid").append(data);
+                $.kd.kdAlert("删除排课成功",function(){
+                    $("#xbAttendList_tbodyid").html("");
+                    $("#xbAttendList_tbodyid").append(data);
+                });
                 },
                 error:function(){
                     load.stop();
@@ -831,6 +824,34 @@
 
         });
     }
+    //搜索日程冲突
+    function getxbAttendConflicListPage(page){
+        var size = $('#conflicsize option:selected').val();//选中的值
+        if(page){
+            page = page -1;
+        }
+        if(size){
+            size = "10";
+        }
+       /* window.location.href = basePath + '/jw_center_arranging_course/to_arranging_course?page='+page
+            +'&size='+size+'&sort=createDate,DESC&sort=createTime,DESC&data='+JSON.stringify(data);*/
+        $.ajax({
+            url: basePath + '/jw_center_arranging_course/findXbAttendConflicList?page='+page
+            +'&size='+size+'&sort=createDate,DESC&sort=createTime,DESC',
+            type: 'get',
+            contentType: 'application/json',
+            async: true,
+            success: function(data) {
+                console.log("查询排课冲突回调成功")
+                //$.kd.kdAlert("查询排课冲突成功");
+                $("#xbAttendConflicList_tbodyid").html("");
+                $("#xbAttendConflicList_tbodyid").append(data);
+            },
+            error:function(){
+                console.log("查询排课冲突失败")
+            }
+        });
+    };
     //搜索
     function getOrgansListPage(page){
         var data= serializeObject("#searchform");

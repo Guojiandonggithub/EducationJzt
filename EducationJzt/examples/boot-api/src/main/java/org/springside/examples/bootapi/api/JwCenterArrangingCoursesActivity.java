@@ -64,14 +64,33 @@ public class JwCenterArrangingCoursesActivity {
                                     @PageableDefault(value = 10) Pageable pageable){
         logger.info("跳转到排课");
         findXbAttendClassPageListAll(model,pageable,data);
-        model.addAttribute("xbAttendConflicList",xbAttendClassService.findXbAttendConflictList());
+        findXbAttendConflicListi(model,pageable);
         model.addAttribute("xbSubjectList",xbSubjectService.findSubjectAll());
         model.addAttribute("xbClassList",xbStudentService.findXbClassListAll());
         model.addAttribute("xbClassroomList",xbStudentService.findXbClassRoomListAll());
         model.addAttribute("sysEmployeeList",employeeService.findSysEmployeeListAll());
         return "courseArray";
     }
+    public void findXbAttendConflicListi(ModelMap model,@PageableDefault(value = 10) Pageable pageable){
+         Map<String,Object> searmap = new HashMap<>();
 
+         List<String> list = xbAttendClassService.findXbAttendConflictIdList();
+         searmap.put("IN_id",list);
+         Page<XbAttendClass> xbAttendConflicList = xbAttendClassService.findXbAttendClassPageAll(pageable,searmap);
+        model.addAttribute("xbAttendConflicList",xbAttendConflicList);
+        model.addAttribute("xbAttendConflicListsize",xbAttendConflicList.getSize());
+    }
+    @RequestMapping("/findXbAttendConflicList")
+    public String findXbAttendConflicList(ModelMap model,@PageableDefault(value = 10) Pageable pageable){
+         Map<String,Object> searmap = new HashMap<>();
+
+         List<String> list = xbAttendClassService.findXbAttendConflictIdList();
+         searmap.put("IN_id",list);
+         Page<XbAttendClass> xbAttendConflicList = xbAttendClassService.findXbAttendClassPageAll(pageable,searmap);
+        model.addAttribute("xbAttendConflicList",xbAttendConflicList);
+        model.addAttribute("xbAttendConflicListsize",xbAttendConflicList.getSize());
+        return "courseArray::xbAttendConflicListFra";
+    }
     /**
      * 查询所有的排课信息
      */
@@ -161,17 +180,6 @@ public class JwCenterArrangingCoursesActivity {
                 xbAttendClass.setWeekDay(DateUtil.dayForWeekChinses(xbAttendClass.getStartDateTime()));
                 xbAttendClass.deleteStatus="1";
                 rsxc = xbAttendClassService.saveXbAttendClass(xbAttendClass);
-            /*XbSubject xbsubject = xbSubjectService.findById(rsxc.getSubjectId());
-            rsxc.setXbsubject(xbsubject!=null?xbsubject:new XbSubject());
-            XbClass findxbclass = xbStudentService.getXbClassById(rsxc.getClassId());
-            XbClass responxbclass = new XbClass();
-            responxbclass.setId(findxbclass.getId());
-            responxbclass.setClassName(findxbclass.getClassName());
-            rsxc.setXbclass(responxbclass!=null?responxbclass:new XbClass());
-            XbClassroom xbclassroom = xbStudentService.getXbClassroomById(rsxc.getClassRoomId());
-            rsxc.setXbclassroom(xbclassroom!=null?xbclassroom:new XbClassroom());
-            SysEmployee sysemployee = employeeService.getSysEmployeeById(rsxc.getTeacherId());
-            rsxc.setSysemployee(sysemployee!=null?sysemployee:new SysEmployee());*/
                 //新增
                 if(StringUtils.isEmpty(xbAttendClass.getId())){
                     //失败

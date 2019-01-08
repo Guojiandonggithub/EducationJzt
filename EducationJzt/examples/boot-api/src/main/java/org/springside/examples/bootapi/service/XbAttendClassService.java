@@ -76,7 +76,9 @@ public class XbAttendClassService {
 	public List<XbAttendClass> findXbAttendConflictList(){
 		return xbAttendClassDao.findXbAttendConflictList();
 	}
-
+	public List<String> findXbAttendConflictIdList(){
+		return xbAttendClassDao.findXbAttendConflictIdList();
+	}
 	public XbAttendClass findById(String id){
 		return xbAttendClassDao.findOne(id);
 	}
@@ -88,15 +90,4 @@ public class XbAttendClassService {
 		xbattendclass.createTime = DateUtil.getTodayDateTimeStr();
 		return xbAttendClassDao.save(xbattendclass);
 	}
-
-	public boolean  removeXbAttendClass(XbAttendClass xbattendclass){
-		try {
-			xbAttendClassDao.delete(xbattendclass);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
-		return true;
-	}
-
 }
