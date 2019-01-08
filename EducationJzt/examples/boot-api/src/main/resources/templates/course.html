@@ -53,27 +53,27 @@
             <div class="tab-pane fade in active student course" id="studentList" >
                 <form id="searchform">
                     <!-- 学员列表 -->
-                        <div class="screen">
-                            <a class="stdEnroll" th:href="@{/jwcentercourse/goaddcourse}" >新建课程</a>
-                            <div class="screenTop">
-                                <select class="selectName" name="type">
-                                    <option value="AZ" th:selected="${type eq 'AZ'}">课程名称</option>
-                                    <!--<option value="AL" th:selected="${type eq 'AL'}">课时</option>-->
-                                </select>
-                                <div class="nav-search" id="nav-search">
-                                    <form class="form-search">
+                    <div class="screen">
+                        <a class="stdEnroll" th:href="@{/jwcentercourse/goaddcourse}" >新建课程</a>
+                        <div class="screenTop">
+                            <select class="selectName" name="type">
+                                <option value="AZ" th:selected="${type eq 'AZ'}">课程名称</option>
+                                <!--<option value="AL" th:selected="${type eq 'AL'}">课时</option>-->
+                            </select>
+                            <div class="nav-search" id="nav-search">
+                                <form class="form-search">
                                         <span class="input-icon">
                                             <input type="text" placeholder="请输入课程名称" class="nav-search-input"
-                                                name="searhname" th:value="${searhname}"
+                                                   name="searhname" th:value="${searhname}"
                                                    id="nav-search-input" autocomplete="off">
                                             <i class="ace-icon fa fa-search nav-search-icon"></i>
                                         </span>
-                                    </form>
-                                </div>
-                                <div class="form-group" style="display: inline;">
-                                    <button type="button" th:onclick="'javascript:getOrgansListPage(\'\')'">搜索</button>
-                                </div>
+                                </form>
                             </div>
+                            <div class="form-group" style="display: inline;">
+                                <button type="button" th:onclick="'javascript:getOrgansListPage(\'\')'">搜索</button>
+                            </div>
+                        </div>
                         <div id="control-position" class="control-position">
                             <div class="control-group">
                                 <label class="control-label">课程类别</label>
@@ -97,16 +97,16 @@
                                         th:onclick="'javascript:getOrgansListPage(\'\')'">
                                 <span class="lbl" th:text="全部"></span>
                                 <div class="checkbox"><label>
-                                <input  th:attr ="checked=${courtype == '0'?true:false}"
-                                        name="courtype" type="radio" th:value="0" class="ace"
-                                        th:onclick="'javascript:getOrgansListPage(\'\')'">
-                                <span class="lbl" th:text="班课"></span>
+                                    <input  th:attr ="checked=${courtype == '0'?true:false}"
+                                            name="courtype" type="radio" th:value="0" class="ace"
+                                            th:onclick="'javascript:getOrgansListPage(\'\')'">
+                                    <span class="lbl" th:text="班课"></span>
                                 </label></div>
                                 <div class="checkbox"><label>
-                                <input  th:attr ="checked=${courtype == '1'?true:false}"
-                                        name="courtype" type="radio" th:value="1" class="ace"
-                                        th:onclick="'javascript:getOrgansListPage(\'\')'">
-                                <span class="lbl" th:text="一对一"></span>
+                                    <input  th:attr ="checked=${courtype == '1'?true:false}"
+                                            name="courtype" type="radio" th:value="1" class="ace"
+                                            th:onclick="'javascript:getOrgansListPage(\'\')'">
+                                    <span class="lbl" th:text="一对一"></span>
                                 </label></div>
                             </div>
                             <div class="control-group">
@@ -156,10 +156,10 @@
                                             <th>金额</th>
                                             <th>创建日期</th>
                                             <th>课程状态</th>
-                                                <div class="sort">
-                                                    <span class="glyphicon glyphicon-triangle-top"></span>
-                                                    <span class="glyphicon glyphicon-triangle-bottom"></span>
-                                                </div>
+                                            <div class="sort">
+                                                <span class="glyphicon glyphicon-triangle-top"></span>
+                                                <span class="glyphicon glyphicon-triangle-bottom"></span>
+                                            </div>
                                             </th>
                                             <th>操作</th>
                                             <th>
@@ -259,46 +259,46 @@
             </div>
             <!-- 课程类别列表 -->
             <div id="divideList" class="tab-pane fade student course">
-                    <div class="screen" style="height:84px;">
-                        <a class="stdEnroll" href="#modal-table1"  data-toggle="modal">新建课程类别</a>
-                    </div>
-                    <div class="orderCon">
-                        <div class="orderTable">
-                            <table id="courseTypeList" class="table table-hover">
-                                <tr>
-                                    <th>序号</th>
-                                    <th>课程类别</th>
-                                    <th>操作</th>
+                <div class="screen" style="height:84px;">
+                    <a class="stdEnroll" href="#modal-table1"  data-toggle="modal">新建课程类别</a>
+                </div>
+                <div class="orderCon">
+                    <div class="orderTable">
+                        <table id="courseTypeList" class="table table-hover">
+                            <tr>
+                                <th>序号</th>
+                                <th>课程类别</th>
+                                <th>操作</th>
+                            </tr>
+                            <tbody id="coursetype_tbody_id">
+                            <th:block th:if="${coursetypelist}" th:fragment="coursetypefralist">
+                                <tr id="choosetype" class="choose" th:each="ctype,coursta:${coursetypelist}" th:if="${coursetypelist} != null">
+                                    <input type="hidden" th:id="${ctype.id}"/>
+                                    <td th:text="${ctype.layOrder}">序号</td>
+                                    <td th:text="${ctype.courseTypeName}">课程类别</td>
+                                    <td>
+                                        <div class="btn-group">
+                                            <p data-toggle="dropdown" class="down" aria-expanded="false">
+                                                更多
+                                                <span class="ace-icon fa fa-caret-down icon-on-right"></span>
+                                            </p>
+                                            <ul class="dropdown-menu dropdown-default">
+                                                <li>
+                                                    <a  href="#modal-table1" data-toggle="modal"
+                                                        th:onclick="|javascript:sourceEdit('${ctype.id}','${ctype.layOrder}','${ctype.courseTypeName}')|">编辑</a>
+                                                </li>
+                                                <li>
+                                                    <a style="cursor:pointer"  th:onclick="|javascript:sourceTypeRemove('${ctype.id}')|">删除</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
                                 </tr>
-                                <tbody id="coursetype_tbody_id">
-                                    <th:block th:if="${coursetypelist}" th:fragment="coursetypefralist">
-                                        <tr id="choosetype" class="choose" th:each="ctype,coursta:${coursetypelist}" th:if="${coursetypelist} != null">
-                                            <input type="hidden" th:id="${ctype.id}"/>
-                                            <td th:text="${ctype.layOrder}">序号</td>
-                                            <td th:text="${ctype.courseTypeName}">课程类别</td>
-                                            <td>
-                                                <div class="btn-group">
-                                                    <p data-toggle="dropdown" class="down" aria-expanded="false">
-                                                        更多
-                                                        <span class="ace-icon fa fa-caret-down icon-on-right"></span>
-                                                    </p>
-                                                    <ul class="dropdown-menu dropdown-default">
-                                                        <li>
-                                                            <a  href="#modal-table1" data-toggle="modal"
-                                                                th:onclick="|javascript:sourceEdit('${ctype.id}','${ctype.layOrder}','${ctype.courseTypeName}')|">编辑</a>
-                                                        </li>
-                                                        <li>
-                                                            <a style="cursor:pointer"  th:onclick="|javascript:sourceTypeRemove('${ctype.id}')|">删除</a>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </th:block>
-                                </tbody>
-                            </table>
-                        </div>
+                            </th:block>
+                            </tbody>
+                        </table>
                     </div>
+                </div>
             </div>
             <!-- 科目列表 -->
             <div id="expiryStu" class="tab-pane fade student course">
@@ -316,7 +316,7 @@
                                     <th>操作</th>
                                 </tr>
                                 <tbody id="subject_tbody_id">
-                                    <th:block th:if="${subjectlist}" th:fragment="subjectfralist">
+                                <th:block th:if="${subjectlist}" th:fragment="subjectfralist">
                                     <tr id="choose" class="choose" class="choose"  th:each="sub,subStat:${subjectlist}">
                                         <input type="hidden" th:id="${sub.id}"/>
                                         <td th:text="${sub.subjectName}">科目名称</td>
@@ -343,7 +343,7 @@
                                             </div>
                                         </td>
                                     </tr>
-                                    </th:block>
+                                </th:block>
                                 </tbody>
                             </table>
                         </div>
@@ -353,6 +353,11 @@
         </div>
     </div>
 
+    <!-- 加载样式 -->
+    <div id="jiazaiyanshi" style="width:200px; height:200px; position: fixed; top:50%; left:50%; margin-top:-100px; margin-left:-100px;">
+
+    </div>
+
     <!-- 自定义选项弹窗 -->
     <div id="modal-table" class="modal fade in" tabindex="-1" aria-hidden="false">
         <div class="modal-dialog">
@@ -360,26 +365,26 @@
                 <div class="modal-header no-padding">
                     <div class="table-header">自定义选项</div>
                 </div>
-                    <div class="modal-body no-padding">
-                        <div class="checkAll">
-                            <input type="checkbox" id="sel_2" onchange="selectAll()">全选
-                        </div>
-                        <div class="checkList">
-                            <span><input type="checkbox">渠道</span>
-                            <span><input type="checkbox">欠费</span>
-                            <span><input type="checkbox">积分</span>
-                            <span><input type="checkbox">微信号</span>
-                            <span><input type="checkbox">生日</span>
-                            <span><input type="checkbox">年龄</span>
-                            <span><input type="checkbox">公立学校</span>
-                            <span><input type="checkbox">公立校班级</span>
-                            <span><input type="checkbox">居住区域</span>
-                            <span><input type="checkbox">其他信息</span>
-                            <span><input type="checkbox">课程状态</span>
-                            <span><input type="checkbox">上课校区</span>
-                            <span><input type="checkbox">课时有校区</span>
-                        </div>
+                <div class="modal-body no-padding">
+                    <div class="checkAll">
+                        <input type="checkbox" id="sel_2" onchange="selectAll()">全选
                     </div>
+                    <div class="checkList">
+                        <span><input type="checkbox">渠道</span>
+                        <span><input type="checkbox">欠费</span>
+                        <span><input type="checkbox">积分</span>
+                        <span><input type="checkbox">微信号</span>
+                        <span><input type="checkbox">生日</span>
+                        <span><input type="checkbox">年龄</span>
+                        <span><input type="checkbox">公立学校</span>
+                        <span><input type="checkbox">公立校班级</span>
+                        <span><input type="checkbox">居住区域</span>
+                        <span><input type="checkbox">其他信息</span>
+                        <span><input type="checkbox">课程状态</span>
+                        <span><input type="checkbox">上课校区</span>
+                        <span><input type="checkbox">课时有校区</span>
+                    </div>
+                </div>
 
 
                 <div class="modal-footer no-margin-top">
@@ -474,23 +479,23 @@
             data: {"courseId":courseId},
             success: function(data) {
                 load.stop();
-            console.log("回调成功");
-            var status = data.status;
-            var msg = data.msg;
-            if(status=="0"){
-                $.kd.kdAlert(data.msg,function(){
-                    window.location.href=basePath+"/jwcentercourse/tocourse"
-                });
+                console.log("回调成功");
+                var status = data.status;
+                var msg = data.msg;
+                if(status=="0"){
+                    $.kd.kdAlert(data.msg,function(){
+                        window.location.href=basePath+"/jwcentercourse/tocourse"
+                    });
 
-            }else{
-                $.kd.kdMsg(msg);
+                }else{
+                    $.kd.kdMsg(msg);
+                }
+            },
+            error:function(){
+                load.stop();
+                console.log("回调失败")
             }
-        },
-        error:function(){
-            load.stop();
-            console.log("回调失败")
-        }
-     });
+        });
     }
     //删除课程
     function sourceRemove(id) {
@@ -498,27 +503,27 @@
         load.init({
             target: "#control-position"
         });
-            $.kd.kdConfirm("确定要删除该课程?",function(){
-                load.start();
-                $.ajax({
-                    url: basePath + '/jwcentercourse/removecourse',
-                    type: 'get',
-                    contentType: 'application/json',
-                    data: {id: id},
-                    async: true,
-                    success: function (data) {
-                        load.stop();
-                        console.log("回调成功")
-                        $.kd.kdAlert("删除成功")
-                        $("#courseList_tbodyid").html("");
-                        $("#courseList_tbodyid").append(data);
-                    },
-                    error: function () {
-                        load.stop();
-                        console.log("回调失败")
-                    }
-                });
-            })
+        $.kd.kdConfirm("确定要删除该课程?",function(){
+            load.start();
+            $.ajax({
+                url: basePath + '/jwcentercourse/removecourse',
+                type: 'get',
+                contentType: 'application/json',
+                data: {id: id},
+                async: true,
+                success: function (data) {
+                    load.stop();
+                    console.log("回调成功")
+                    $.kd.kdAlert("删除成功")
+                    $("#courseList_tbodyid").html("");
+                    $("#courseList_tbodyid").append(data);
+                },
+                error: function () {
+                    load.stop();
+                    console.log("回调失败")
+                }
+            });
+        })
 
     };
     //课程上架下架
@@ -767,7 +772,7 @@
         load.init({
             target: "#control-position"
         });
-        if($.kd.kdConfirm("确定要删除该科目?")) {
+        $.kd.kdConfirm("确定要删除该科目?",function(){
             load.start();
             $.ajax({
                 url: basePath + '/jwcentercourse/removesubject',
@@ -786,9 +791,8 @@
                     load.stop();
                     console.log("删除科目回调失败")
                 }
-
             });
-        }
+        });
     }
 </script>
 <!--动态样式函数群-->
@@ -846,7 +850,8 @@
 <script type="text/javascript" th:inline="javascript">
     var load = new Loading();
     load.init({
-        target: "#control-position"
+        target: "#jiazaiyanshi"
+        //target: "#control-position"
     });
     //搜索
     function getOrgansListPage(page){
@@ -859,7 +864,7 @@
         if(size){
             size = "10";
         }
-        window.location.href = basePath + '/jwcentercourse/tocourse?page='+page+'&size='+size+'sort=xbCourse.createDate,DESC&sort=xbCourse.createTime,DESC&data='+JSON.stringify(data);
+        //window.location.href = basePath + '/jwcentercourse/tocourse?page='+page+'&size='+size+'sort=xbCourse.createDate,DESC&sort=xbCourse.createTime,DESC&data='+JSON.stringify(data);
     }
     function serializeObject(form){
         var o = {};
