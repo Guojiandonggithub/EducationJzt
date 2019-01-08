@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="../static/pages/css/bootstrap.min.css">
     <link rel="stylesheet" href="../static/pages/css/font-awesome.min.css" />
     <link rel="stylesheet" href="../static/pages/css/kd.ui.plugin.css" />
+    <link rel="stylesheet" href="../static/pages/css/loading.css" />
     <script src="../static/pages/js/jquery.min.js"></script>
     <script src="../static/pages/js/bootstrap.min.js"> </script>
     <script src="../static/pages/js/ace.min.js"> </script>
@@ -22,6 +23,7 @@
     <script src="../static/pages/js/additiona17l-methods.min.js"></script>
     <script src="../static/pages/js/messages_zh.min.js"></script>
     <script src="../static/pages/js/kd.ui.plugin.js"></script>
+    <script src="../static/pages/js/loading.js"></script>
 </head>
 <body>
 <div th:replace="layout::top"></div>
@@ -43,7 +45,7 @@
                         <input type="text" placeholder="" required th:value="${xbClassroom.classroomName}" name="classroomName" id="classroomName" class="remark">
                     </div>
                     <input type="hidden" name="id" id="classroomid" th:value="${xbClassroom.id}">
-                    <div class="form-group">
+                    <div class="form-group" id="donghua">
                         <label for="organId" style="width:130px;"><span>*</span>校区</label>
                         <select name="organId" >
                             <!--<option value="">选择校区</option>-->
@@ -127,6 +129,11 @@ var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletReque
 function saveRoom(){
     if ($("#roomform").valid()) {
         var data= serializeObject("#roomform");
+        var load = new Loading();
+        load.init({
+            target: "#donghua"
+        });
+        load.start();
         $.ajax({
             type: 'post',
             dataType: 'json',
@@ -136,6 +143,7 @@ function saveRoom(){
             cache: false,
             async: true,
             success: function (data) {
+                load.stop();
                 //var status = data.status;
                 var msg = data.msg;
                 $.kd.kdAlert("编辑成功！",function () {

@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="../static/pages/css/bootstrap.min.css">
     <link rel="stylesheet" href="../static/pages/css/font-awesome.min.css" />
     <link rel="stylesheet" href="../static/pages/css/kd.ui.plugin.css" />
+    <link rel="stylesheet" href="../static/pages/css/loading.css" />
     <script src="../static/pages/js/jquery.min.js"></script>
     <script src="../static/pages/js/bootstrap.min.js"> </script>
     <script src="../static/pages/js/ace.min.js"> </script>
@@ -21,6 +22,7 @@
     <script src="../static/pages/laydate/laydate.js"></script>
     <script src="../static/pages/js/dropzone.min.js"></script>
     <script src="../static/pages/js/kd.ui.plugin.js"></script>
+    <script src="../static/pages/js/loading.js"></script>
 
 
 </head>
@@ -36,7 +38,7 @@
                     <p th:text="${classes.className}"><img src="../static/pages/img/ban.png"></p>
                     <span>校区：</span><p th:text="${classes.sysOrgans.organName}" ></p>
                     <span>课程：</span><p th:text="${classes.xbCourse.courseName}"><</p>
-                    <input type="text" id="organId" name="organId" th:value="${classes.sysOrgans.id}" />
+                    <input type="hidden" id="organId" name="organId" th:value="${classes.sysOrgans.id}" />
                     <input type="hidden" id="classId" name="classId" th:value="${classes.id}" />
                     <input type="hidden" id="courseId" name="courseId" th:value="${classes.xbCourse.id}" />
                 </div>
@@ -49,7 +51,7 @@
                         <label>教师课时</label>
                         <input type="text" disabled="disabled" th:value="${classes.teacherNum}">
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" id="donghua">
                         <label>教师</label>
                         <input type="text" disabled="disabled" th:value="${classes.teacher.employeeName}">
                     </div>
@@ -200,6 +202,10 @@
         var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/ ;
 
         function saveRecordClass() {
+            var load = new Loading();
+            load.init({
+                target: "#donghua"
+            });
             var classId = $("#classId").val();
             var courseId = $("#courseId").val();
             var organId = $("#organId").val();
@@ -244,6 +250,7 @@
                     }
                 }
                 console.log(list);
+                load.start();
                 $.ajax({
                     type: 'post',
                     dataType: 'json',
@@ -253,6 +260,7 @@
                     cache: false,
                     async: true,
                     success: function (data) {
+                        load.stop();
                         var status = data.status;
                         var msg = data.msg;
                         $.kd.kdAlert("编辑成功！",function () {

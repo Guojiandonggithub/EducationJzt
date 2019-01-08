@@ -199,7 +199,7 @@ public class XbStudentService {
 		return studentDao.findAllByStudentNameAndContactPhone(name,contactPhone);
 	}
 	@Transactional
-	public XbClass checkClassesName(String name,String organId){
-		return xbClassDao.findAllByClassNameAndOrganId(name,organId);
+	public XbClass checkClassesName(String name,String organId,String courseId){
+		return xbClassDao.findAllByClassNameAndOrganIdAndCourseId(name,organId,courseId);
 	}
 }

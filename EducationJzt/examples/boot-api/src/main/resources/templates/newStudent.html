@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
-      >
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -17,13 +16,15 @@
     <link rel="stylesheet" href="../static/pages/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="../static/pages/css/font-awesome.min.css" />
     <link rel="stylesheet" href="../static/pages/css/kd.ui.plugin.css" />
+    <link rel="stylesheet" href="../static/pages/css/loading.css" />
     <script src="../static/pages/js/jquery.min.js"></script>
     <script src="../static/pages/js/bootstrap.min.js"> </script>
     <script src="../static/pages/js/ace.min.js"> </script>
     <script src="../static/pages/js/ace-elements.min.js"></script>
     <script src="../static/pages/laydate/laydate.js"></script>
     <script src="../static/pages/js/kd.ui.plugin.js"></script>
-    
+    <script src="../static/pages/js/loading.js"></script>
+
 
 </head>
 <body>
@@ -140,7 +141,7 @@
                                         </th>
                                         <th>姓名</th>
                                         <th>手机号</th>
-                                        <th>所属校区</th>
+                                        <th id="donghua">所属校区</th>
                                         <th>是否教师</th>
                                         <!--<th>机构账号</th>-->
                                         <th>操作</th>
@@ -234,6 +235,11 @@ function selectAll(){
     var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/;
 function deleteEmployee(id){
     if(confirm("确定要删除该用户吗？")){
+        var load = new Loading();
+        load.init({
+            target: "#donghua"
+        });
+        load.start();
         $.ajax({
             url: basePath + '/accounts/delete/employee/'+id,
             type: 'get',
@@ -241,6 +247,7 @@ function deleteEmployee(id){
             contentType: 'application/json',
             async: true,
             success: function(data) {
+                load.stop();
                 var status = data.status;
                 var msg = data.msg;
                 $.kd.kdAlert("删除成功！",function () {

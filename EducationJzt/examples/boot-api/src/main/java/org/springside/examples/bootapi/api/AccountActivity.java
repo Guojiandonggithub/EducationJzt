@@ -119,6 +119,24 @@ public class AccountActivity {
 		}
 	}
 
+	@RequestMapping("/getXiaoshouList")
+	public void getXiaoshouList(@RequestParam String organId, HttpServletResponse resp,Pageable pageable){
+		try {
+			Map<String, Object> searchParams = new HashMap<>();
+			searchParams.put("EQ_organId",organId);
+			searchParams.put("EQ_sysRole.roleName","销售员");
+			Page<SysEmployee> sysEmployeePage = accountService.getAccountList(pageable,searchParams);
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("status","1");
+			jsonObject.put("sysEmployeePage",com.alibaba.fastjson.JSONObject.toJSON(sysEmployeePage.getContent()));
+			resp.setContentType("text/html;charset=UTF-8");
+			resp.getWriter().println(jsonObject.toJSONString());
+			resp.getWriter().close();
+		} catch (IOException e) {
+			logger.info(e.toString());
+		}
+	}
+
 	@RequestMapping("/checkUserName")
 	public void checkUserName(@RequestParam String name, HttpServletResponse resp){
 		try {

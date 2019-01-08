@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="../static/pages/css/font-awesome.min.css" />
     <link rel="stylesheet" href="../static/pages/css/madal.css" />
     <link rel="stylesheet" href="../static/pages/css/kd.ui.plugin.css" />
+    <link rel="stylesheet" href="../static/pages/css/loading.css" />
     <script src="../static/pages/js/jquery.min.js"></script>
     <script src="../static/pages/js/ace.min.js"> </script>
     <script src="../static/pages/js/bootstrap.min.js"> </script>
@@ -23,6 +24,7 @@
     <script src="http://static.runoob.com/assets/jquery-validation-1.14.0/dist/jquery.validate.min.js"></script>
     <script src="http://static.runoob.com/assets/jquery-validation-1.14.0/dist/localization/messages_zh.js"></script>
     <script src="../static/pages/js/kd.ui.plugin.js"></script>
+    <script src="../static/pages/js/loading.js"></script>
 </head>
 <body>
 <div th:replace="layout::top"></div>
@@ -250,7 +252,7 @@
     <h2>经办信息</h2>
     <div class="form-group">
         <label class="col-sm-1">经办校区</label>
-        <select name="organId">
+        <select name="organId"　id="jborganId" onchange="getEmployee();">
             <option th:each="orgs:${organsList}"  th:value="${orgs.id}" th:text="${orgs.organName}"></option>
         </select>
     </div>
@@ -269,7 +271,7 @@
     <div class="form-group" style="margin-right:0 !important;">
         <label class="col-sm-1">销售员</label>
         <!--<input type="text" placeholder="" name="">-->
-        <select name="salesPerson">
+        <select name="salesPerson" id="salesPerson">
             <option th:each="emp:${employeeList}"  th:value="${emp.employeeName}" th:text="${emp.employeeName}"></option>
         </select>
     </div>
@@ -327,8 +329,9 @@
                         </td>
                         <td th:text="${couse.xbCourse.courseName}"><img src="../static/pages/img/man.png"></td>
                         <td th:text="${couse.xbCourse.xbcoursetype.courseTypeName}"></td>
-                        <td class="numberPer">按课时</td>
-                        <td th:text="${couse.money}+'元/期('+${couse.periodNum}+'课时)'">5700.00元/期(190课时)</td>
+                        <td th:if="${couse.xbCourse.chargingMode}eq '0'" class="numberPer">按课时</td>
+                        <td th:if="${couse.xbCourse.chargingMode}eq '2'" class="numberPer">按期</td>
+                        <td th:text="${couse.money}+'元/期('+${couse.periodNum}+'课时)'"></td>
                         <td th:if="${couse.xbCourse.type}eq '0'">班课</td>
                         <td th:if="${couse.xbCourse.type}eq '1'">一对一</td>
                     </tr>
@@ -398,7 +401,7 @@
                     </tbody>
                     <tbody th:id ="classchoose">
                     <th:block th:if="${xbClassPage}" th:fragment="classlist">
-                    <tr th:each="clas,clasint:${xbClassPage.content}" >
+                    <tr th:each="clas,clasint:${xbClassPage}" >
                         <td>
                             <input name="form-field-checkbox" name="classcheckboxname" type="checkbox" th:value="${clas.id}" onchange="classbox();">
                         </td>
@@ -605,6 +608,11 @@
     var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/;
     function checkedclass(indexs){
         var val=$('input:radio[name="classId"]:checked').val();
+        var load = new Loading();
+        load.init({
+            target: "#enrollCon"
+        });
+        load.start();
         $.ajax({
             url: basePath + '/student/class/'+val,
             type: 'get',
@@ -612,6 +620,7 @@
             contentType: 'application/json',
             async: false,
             success: function(data) {
+                load.stop();
                 $(".apply").show();
                 var className = data.className;
                 var courseName = data.courseName;
@@ -670,6 +679,11 @@
                 }
             }
             console.log(list);
+            var load = new Loading();
+            load.init({
+                target: "#enrollCon"
+            });
+            load.start();
             $.ajax({
                 type: 'get',
                 dataType: 'json',
@@ -679,6 +693,7 @@
                 cache: false,
                 async: true,
                 success: function (data) {
+                    load.stop();
                     var status = data.status;
                     var msg = data.msg;
                     $.kd.kdAlert("编辑成功！",function () {
@@ -707,6 +722,11 @@
     };
 
     function getCourseList(){
+        var load = new Loading();
+        load.init({
+            target: "#enrollCon"
+        });
+        load.start();
         $.ajax({
             type: 'get',
             //dataType: 'json',
@@ -716,6 +736,7 @@
             cache: false,
             async: true,
             success: function (data) {
+                load.stop();
                 console.log(data);
                 $("#kechengchoose").html("");
             $('#kechengchoose').append(data);
@@ -724,6 +745,11 @@
     };
 
     function getClassList(){
+        var load = new Loading();
+        load.init({
+            target: "#enrollCon"
+        });
+        load.start();
         $.ajax({
             type: 'get',
             //dataType: 'json',
@@ -733,6 +759,7 @@
             cache: false,
             async: true,
             success: function (data) {
+                load.stop();
                 console.log(data);
                 $("#classchoose").html("");
             $('#classchoose').append(data);
@@ -747,6 +774,11 @@
         var courseIds = $("input:checkbox[name='checkboxname']:checked").map(function(index,elem) {
             return $(elem).val();
         }).get().join(',');
+        var load = new Loading();
+        load.init({
+            target: "#enrollCon"
+        });
+        load.start();
         $.ajax({
             type: 'get',
             //dataType: 'json',
@@ -756,9 +788,10 @@
             cache: false,
             async: true,
             success: function (data) {
-            $(".apply").show();
-            $("#baominginfo").html("");
-            $('#baominginfo').html(data);
+                load.stop();
+                $(".apply").show();
+                $("#baominginfo").html("");
+                $('#baominginfo').html(data);
         }
     });
     };
@@ -768,6 +801,11 @@
         var classIds = $("input:checkbox[name='classcheckboxname']:checked").map(function(index,elem) {
             return $(elem).val();
         }).get().join(',');
+        var load = new Loading();
+        load.init({
+            target: "#enrollCon"
+        });
+        load.start();
         $.ajax({
             type: 'get',
             //dataType: 'json',
@@ -777,6 +815,7 @@
             cache: false,
             async: true,
             success: function (data) {
+                load.stop();
                 $(".apply").show();
                 $("#baominginfo").html("");
                 $('#baominginfo').html(data);
@@ -796,6 +835,11 @@
 
     function remove(){
         $("#enrollCon").hide();
+        var load = new Loading();
+        load.init({
+            target: "#enrollCon"
+        });
+        load.start();
         $.ajax({
             type: 'get',
             //dataType: 'json',
@@ -805,9 +849,42 @@
             cache: false,
             async: true,
             success: function (data) {
+                load.stop();
                 $(".apply").show();
                 $("#baominginfo").html("");
                 $('#baominginfo').html(data);
+            }
+        });
+    }
+
+    function getEmployee(){
+        var orgid = $("#jborganId").val();
+        var load = new Loading();
+        load.init({
+            target: "#enrollCon"
+        });
+        load.start();
+        $.ajax({
+            type: 'get',
+            dataType: 'json',
+            url: basePath + '/accounts/getXiaoshouList',
+            data: {organId: orgid},
+            contentType:"application/json;charset=UTF-8",
+            cache: false,
+            async: true,
+            success: function (data) {
+                load.stop();
+                $('#salesPerson').empty();
+                for (var i = 0; i < data.sysEmployeePage.length; i++) {
+                    //先创建好select里面的option元素
+                    var option = document.createElement("option");
+                    //转换DOM对象为JQ对象,好用JQ里面提供的方法 给option的value赋值
+                    $(option).val(data.sysEmployeePage[i].employeeName);
+                    //给option的text赋值,这就是你点开下拉框能够看到的东西
+                    $(option).text(data.sysEmployeePage[i].employeeName);
+                    //获取select 下拉框对象,并将option添加进select
+                    $('#salesPerson').append(option);
+                }
             }
         });
     }

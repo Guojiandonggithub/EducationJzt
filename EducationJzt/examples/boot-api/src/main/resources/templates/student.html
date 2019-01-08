@@ -15,12 +15,14 @@
     <link rel="stylesheet" href="../static/pages/css/bootstrap.min.css">
     <link rel="stylesheet" href="../static/pages/css/font-awesome.min.css" />
     <link rel="stylesheet" href="../static/pages/css/kd.ui.plugin.css" />
+    <link rel="stylesheet" href="../static/pages/css/loading.css" />
     <script src="../static/pages/js/jquery.min.js"></script>
     <script src="../static/pages/js/bootstrap.min.js"> </script>
     <script src="../static/pages/js/ace.min.js"> </script>
     <script src="../static/pages/js/ace-elements.min.js"></script>
     <script src="../static/pages/laydate/laydate.js"></script>
     <script src="../static/pages/js/kd.ui.plugin.js"></script>
+    <script src="../static/pages/js/loading.js"></script>
 
     
 
@@ -75,7 +77,7 @@
                                 <button type="button" th:onclick="'javascript:getOrgansListPage(\'\')'">搜索</button>
                             </div>
                         </div>
-                        <div class="screenBot tags">
+                        <div class="screenBot tags" id="donghua">
                             <div class="control-group">
                                 <label class="control-label">管辖校区</label>
                                 <input  th:attr ="checked=${organId == '0'?true:false}" name="organId" type="radio" th:value="0" class="ace" th:onclick="'javascript:getOrgansListPage(\'\')'">
@@ -687,7 +689,11 @@ function getqianfeilist(page){
     if(page){
         page = page -1;
     }
-    console.log("ddddddddddddddddddd"+data);
+    var load = new Loading();
+    load.init({
+        target: "#donghua"
+    });
+    load.start();
     $.ajax({
         type: 'get',
         //dataType: 'json',
@@ -697,6 +703,7 @@ function getqianfeilist(page){
         cache: false,
         async: true,
         success: function (data) {
+            load.stop();
             console.log(data);
             $("#arrearList").html("");
             $('#arrearList').html(data);
@@ -710,6 +717,11 @@ function getexpiryStulist(page){
     if(page){
         page = page -1;
     }
+    var load = new Loading();
+    load.init({
+        target: "#donghua"
+    });
+    load.start();
     $.ajax({
         type: 'get',
         //dataType: 'json',
@@ -719,6 +731,7 @@ function getexpiryStulist(page){
         cache: false,
         async: true,
         success: function (data) {
+            load.stop();
             console.log(data);
             $("#expiryStu").html("");
             $('#expiryStu').html(data);

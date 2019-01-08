@@ -6,17 +6,18 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springside.examples.bootapi.domain.*;
 import org.springside.examples.bootapi.service.EmployeeService;
 import org.springside.examples.bootapi.service.OrgansService;
 import org.springside.examples.bootapi.service.XbStudentService;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -42,14 +43,25 @@ public class FeeRelatedActivity {
 	@Autowired
 	private XbStudentService studentService;
 
+
 	/**
 	 * 跳转到转班
 	 * @return
 	 */
 	@RequestMapping("/changeClass")
-	public String changeClass(ModelMap model, @PageableDefault(sort = { "layOrder" }, direction = Sort.Direction.ASC)Pageable pageable){
+	public String changeClass(ModelMap model,Pageable pageable){
 		List<SysOrgans> sysOrgansList = organsService.getOrgansList();
+		Map<String,Object> searhMap = new HashMap<>();
+		if(sysOrgansList.size()>0){
+			searhMap.put("EQ_organId",sysOrgansList.get(0).id);
+		}
+		searhMap.put("EQ_sysRole.roleName","销售员");
+		Page<SysEmployee> employeePage = accountService.getAccountList(pageable,searhMap);
+		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
+		SysEmployee sysEmployee = (SysEmployee)request.getSession().getAttribute("sysEmployee");
 		model.addAttribute("sysOrgansList",sysOrgansList);
+		model.addAttribute("employeeList",employeePage.getContent());
+		model.addAttribute("sysEmployee",sysEmployee);
 		return "changeClass";
 	}
 
@@ -83,13 +95,18 @@ public class FeeRelatedActivity {
 		XbStudent xbStudent = studentService.getXbStudent(studentId);
 		Map<String,Object> studentMap = new HashMap<>();
 		studentMap.put("EQ_studentId",studentId);
+		studentMap.put("EQ_xbClass.deleteStatus","1");
 		Page<XbStudentRelation> xbStudentPage = studentService.getXbStudentRelationList(pageable,studentMap);
 		Map<String,Object> studentMaps = new HashMap<>();
 		if(xbStudentPage.getContent().size()>0){
 			String typeId = xbStudentPage.getContent().get(0).xbCourse.xbcoursetype.id;
-			String courseId = xbStudentPage.getContent().get(0).xbCourse.id;
+			String classId = xbStudentPage.getContent().get(0).xbClass.id;
 			studentMaps.put("EQ_xbCourse.xbcoursetype.id",typeId);
-			studentMaps.put("NEQ_xbCourse.id",courseId);
+			studentMaps.put("NEQ_xbClass.id",classId);
+			studentMaps.put("EQ_organId",xbStudentPage.getContent().get(0).organId);
+			studentMaps.put("EQ_xbClass.deleteStatus","1");
+		}else{
+			studentMaps.put("EQ_organId","10001");
 		}
 		Page<XbStudentRelation> xbClassPage = studentService.getXbStudentRelationList(pageable,studentMaps);
 		model.addAttribute("xbStudent",xbStudent);
@@ -145,6 +162,9 @@ public class FeeRelatedActivity {
 				xbSupplementFee.surplusMoney = receivable;
 				xbSupplementFee.remarks = xbStudentRelation.xbClass.className+"转到"+xbClass.className;
 			}
+			HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
+			SysEmployee sysEmployee = (SysEmployee)request.getSession().getAttribute("sysEmployee");
+			xbSupplementFee.handlePerson = sysEmployee.employeeName;
 			studentService.saveXbSupplementFee(xbSupplementFee);
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put("status","1");

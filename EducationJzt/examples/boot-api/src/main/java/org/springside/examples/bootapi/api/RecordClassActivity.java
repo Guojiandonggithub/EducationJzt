@@ -97,7 +97,7 @@ public class RecordClassActivity {
 					String chargingMode = xbCoursePresetList.get(0).xbCourse.chargingMode;
 					money = xbCoursePresetList.get(0).money;
 					if(chargingMode.equals("2")){
-						money = money.divide(new BigDecimal(xbCoursePresetList.get(0).periodNum));
+						money = money.divide(new BigDecimal(xbCoursePresetList.get(0).periodNum),2,BigDecimal.ROUND_HALF_UP);
 					}
 				}
 				Page<XbStudentRelation> xbStudentRelations = studentService.getXbStudentRelationList(pageable,searhMap);

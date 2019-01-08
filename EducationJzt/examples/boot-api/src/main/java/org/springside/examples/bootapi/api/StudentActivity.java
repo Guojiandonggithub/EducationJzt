@@ -60,10 +60,13 @@ public class StudentActivity {
 		}*/
 		Map<String,Object> searhMap = new HashMap<>();
 		Page<XbClass> classPage = studentService.getXbClassList(pageable,searhMap);
-		Iterable<SysOrgans> organsList = organsService.getOrgansList();
+		List<SysOrgans> organsList = organsService.getOrgansList();
 		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
 		SysEmployee sysEmployee = (SysEmployee)request.getSession().getAttribute("sysEmployee");
 		List<XbStudent> xbStudentList = studentService.getXbStudentList(pageable,searhMap).getContent();
+		if(organsList.size()>0){
+			searhMap.put("EQ_organId",organsList.get(0).id);
+		}
 		searhMap.put("EQ_sysRole.roleName","销售员");
 		Page<SysEmployee> employeePage = employeeService.getAccountList(pageable,searhMap);
 		/*model.addAttribute("xbXbStudent",student);*/
@@ -118,11 +121,11 @@ public class StudentActivity {
     }
 
     @RequestMapping("/checkClassesName")
-    public void checkClassesName(@RequestParam(required = false) String name,@RequestParam(required = false) String organId,HttpServletResponse resp) {
+    public void checkClassesName(@RequestParam(required = false) String name,@RequestParam(required = false) String organId,@RequestParam(required = false) String courseId,HttpServletResponse resp) {
         Map<String, Object> map  =  new HashMap<>();
         try {
             String code = "1000";
-			XbClass xbClass = studentService.checkClassesName(name,organId);
+			XbClass xbClass = studentService.checkClassesName(name,organId,courseId);
             if(null!=xbClass){
                 code = "1001";
             }
@@ -308,6 +311,7 @@ public class StudentActivity {
 		List<XbCoursePreset> xbCoursePage = xbCoursePresetService.getXbCoursePresets(searhMap);
 		Map<String,Object> ygsearhMap = new HashMap<>();
 		ygsearhMap.put("EQ_isAttendClass","0");
+		ygsearhMap.put("EQ_organId",organId);
 		List<SysEmployee> employeeList = employeeService.getAccountList(pageable,ygsearhMap).getContent();
 		roomsearhMap.put("EQ_organId",organId);
 		List<XbClassroom> xbClassroomList = studentService.getXbClassroomList(pageable,roomsearhMap).getContent();
@@ -367,14 +371,22 @@ public class StudentActivity {
 	}
 
 	@RequestMapping("/delete/class/{id}")
-	public void deleteclass(@PathVariable String id, HttpServletResponse resp){
+	public void deleteclass(@PathVariable String id, HttpServletResponse resp,Pageable pageable){
 
 		Map<String, Object> map  =  new HashMap<>();
 		try {
-			studentService.deleteClass(id);
-			JSONObject jsonObject = new JSONObject();
-			jsonObject.put("status","1");
-			jsonObject.put("msg", "删除成功");
+            Map<String,Object> xbClassearhMap = new HashMap<>();
+            xbClassearhMap.put("EQ_classId",id);
+            JSONObject jsonObject = new JSONObject();
+            Page<XbStudentRelation> xbStudentRelationPage = studentService.getXbStudentRelationList(pageable,xbClassearhMap);
+            if(xbStudentRelationPage.getContent().size()>0){
+                jsonObject.put("status","0");
+                jsonObject.put("msg", "有学员报名不能删除该班级！");
+            }else{
+                studentService.deleteClass(id);
+                jsonObject.put("status","1");
+                jsonObject.put("msg", "删除成功");
+            }
 			logger.info("删除返回json参数="+jsonObject.toString());
 			resp.setContentType("text/html;charset=UTF-8");
 			resp.getWriter().println(jsonObject.toJSONString());
@@ -416,6 +428,9 @@ public class StudentActivity {
 			}
 			xbSupplementFee.remarks = content;
 			xbSupplementFee.type = "0";//报名
+			HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
+			SysEmployee sysEmployee = (SysEmployee)request.getSession().getAttribute("sysEmployee");
+			xbSupplementFee.handlePerson = sysEmployee.employeeName;
 			studentService.saveXbSupplementFee(xbSupplementFee);
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put("status","1");
@@ -463,7 +478,17 @@ public class StudentActivity {
 				xbCoursesearhMap.put("LIKE_className",classesName);
 			}
 			Page<XbClass> xbClassPage = studentService.getXbClassList(pageable,xbCoursesearhMap);
-			model.addAttribute("xbClassPage",xbClassPage);
+            List<XbClass> xbClassList = xbClassPage.getContent();
+            List<XbClass> xbClassPages = new ArrayList<>();
+            for (int i = 0; i < xbClassList.size(); i++) {
+                Map<String,Object> xbClassearhMap = new HashMap<>();
+                xbClassearhMap.put("EQ_classId",xbClassList.get(i).id);
+                Page<XbStudentRelation> xbStudentRelationPage = studentService.getXbStudentRelationList(pageable,xbClassearhMap);
+                if(xbStudentRelationPage.getTotalElements()<xbClassList.get(i).studentNum){
+                    xbClassPages.add(xbClassList.get(i));
+                }
+            }
+			model.addAttribute("xbClassPage",xbClassPages);
 		}
 		return "enroll::classlist";
 	}

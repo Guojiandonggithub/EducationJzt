@@ -23,6 +23,9 @@ public interface OrgansDao extends PagingAndSortingRepository<SysOrgans, String>
     @Query(value = " select * from sys_organs u where u.parent_id=?1 and u.delete_status='1' order by u.lay_order asc ",nativeQuery = true)
     List<SysOrgans> findSysOrgansList(String parentId);
 
+    @Query(value = " select * from sys_organs u where u.parent_id=?1 and u.delete_status='1' and u.id=?2 order by u.lay_order asc ",nativeQuery = true)
+    List<SysOrgans> findSysOrgansListById(String parentId,String id);
+
     SysOrgans findAllByOrganName(String organName);
     SysOrgans findById(String id);
 }

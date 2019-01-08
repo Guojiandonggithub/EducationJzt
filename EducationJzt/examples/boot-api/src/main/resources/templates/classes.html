@@ -15,12 +15,14 @@
     <link rel="stylesheet" href="../static/pages/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="../static/pages/css/font-awesome.min.css" />
     <link rel="stylesheet" href="../static/pages/css/kd.ui.plugin.css" />
+    <link rel="stylesheet" href="../static/pages/css/loading.css" />
     <script src="../static/pages/js/jquery.min.js"></script>
     <script src="../static/pages/js/bootstrap.min.js"> </script>
     <script src="../static/pages/js/ace.min.js"> </script>
     <script src="../static/pages/js/ace-elements.min.js"></script>
     <script src="../static/pages/laydate/laydate.js"></script>
     <script src="../static/pages/js/kd.ui.plugin.js"></script>
+    <script src="../static/pages/js/loading.js"></script>
 
 
 </head>
@@ -52,7 +54,7 @@
                         <div class="screen" style="height:76px;">
                             <a href="/student/getXbClass"><button class="stdEnroll">新建班级</button></a>
                         </div>
-                        <div class="orderCon">
+                        <div class="orderCon" id="donghua">
                             <div class="export">
                                 <button type="button" class="btn btn-primary">批量删除</button>
                                 <button type="button" class="btn btn-primary">导出班级</button>
@@ -371,6 +373,11 @@
 
         function deleteClassroom(id) {
             if (confirm("确定要删除该教室吗？")) {
+                var load = new Loading();
+                load.init({
+                    target: "#donghua"
+                });
+                load.start();
                 $.ajax({
                     url: basePath + '/student/delete/classroom/' + id,
                     type: 'get',
@@ -378,6 +385,7 @@
                     contentType: 'application/json',
                     async: true,
                     success: function (data) {
+                        load.stop();
                         var status = data.status;
                         var msg = data.msg;
                         $.kd.kdAlert("删除成功！",function () {
@@ -393,6 +401,11 @@
 
         function deleteClass(id) {
             if (confirm("确定要删除该班级吗？")) {
+                var load = new Loading();
+                load.init({
+                    target: "#donghua"
+                });
+                load.start();
                 $.ajax({
                     url: basePath + '/student/delete/class/' + id,
                     type: 'get',
@@ -400,13 +413,20 @@
                     contentType: 'application/json',
                     async: true,
                     success: function (data) {
+                        load.stop();
                         var status = data.status;
                         var msg = data.msg;
-                        $.kd.kdAlert("删除成功！",function () {
-                            window.location.href = basePath + '/student/getXbClassroomList?room=1';
-                        });
+                        if(status==0){
+                            $.kd.kdAlert(msg);
+                        }else{
+                            $.kd.kdAlert(msg,function () {
+                                window.location.href = basePath + '/student/getXbClassroomList?room=1';
+                            });
+                        }
                     },
                     error: function () {
+                        load.stop();
+                        $.kd.kdAlert("删除失败");
                         console.log("回调失败")
                     }
                 });

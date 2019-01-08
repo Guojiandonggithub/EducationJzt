@@ -128,6 +128,7 @@ public class EmployeeService {
 	@Transactional
 	public Page<SysEmployee>  getAccountList(Pageable pageable,Map<String, Object> searchParams) {
 		searchParams = HttpServletUtil.getRoleDate(searchParams);
+		searchParams.put("EQ_deleteStatus","1");
 		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
 		Specification<SysEmployee> spec = DynamicSpecifications.bySearchFilter(
 				filters.values(), SysEmployee.class);

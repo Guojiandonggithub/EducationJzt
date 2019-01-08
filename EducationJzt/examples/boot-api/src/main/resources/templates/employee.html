@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="../static/pages/css/bootstrap.min.css">
     <link rel="stylesheet" href="../static/pages/css/font-awesome.min.css" />
     <link rel="stylesheet" href="../static/pages/css/kd.ui.plugin.css" />
+    <link rel="stylesheet" href="../static/pages/css/loading.css" />
     <script src="../static/pages/js/jquery.min.js"></script>
     <script src="../static/pages/js/bootstrap.min.js"> </script>
     <script src="../static/pages/js/ace.min.js"> </script>
@@ -24,6 +25,7 @@
     <script src="http://static.runoob.com/assets/jquery-validation-1.14.0/dist/jquery.validate.min.js"></script>
     <script src="http://static.runoob.com/assets/jquery-validation-1.14.0/dist/localization/messages_zh.js"></script>
     <script src="../static/pages/js/kd.ui.plugin.js"></script>
+    <script src="../static/pages/js/loading.js"></script>
 </head>
 
 <body>
@@ -353,6 +355,11 @@
         var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/ ;
 
         function saveEmployee() {
+            var load = new Loading();
+            load.init({
+                target: "#breadcrumbs"
+            });
+            load.start();
             if ($("#iform").valid()) {
                 var data = serializeObject("#iform");
                 $.ajax({
@@ -366,6 +373,7 @@
                     cache: false,
                     async: true,
                     success: function (data) {
+                        load.stop();
                         var status = data.status;
                         var msg = data.msg;
                         $.kd.kdAlert("编辑成功！",function () {
@@ -489,6 +497,11 @@
                 if(id){
                     return true;
                 }
+                var load = new Loading();
+                load.init({
+                    target: "#breadcrumbs"
+                });
+                load.start();
                 var msgcode=null;
                 $.ajax({
                     url: basePath + "/accounts/checkUserName",
@@ -498,6 +511,7 @@
                     contentType:"application/json;charset=UTF-8",
                     data: {"name":value},
                     success: function(result){
+                        load.stop();
                         msgcode= result.code;
                     }
                 })

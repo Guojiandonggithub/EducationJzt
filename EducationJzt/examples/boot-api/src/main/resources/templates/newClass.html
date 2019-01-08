@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="../static/pages/css/bootstrap.min.css">
     <link rel="stylesheet" href="../static/pages/css/font-awesome.min.css" />
     <link rel="stylesheet" href="../static/pages/css/kd.ui.plugin.css" />
+    <link rel="stylesheet" href="../static/pages/css/loading.css" />
     <script src="../static/pages/js/jquery.min.js"></script>
     <script src="../static/pages/js/bootstrap.min.js"> </script>
     <script src="../static/pages/js/ace.min.js"> </script>
@@ -23,6 +24,7 @@
     <script src="../static/pages/js/additiona17l-methods.min.js"></script>
     <script src="../static/pages/js/messages_zh.min.js"></script>
     <script src="../static/pages/js/kd.ui.plugin.js"></script>
+    <script src="../static/pages/js/loading.js"></script>
 </head>
 
 <body>
@@ -55,7 +57,7 @@
                                     th:value="${course.xbCourse.id}" th:text="${course.xbCourse.courseName}"></option>
                             </select>
                         </div>
-                        <div class="form-group" style="display: block;">
+                        <div class="form-group" style="display: block;" id="donghua">
                             <label for="className"><span>*</span>班级名称</label>
                             <input type="hidden" name="id" id="classId" th:value="${xbClass.id}">
                             <input type="text" th:value="${xbClass.className}" name="className" placeholder="请输入班级名称"
@@ -217,9 +219,15 @@
             jQuery.validator.addMethod('checkName', function (value, element) {
                 var id = $("#classId").val();
                 var organId = $("#organId").val();
+                var courseId = $("#courseId").val();
                 if(id){
                     return true;
                 }
+                var load = new Loading();
+                load.init({
+                    target: "#donghua"
+                });
+                load.start();
                 var msgcode=null;
                 $.ajax({
                     url: basePath + "/student/checkClassesName",
@@ -227,8 +235,9 @@
                     dataType: 'json',
                     async:false,
                     contentType:"application/json;charset=UTF-8",
-                    data: {"name":value,"organId":organId},
+                    data: {"name":value,"organId":organId,"courseId":courseId},
                     success: function(result){
+                        load.stop();
                         msgcode= result.code;
                     }
                 })
@@ -248,6 +257,11 @@
         function saveClass() {
             if ($("#classform").valid()) {
                 var data = serializeObject("#classform");
+                var load = new Loading();
+                load.init({
+                    target: "#donghua"
+                });
+                load.start();
                 $.ajax({
                     type: 'post',
                     dataType: 'json',
@@ -257,6 +271,7 @@
                     cache: false,
                     async: true,
                     success: function (data) {
+                        load.stop();
                         //var status = data.status;
                         var msg = data.msg;
                         $.kd.kdAlert("编辑成功！",function () {
@@ -291,6 +306,11 @@
 
         function getXbClassJl() {
             var orgid = $("#organId").val();
+            var load = new Loading();
+            load.init({
+                target: "#donghua"
+            });
+            load.start();
             $.ajax({
                 type: 'get',
                 dataType: 'json',
@@ -302,6 +322,7 @@
                 cache: false,
                 async: true,
                 success: function (data) {
+                    load.stop();
                     console.log(data.xbCourseList)
                     $('#classroomId').empty();
                     $('#courseId').empty();
