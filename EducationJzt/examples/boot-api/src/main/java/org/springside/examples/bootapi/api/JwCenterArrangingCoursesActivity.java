@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springside.examples.bootapi.ToolUtils.DateUtil;
 import org.springside.examples.bootapi.ToolUtils.HttpServletUtil;
 import org.springside.examples.bootapi.domain.*;
-import org.springside.examples.bootapi.repository.XbClassDao;
 import org.springside.examples.bootapi.service.EmployeeService;
 import org.springside.examples.bootapi.service.XbAttendClassService;
 import org.springside.examples.bootapi.service.XbStudentService;
