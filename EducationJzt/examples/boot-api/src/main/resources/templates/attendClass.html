@@ -103,12 +103,12 @@
                                         <td>
                                             <span class="glyphicon glyphicon-star-empty"></span>
                                         </td>
-                                        <td th:text="${cls.className}"><img src="../static/pages/img/ban.png">昆区分校作文张三1班</td>
-                                        <td th:text="${cls.teacher.employeeName}">李四</td>
-                                        <td th:text="${cls.xbCourse.courseName}">作文1</td>
+                                        <td th:text="${cls.xbclass.className}"><img src="../static/pages/img/ban.png">昆区分校作文张三1班</td>
+                                        <td th:text="${cls.xbclass.teacher.employeeName}">李四</td>
+                                        <td th:text="${cls.xbclass.xbCourse.courseName}">作文1</td>
                                         <!--<td>2018-05-20</td>-->
-                                        <td th:text="${cls.sysOrgans.organName}">昆区分校</td>
-                                        <td th:text="${cls.xbClassroom.classroomName}">昆5号教室</td>
+                                        <td th:text="${cls.xbclass.sysOrgans.organName}">昆区分校</td>
+                                        <td th:text="${cls.xbclass.xbClassroom.classroomName}">昆5号教室</td>
                                         <td><a th:href="@{'/recordClass/classEdit?classesId='+${cls.id}}"><img src="../static/pages/img/jsk.jpg">记上课</a></td>
                                     </tr>
                                 </table>

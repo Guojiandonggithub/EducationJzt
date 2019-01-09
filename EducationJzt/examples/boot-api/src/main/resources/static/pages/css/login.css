@@ -39,7 +39,7 @@ body{
 }
 .loginBox button{
     width:100%;
-    background:#d2d6ee;
+    background:#55a7fb;
     color:#fff;
     border:0;
     height:46px;
@@ -49,7 +49,7 @@ body{
     cursor: pointer;
 }
 .loginBox button:hover{
-    background:#55a7fb;
+    background:#d2d6ee;
     color:#fff;
 }
 .loginBox a{

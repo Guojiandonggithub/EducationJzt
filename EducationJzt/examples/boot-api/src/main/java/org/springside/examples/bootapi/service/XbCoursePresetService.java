@@ -68,7 +68,6 @@ public class XbCoursePresetService {
 			searchParams.put("EQ_organIds",sysEmployee.organId);
 		}
 		searchParams.put("EQ_xbCourse.deleteStatus","1");
-		searchParams.put("EQ_xbCourse.state","0");
 		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
 		Specification<XbCoursePreset> spec = DynamicSpecifications.bySearchFilter(
 				filters.values(), XbCoursePreset.class);

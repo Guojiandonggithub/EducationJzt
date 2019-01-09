@@ -50,6 +50,7 @@ public class XbCourseService {
 		return xbCourseDao.findById(id);
 	}
 	public XbCourse saveXbCourse(XbCourse xbcourse){
+		xbcourse.deleteStatus = "1";
 		return xbCourseDao.save(xbcourse);
 	}
 

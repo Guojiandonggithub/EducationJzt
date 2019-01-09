@@ -64,7 +64,7 @@
                                 </div>
                             </div>
                             <div class="result">
-                                当前结果：共计<span th:text="${xbClassPage.getTotalPages()}"></span>个班级，<span>111</span>名在读学员，报班<span>111</span>人次(不包括转出、停课、退费、结课的学员)
+                                当前结果：共计<span th:text="${xbClassPage.getTotalPages()}"></span>个班级<!--，<span>111</span>名在读学员，报班<span>111</span>人次(不包括转出、停课、退费、结课的学员)-->
                             </div>
                             <div class="orderTable">
                                 <table class="table table-hover">
@@ -98,7 +98,7 @@
                                     </tr>
                                     <tr id="chooses" th:each="xbclass:${xbClassPage.content}">
                                         <td><input type="checkbox"></td>
-                                        <td th:text="${xbclass.sysOrgans.organName}+${xbclass.xbCourse.xbcoursetype.courseTypeName}+${xbclass.teacher.employeeName}+${xbclass.className}" class="className"><img src="../static/pages/img/ban.png"></td>
+                                        <td th:text="${xbclass.sysOrgans.organName}+${xbclass.xbCourse.xbcoursetype.courseTypeName}+${xbclass.teacher.employeeName}+${xbclass.className}" class="className" th:onclick="'javascript:classDetail(\''+${xbclass.id}+'\')'"><img src="../static/pages/img/ban.png"></td>
                                         <td class="prog" th:text="${xbclass.establishNum}">
                                             <div class="progress progress-small progress-striped active">
                                                 <!--<div class="progress-bar progress-bar-warning" style="width: 0%;"></div>
@@ -127,6 +127,9 @@
                                                     <span class="ace-icon fa fa-caret-down icon-on-right"></span>
                                                 </p>
                                                 <ul class="dropdown-menu dropdown-default" style="display: none;">
+                                                    <li>
+                                                        <a href="#" th:onclick="'javascript:finishClass(\''+${xbclass.id}+'\')'">结班</a>
+                                                    </li>
                                                     <li>
                                                         <a th:href="@{'/student/getXbClass?id='+${xbclass.id}}">编辑</a>
                                                     </li>
@@ -365,6 +368,11 @@
             window.location.href = basePath + '/student/getXbClassroomList?page=' + page + '&size=' + size;
         }
 
+        //跳转到班级详情
+        function classDetail(id) {
+            window.location.href = basePath + '/student/classDetail?classId=' + id ;
+        }
+
         function deleteClassroom(id) {
             if (confirm("确定要删除该教室吗？")) {
                 var load = new Loading();
@@ -394,7 +402,6 @@
         }
 
         function deleteClass(id) {
-            //if (confirm("确定要删除该班级吗？")) {
             $.kd.kdConfirm("确定要删除该班级吗？",function(){
                 var load = new Loading();
                 load.init({
@@ -426,7 +433,36 @@
                     }
                 });
             })
-            //}
+        }
+
+        function finishClass(id) {
+            $.kd.kdConfirm("确定要同步结束该班级吗？",function(){
+                var load = new Loading();
+                load.init({
+                    target: "#donghua"
+                });
+                load.start();
+                $.ajax({
+                    url: basePath + '/student/finish/class/' + id,
+                    type: 'get',
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    async: true,
+                    success: function (data) {
+                        load.stop();
+                        var status = data.status;
+                        var msg = data.msg;
+                        $.kd.kdAlert(msg,function () {
+                            window.location.href = basePath + '/student/getXbClassroomList?room=1';
+                        });
+                    },
+                    error: function () {
+                        load.stop();
+                        $.kd.kdMsg("删除失败");
+                        console.log("回调失败")
+                    }
+                });
+            })
         }
     </script>
 </body>

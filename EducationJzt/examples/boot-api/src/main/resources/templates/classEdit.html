@@ -41,6 +41,7 @@
                     <input type="hidden" id="organId" name="organId" th:value="${classes.sysOrgans.id}" />
                     <input type="hidden" id="classId" name="classId" th:value="${classes.id}" />
                     <input type="hidden" id="courseId" name="courseId" th:value="${classes.xbCourse.id}" />
+                    <input type="hidden" id="attendId" name="attendId" th:value="${attendId}" />
                 </div>
                 <div class="info2">
                     <div class="form-group">
@@ -209,6 +210,7 @@
             var classId = $("#classId").val();
             var courseId = $("#courseId").val();
             var organId = $("#organId").val();
+            var attendId = $("#attendId").val();
             var data = serializeObject("#classForm");
             if (data) {
                 console.log(data);
@@ -221,7 +223,8 @@
                     recordTime: "",
                     classId: "",
                     courseId: "",
-                    organId:""
+                    organId:"",
+                    attendId:""
                 };
                 if (data.studentId.length == 32) {
                     aa.studentId = data.studentId;
@@ -232,6 +235,7 @@
                     aa.classId = classId;
                     aa.courseId = courseId;
                     aa.organId = organId;
+                    aa.attendId = attendId;
                     list.push(aa);
                 } else {
                     for (var i = 0; i < data.studentId.length; i++) {
@@ -246,6 +250,7 @@
                         aa.classId = classId;
                         aa.courseId = courseId;
                         aa.organId = organId;
+                        aa.attendId = attendId;
                         list.push(aa);
                     }
                 }

@@ -333,6 +333,7 @@ public class StudentActivity {
 		Map<String,Object> searhMap = new HashMap<>();
 		Map<String,Object> roomsearhMap = new HashMap<>();
 		searhMap.put("EQ_organIds",organId);
+		searhMap.put("EQ_xbCourse.state","0");
 		List<XbCoursePreset> xbCoursePage = xbCoursePresetService.getXbCoursePresets(searhMap);
 		roomsearhMap.put("EQ_organId",organId);
 		List<XbClassroom> xbClassroomList = studentService.getXbClassroomList(pageable,roomsearhMap).getContent();
@@ -389,6 +390,23 @@ public class StudentActivity {
                 jsonObject.put("msg", "删除成功");
             }
 			logger.info("删除返回json参数="+jsonObject.toString());
+			resp.setContentType("text/html;charset=UTF-8");
+			resp.getWriter().println(jsonObject.toJSONString());
+			resp.getWriter().close();
+		} catch (IOException e) {
+			logger.info(e.toString());
+		}
+	}
+
+	@RequestMapping("/finish/class/{id}")
+	public void finishclass(@PathVariable String id, HttpServletResponse resp,Pageable pageable){
+
+		Map<String, Object> map  =  new HashMap<>();
+		try {
+            JSONObject jsonObject = new JSONObject();
+			studentService.finishClass(id);
+			jsonObject.put("status","1");
+			jsonObject.put("msg", "同步结束成功");
 			resp.setContentType("text/html;charset=UTF-8");
 			resp.getWriter().println(jsonObject.toJSONString());
 			resp.getWriter().close();
@@ -567,7 +585,12 @@ public class StudentActivity {
 					xbClasssearhMap.put("EQ_organIds",xbClass.organId);
 					List<XbCoursePreset> xbCourseList = xbCoursePresetService.getXbCoursePresets(xbClasssearhMap);
 					xbCourseList.get(0).setXbClassList(classList);
-					money = money.add(xbCourseList.get(0).money);
+					BigDecimal totalmoney = xbCourseList.get(0).money;//每个课程总金额
+					if(xbCourseList.get(0).xbCourse.chargingMode.equals("0")){
+						totalmoney = xbCourseList.get(0).money.multiply(new BigDecimal(xbCourseList.get(0).periodNum));
+						xbCourseList.get(0).money = totalmoney;
+					}
+					money = money.add(totalmoney);
 					xbCoursePresetList.addAll(xbCourseList);
 				}
 			}
@@ -697,15 +720,15 @@ public class StudentActivity {
 	 * @return
 	 */
 	@RequestMapping("/chooseStudent")
-	public void chooseStudent(@RequestParam(required = false) String studentId,HttpServletResponse resp, ModelMap model, Pageable pageable){
+	public void chooseStudent(@RequestParam(required = false) String studentId,HttpServletResponse resp, ModelMap model, Pageable pageable) {
 		JSONObject jsonObject = new JSONObject();
-		Map<String,Object> searhMap = new HashMap<>();
+		Map<String, Object> searhMap = new HashMap<>();
 		try {
-			searhMap.put("EQ_studentId",studentId);
-			Page<XbStudentRelation> xbCoursePage = studentService.getXbStudentRelationList(pageable,searhMap);
+			searhMap.put("EQ_studentId", studentId);
+			Page<XbStudentRelation> xbCoursePage = studentService.getXbStudentRelationList(pageable, searhMap);
 			jsonObject.put("msg", "新建科目成功");
-			jsonObject.put("status","0");
-			jsonObject.put("xbCoursePage",com.alibaba.fastjson.JSONObject.toJSON(xbCoursePage.getContent()));
+			jsonObject.put("status", "0");
+			jsonObject.put("xbCoursePage", com.alibaba.fastjson.JSONObject.toJSON(xbCoursePage.getContent()));
 			resp.setContentType("text/html;charset=UTF-8");
 			resp.getWriter().println(jsonObject.toJSONString());
 			resp.getWriter().close();
@@ -714,4 +737,12 @@ public class StudentActivity {
 		}
 	}
 
+	/*
+	 * 跳转到班级详情
+	 * @return
+	 */
+	@RequestMapping("/classDetail")
+	public String classDetail(@RequestParam(required = false) String classId){
+		return "manageClass";
+	}
 }

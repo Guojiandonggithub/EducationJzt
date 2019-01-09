@@ -331,7 +331,8 @@
                         <td th:text="${couse.xbCourse.xbcoursetype.courseTypeName}"></td>
                         <td th:if="${couse.xbCourse.chargingMode}eq '0'" class="numberPer">按课时</td>
                         <td th:if="${couse.xbCourse.chargingMode}eq '2'" class="numberPer">按期</td>
-                        <td th:text="${couse.money}+'元/期('+${couse.periodNum}+'课时)'"></td>
+                        <td th:if="${couse.xbCourse.chargingMode}eq '0'" th:text="${couse.money}+'元('+${couse.periodNum}+'课时)'"></td>
+                        <td th:if="${couse.xbCourse.chargingMode}eq '2'" th:text="${couse.money}+'元/期('+${couse.periodNum}+'课时)'"></td>
                         <td th:if="${couse.xbCourse.type}eq '0'">班课</td>
                         <td th:if="${couse.xbCourse.type}eq '1'">一对一</td>
                     </tr>

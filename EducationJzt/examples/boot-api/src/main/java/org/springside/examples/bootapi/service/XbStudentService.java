@@ -173,6 +173,14 @@ public class XbStudentService {
 	}
 
 	@Transactional
+	public void finishClass(String id) {
+		XbClass xbClass = xbClassDao.findOne(id);
+		xbClass.isEnd="0";//0同步结束
+		xbClass.classEndDate = new Date();
+		xbClassDao.save(xbClass);
+	}
+
+	@Transactional
 	public XbClass getXbClass(String id) {
 		return xbClassDao.findOne(id);
 	}
