@@ -111,7 +111,7 @@
                         <th>状态</th>
                         <th>操作</th>
                       </tr>
-                      <tr th:each="ment:${XbSupplementFeePage}">
+                      <tr th:each="ment:${XbSupplementFeePage.content}">
                         <!--<td>11180</td>-->
                         <td th:text="${ment.xbStudent.studentName}"></td>
                         <td th:if="${ment.type} eq '0'">报名</td>
@@ -133,12 +133,12 @@
                                     <span class="ace-icon fa fa-caret-down icon-on-right"></span>
                                 </p>
                                 <ul class="dropdown-menu dropdown-default">
-                                    <li>
+                                    <!--<li>
                                         <a href="#">确认到款</a>
                                     </li>
-
+-->
                                     <li>
-                                        <a href="managementEdit.html">编辑</a>
+                                        <a href=#">编辑</a>
                                     </li>
                                 </ul>
                             </div>
@@ -148,49 +148,34 @@
                 <div class="orderPage">
                     <div class="page">
                         单页显示：
-                        <select>
-                            <option>20条/页</option>
-                            <option>50条/页</option>
-                            <option>100条/页</option>
+                        <select id="size" name="size" onchange="getFeeListPage('');">
+                            <option th:selected="${feecurrentzise eq 20}" value="20">20条/页</option>
+                            <option th:selected="${feecurrentzise eq 5}" value="5">5条/页</option>
+                            <option th:selected="${feecurrentzise eq 10}" value="10">10条/页</option>
+                            <option th:selected="${feecurrentzise eq 15}" value="15">15条/页</option>
                         </select>
                     </div>
-                    <ul class="pagination">
+                    <ul class="pagination" th:if="${XbSupplementFeePage.getTotalPages() gt 0}">
                         <li class="disabled">
-                            <a href="#">首页</a>
+                            <a href="#" th:onclick="'javascript:getFeeListPage(\''+0+'\')'">首页</a>
                         </li>
-                        <li class="disabled">
-                            <a href="#">
+                        <li class="disabled" th:if="${XbSupplementFeePage.getNumber()-1} ge 0">
+                            <a href="#" th:onclick="'javascript:getFeeListPage(\''+${XbSupplementFeePage.getNumber()-1}+'\')'">
                                 <i class="ace-icon fa fa-angle-double-left"></i>
                             </a>
-                        </li>  
-                        <li class="active">
-                            <a href="#">1</a>
                         </li>
-
-                        <li>
-                            <a href="#">2</a>
+                        <li th:class="${i} eq ${XbSupplementFeePage.getNumber()+1}?'active':''" th:each="i:${#numbers.sequence(1,XbSupplementFeePage.getTotalPages())}">
+                            <a href="#" th:onclick="'javascript:getFeeListPage(\''+${i}+'\')'"
+                               th:text="${i}"></a>
                         </li>
-
-                        <li>
-                            <a href="#">3</a>
-                        </li>
-
-                        <li>
-                            <a href="#">4</a>
-                        </li>
-
-                        <li>
-                            <a href="#">5</a>
-                        </li>
-
-                        <li>
-                            <a href="#">
+                        <li th:if="${XbSupplementFeePage.getTotalPages()} ge ${XbSupplementFeePage.getNumber()+2} ">
+                            <a href="#" th:onclick="'javascript:getFeeListPage(\''+${XbSupplementFeePage.getNumber()+2}+'\')'">
                                 <i class="ace-icon fa fa-angle-double-right"></i>
                             </a>
                         </li>
-                        <li class="">
-                            <a href="#">尾页</a>
-                        </li>
+                        <!-- <li class="">
+                         <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${currentnumber}+'\')'">尾页</a>
+                     </li>-->
                     </ul>
                 </div>
             </div>
@@ -211,6 +196,17 @@ $(".tag .close").click(function(){
   $(this).parent(".tag").hide();
 });
 
-</script> 
+</script>
+<script type="text/javascript" th:inline="javascript">
+    var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/ ;
+
+    function getFeeListPage(page) {
+        var size = $('#size option:selected').val(); //选中的值
+        if (page) {
+            page = page - 1;
+        }
+        window.location.href = basePath + '/student/getManagementList?page=' + page + '&size=' + size;
+    }
+</script>
 </body>
 </html>

@@ -52,6 +52,7 @@
                 <div class="tab-content student attendClass">
                     <!-- 记上课 -->
                     <div id="studentList" class="tab-pane fade in active">
+                        <form id="recordForm">
                         <div class="screen" style="height:138px;">
                             <div class="attendBtn">
                                 <span>今日上课</span>
@@ -114,53 +115,39 @@
                                 <div class="orderPage">
                                     <div class="page">
                                         单页显示：
-                                        <select id="size" onchange="getClassListPage('')">
-                                            <option value="20">20条/页</option>
-                                            <option value="50">50条/页</option>
-                                            <option value="100">100条/页</option>
+                                        <select id="size" th:name="size" onchange="getClassListPage('');">
+                                            <option th:selected="${currentzise eq 20}" th:value="20">20条/页</option>
+                                            <option th:selected="${currentzise eq 5}" th:value="5">5条/页</option>
+                                            <option th:selected="${currentzise eq 10}" th:value="10">10条/页</option>
+                                            <option th:selected="${currentzise eq 15}" th:value="15">15条/页</option>
                                         </select>
                                     </div>
-                                    <!--<ul class="pagination">
-                                    <li class="disabled">
-                                        <a href="#">首页</a>
-                                    </li>
-                                    <li class="disabled">
-                                        <a href="#">
-                                            <i class="ace-icon fa fa-angle-double-left"></i>
-                                        </a>
-                                    </li>  
-                                    <li class="active">
-                                        <a href="#">1</a>
-                                    </li>
-            
-                                    <li>
-                                        <a href="#">2</a>
-                                    </li>
-            
-                                    <li>
-                                        <a href="#">3</a>
-                                    </li>
-            
-                                    <li>
-                                        <a href="#">4</a>
-                                    </li>
-            
-                                    <li>
-                                        <a href="#">5</a>
-                                    </li>
-            
-                                    <li>
-                                        <a href="#">
-                                            <i class="ace-icon fa fa-angle-double-right"></i>
-                                        </a>
-                                    </li>
-                                    <li class="">
-                                        <a href="#">尾页</a>
-                                    </li>
-                                </ul>-->
+                                    <ul class="pagination" th:if="${classPage.getTotalPages() gt 0}">
+                                        <li class="disabled">
+                                            <a href="#" th:onclick="'javascript:getClassListPage(\''+0+'\')'">首页</a>
+                                        </li>
+                                        <li class="disabled" th:if="${classPage.getNumber()-1} ge 0">
+                                            <a href="#" th:onclick="'javascript:getClassListPage(\''+${classPage.getNumber()-1}+'\')'">
+                                                <i class="ace-icon fa fa-angle-double-left"></i>
+                                            </a>
+                                        </li>
+                                        <li th:class="${i} eq ${classPage.getNumber()+1}?'active':''" th:each="i:${#numbers.sequence(1,classPage.getTotalPages())}">
+                                            <a href="#" th:onclick="'javascript:getClassListPage(\''+${i}+'\')'"
+                                               th:text="${i}"></a>
+                                        </li>
+                                        <li th:if="${classPage.getTotalPages()} ge ${classPage.getNumber()+2} ">
+                                            <a href="#" th:onclick="'javascript:getClassListPage(\''+${classPage.getNumber()+2}+'\')'">
+                                                <i class="ace-icon fa fa-angle-double-right"></i>
+                                            </a>
+                                        </li>
+                                        <!-- <li class="">
+                                         <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${currentnumber}+'\')'">尾页</a>
+                                     </li>-->
+                                    </ul>
                                 </div>
                             </div>
                         </div>
+                        </form>
                     </div>
                     <!-- 上课记录 -->
                     <div id="divideList" class="tab-pane fade divideList classjl">
@@ -969,17 +956,30 @@
         var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/ ;
 
         function getClassListPage(page) {
-            var classrsName = $("#classesName").val();
-            if (!classrsName) {
-                return false;
-            }
+            var data= serializeObject("#recordForm");
             var size = $('#size option:selected').val(); //选中的值
-            /*if(page){
+            if(page){
                 page = page -1;
-            }*/
-            window.location.href = basePath + '/recordClass/getRecordClassList?size=' + size + '&classesName=' +
-                classrsName;
+            }
+            window.location.href = basePath + '/recordClass/getRecordClassList?size=' + size +'&page='+page+'&data='+JSON.stringify(data);
         }
+
+        function serializeObject(form)
+        {
+            var o = {};
+            var a = $(form).serializeArray();
+            $.each(a, function() {
+                if (o[this.name]) {
+                    if (!o[this.name].push) {
+                        o[this.name] = [o[this.name]];
+                    }
+                    o[this.name].push(this.value || '');
+                } else {
+                    o[this.name] = this.value || '';
+                }
+            });
+            return o;
+        };
     </script>
 </body>
 

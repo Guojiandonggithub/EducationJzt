@@ -41,10 +41,10 @@
         <div class="tabbable">
             <ul class="nav nav-tabs" id="myTab">
                 <li class="active">
-                    <a data-toggle="tab" href="#studentList">学员列表</a>
+                    <a data-toggle="tab" href="#studentList" >学员列表</a>
                 </li>
                 <li>
-                    <a data-toggle="tab" href="#divideList">学员分班列表</a>
+                    <a data-toggle="tab" href="#divideList" >学员分班列表</a>
                 </li>
                 <li>
                     <a data-toggle="tab" href="#expiryStu" onclick="getexpiryStulist('');">到期学员</a>
@@ -141,10 +141,10 @@
                                 <div class="page">
                                     单页显示：
                                     <select id="size" name="size" onchange="getOrgansListPage('');">
-                                        <option th:selected="${roomcurrentzise eq 20}" value="20">20条/页</option>
-                                        <option th:selected="${roomcurrentzise eq 5}" value="5">5条/页</option>
-                                        <option th:selected="${roomcurrentzise eq 10}" value="10">10条/页</option>
-                                        <option th:selected="${roomcurrentzise eq 15}" value="15">15条/页</option>
+                                        <option th:selected="${studentcurrentzise eq 20}" value="20">20条/页</option>
+                                        <option th:selected="${studentcurrentzise eq 5}" value="5">5条/页</option>
+                                        <option th:selected="${studentcurrentzise eq 10}" value="10">10条/页</option>
+                                        <option th:selected="${studentcurrentzise eq 15}" value="15">15条/页</option>
                                     </select>
                                 </div>
                                 <ul class="pagination" th:if="${xbStudentPage.getTotalPages() gt 0}" >
@@ -156,7 +156,7 @@
                                             <i class="ace-icon fa fa-angle-double-left"></i>
                                         </a>
                                     </li>
-                                    <li class="active" th:each="i:${#numbers.sequence(1,xbStudentPage.getTotalPages())}">
+                                    <li th:class="${i} eq ${xbStudentPage.getNumber()+1}?'active':''" th:each="i:${#numbers.sequence(1,xbStudentPage.getTotalPages())}">
                                         <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${i}+'\')'" th:text="${i}"></a>
                                     </li>
                                     <li th:if="${xbStudentPage.getTotalPages()} ge ${xbStudentPage.getNumber()+2} ">
@@ -252,49 +252,34 @@
                             <div class="orderPage">
                                 <div class="page">
                                     单页显示：
-                                    <select>
-                                        <option>20条/页</option>
-                                        <option>50条/页</option>
-                                        <option>100条/页</option>
+                                    <select id="size" name="size" onchange="xbStudentsPage('');">
+                                        <option th:selected="${studentcurrentzise eq 20}" value="20">20条/页</option>
+                                        <option th:selected="${studentcurrentzise eq 5}" value="5">5条/页</option>
+                                        <option th:selected="${studentcurrentzise eq 10}" value="10">10条/页</option>
+                                        <option th:selected="${studentcurrentzise eq 15}" value="15">15条/页</option>
                                     </select>
                                 </div>
-                                <ul class="pagination">
+                                <ul class="pagination" th:if="${xbStudentPage.getTotalPages() gt 0}">
                                     <li class="disabled">
-                                        <a href="#">首页</a>
+                                        <a href="#" th:onclick="'javascript:xbStudentsPage(\''+0+'\')'">首页</a>
                                     </li>
-                                    <li class="disabled">
-                                        <a href="#">
+                                    <li class="disabled" th:if="${xbStudentPage.getNumber()-1} ge 0">
+                                        <a href="#" th:onclick="'javascript:xbStudentsPage(\''+${xbStudentPage.getNumber()-1}+'\')'">
                                             <i class="ace-icon fa fa-angle-double-left"></i>
                                         </a>
-                                    </li>  
-                                    <li class="active">
-                                        <a href="#">1</a>
                                     </li>
-            
-                                    <li>
-                                        <a href="#">2</a>
+                                    <li th:class="${i} eq ${xbStudentPage.getNumber()+1}?'active':''" th:each="i:${#numbers.sequence(1,xbStudentPage.getTotalPages())}">
+                                        <a href="#" th:onclick="'javascript:xbStudentsPage(\''+${i}+'\')'"
+                                           th:text="${i}"></a>
                                     </li>
-            
-                                    <li>
-                                        <a href="#">3</a>
-                                    </li>
-            
-                                    <li>
-                                        <a href="#">4</a>
-                                    </li>
-            
-                                    <li>
-                                        <a href="#">5</a>
-                                    </li>
-            
-                                    <li>
-                                        <a href="#">
+                                    <li th:if="${xbStudentPage.getTotalPages()} ge ${xbStudentPage.getNumber()+2} ">
+                                        <a href="#" th:onclick="'javascript:xbStudentsPage(\''+${xbStudentPage.getNumber()+2}+'\')'">
                                             <i class="ace-icon fa fa-angle-double-right"></i>
                                         </a>
                                     </li>
-                                    <li class="">
-                                        <a href="#">尾页</a>
-                                    </li>
+                                    <!-- <li class="">
+                                     <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${currentnumber}+'\')'">尾页</a>
+                                 </li>-->
                                 </ul>
                             </div>
                         </div>    
@@ -389,49 +374,34 @@
                             <div class="orderPage">
                                 <div class="page">
                                     单页显示：
-                                    <select>
-                                        <option>20条/页</option>
-                                        <option>50条/页</option>
-                                        <option>100条/页</option>
+                                    <select id="pirysize" name="size" onchange="getexpiryStulist('');">
+                                        <option th:selected="${expirycurrentzise eq 20}" value="20">20条/页</option>
+                                        <option th:selected="${expirycurrentzise eq 5}" value="5">5条/页</option>
+                                        <option th:selected="${expirycurrentzise eq 10}" value="10">10条/页</option>
+                                        <option th:selected="${expirycurrentzise eq 15}" value="15">15条/页</option>
                                     </select>
                                 </div>
-                                <ul class="pagination">
+                                <ul class="pagination" th:if="${expiryStuPage.getTotalPages() gt 0}">
                                     <li class="disabled">
-                                        <a href="#">首页</a>
+                                        <a href="#" th:onclick="'javascript:getexpiryStulist(\''+0+'\')'">首页</a>
                                     </li>
-                                    <li class="disabled">
-                                        <a href="#">
+                                    <li class="disabled" th:if="${expiryStuPage.getNumber()-1} ge 0">
+                                        <a href="#" th:onclick="'javascript:getexpiryStulist(\''+${expiryStuPage.getNumber()-1}+'\')'">
                                             <i class="ace-icon fa fa-angle-double-left"></i>
                                         </a>
-                                    </li>  
-                                    <li class="active">
-                                        <a href="#">1</a>
                                     </li>
-            
-                                    <li>
-                                        <a href="#">2</a>
+                                    <li th:class="${i} eq ${expiryStuPage.getNumber()+1}?'active':''" th:each="i:${#numbers.sequence(1,expiryStuPage.getTotalPages())}">
+                                        <a href="#" th:onclick="'javascript:getexpiryStulist(\''+${i}+'\')'"
+                                           th:text="${i}"></a>
                                     </li>
-            
-                                    <li>
-                                        <a href="#">3</a>
-                                    </li>
-            
-                                    <li>
-                                        <a href="#">4</a>
-                                    </li>
-            
-                                    <li>
-                                        <a href="#">5</a>
-                                    </li>
-            
-                                    <li>
-                                        <a href="#">
+                                    <li th:if="${expiryStuPage.getTotalPages()} ge ${expiryStuPage.getNumber()+2} ">
+                                        <a href="#" th:onclick="'javascript:getexpiryStulist(\''+${expiryStuPage.getNumber()+2}+'\')'">
                                             <i class="ace-icon fa fa-angle-double-right"></i>
                                         </a>
                                     </li>
-                                    <li class="">
-                                        <a href="#">尾页</a>
-                                    </li>
+                                    <!-- <li class="">
+                                     <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${currentnumber}+'\')'">尾页</a>
+                                 </li>-->
                                 </ul>
                             </div>
                         </div>    
@@ -486,7 +456,7 @@
                             <table class="table table-hover">
                                 <tr>
                                     <th>
-                                        <input type="checkbox" id="sel_5" onchange="chooseAll2()">
+                                        <input type="checkbox" id="sel_5">
                                     </th>
                                     <th>学员姓名</th>
                                     <th>联系方式</th>
@@ -514,49 +484,34 @@
                             <div class="orderPage">
                                 <div class="page">
                                     单页显示：
-                                    <select>
-                                        <option>20条/页</option>
-                                        <option>50条/页</option>
-                                        <option>100条/页</option>
+                                    <select id="qianfeisize" th:name="size" onchange="getqianfeilist('');">
+                                        <option th:selected="${qianfeicurrentzise eq 20}" th:value="20">20条/页</option>
+                                        <option th:selected="${qianfeicurrentzise eq 5}" th:value="5">5条/页</option>
+                                        <option th:selected="${qianfeicurrentzise eq 10}" th:value="10">10条/页</option>
+                                        <option th:selected="${qianfeicurrentzise eq 15}" th:value="15">15条/页</option>
                                     </select>
                                 </div>
-                                <ul class="pagination">
+                                <ul class="pagination" th:if="${xbqianfeiPage.getTotalPages() gt 0}">
                                     <li class="disabled">
-                                        <a href="#">首页</a>
+                                        <a href="#" th:onclick="'javascript:getqianfeilist(\''+0+'\')'">首页</a>
                                     </li>
-                                    <li class="disabled">
-                                        <a href="#">
+                                    <li class="disabled" th:if="${xbqianfeiPage.getNumber()-1} ge 0">
+                                        <a href="#" th:onclick="'javascript:getqianfeilist(\''+${xbqianfeiPage.getNumber()-1}+'\')'">
                                             <i class="ace-icon fa fa-angle-double-left"></i>
                                         </a>
-                                    </li>  
-                                    <li class="active">
-                                        <a href="#">1</a>
                                     </li>
-            
-                                    <li>
-                                        <a href="#">2</a>
+                                    <li th:class="${i} eq ${xbqianfeiPage.getNumber()+1}?'active':''" th:each="i:${#numbers.sequence(1,xbqianfeiPage.getTotalPages())}">
+                                        <a href="#" th:onclick="'javascript:getqianfeilist(\''+${i}+'\')'"
+                                           th:text="${i}"></a>
                                     </li>
-            
-                                    <li>
-                                        <a href="#">3</a>
-                                    </li>
-            
-                                    <li>
-                                        <a href="#">4</a>
-                                    </li>
-            
-                                    <li>
-                                        <a href="#">5</a>
-                                    </li>
-            
-                                    <li>
-                                        <a href="#">
+                                    <li th:if="${xbqianfeiPage.getTotalPages()} ge ${xbqianfeiPage.getNumber()+2} ">
+                                        <a href="#" th:onclick="'javascript:getqianfeilist(\''+${xbqianfeiPage.getNumber()+2}+'\')'">
                                             <i class="ace-icon fa fa-angle-double-right"></i>
                                         </a>
                                     </li>
-                                    <li class="">
-                                        <a href="#">尾页</a>
-                                    </li>
+                                    <!-- <li class="">
+                                     <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${currentnumber}+'\')'">尾页</a>
+                                 </li>-->
                                 </ul>
                             </div>
                         </div>    
@@ -662,7 +617,7 @@ function getOrgansListPage(page){
     if(page){
         page = page -1;
     }
-    window.location.href = basePath + '/student/getXbStudentList?page='+page+'&size='+size+'&room=0'+'&data='+JSON.stringify(data);;
+    window.location.href = basePath + '/student/getXbStudentList?page='+page+'&size='+size+'&room=0'+'&data='+JSON.stringify(data);
 }
 
 function serializeObject(form)
@@ -685,7 +640,7 @@ function serializeObject(form)
 
 function getqianfeilist(page){
     var data= serializeObject("#qianfeisearchform");
-    var size = $('#size option:selected').val();//选中的值
+    var size = $('#qianfeisize option:selected').val();//选中的值
     if(page){
         page = page -1;
     }
@@ -694,10 +649,11 @@ function getqianfeilist(page){
         target: "#donghua"
     });
     load.start();
+    console.log("qqq"+data);
     $.ajax({
         type: 'get',
         //dataType: 'json',
-        url: basePath + '/student/getQianfeiList',
+        url: basePath + '/student/getQianfeiList?page='+page+'&size='+size+'&room=0'+'&data='+JSON.stringify(data),
         data: {data:data},
         contentType:"application/json;charset=UTF-8",
         cache: false,
@@ -713,7 +669,7 @@ function getqianfeilist(page){
 
 function getexpiryStulist(page){
     var data= serializeObject("#expiryStuearchform");
-    var size = $('#size option:selected').val();//选中的值
+    var size = $('#pirysize option:selected').val();//选中的值
     if(page){
         page = page -1;
     }

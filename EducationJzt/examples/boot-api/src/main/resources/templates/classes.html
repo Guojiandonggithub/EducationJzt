@@ -98,7 +98,7 @@
                                     </tr>
                                     <tr id="chooses" th:each="xbclass:${xbClassPage.content}">
                                         <td><input type="checkbox"></td>
-                                        <td th:text="${xbclass.className}" class="className"><img src="../static/pages/img/ban.png"></td>
+                                        <td th:text="${xbclass.sysOrgans.organName}+${xbclass.xbCourse.xbcoursetype.courseTypeName}+${xbclass.teacher.employeeName}+${xbclass.className}" class="className"><img src="../static/pages/img/ban.png"></td>
                                         <td class="prog" th:text="${xbclass.establishNum}">
                                             <div class="progress progress-small progress-striped active">
                                                 <!--<div class="progress-bar progress-bar-warning" style="width: 0%;"></div>
@@ -142,49 +142,34 @@
                                 <div class="orderPage">
                                     <div class="page">
                                         单页显示：
-                                        <select>
-                                            <option>20条/页</option>
-                                            <option>50条/页</option>
-                                            <option>100条/页</option>
+                                        <select id="size" name="size" onchange="getClassListPage('');">
+                                            <option th:selected="${classcurrentzise eq 20}" value="20">20条/页</option>
+                                            <option th:selected="${classcurrentzise eq 5}" value="5">5条/页</option>
+                                            <option th:selected="${classcurrentzise eq 10}" value="10">10条/页</option>
+                                            <option th:selected="${classcurrentzise eq 15}" value="15">15条/页</option>
                                         </select>
                                     </div>
-                                    <ul class="pagination">
+                                    <ul class="pagination" th:if="${xbClassPage.getTotalPages() gt 0}">
                                         <li class="disabled">
-                                            <a href="#">首页</a>
+                                            <a href="#" th:onclick="'javascript:getClassListPage(\''+0+'\')'">首页</a>
                                         </li>
-                                        <li class="disabled">
-                                            <a href="#">
+                                        <li class="disabled" th:if="${xbClassPage.getNumber()-1} ge 0">
+                                            <a href="#" th:onclick="'javascript:getClassListPage(\''+${xbClassPage.getNumber()-1}+'\')'">
                                                 <i class="ace-icon fa fa-angle-double-left"></i>
                                             </a>
                                         </li>
-                                        <li class="active">
-                                            <a href="#">1</a>
+                                        <li th:class="${i} eq ${xbClassPage.getNumber()+1}?'active':''" th:each="i:${#numbers.sequence(1,xbClassPage.getTotalPages())}">
+                                            <a href="#" th:onclick="'javascript:getClassListPage(\''+${i}+'\')'"
+                                               th:text="${i}"></a>
                                         </li>
-
-                                        <li>
-                                            <a href="#">2</a>
-                                        </li>
-
-                                        <li>
-                                            <a href="#">3</a>
-                                        </li>
-
-                                        <li>
-                                            <a href="#">4</a>
-                                        </li>
-
-                                        <li>
-                                            <a href="#">5</a>
-                                        </li>
-
-                                        <li>
-                                            <a href="#">
+                                        <li th:if="${xbClassPage.getTotalPages()} ge ${xbClassPage.getNumber()+2} ">
+                                            <a href="#" th:onclick="'javascript:getClassListPage(\''+${xbClassPage.getNumber()+2}+'\')'">
                                                 <i class="ace-icon fa fa-angle-double-right"></i>
                                             </a>
                                         </li>
-                                        <li class="">
-                                            <a href="#">尾页</a>
-                                        </li>
+                                        <!-- <li class="">
+                                         <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${currentnumber}+'\')'">尾页</a>
+                                     </li>-->
                                     </ul>
                                 </div>
                             </div>
@@ -248,7 +233,7 @@
                                                 <i class="ace-icon fa fa-angle-double-left"></i>
                                             </a>
                                         </li>
-                                        <li class="active" th:each="i:${#numbers.sequence(1,xbClassroomPage.getTotalPages())}">
+                                        <li th:class="${i} eq ${xbClassroomPage.getNumber()+1}?'active':''" th:each="i:${#numbers.sequence(1,xbClassroomPage.getTotalPages())}">
                                             <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${i}+'\')'"
                                                 th:text="${i}"></a>
                                         </li>
@@ -369,6 +354,14 @@
                 page = page - 1;
             }
             window.location.href = basePath + '/student/getXbClassroomList?page=' + page + '&size=' + size + '&room=0';
+        }
+
+        function getClassListPage(page) {
+            var size = $('#size option:selected').val(); //选中的值
+            if (page) {
+                page = page - 1;
+            }
+            window.location.href = basePath + '/student/getXbClassroomList?page=' + page + '&size=' + size;
         }
 
         function deleteClassroom(id) {

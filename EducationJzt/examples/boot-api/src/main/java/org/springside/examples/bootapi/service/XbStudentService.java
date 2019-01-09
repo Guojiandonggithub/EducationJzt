@@ -200,6 +200,6 @@ public class XbStudentService {
 	}
 	@Transactional
 	public XbClass checkClassesName(String name,String organId,String courseId){
-		return xbClassDao.findAllByClassNameAndOrganIdAndCourseId(name,organId,courseId);
+		return xbClassDao.findAllByClassNameAndOrganIdAndCourseIdAndDeleteStatus(name,organId,courseId,"1");
 	}
 }

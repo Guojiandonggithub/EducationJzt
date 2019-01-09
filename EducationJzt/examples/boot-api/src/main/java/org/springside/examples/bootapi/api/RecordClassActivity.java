@@ -46,14 +46,20 @@ public class RecordClassActivity {
 	 * @return
 	 */
 	@RequestMapping("/getRecordClassList")
-	public String getRecordClassList(@RequestParam(required = false) String classesName, ModelMap model, Pageable pageable){
+	public String getRecordClassList(@RequestParam(required = false) String data, ModelMap model, Pageable pageable){
+		Map<String,Object> resultMap = new HashMap<>();
 		Map<String,Object> searhMap = new HashMap<>();
-		if(null!=classesName){
+		if(null!=data){
+			resultMap = com.alibaba.fastjson.JSONObject.parseObject(data,Map.class);
+		}
+		String classesName  = (String)resultMap.get("classesName");
+		if(null!=classesName&&!classesName.equals("")){
 			searhMap.put("LIKE_className",classesName);
 		}
 		Page<XbClass> classPage = studentService.getXbClassList(pageable,searhMap);
 		model.addAttribute("classPage",classPage);
 		model.addAttribute("classesName",classesName);
+		model.addAttribute("currentzise",classPage.getSize());
 		return "attendClass";
 	}
 

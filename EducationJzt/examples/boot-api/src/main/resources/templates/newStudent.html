@@ -184,7 +184,7 @@
                                                 <i class="ace-icon fa fa-angle-double-left"></i>
                                             </a>
                                         </li>
-                                        <li class="active" th:each="i:${#numbers.sequence(1,employeePage.getTotalPages())}">
+                                        <li th:class="${i} eq ${employeePage.getNumber()+1}?'active':''" th:each="i:${#numbers.sequence(1,employeePage.getTotalPages())}">
                                             <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${i}+'\')'" th:text="${i}"></a>
                                         </li>
                                         <li th:if="${employeePage.getTotalPages()} ge ${employeePage.getNumber()+2} ">

@@ -229,7 +229,7 @@ public class StudentActivity {
 		model.addAttribute("xbStudentsPage",xbStudentsPage);
 		model.addAttribute("organId",organId);
 		model.addAttribute("organsList",organsList);
-		model.addAttribute("roomcurrentzise",xbStudentPage.getSize());
+		model.addAttribute("studentcurrentzise",xbStudentPage.getSize());
 		model.addAttribute("nameormobile",nameormobile);
 		model.addAttribute("type",type);
 		return "student";
@@ -269,6 +269,7 @@ public class StudentActivity {
 		model.addAttribute("xbClassroomPage",xbClassroomPage);
 		model.addAttribute("xbClassPage",xbClassPage);
 		model.addAttribute("roomcurrentzise",xbClassroomPage.getSize());
+		model.addAttribute("classcurrentzise",xbClassPage.getSize());
 		return "classes";
 	}
 
@@ -457,7 +458,7 @@ public class StudentActivity {
 		Map<String,Object> searhMap = new HashMap<>();
 		Page<XbSupplementFee> XbSupplementFeePage = studentService.getXbSupplementFeeList(pageable,searhMap);
 		model.addAttribute("XbSupplementFeePage",XbSupplementFeePage);
-		model.addAttribute("roomcurrentzise",XbSupplementFeePage.getSize());
+		model.addAttribute("feecurrentzise",XbSupplementFeePage.getSize());
 		return "management";
 	}
 
@@ -629,7 +630,7 @@ public class StudentActivity {
 		model.addAttribute("xbStudentsPage",xbStudentsPage);
 		model.addAttribute("organId",organId);
 		model.addAttribute("organsList",organsList);
-		model.addAttribute("roomcurrentzise",xbStudentPage.getSize());
+		model.addAttribute("qianfeicurrentzise",xbStudentPage.getSize());
 		model.addAttribute("nameormobile",nameormobile);
 		model.addAttribute("type",type);
 		return "student::qianfei";
@@ -670,7 +671,7 @@ public class StudentActivity {
 		model.addAttribute("expiryStuPage",xbStudentPage);
 		model.addAttribute("organId",organId);
 		model.addAttribute("organsList",organsList);
-		model.addAttribute("roomcurrentzise",xbStudentPage.getSize());
+		model.addAttribute("expirycurrentzise",xbStudentPage.getSize());
 		model.addAttribute("nameormobile",nameormobile);
 		model.addAttribute("type",type);
 		return "student::expiryStu";
