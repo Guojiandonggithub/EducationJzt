@@ -12,13 +12,14 @@
     <link rel="stylesheet" href="../static/pages/css/bootstrap.min.css">
     <link rel="stylesheet" href="../static/pages/css/font-awesome.min.css" />
     <link rel="stylesheet" href="../static/pages/css/kd.ui.plugin.css" />
+    <link rel="stylesheet" href="../static/pages/css/loading.css" />
     <script src="../static/pages/js/jquery.min.js"></script>
     <script src="../static/pages/js/bootstrap.min.js"> </script>
     <script src="../static/pages/js/ace.min.js"> </script>
     <script src="../static/pages/js/ace-elements.min.js"></script>
     <script src="../static/pages/laydate/laydate.js"></script>
     <script src="../static/pages/js/kd.ui.plugin.js"></script>
-
+    <script src="../static/pages/js/loading.js"></script>
 
 </head>
 <body>
@@ -26,7 +27,7 @@
 <div class="main-container" id="main-container">
     <div th:replace="layout::left('12','')">
     </div>
-    <div class="main-content">
+    <div class="main-content" id="main-content">
         <div class="breadcrumbs" id="breadcrumbs">
             <img src="../static/pages/img/line1.png">
             <span>办理中心</span>
@@ -201,6 +202,11 @@ $(".tag .close").click(function(){
     var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/ ;
 
     function getFeeListPage(page) {
+        var load = new Loading();
+        load.init({
+            target: "#main-content"
+        });
+        load.start();
         var size = $('#size option:selected').val(); //选中的值
         if (page) {
             page = page - 1;

@@ -68,7 +68,7 @@
                                 <p>清空筛选</p>-->
                             </div>
                         </div>
-                        <div class="control-position">
+                        <div class="control-position" id="control-position">
                             <!--<div class="control-group">
                                 <label class="control-label">所属部门</label>
                                 <div class="checkbox">
@@ -234,7 +234,8 @@ function selectAll(){
 <script type="text/javascript" th:inline="javascript">
     var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/;
 function deleteEmployee(id){
-    if(confirm("确定要删除该用户吗？")){
+   // if(confirm("确定要删除该用户吗？")){
+    $.kd.kdConfirm("确定要删除该用户吗？",function(){
         var load = new Loading();
         load.init({
             target: "#donghua"
@@ -258,10 +259,16 @@ function deleteEmployee(id){
                 console.log("回调失败")
             }
         });
-    }
+    })
+    //}
 }
 
     function getOrgansListPage(page){
+        var load = new Loading();
+        load.init({
+            target: "#control-position"
+        });
+        load.start();
         var data= serializeObject("#searchform");
         var size = $('#size option:selected').val();//选中的值
         if(page){

@@ -34,7 +34,7 @@
         <div class="main-container" id="main-container">
             <div th:replace="layout::left('14','42')">
             </div>
-            <div class="main-content">
+            <div class="main-content" id="main-content">
                 <div class="breadcrumbs" id="breadcrumb">
                     <img src="../static/pages/img/line1.png">
                     <span>员工信息</span>
@@ -357,7 +357,7 @@
         function saveEmployee() {
             var load = new Loading();
             load.init({
-                target: "#breadcrumbs"
+                target: "#main-content"
             });
             load.start();
             if ($("#iform").valid()) {

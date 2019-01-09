@@ -32,7 +32,7 @@
     <div class="main-container" id="main-container">
         <div th:replace="layout::left('13','31')">
         </div>
-        <div class="main-content">
+        <div class="main-content" id="saveEnroll">
             <div class="breadcrumbs" id="breadcrumbs">
                 <img src="../static/pages/img/line1.png">
                 <span>报名/续费</span>
@@ -141,12 +141,12 @@
 <div class="enrollCon" id="enrollCon">
     <h2>报名信息</h2>
     <div class="choose">
-        <div class="chooseSub">
-            <a href="#modal-table" onclick="getCourseList();" role="button" class="blue" data-toggle="modal">选择课程报名</a>
+        <div class="chooseSub" id="chooseSub">
+            <a href="#modal-table" onclick="getCourseList('1');" role="button" class="blue" data-toggle="modal">选择课程报名</a>
             <p>适应于一对一或先报课程后分班的学员报名</p>
         </div>
-        <div class="chooseClass">
-            <a href="#modal-table1" role="button" onclick="getClassList();"  class="blue" data-toggle="modal">选择班级报名</a>
+        <div class="chooseClass" id="chooseClass">
+            <a href="#modal-table1" role="button" onclick="getClassList('1');"  class="blue" data-toggle="modal">选择班级报名</a>
             <p>适应于已建班级，直接报入班级的学员报名</p>
         </div>
     </div>
@@ -156,8 +156,8 @@
 <div class="enrollCon payInfo apply">
     <th:block th:if="${xbCourseLists}" th:fragment="baoming">
     <h2>报名信息
-        <a href="#modal-table1" role="button" onclick="getClassList();" class="blue" data-toggle="modal">选择班级报名</a>
-        <a href="#modal-table" role="button" onclick="getCourseList();" class="blue" data-toggle="modal">选择课程报名</a>
+        <a href="#modal-table1" role="button" onclick="getClassList('1');" class="blue" data-toggle="modal">选择班级报名</a>
+        <a href="#modal-table" role="button" onclick="getCourseList('1');" class="blue" data-toggle="modal">选择课程报名</a>
     </h2>
     <th:block th:each="course,courseindex:${xbCourseLists}">
     <div class="alert-info" >
@@ -248,7 +248,7 @@
 </div>
 </th:block>
 </div>
-<div class="enrollCon handleInfo">
+<div class="enrollCon handleInfo" id="enrollCon_jbxq">
     <h2>经办信息</h2>
     <div class="form-group">
         <label class="col-sm-1">经办校区</label>
@@ -277,26 +277,26 @@
     </div>
 </div>
 <div class="enrollCon">
-    <button class="save" type="button" onclick="saveEnroll();">保存</button>
+    <button  class="save" type="button" onclick="saveEnroll();">保存</button>
 </div>
 </div>
 </form>
 <!-- 课程选择弹窗 -->
 <div id="modal-table" class="modal fade in" tabindex="-1" aria-hidden="false">
     <div class="modal-dialog">
-        <div class="modal-content">
+        <div class="modal-content" id="modal-content">
             <div class="modal-header no-padding">
                 <div class="table-header">课程选择</div>
             </div>
             <div class="modalFrom">
                 <div class="form-group" style="margin-right:0 !important;">
-                    <select id="kechengorgan" onchange="getCourseList();">
+                    <select id="kechengorgan" onchange="getCourseList('2');">
                         <option th:each="orgs:${organsList}"  th:value="${orgs.id}" th:text="${orgs.organName}"></option>
                     </select>
                 </div>
                 <form class="form-search">
                         <span class="input-icon">
-                            <input type="text" oninput="getCourseList()"  id="courseName" placeholder="请输入课程名称" >
+                            <input type="text" oninput="getCourseList('2')"  id="courseName" placeholder="请输入课程名称" >
                             <i class="ace-icon fa fa-search nav-search-icon"></i>
                         </span>
                 </form>
@@ -356,7 +356,7 @@
 <!-- 班级选择弹窗 -->
 <div id="modal-table1" class="modal fade in" tabindex="-1" aria-hidden="false" >
     <div class="modal-dialog">
-        <div class="modal-content">
+        <div class="modal-content" id="modal-content-banji">
             <div class="modal-header no-padding">
                 <div class="table-header">
                     <!-- <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
@@ -682,7 +682,7 @@
             console.log(list);
             var load = new Loading();
             load.init({
-                target: "#enrollCon"
+                target: "#saveEnroll"
             });
             load.start();
             $.ajax({
@@ -700,6 +700,9 @@
                     $.kd.kdAlert("编辑成功！",function () {
                         window.location.href = basePath + '/student/getXbStudentList';
                     });
+                },
+                error(){
+                    load.stop();
                 }
             });
         }
@@ -722,10 +725,16 @@
         return o;
     };
 
-    function getCourseList(){
+    function getCourseList(type){
+        var typename = "";
+        if(type=='1'){
+            typename="chooseSub"
+        }else{
+            typename="modal-content"
+        }
         var load = new Loading();
         load.init({
-            target: "#enrollCon"
+            target: "#"+typename
         });
         load.start();
         $.ajax({
@@ -745,10 +754,16 @@
         });
     };
 
-    function getClassList(){
+    function getClassList(type){
+        var typename = "";
+        if(type=='1'){
+            typename="chooseClass"
+        }else{
+            typename="modal-content-banji"
+        }
         var load = new Loading();
         load.init({
-            target: "#enrollCon"
+            target: "#"+typename
         });
         load.start();
         $.ajax({
@@ -777,7 +792,7 @@
         }).get().join(',');
         var load = new Loading();
         load.init({
-            target: "#enrollCon"
+            target: "#modal-content"
         });
         load.start();
         $.ajax({
@@ -789,11 +804,16 @@
             cache: false,
             async: true,
             success: function (data) {
+                console.log('成功');
                 load.stop();
                 $(".apply").show();
                 $("#baominginfo").html("");
                 $('#baominginfo').html(data);
-        }
+            },
+            error(){
+                console.log('失败');
+                load.stop();
+            }
     });
     };
 
@@ -804,7 +824,7 @@
         }).get().join(',');
         var load = new Loading();
         load.init({
-            target: "#enrollCon"
+            target: "#modal-content-banji"
         });
         load.start();
         $.ajax({
@@ -820,6 +840,9 @@
                 $(".apply").show();
                 $("#baominginfo").html("");
                 $('#baominginfo').html(data);
+            },
+            error(){
+                load.stop();
             }
         });
     };
@@ -862,7 +885,7 @@
         var orgid = $("#jborganId").val();
         var load = new Loading();
         load.init({
-            target: "#enrollCon"
+            target: "#enrollCon_jbxq"
         });
         load.start();
         $.ajax({

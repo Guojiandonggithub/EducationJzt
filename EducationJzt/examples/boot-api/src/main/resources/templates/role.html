@@ -32,7 +32,7 @@
 <div class="main-container" id="main-container">
     <div th:replace="layout::left('14','43')">
     </div>
-    <div class="main-content">
+    <div class="main-content" id="main-content">
         <div class="breadcrumbs" id="breadcrumbs">
             <img src="../static/pages/img/line1.png">
             <span>角色</span>
@@ -126,7 +126,7 @@
     <div id="modal-table" class="modal fade in pk" tabindex="-1" aria-hidden="false">
         <form id="iform" th:action="@{/accounts/save/organs}" th:method="post">
             <div class="modal-dialog">
-                <div class="modal-content">
+                <div class="modal-content" id="modal-content">
                     <div class="modal-header no-padding">
                         <div class="table-header">新建/编辑</div>
                     </div>
@@ -227,7 +227,7 @@ function selectAll(){
             var data= serializeObject("#iform");
             var load = new Loading();
             load.init({
-                target: "#modal-table"
+                target: "#modal-content"
             });
             load.start();
             $.ajax({
@@ -245,6 +245,7 @@ function selectAll(){
                     });
                 },
                 error:function(){
+                    load.stop();
                     console.log("编辑失败")
                 }
             });
@@ -253,6 +254,11 @@ function selectAll(){
 
 
     function getOrgansListPage(page){
+        var load = new Loading();
+        load.init({
+            target: "#main-content"
+        });
+        load.start();
         var size = $('#size option:selected').val();//选中的值
         if(page){
             page = page -1;
@@ -285,7 +291,8 @@ function selectAll(){
 
     //删除课程类别
     function sourceRemove(id){
-        if(confirm("确定要删除该角色?")){
+        //if(confirm/("确定要删除该角色?")){
+        $.kd.kdConfirm("确定要删除该角色?",function () {
             var load = new Loading();
             load.init({
                 target: "#modal-table"
@@ -310,9 +317,13 @@ function selectAll(){
                     console.log("删除失败")
                 }
             });
-        }
+        })
+        //}
     }
 
 </script>
+<style>
+    a{cursor:pointer}
+</style>
 </body>
 </html>

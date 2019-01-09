@@ -41,7 +41,7 @@
         <div class="tabbable">
             <div class="tab-content student classes">
                 <!-- 学员列表 -->
-                <div  class="tab-pane fade in active"> 
+                <div  class="tab-pane fade in active" id="student_list_jz">
                     <div class="screen">
                         <a href="#modal-table" role="button"  data-toggle="modal"><button class="stdEnroll">新建</button></a> 
                     </div>
@@ -147,7 +147,7 @@
     <div id="modal-table" class="modal fade in pk" tabindex="-1" aria-hidden="false">
         <form id="iform" th:action="@{/accounts/save/organs}" th:method="post">
             <div class="modal-dialog">
-                <div class="modal-content">
+                <div class="modal-content" id="modal-content">
                     <div class="modal-header no-padding">
                         <div class="table-header">新建/编辑</div>
                     </div>
@@ -348,7 +348,7 @@ function selectAll(){
             var data= serializeObject("#iform");
             var load = new Loading();
             load.init({
-                target: "#donghua"
+                target: "#modal-content"
             });
             load.start();
             $.ajax({
@@ -380,6 +380,11 @@ function selectAll(){
 
 
     function getOrgansListPage(page){
+        var load = new Loading();
+        load.init({
+            target: "#student_list_jz"
+        });
+        load.start();
         var size = $('#size option:selected').val();//选中的值
         if(page){
             page = page -1;
@@ -418,10 +423,11 @@ function selectAll(){
 
     //删除课程类别
     function sourceRemove(id){
-        if(confirm("确定要删除该校区?")){
+        //if(confirm("确定要删除该校区?")){
+        $.kd.kdConfirm("确定要删除该校区?",function(){
             var load = new Loading();
             load.init({
-                target: "#donghua"
+                target: "#modal-content"
             });
             load.start();
             $.ajax({
@@ -443,9 +449,13 @@ function selectAll(){
                     console.log("回调失败")
                 }
             });
-        }
+        })
+        //}
     }
 
 </script>
+<style>
+    a{cursor:pointer}
+</style>
 </body>
 </html>

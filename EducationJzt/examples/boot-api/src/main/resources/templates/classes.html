@@ -50,7 +50,7 @@
                 </ul>
                 <div id="class" class="tab-content student classes">
                     <!-- 学员列表 -->
-                    <div class="tab-pane fade in active">
+                    <div class="tab-pane fade in active" id="class_jz">
                         <div class="screen" style="height:76px;">
                             <a href="/student/getXbClass"><button class="stdEnroll">新建班级</button></a>
                         </div>
@@ -352,6 +352,11 @@
         var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/ ;
 
         function getOrgansListPage(page) {
+            var load = new Loading();
+            load.init({
+                target: "#teacher"
+            });
+            load.start();
             var size = $('#size option:selected').val(); //选中的值
             if (page) {
                 page = page - 1;
@@ -360,7 +365,11 @@
         }
         //班级列表
         function getClassListPage(page) {
-
+            var load = new Loading();
+            load.init({
+                target: "#class_jz"
+            });
+            load.start();
             var size = $('#size option:selected').val(); //选中的值
             if (page) {
                 page = page - 1;
@@ -374,7 +383,8 @@
         }
 
         function deleteClassroom(id) {
-            if (confirm("确定要删除该教室吗？")) {
+            //if (confirm("确定要删除该教室吗？")) {
+            $.kd.kdConfirm("确定要删除该教室吗？",function(){
                 var load = new Loading();
                 load.init({
                     target: "#donghua"
@@ -395,10 +405,11 @@
                         });
                     },
                     error: function () {
-                        $.kd.kdAlert("删除失败！");
+                        $.kd.kdMsg("删除失败！");
                     }
                 });
-            }
+            })
+            //}
         }
 
         function deleteClass(id) {
