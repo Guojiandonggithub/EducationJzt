@@ -130,7 +130,7 @@
                                 <div class="result">
                                    当前结果：共计<span th:text="${xbAttendList.getTotalElements()}"></span>条排课
                                 </div>
-                                <div  class="orderTable">
+                                <div id="orderTable"  class="orderTable">
                                     <table id="attendClassList" class="table table-hover" th:fragment="attendClassList">
                                         <tr>
                                             <th>
@@ -211,7 +211,7 @@
                                                 </a>
                                             </li>
                                             <li th:class="${i} eq ${xbAttendList.getNumber()+1}?'active':''" th:each="i:${#numbers.sequence(1,xbAttendList.getTotalPages())}">
-                                                <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${i}+'\')'" th:text="${i}"></a>
+                                                <a  th:onclick="'javascript:getOrgansListPage(\''+${i}+'\')'" th:text="${i}"></a>
                                             </li>
                                             <li th:if="${xbAttendList.getTotalPages()} ge ${xbAttendList.getNumber()+2} ">
                                                 <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${xbAttendList.getNumber()+2}+'\')'">
@@ -290,7 +290,7 @@
                                             </a>
                                         </li>
                                         <li  th:class="${i} eq ${xbAttendConflicList.getNumber()+1}?'active':''" th:each="i:${#numbers.sequence(1,xbAttendConflicList.getTotalPages())}">
-                                            <a href="#" th:onclick="'javascript:getxbAttendConflicListPage(\''+${i}+'\')'" th:text="${i}"></a>
+                                            <a  th:onclick="'javascript:getxbAttendConflicListPage(\''+${i}+'\')'" th:text="${i}"></a>
                                         </li>
                                         <li th:if="${xbAttendConflicList.getTotalPages()} ge ${xbAttendConflicList.getNumber()+2} ">
                                             <a href="#" th:onclick="'javascript:getxbAttendConflicListPage(\''+${xbAttendConflicList.getNumber()+2}+'\')'">
@@ -854,6 +854,11 @@
     };
     //搜索
     function getOrgansListPage(page){
+        var load = new Loading();
+        load.init({
+            target: "#orderTable"
+        });
+        load.start();
         var data= serializeObject("#searchform");
         var size = $('#size option:selected').val();//选中的值
         if(page){
@@ -1219,6 +1224,7 @@
         width: 30px;
         height: 15px;
     }
+    a{cursor:pointer}
 </style>
 
 </html>

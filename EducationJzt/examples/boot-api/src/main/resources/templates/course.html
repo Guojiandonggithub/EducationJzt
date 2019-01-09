@@ -207,7 +207,7 @@
                                                                 <a th:case="1" style="cursor:pointer" th:onclick="|kaiketingke('${obj.xbCourse.id}','0')|">开课</a>
                                                                 <a th:case="0" style="cursor:pointer" th:onclick="|kaiketingke('${obj.xbCourse.id}','1')|">停课</a>
                                                             </li>
-                                                            <li>
+                                                            <li th:if="${obj.xbCourse.state} eq '0'">
                                                                 <a th:href="@{/jwcentercourse/goaddcourse(courseId=${obj.xbCourse.id},presetid=${obj.id})}"  >编辑</a>
                                                             </li>
                                                             <li>
@@ -242,7 +242,7 @@
                                                 </a>
                                             </li>
                                             <li th:class="${i} eq ${prelist.getNumber()+1}?'active':''" th:each="i:${#numbers.sequence(1,prelist.getTotalPages())}">
-                                                <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${i}+'\')'" th:text="${i}"></a>
+                                                <a  th:onclick="'javascript:getOrgansListPage(\''+${i}+'\')'" th:text="${i}"></a>
                                             </li>
                                             <li th:if="${prelist.getTotalPages()} ge ${prelist.getNumber()+2} ">
                                                 <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${prelist.getNumber()+2}+'\')'">
@@ -848,13 +848,12 @@
 </script>
 <!--工具函数群-->
 <script type="text/javascript" th:inline="javascript">
-    var load = new Loading();
-    load.init({
-        target: "#jiazaiyanshi"
-        //target: "#control-position"
-    });
     //搜索
     function getOrgansListPage(page){
+        var load = new Loading();
+        load.init({
+            target: "#control-position"
+        });
         load.start();
         var data= serializeObject("#searchform");
         var size = $('#size option:selected').val();//选中的值
@@ -864,7 +863,7 @@
         if(size){
             size = "10";
         }
-        //window.location.href = basePath + '/jwcentercourse/tocourse?page='+page+'&size='+size+'sort=xbCourse.createDate,DESC&sort=xbCourse.createTime,DESC&data='+JSON.stringify(data);
+        window.location.href = basePath + '/jwcentercourse/tocourse?page='+page+'&size='+size+'sort=xbCourse.createDate,DESC&sort=xbCourse.createTime,DESC&data='+JSON.stringify(data);
     }
     function serializeObject(form){
         var o = {};

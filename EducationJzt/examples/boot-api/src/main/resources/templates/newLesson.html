@@ -43,7 +43,7 @@
             <img src="../static/pages/img/line.png">
         </div>
 
-        <div class="form-box">
+        <div id="control-position" class="form-box">
             <form id="dJFrom" th:method="post">
                 <div class="main-form">
                     <h3>课程基础信息</h3>
@@ -227,7 +227,6 @@
                     target: "#control-position"
                 });
                 if ($("#dJFrom").valid()) {
-                    load.start();
                 var datafrom = serializeObject("#dJFrom");
                 if(datafrom.courseTypeId=="-1"){
                     $.kd.kdMsg("请选择课程类别");
@@ -271,6 +270,7 @@
                         list.push(obj);
                    });
                 }
+                    load.start();
                 datafrom.xbcoursepresetlist = list;
                 $.ajax({
                     url: basePath + '/jwcentercourse/savecourse',
