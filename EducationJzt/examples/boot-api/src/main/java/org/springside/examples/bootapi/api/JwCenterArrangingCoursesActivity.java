@@ -75,7 +75,9 @@ public class JwCenterArrangingCoursesActivity {
          Map<String,Object> searmap = new HashMap<>();
 
          List<String> list = xbAttendClassService.findXbAttendConflictIdList();
-         searmap.put("IN_id",list);
+         if(list.size()>0){
+             searmap.put("IN_id",list);
+         }
          Page<XbAttendClass> xbAttendConflicList = xbAttendClassService.findXbAttendClassPageAll(pageable,searmap);
         model.addAttribute("xbAttendConflicList",xbAttendConflicList);
         model.addAttribute("xbAttendConflicListsize",xbAttendConflicList.getSize());
@@ -85,7 +87,9 @@ public class JwCenterArrangingCoursesActivity {
          Map<String,Object> searmap = new HashMap<>();
 
          List<String> list = xbAttendClassService.findXbAttendConflictIdList();
-         searmap.put("IN_id",list);
+        if(list.size()>0){
+            searmap.put("IN_id",list);
+        }
          Page<XbAttendClass> xbAttendConflicList = xbAttendClassService.findXbAttendClassPageAll(pageable,searmap);
         model.addAttribute("xbAttendConflicList",xbAttendConflicList);
         model.addAttribute("xbAttendConflicListsize",xbAttendConflicList.getSize());

@@ -355,8 +355,9 @@
             }
             window.location.href = basePath + '/student/getXbClassroomList?page=' + page + '&size=' + size + '&room=0';
         }
-
+        //班级列表
         function getClassListPage(page) {
+
             var size = $('#size option:selected').val(); //选中的值
             if (page) {
                 page = page - 1;
@@ -393,7 +394,8 @@
         }
 
         function deleteClass(id) {
-            if (confirm("确定要删除该班级吗？")) {
+            //if (confirm("确定要删除该班级吗？")) {
+            $.kd.kdConfirm("确定要删除该班级吗？",function(){
                 var load = new Loading();
                 load.init({
                     target: "#donghua"
@@ -419,11 +421,12 @@
                     },
                     error: function () {
                         load.stop();
-                        $.kd.kdAlert("删除失败");
+                        $.kd.kdMsg("删除失败");
                         console.log("回调失败")
                     }
                 });
-            }
+            })
+            //}
         }
     </script>
 </body>

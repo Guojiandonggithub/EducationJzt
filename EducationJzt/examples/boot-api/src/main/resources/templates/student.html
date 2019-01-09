@@ -32,7 +32,7 @@
 <div class="main-container" id="main-container">
     <div th:replace="layout::left('13','31')">
     </div>
-    <div class="main-content">
+    <div class="main-content" >
         <div class="breadcrumbs" id="breadcrumbs">
             <img src="../static/pages/img/line1.png">
             <span>学员</span>
@@ -611,7 +611,13 @@ function chooseAll2(){
 </script>
 <script type="text/javascript" th:inline="javascript">
 var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/;
+//学员列表搜索studentList
 function getOrgansListPage(page){
+    var load = new Loading();
+    load.init({
+        target: "#studentList"
+    });
+    load.start();
     var data= serializeObject("#searchform");
     var size = $('#size option:selected').val();//选中的值
     if(page){
@@ -646,7 +652,7 @@ function getqianfeilist(page){
     }
     var load = new Loading();
     load.init({
-        target: "#donghua"
+        target: "#divideList"
     });
     load.start();
     console.log("qqq"+data);
