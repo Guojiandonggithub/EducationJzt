@@ -87,7 +87,7 @@
                                                name="typeId" type="radio" th:value="${types.id}" class="ace"
                                                th:onclick="'javascript:getOrgansListPage(\'\')'">
                                         <span class="lbl" th:text="${types.courseTypeName}"></span>
-                                    </label>
+                                    </label>金额
                                 </div>
                             </div>
                             <div class="control-group">
@@ -187,8 +187,8 @@
                                                 <td th:text="${obj.sysorgans.organName}">开课校区</td>
                                                 <td th:text="${obj.periodNum}">课时</td>
                                                 <td th:switch="${obj.xbCourse.chargingMode}">
-                                                    <span th:case="0" th:text="${obj.money}+'/课时'"></span>
-                                                    <span th:case="2" th:text="${obj.money}+'/期'"></span>
+                                                    <span th:case="0" th:text="${#numbers.formatDecimal(obj.money, 1, 2)}+'/课时'"></span>
+                                                    <span th:case="2" th:text="${#numbers.formatDecimal(obj.money, 1, 2)}+'/期'"></span>
                                                 </td>
 
                                                 <td th:text="${obj.xbCourse.createDate}+' '+${obj.xbCourse.createTime}">创建日期</td>
