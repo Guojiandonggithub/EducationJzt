@@ -1,8 +1,12 @@
 package org.springside.examples.bootapi.domain;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springside.examples.bootapi.repository.XbAttendClassDao;
+import org.springside.examples.bootapi.service.XbAttendClassService;
 
 import javax.persistence.*;
+import java.util.List;
 
 // JPA实体类的标识
 
@@ -11,7 +15,8 @@ import javax.persistence.*;
  */
 @Entity
 public class XbAttendClass {
-
+   /* @Autowired
+    public XbAttendClassService xbAttendClassService;*/
     // JPA 主键标识, 策略为由数据库生成主键
     @Id
     @GenericGenerator(name="idGenerator", strategy="uuid") //这个是hibernate的注解/生成32位UUID
@@ -281,5 +286,17 @@ public class XbAttendClass {
     public void setSysemployee(SysEmployee sysemployee) {
         this.sysemployee = sysemployee;
     }
+    @Transient
+    public int ydstudentnum;
+    @Transient
+    public int sdstudentnum;
 
+    /*public void setYdstudentnum() {
+        XbAttendClassService  xbAttendClassService = new XbAttendClassService();
+        this.ydstudentnum = xbAttendClassService.getYdstudentnum(this.classId,this.startDateTime);
+    }
+    public void setSdstudentnum() {
+        XbAttendClassService  xbAttendClassService = new XbAttendClassService();
+        this.sdstudentnum = xbAttendClassService.getSdstudentnum(this.classId,this.startDateTime);
+    }*/
 }

@@ -142,6 +142,10 @@ public class JwCenterArrangingCoursesActivity {
             searhMap.put("EQ_subjectId",subjectId);
         }
        Page<XbAttendClass> xbAttendList = xbAttendClassService.findXbAttendClassPageAll(pageable,searhMap);
+        for(XbAttendClass xbattendclass : xbAttendList){
+            xbattendclass.ydstudentnum = xbAttendClassService.getYdstudentnum(xbattendclass.classId,xbattendclass.startDateTime);
+            xbattendclass.sdstudentnum = xbAttendClassService.getSdstudentnum(xbattendclass.classId,xbattendclass.startDateTime);
+        }
         model.addAttribute("xbAttendList",xbAttendList);
         model.addAttribute("xbAttendListsize",xbAttendList.getSize());
         model.addAttribute("searhname",searhname);
@@ -308,7 +312,12 @@ public class JwCenterArrangingCoursesActivity {
         xbac.deleteStatus = "0";
         xbAttendClassService.saveXbAttendClass(xbac);
         Map<String,Object> searmap = new HashMap<>();
-        model.addAttribute("xbAttendList",xbAttendClassService.findXbAttendClassPageAll(pageable,searmap));
+        Page<XbAttendClass> xbAttendList = xbAttendClassService.findXbAttendClassPageAll(pageable,searmap);
+        for(XbAttendClass xbattendclass : xbAttendList){
+            xbattendclass.ydstudentnum = xbAttendClassService.getYdstudentnum(xbattendclass.classId,xbattendclass.startDateTime);
+            xbattendclass.sdstudentnum = xbAttendClassService.getSdstudentnum(xbattendclass.classId,xbattendclass.startDateTime);
+        }
+        model.addAttribute("xbAttendList",xbAttendList);
         logger.info("删除排课结束");
         return "courseArray::xbAttendListFra";
     }

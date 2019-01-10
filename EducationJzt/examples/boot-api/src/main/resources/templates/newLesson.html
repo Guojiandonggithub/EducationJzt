@@ -156,7 +156,7 @@
                                                 <input id="XbCoursePresetmoney" name="money" type="text" value="0" />
                                             </div>
                                             <span class="txt">元</span>
-                                            <span class="glyphicon glyphicon-remove-sign"></span>
+                                            <span class="glyphicon glyphicon-plus-sign" onclick="dingJiaBiaoZunAllAdd('','0',this)"></span>
                                         </div>
                                     </div>
                                 </td>
@@ -184,7 +184,7 @@
                                             <span class="txt">元</span>
                                             <!--<span class="glyphicon glyphicon-plus-sign"
                                                   th:onclick="|appointSchooladd('${pre.sysorgans.organName}','${pre?.courseId}','${pre?.organIds}',this)|"></span>-->
-                                            <span class="glyphicon glyphicon-remove-sign"></span>
+                                            <span class="glyphicon "></span>
                                         </div>
                                     </div>
                                 </td>
@@ -202,8 +202,7 @@
                                             </div>
                                             <input type="hidden" id="preid" name="id" th:value="${pre?.id}" />
                                             <span class="txt">课时</span>
-                                            <span class="glyphicon glyphicon-plus-sign"></span>
-                                            <span class="glyphicon glyphicon-remove-sign"></span>
+                                            <span class="glyphicon "></span>
                                         </div>
                                     </div>
                                 </td>
@@ -246,13 +245,34 @@
                 var list = [];
                 //全部校区
                 if (datafrom.openingType == "0") {
+                    /*$("#dingjiaiform tr:not(:first)").each(function () {
+                        $("input[name='openingTypes']:checked").each(function (j) {
+                            var obj = {};
+                            obj.courseId = $("#XbCoursePresetcourseId").val();
+                            obj.organIds = $(this).val();
+                            obj.periodNum = $("#XbCoursePresetperiodNum").val();
+                            obj.money = $("#XbCoursePresetmoney").val();
+                            list.push(obj);
+                        });
+                    });*/
                     $("input[name='openingTypes']:checked").each(function (j) {
-                        var obj = {};
-                        obj.courseId = $("#XbCoursePresetcourseId").val();
-                        obj.organIds = $(this).val();
-                        obj.periodNum = $("#XbCoursePresetperiodNum").val();
-                        obj.money = $("#XbCoursePresetmoney").val();
-                        list.push(obj);
+                        var organIds = $(this).val();
+                        $("#dingjiaiform tr:not(:first)").each(function () {
+                            var $ele = $(this);
+                            var obj = {};
+                            var x = $ele.find("input");
+                            obj.courseId = x.eq(0).val();
+                            obj.organIds = organIds;
+                            if(datafrom.chargingMode=="0"){
+                                obj.periodNum = x.eq(2).val();
+                                obj.money = x.eq(3).val();
+                            }else if(datafrom.chargingMode=="2"){
+                                obj.periodNum = x.eq(3).val();
+                                obj.money = x.eq(2).val();
+                            }
+                            obj.id = x.eq(4).val();
+                            list.push(obj);
+                        });
                     });
                     //指定校区
                 } else {

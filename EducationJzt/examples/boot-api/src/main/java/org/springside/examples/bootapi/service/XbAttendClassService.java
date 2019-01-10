@@ -22,6 +22,7 @@ import org.springside.examples.bootapi.repository.XbAttendClassDao;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -89,5 +90,15 @@ public class XbAttendClassService {
 		xbattendclass.setCreateDate(DateUtil.getTodayDateStr());
 		xbattendclass.createTime = DateUtil.getTodayDateTimeStr();
 		return xbAttendClassDao.save(xbattendclass);
+	}
+	public int getYdstudentnum(String classId,String startDateTime) {
+		List list = new ArrayList();
+		list = xbAttendClassDao.findYDStudentNum(classId,startDateTime);
+		return list.size();
+	}
+	public int getSdstudentnum(String classId,String startDateTime) {
+		List list = new ArrayList();
+		 list =xbAttendClassDao.findSDStudentNum(classId,startDateTime);
+		return list.size();
 	}
 }

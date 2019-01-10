@@ -88,7 +88,7 @@ function dingJiaBiaoZunZD(i,schoolName,courseId,organIds,chargingMode,id){
         html.push('				</div>                                                           ');
         html.push('				<input type="hidden" id="preid" name="id" value="'+id+'" />    ');
         html.push('				<span class="txt">课时</span>                                      ');
-        html.push('				<span class="glyphicon glyphicon-plus-sign" onclick="appointSchooladd(\''+schoolName+'\',\'\',\''+organIds+'\',this)"></span>                                  ');
+        html.push('				<span class="glyphicon glyphicon-plus-sign" onclick="appointSchooladd(\''+schoolName+'\',\'\',\''+organIds+'\',this)"></span>  ');
        // html.push('				<span class="glyphicon glyphicon-remove-sign" onclick="appointSchoolremove(this)"></span>            ');
     }
     html.push('			</div>                                                               ');
@@ -119,7 +119,6 @@ function dingJiaBiaoZunAll(courseId,chargingMode){
         html.push('					<input id="XbCoursePresetmoney" name="XbCoursePresetmoney" type="text" value="0"/>   ');
         html.push('				</div>                                                           ');
         html.push('				<span class="txt">元</span>                                      ');
-        html.push('				<span class="glyphicon glyphicon-remove-sign"></span>            ');
     }else if(chargingMode=='2'){
         html.push('				<label>按期数</label>                                  ');
         html.push('				<div class="numCon">                                             ');
@@ -131,13 +130,57 @@ function dingJiaBiaoZunAll(courseId,chargingMode){
         html.push('					<input id="XbCoursePresetperiodNum"  name="XbCoursePresetperiodNum" type="text" value="0"/>');
         html.push('				</div>                                                           ');
         html.push('				<span class="txt">课时</span>                                      ');
-        html.push('				<span class="glyphicon glyphicon-remove-sign" ></span>            ');
     }
+    html.push('				<span class="glyphicon glyphicon-plus-sign" onclick="dingJiaBiaoZunAllAdd(\''+courseId+'\',\''+chargingMode+'\',this)"></span>  ');
+    /*html.push('				<span class="glyphicon glyphicon-remove-sign" ></span>            ');*/
     html.push('			</div>                                                               ');
     html.push('		</div>                                                                   ');
     html.push('	</td>                                                                        ');
     html.push('</tr>                                                                         ');
     $("#dingjiaiform").append(html.join(""))
+}
+
+//开课校区 i(list坐标) schoolName（校区名称）courseId（课程id） organIds(校区id)
+//chargingMode （收费模式）
+function dingJiaBiaoZunAllAdd(courseId,chargingMode,shi){
+    var html = [];
+    html.push('<tr id="delete_0">                                                                          ');
+    html.push('	<td>全校</td>                                                            ');
+    html.push('	<input type="hidden" id="XbCoursePresetcourseId" name="XbCoursePresetcourseId" value=""/>                              ');
+    html.push('	<input type="hidden" id="XbCoursePresetorganIds" name="XbCoursePresetorganIds" value=""/>                              ');
+    html.push('	<td>                                                                         ');
+    html.push('		<div class="extend-list">                                                ');
+    html.push('			<div class="form-group">                                             ');
+    if(chargingMode=='0'){
+        html.push('				<label>按课时</label>                                  ');
+        html.push('				<div class="numCon">                                             ');
+        html.push('					<input id="XbCoursePresetperiodNum"  name="XbCoursePresetperiodNum" type="text" value="0"/>');
+        html.push('				</div>                                                           ');
+        html.push('				<span class="txt">课时</span>                                    ');
+        html.push('				<span class="txt">=</span>                                       ');
+        html.push('				<div class="numCon">                                             ');
+        html.push('					<input id="XbCoursePresetmoney" name="XbCoursePresetmoney" type="text" value="0"/>   ');
+        html.push('				</div>                                                           ');
+        html.push('				<span class="txt">元</span>                                      ');
+        html.push('				<span class="glyphicon glyphicon-remove-sign" onclick="appointSchoolremove(this)"></span>            ');
+    }else if(chargingMode=='2'){
+        html.push('				<label>按期数</label>                                  ');
+        html.push('				<div class="numCon">                                             ');
+        html.push('					<input id="XbCoursePresetmoney" name="XbCoursePresetmoney" type="text" value="0"/>   ');
+        html.push('				</div>                                                           ');
+        html.push('				<span class="txt">元/期</span>                                    ');
+        html.push('				<span class="txt">包含</span>                                       ');
+        html.push('				<div class="numCon">                                             ');
+        html.push('					<input id="XbCoursePresetperiodNum"  name="XbCoursePresetperiodNum" type="text" value="0"/>');
+        html.push('				</div>                                                           ');
+        html.push('				<span class="txt">课时</span>                                      ');
+        html.push('				<span class="glyphicon glyphicon-remove-sign" onclick="appointSchoolremove(this)"></span>            ');
+    }
+    html.push('			</div>                                                               ');
+    html.push('		</div>                                                                   ');
+    html.push('	</td>                                                                        ');
+    html.push('</tr>                                                                         ');
+    $(shi).parent().parent().parent().parent().after(html.join(""));
 }
 function appointSchoolremove(shi){
     $(shi).parent().parent().parent().parent().remove();

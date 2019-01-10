@@ -30,6 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 
 /**
@@ -228,7 +229,7 @@ public class JwCenterCourseActivity {
             if(charginMode.equals("0")){
                 BigDecimal bdmoney = new BigDecimal(money);
                 BigDecimal bdperiodNum = new BigDecimal(periodNum);
-                pre.setMoney(bdmoney.divide(bdperiodNum));
+                pre.setMoney(bdmoney.divide(bdperiodNum, 4, RoundingMode.HALF_UP));
             }else if(charginMode.equals("2")){
                 pre.setMoney(BigDecimal.valueOf(money));
             }else{
@@ -274,7 +275,7 @@ public class JwCenterCourseActivity {
             if(charginMode.equals("0")){
                 BigDecimal bdmoney = new BigDecimal(money);
                 BigDecimal bdperiodNum = new BigDecimal(periodNum);
-                pre.setMoney(bdmoney.divide(bdperiodNum));
+                pre.setMoney(bdmoney.divide(bdperiodNum, 4, RoundingMode.HALF_UP));
             }else if(charginMode.equals("2")){
                 pre.setMoney(BigDecimal.valueOf(money));
             }else{
