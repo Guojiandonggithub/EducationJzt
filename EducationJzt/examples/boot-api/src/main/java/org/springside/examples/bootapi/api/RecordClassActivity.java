@@ -12,8 +12,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springside.examples.bootapi.domain.*;
-import org.springside.examples.bootapi.service.XbAttendClassService;
+import org.springside.examples.bootapi.domain.XbClass;
+import org.springside.examples.bootapi.domain.XbCoursePreset;
+import org.springside.examples.bootapi.domain.XbRecordClass;
+import org.springside.examples.bootapi.domain.XbStudentRelation;
 import org.springside.examples.bootapi.service.XbCoursePresetService;
 import org.springside.examples.bootapi.service.XbStudentService;
 
@@ -39,9 +41,6 @@ public class RecordClassActivity {
 	@Autowired
 	public XbCoursePresetService xbCoursePresetService;
 
-	@Autowired
-	public XbAttendClassService xbAttendClassService;
-
 	/*
 	 * 跳转到记上课
 	 * @return
@@ -55,10 +54,9 @@ public class RecordClassActivity {
 		}
 		String classesName  = (String)resultMap.get("classesName");
 		if(null!=classesName&&!classesName.equals("")){
-			searhMap.put("LIKE_xbclass.className",classesName);
+			searhMap.put("LIKE_className",classesName);
 		}
-		Page<XbAttendClass> classPage = xbAttendClassService.findXbAttendClassPageAll(pageable,searhMap);
-		//Page<XbClass> classPage = studentService.getXbClassList(pageable,searhMap);
+		Page<XbClass> classPage = studentService.getXbClassList(pageable,searhMap);
 		model.addAttribute("classPage",classPage);
 		model.addAttribute("classesName",classesName);
 		model.addAttribute("currentzise",classPage.getSize());
@@ -72,13 +70,13 @@ public class RecordClassActivity {
 	@RequestMapping("/classEdit")
 	public String classEdit(@RequestParam(required = false) String classesId, ModelMap model, Pageable pageable){
 		Map<String,Object> searhMap = new HashMap<>();
-		String classId = xbAttendClassService.findById(classesId).getClassId();
-		searhMap.put("EQ_classId",classId);
-		XbClass classes = studentService.getXbClass(classId);
+		if(null!=classesId){
+			searhMap.put("LIKE_classId",classesId);
+		}
+		XbClass classes = studentService.getXbClass(classesId);
 		Page<XbStudentRelation> classPage = studentService.getXbStudentRelationList(pageable,searhMap);
 		model.addAttribute("classPage",classPage);
 		model.addAttribute("classes",classes);
-		model.addAttribute("attendId",classesId);
 		return "classEdit";
 	}
 

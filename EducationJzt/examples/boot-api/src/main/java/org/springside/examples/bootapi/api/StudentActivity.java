@@ -742,7 +742,13 @@ public class StudentActivity {
 	 * @return
 	 */
 	@RequestMapping("/classDetail")
-	public String classDetail(@RequestParam(required = false) String classId){
+	public String classDetail(@RequestParam(required = false) String classId,ModelMap model,Pageable pageable){
+		XbClass xbClass = studentService.getXbClass(classId);
+		Map<String, Object> searchParams = new HashMap<>();
+		searchParams.put("EQ_classId",classId);
+		Page<XbStudentRelation> xbStudentRelationPage = studentService.getXbStudentRelationList(pageable,searchParams);
+		model.addAttribute("xbClass",xbClass);
+		model.addAttribute("xbStudentRelationPage",xbStudentRelationPage);
 		return "manageClass";
 	}
 }

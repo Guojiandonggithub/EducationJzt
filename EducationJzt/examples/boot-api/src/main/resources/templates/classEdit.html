@@ -41,12 +41,12 @@
                     <input type="hidden" id="organId" name="organId" th:value="${classes.sysOrgans.id}" />
                     <input type="hidden" id="classId" name="classId" th:value="${classes.id}" />
                     <input type="hidden" id="courseId" name="courseId" th:value="${classes.xbCourse.id}" />
-                    <input type="hidden" id="attendId" name="attendId" th:value="${attendId}" />
+                    <input type="hidden" id="attendId" name="attendId" th:value="${classes.id}" />
                 </div>
                 <div class="info2">
                     <div class="form-group">
                         <label>上课日期</label>
-                        <input class="laydate-icon" id="demo" th:value="${#dates.format(new java.util.Date().getTime(), 'yyyy-MM-dd')}">
+                        <input class="laydate-icon" name="recordTime" id="demo" th:value="${#dates.format(new java.util.Date().getTime(), 'yyyy-MM-dd')}">
                     </div>
                     <div class="form-group">
                         <label>教师课时</label>
