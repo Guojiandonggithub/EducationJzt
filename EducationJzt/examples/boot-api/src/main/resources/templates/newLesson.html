@@ -292,7 +292,8 @@
                         var msg = data.msg;
                         if (status == "0") {
                             $.kd.kdAlert(data.msg,function(){
-                                window.location.href = basePath + "/jwcentercourse/tocourse?sort=xbCourse.createDate,DESC&sort=xbCourse.createTime,DESC"
+                                window.location.href =
+                                    basePath + "/jwcentercourse/tocourse"
                             });
                         } else {
                             $.kd.kdMsg(msg);

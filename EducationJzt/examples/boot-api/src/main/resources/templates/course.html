@@ -514,9 +514,11 @@
                 success: function (data) {
                     load.stop();
                     console.log("回调成功")
-                    $.kd.kdAlert("删除成功")
-                    $("#courseList_tbodyid").html("");
-                    $("#courseList_tbodyid").append(data);
+                    $.kd.kdAlert("删除成功",function(){
+                        $("#courseList_tbodyid").html("");
+                        $("#courseList_tbodyid").append(data);
+                    })
+
                 },
                 error: function () {
                     load.stop();
@@ -863,7 +865,7 @@
         if(size){
             size = "10";
         }
-        window.location.href = basePath + '/jwcentercourse/tocourse?page='+page+'&size='+size+'sort=xbCourse.createDate,DESC&sort=xbCourse.createTime,DESC&data='+JSON.stringify(data);
+        window.location.href = basePath + '/jwcentercourse/tocourse?page='+page+'&size='+size+'&data='+JSON.stringify(data);
     }
     function serializeObject(form){
         var o = {};

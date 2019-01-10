@@ -10,7 +10,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -55,10 +57,13 @@ public class JwCenterCourseActivity {
     @RequestMapping("/tocourse")
     public String toCourse(ModelMap model,
                            @RequestParam(required=false) String data,
-                           @PageableDefault(value = 10) Pageable pageable){
-
+                       Pageable pageable){
+        Sort sort = new Sort(Sort.Direction.DESC, "xbCourse.createDate")
+                .and(new Sort(Sort.Direction.DESC, "xbCourse.createTime"));
+        Pageable findpage
+                = new PageRequest(pageable.getPageNumber(), 10, sort);
         logger.info("跳转到课程列表主页data="+data);
-        getXbCorusePresetListPage(model,pageable,data);
+        getXbCorusePresetListPage(model,findpage,data);
         Map<String,Object> searhtypeMap = new HashMap<>();
         List<XbCourseType> coursetypelist = xbCourseTypeService.findXbCourseTypeList(searhtypeMap);
         model.addAttribute("coursetypelist",coursetypelist);
@@ -80,7 +85,8 @@ public class JwCenterCourseActivity {
      * @param pageable
      * @param data
      */
-    private void getXbCorusePresetListPage(ModelMap model,Pageable pageable,String data){
+    private void getXbCorusePresetListPage(ModelMap model,
+             Pageable pageable, String data){
         Map<String,Object> resultMap = new HashMap<>();
         Map<String,Object> searhMap = new HashMap<>();
         if(null!=data){
@@ -112,6 +118,7 @@ public class JwCenterCourseActivity {
         }else if(!courtype.equals("-1")){
             searhMap.put("EQ_xbCourse.type",courtype);
         }
+        searhMap.put("EQ_deleteStatus","1");
         Page<XbCoursePreset> prelist =xbCoursePresetService.getXbCoursePresetList(pageable,searhMap);
         model.addAttribute("prelist",prelist);
         model.addAttribute("prelistsize",prelist.getSize());
@@ -203,8 +210,10 @@ public class JwCenterCourseActivity {
         for(Map map:list){
             //开始存课程
             Date date  = new Date();
-            xbcourse.setCreateDate(DateUtil.getDateStr(date));
-            xbcourse.setCreateTime(DateUtil.getTimeStr(date));
+            XbCourse findxbc= xbCourseService.findById(xbcourse.id);
+            xbcourse.setCreateDate(findxbc.getCreateDate());
+            xbcourse.setCreateTime(findxbc.getCreateTime());
+            xbcourse.deleteStatus = "1";
             XbCourse entity =  xbCourseService.saveXbCourse(xbcourse);
             //开始存课时
             XbCoursePreset pre = new XbCoursePreset();
@@ -363,7 +372,9 @@ public class JwCenterCourseActivity {
      * @param resp
      */
     @RequestMapping("/removecourse")
-    public String removeCourse(@RequestParam(required=false) String id,HttpServletResponse resp,ModelMap model,Pageable pageable){
+    public String removeCourse(@RequestParam(required=false) String id,HttpServletResponse resp,ModelMap model,
+                               @PageableDefault(sort = {"xbCourse.createDate","xbCourse.createTime"},
+                                       direction = Sort.Direction.DESC) Pageable pageable){
         logger.info("删除课程");
         try {
             Map<String,Object> xbCoursesearhMap = new HashMap<>();
@@ -390,7 +401,8 @@ public class JwCenterCourseActivity {
      */
     @RequestMapping("/statecourse")
     public String stateCourse(@RequestParam(required=false) String id,@RequestParam String state,
-                              HttpServletResponse resp, ModelMap model,Pageable pageable){
+           HttpServletResponse resp, ModelMap model,@PageableDefault(sort = {"xbCourse.createDate","xbCourse.createTime"},
+            direction = Sort.Direction.DESC) Pageable pageable){
         logger.info("课程上架下架");
         try {
             Map<String,Object> xbCoursesearhMap = new HashMap<>();
