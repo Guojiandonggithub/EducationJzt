@@ -75,24 +75,31 @@ public class JwCenterArrangingCoursesActivity {
          Map<String,Object> searmap = new HashMap<>();
 
          List<String> list = xbAttendClassService.findXbAttendConflictIdList();
+         Page<XbAttendClass> xbAttendConflicList = null;
          if(list.size()>0){
              searmap.put("IN_id",list);
+            xbAttendConflicList = xbAttendClassService.findXbAttendClassPageAll(pageable,searmap);
          }
-         Page<XbAttendClass> xbAttendConflicList = xbAttendClassService.findXbAttendClassPageAll(pageable,searmap);
         model.addAttribute("xbAttendConflicList",xbAttendConflicList);
-        model.addAttribute("xbAttendConflicListsize",xbAttendConflicList.getSize());
+         if(null != xbAttendConflicList &&xbAttendConflicList.getSize()>0){
+             model.addAttribute("xbAttendConflicListsize",xbAttendConflicList.getSize());
+         }
+
     }
     @RequestMapping("/findXbAttendConflicList")
     public String findXbAttendConflicList(ModelMap model,@PageableDefault(value = 10) Pageable pageable){
          Map<String,Object> searmap = new HashMap<>();
 
          List<String> list = xbAttendClassService.findXbAttendConflictIdList();
+        Page<XbAttendClass> xbAttendConflicList = null;
         if(list.size()>0){
             searmap.put("IN_id",list);
+             xbAttendConflicList = xbAttendClassService.findXbAttendClassPageAll(pageable,searmap);
         }
-         Page<XbAttendClass> xbAttendConflicList = xbAttendClassService.findXbAttendClassPageAll(pageable,searmap);
         model.addAttribute("xbAttendConflicList",xbAttendConflicList);
-        model.addAttribute("xbAttendConflicListsize",xbAttendConflicList.getSize());
+        if(null != xbAttendConflicList &&xbAttendConflicList.getSize()>0){
+            model.addAttribute("xbAttendConflicListsize",xbAttendConflicList.getSize());
+        }
         return "courseArray::xbAttendConflicListFra";
     }
     /**

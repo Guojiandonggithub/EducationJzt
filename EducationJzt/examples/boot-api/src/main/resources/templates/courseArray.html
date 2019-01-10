@@ -242,7 +242,7 @@
                                         <th>操作</th>
                                     </tr>
                                     <tbody id="xbAttendConflicList_tbodyid">
-                                        <th:block th:if="${xbAttendConflicList}" th:fragment="xbAttendConflicListFra">
+                                        <th:block th:if="${xbAttendConflicList}!= null" th:fragment="xbAttendConflicListFra">
                                             <tr th:each="conf,confSte:${xbAttendConflicList.content}" id="choose">
                                                 <input th:id="${conf.id}+'_ct'"  type="hidden">
                                                 <td th:text="${confSte.count}+${xbAttendConflicList.getNumber()*10}">序号</td>
@@ -280,20 +280,20 @@
                                         </select>
                                         <input type="hidden" id="xbAttendConflicListsize" th:value="${xbAttendConflicListsize}"/>
                                     </div>
-                                    <ul class="pagination" th:if="${xbAttendConflicList.getTotalPages() gt 0}" >
+                                    <ul class="pagination" th:if="${xbAttendConflicList?.getTotalPages() gt 0}" >
                                         <li class="disabled">
                                             <a href="#" th:onclick="'javascript:getxbAttendConflicListPage(\''+0+'\')'">首页</a>
                                         </li>
-                                        <li class="disabled" th:if="${xbAttendConflicList.getNumber()-1} ge 0">
-                                            <a href="#" th:onclick="'javascript:getxbAttendConflicListPage(\''+${xbAttendConflicList.getNumber()-1}+'\')'">
+                                        <li class="disabled" th:if="${xbAttendConflicList?.getNumber()-1} ge 0">
+                                            <a href="#" th:onclick="'javascript:getxbAttendConflicListPage(\''+${xbAttendConflicList?.getNumber()-1}+'\')'">
                                                 <i class="ace-icon fa fa-angle-double-left"></i>
                                             </a>
                                         </li>
-                                        <li  th:class="${i} eq ${xbAttendConflicList.getNumber()+1}?'active':''" th:each="i:${#numbers.sequence(1,xbAttendConflicList.getTotalPages())}">
+                                        <li  th:class="${i} eq ${xbAttendConflicList?.getNumber()+1}?'active':''" th:each="i:${#numbers.sequence(1,xbAttendConflicList?.getTotalPages())}">
                                             <a  th:onclick="'javascript:getxbAttendConflicListPage(\''+${i}+'\')'" th:text="${i}"></a>
                                         </li>
-                                        <li th:if="${xbAttendConflicList.getTotalPages()} ge ${xbAttendConflicList.getNumber()+2} ">
-                                            <a href="#" th:onclick="'javascript:getxbAttendConflicListPage(\''+${xbAttendConflicList.getNumber()+2}+'\')'">
+                                        <li th:if="${xbAttendConflicList?.getTotalPages()} ge ${xbAttendConflicList?.getNumber()+2} ">
+                                            <a href="#" th:onclick="'javascript:getxbAttendConflicListPage(\''+${xbAttendConflicList?.getNumber()+2}+'\')'">
                                                 <i class="ace-icon fa fa-angle-double-right"></i>
                                             </a>
                                         </li>
@@ -407,9 +407,9 @@
                                             <div class="form-group">
                                                 <label><i>*</i>上课方式</label>
                                                 <input name="wayOfTeaching" id="wayOfTeaching" type="hidden" th:value="${XbClass.xbCourse.type}">
-                                                <input th:if="${XbClass.xbCourse.type} eq '0'" name="wayOfTeachingName"
-                                                    id="wayOfTeachingName" type="text" disabled="disabled" th:value="一对一">
                                                 <input th:if="${XbClass.xbCourse.type} eq '1'" name="wayOfTeachingName"
+                                                    id="wayOfTeachingName" type="text" disabled="disabled" th:value="一对一">
+                                                <input th:if="${XbClass.xbCourse.type} eq '0'" name="wayOfTeachingName"
                                                     id="wayOfTeachingName" type="text" disabled="disabled" th:value="班课">
                                             </div>
                                         </div>
