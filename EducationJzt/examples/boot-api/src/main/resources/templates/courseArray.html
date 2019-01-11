@@ -228,7 +228,7 @@
                                                 </a>
                                             </li>
                                             <!--第1页-->
-                                            <li th:class="${i} eq ${xbAttendList.getNumber()+1}?'active':''">
+                                            <li th:class=" ${xbAttendList.getNumber()==0}?'active':''">
                                                 <a  th:onclick="'javascript:getOrgansListPage(\''+0+'\')'">1</a>
                                             </li>
                                             <!--小于等于5页处理-->
