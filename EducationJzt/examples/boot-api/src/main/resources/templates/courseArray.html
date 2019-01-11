@@ -251,7 +251,7 @@
                                                 <a  th:onclick="'javascript:getOrgansListPage(\''+${i-1}+'\')'" th:text="${i}"></a>
                                             </li>
                                             <!--最后一页-->
-                                            <li th:class="${i} eq ${xbAttendList.getNumber()+1}?'active':''">
+                                            <li th:class="${xbAttendList.getNumber()+1==xbAttendList.getTotalPages()}?'active':''">
                                                 <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${xbAttendList.getTotalPages()-1}+'\')'"
                                                    th:text="${xbAttendList.getTotalPages()}"></a>
                                             </li>
