@@ -7,7 +7,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -64,21 +66,25 @@ public class JwCenterArrangingCoursesActivity {
                                     @PageableDefault(value = 10) Pageable pageable){
         logger.info("跳转到排课");
         findXbAttendClassPageListAll(model,pageable,data);
-        findXbAttendConflicListi(model,pageable);
+        findXbAttendConflicListi(model);
         model.addAttribute("xbSubjectList",xbSubjectService.findSubjectAll());
         model.addAttribute("xbClassList",xbStudentService.findXbClassListAll());
         model.addAttribute("xbClassroomList",xbStudentService.findXbClassRoomListAll());
         model.addAttribute("sysEmployeeList",employeeService.findSysEmployeeListAll());
         return "courseArray";
     }
-    public void findXbAttendConflicListi(ModelMap model,@PageableDefault(value = 10) Pageable pageable){
+    public void findXbAttendConflicListi(ModelMap model){
+        Sort sort = new Sort(Sort.Direction.DESC, "startDateTime");
+        Pageable findpage
+                = new PageRequest(0, 10, sort);
+
          Map<String,Object> searmap = new HashMap<>();
 
          List<String> list = xbAttendClassService.findXbAttendConflictIdList();
          Page<XbAttendClass> xbAttendConflicList = null;
          if(list.size()>0){
              searmap.put("IN_id",list);
-            xbAttendConflicList = xbAttendClassService.findXbAttendClassPageAll(pageable,searmap);
+            xbAttendConflicList = xbAttendClassService.findXbAttendClassPageAll(findpage,searmap);
          }
         model.addAttribute("xbAttendConflicList",xbAttendConflicList);
          if(null != xbAttendConflicList &&xbAttendConflicList.getSize()>0){
@@ -87,7 +93,10 @@ public class JwCenterArrangingCoursesActivity {
 
     }
     @RequestMapping("/findXbAttendConflicList")
-    public String findXbAttendConflicList(ModelMap model,@PageableDefault(value = 10) Pageable pageable){
+    public String findXbAttendConflicList(ModelMap model,
+             @PageableDefault(value = 10,sort = {"startDateTime"},
+             direction = Sort.Direction.DESC)
+             Pageable pageable){
          Map<String,Object> searmap = new HashMap<>();
 
          List<String> list = xbAttendClassService.findXbAttendConflictIdList();

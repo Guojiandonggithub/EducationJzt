@@ -54,7 +54,7 @@
                 <form id="searchform">
                     <!-- 学员列表 -->
                     <div class="screen">
-                        <a class="stdEnroll" th:href="@{/jwcentercourse/goaddcourse}" >新建课程</a>
+                        <a class="stdEnroll" th:href="@{/jwcentercourse/goaddcourse(type=newadd)}" >新建课程</a>
                         <div class="screenTop">
                             <select class="selectName" name="type">
                                 <option value="AZ" th:selected="${type eq 'AZ'}">课程名称</option>
@@ -208,7 +208,10 @@
                                                                 <a th:case="0" style="cursor:pointer" th:onclick="|kaiketingke('${obj.xbCourse.id}','1')|">停课</a>
                                                             </li>
                                                             <li th:if="${obj.xbCourse.state} eq '0'">
-                                                                <a th:href="@{/jwcentercourse/goaddcourse(courseId=${obj.xbCourse.id},presetid=${obj.id})}"  >编辑</a>
+                                                                <a th:href="@{/jwcentercourse/goaddcourse(type=update,courseId=${obj.xbCourse.id},presetid=${obj.id})}"  >编辑</a>
+                                                            </li>
+                                                            <li th:if="${obj.xbCourse.state} eq '0'">
+                                                                <a th:href="@{/jwcentercourse/goaddcourse(type=add,courseId=${obj.xbCourse.id},presetid=${obj.id})}"  >新增定价标准</a>
                                                             </li>
                                                             <li>
                                                                 <a style="cursor:pointer" th:onclick="|sourceRemove('${obj.id}')|">删除</a>

@@ -137,6 +137,7 @@ public class JwCenterCourseActivity {
     public String goAddCourse(HttpServletRequest req,
             @RequestParam(value="courseId",defaultValue = "") String courseId,
             @RequestParam(value="presetid",defaultValue = "") String presetid,
+            @RequestParam(value="type",defaultValue = "newadd") String type,
                           ModelMap model){
         logger.info("跳转到新建课程");
         //查询所有课程类别
@@ -164,7 +165,13 @@ public class JwCenterCourseActivity {
             model.addAttribute("pre",pre);
 
         }
-
+        if(type.equals("update")){
+            model.addAttribute("typename","修改课程");
+        }else if(type.equals("add")){
+            model.addAttribute("typename","新增定价标准");
+        }else{
+            model.addAttribute("typename","新建课程");
+        }
         return "newLesson";
     }
 
@@ -175,16 +182,24 @@ public class JwCenterCourseActivity {
      */
     @RequestMapping("/savecourse")
     public void saveCourse(@RequestParam String dataentity,
+                           @RequestParam String typename,
                            HttpServletResponse resp){
         logger.info("新建课程");
         IResult rs = new Result();
         XbCourse xbcourse = com.alibaba.fastjson.JSONObject.parseObject(dataentity,XbCourse.class);
+
         com.alibaba.fastjson.JSONObject obj= com.alibaba.fastjson.JSONObject.parseObject(dataentity);//获取jsonobject对象
         List<Map<String,String>> list=(List)obj.getJSONArray("xbcoursepresetlist");//获取的结果集合转换成数组
-        if(StringUtils.isEmpty(xbcourse.getId())){
+        if(typename.equals("新建课程")){
              rs = designatedCampus(list,xbcourse);
-        }else{
+        }else if(typename.equals("修改课程")){
             rs =  designatedCampusEdit(list,xbcourse);
+        }else if(typename.equals("新增定价标准")){
+            rs =  designatedCampusAdd(list,xbcourse);
+        }else {
+            rs.setErrorCode("0");
+            rs.setErrorMessage("未获取到需要执行的保存类型,请联系管理员");
+
         }
         JSONObject jsonObject = new JSONObject();
         if(rs.isSuccessful()){
@@ -258,11 +273,11 @@ public class JwCenterCourseActivity {
                 return UtilTools.makerErsResults("课程名称【"+xbcourse.courseName+"】课程类别【"+xbct.getCourseTypeName()+"】校区【"+syso.organName+"】已存在,不能重复");
             }
         }*/
+        XbCourse xbcnew = new XbCourse();
+        BeanUtils.copyProperties(xbcourse,xbcnew);
+        xbcnew.deleteStatus = "1";
+        XbCourse entity =  xbCourseService.saveXbCourse(xbcnew);
         for(Map map:list){
-            XbCourse xbcnew = new XbCourse();
-            BeanUtils.copyProperties(xbcourse,xbcnew);
-            xbcnew.deleteStatus = "1";
-            XbCourse entity =  xbCourseService.saveXbCourse(xbcnew);
             //开始存课时
             XbCoursePreset pre = new XbCoursePreset();
             pre.setCourseId(entity.getId());
@@ -288,7 +303,36 @@ public class JwCenterCourseActivity {
         }
         return UtilTools.makerSusResults("保存课程信息成功");
     }
-
+    /**
+     * 新增定价标准
+     */
+    private IResult designatedCampusAdd(List<Map<String,String >> list,XbCourse xbcourse){
+        for(Map map:list){
+            //开始存课时
+            XbCoursePreset pre = new XbCoursePreset();
+            pre.setCourseId(xbcourse.getId());
+            pre.deleteStatus ="1";
+            pre.setOrganIds((String)map.get("organIds") );
+            int periodNum = Integer.parseInt((String)map.get("periodNum"));
+            double money = Double.parseDouble((String)map.get("money"));//金额
+            pre.setPeriodNum(periodNum);//课时
+            String charginMode = xbcourse.chargingMode;
+            if(charginMode.equals("0")){
+                BigDecimal bdmoney = new BigDecimal(money);
+                BigDecimal bdperiodNum = new BigDecimal(periodNum);
+                pre.setMoney(bdmoney.divide(bdperiodNum, 4, RoundingMode.HALF_UP));
+            }else if(charginMode.equals("2")){
+                pre.setMoney(BigDecimal.valueOf(money));
+            }else{
+                pre.setMoney(BigDecimal.valueOf(money));
+            }
+            XbCoursePreset rs= xbCoursePresetService.saveXbCoursePreset(pre);
+            if(StringUtils.isEmpty(rs.getId())){
+                return UtilTools.makerErsResults("新增定价标准信息失败");
+            }
+        }
+        return UtilTools.makerSusResults("新增定价标准信息成功");
+    }
     /**
      * 保存课程 验证 课程名 课程类别 校区唯一性
      * @param course_name
@@ -383,10 +427,17 @@ public class JwCenterCourseActivity {
             XbCoursePreset xbp = xbCoursePresetService.getXbCoursePreset(id);
             xbp.deleteStatus = "0";
             xbCoursePresetService.saveXbCoursePreset(xbp);
-            //逻辑删除课程
-            XbCourse xbc = xbCourseService.findById(xbp.getCourseId());
-            xbc.deleteStatus = "0";
-            xbCourseService.saveXbCourse(xbc);
+            //查询该对应的课程还有多少课时 如果=1的话就把主表也逻辑删除
+            Map<String,Object> getnumsearmap = new HashMap<>();
+            getnumsearmap.put("EQ_courseId",xbp.courseId);
+            getnumsearmap.put("EQ_deleteStatus","1");
+            List<XbCoursePreset> list = xbCoursePresetService.getXbCoursePresets(getnumsearmap);
+            if(list.size()<1){
+                //逻辑删除课程
+                XbCourse xbc = xbCourseService.findById(xbp.getCourseId());
+                xbc.deleteStatus = "0";
+                xbCourseService.saveXbCourse(xbc);
+            }
             xbCoursesearhMap.put("EQ_deleteStatus","1");
             Page<XbCoursePreset> prelist = xbCoursePresetService.getXbCoursePresetList(pageable,xbCoursesearhMap);
             model.addAttribute("prelist",prelist);
