@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    
+    <link rel="stylesheet" href="../static/pages/css/ace.min.css" id="main-ace-style" />
+    <link rel="stylesheet" href="../static/pages/css/stuinfoDetail.css">
+    <link rel="stylesheet" href="../static/pages/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/pages/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="../static/pages/css/management.css">
+    <link rel="stylesheet" href="../static/pages/css/newStudent.css">
+    <link rel="stylesheet" href="../static/pages/css/student.css">
+    <link rel="stylesheet" href="../static/pages/css/madal.css">
+    <link rel="stylesheet" href="../static/pages/css/fullcalendar.css">
+    <link rel="stylesheet" href="../static/pages/css/lessonTable.css">
+    <link rel="stylesheet" href="../static/pages/css/syllabus.css">
+
+
+    <script src="../static/pages/js/jquery.min.js"></script>
+    <script src="../static/pages/js/ace.min.js"> </script>
+    <script src="../static/pages/js/bootstrap.min.js"> </script>
+
+    <script src="../static/pages/js/ace-elements.min.js"></script>
+    <script src="../static/pages/laydate/laydate.js"></script>
+    <script src="../static/pages/js/fullcalendar.min.js"></script>
+    <script src="../static/pages/js/jquery-ui-1.10.2.custom.min.js"></script>
+
+
+
+</head>
+<body style="padding:20px; background: #eef0f2;">
+<!--<div th:replace="layout::top"></div>
+<div th:replace="layout::left('13','31')">
+</div>-->
+<div class="user-infor-position clearfix">
+    <div class=" user-infor-l ">
+        <span class="user-inner">
+            <span class="img-com">
+                <img src="../static/pages/img/headpic.png">
+            </span>
+        </span>
+        <p class="user-infor-name txt-hide" th:text="${xbStudent.studentName}">
+            <th:block th:if="${xbStudent.sex} eq 0"><img src="../static/pages/img/boy.png"></th:block>
+            <th:block th:if="${xbStudent.sex} eq 1"><img src="../static/pages/img/girl.png.png"></th:block>
+        </p>
+        <a class="td_edit" href="#modal-table" role="button"  data-toggle="modal"><img src="../static/pages/img/edit.png">编辑</a>
+        <a class="td_delete"><img src="../static/pages/img/del.png">删除</a>
+    </div>
+    <div class=" user-infor-r">
+        <div class="user-inf or-r-con">
+            <div class="user-infor-list">
+                <ul class="user-infor-ul clearfix">
+                    <div class="block-box-title" style="position: relative;top: 8px;">基本信息</div>
+                    <div style="padding-left:15px;">
+                        <li>
+                            <span class="text-tips">联系电话（<span th:text="${xbStudent.contactRelation}"></span>）：</span><th:block th:text="${xbStudent.contactPhone}"></th:block>
+                        </li>
+                        <li>
+                            <a data-toggle="tab" href="#">
+                                <button type="button" class="btn btn-info" onclick="javascript:history.go(-1)">返回</button>
+                            </a>
+                        </li>
+                    </div>
+                    <div class="line" style="height: 1px;width: 100%;background:#d4dfe5;margin-top: 10px;"></div>
+                    <div class="block-box-title" style="    position: relative;top: 8px;margin-top: 10px;">更多信息</div>
+                    <div style="padding-left:15px;">
+                        <li>
+                            <span class="text-tips">欠费金额：</span><th:block th:text="${xbStudent.paymentMoney}"></th:block>
+                            <span class="btn-white" style="padding:0 5px;margin:0 4px;">补费</span>
+                        </li>
+                        <li>
+                            <span class="text-tips">磁卡卡号：</span>
+                        </li>
+                        <li class="">
+                            <span class="text-tips">微信号：</span>
+                        </li>
+                        <li class="">
+                            <span class="text-tips">生日：</span>
+                        </li>
+                        <li class="">
+                            <span class="text-tips">公立学校：</span>
+                        </li>
+                        <li class="">
+                            <span class="text-tips">公立校班级：</span>
+                        </li>
+                        <li class="li-block">
+                            <span class="text-tips">居住区域：</span>
+                        </li>
+                        <li class="li-block">
+                            <span class="text-tips">其他信息：</span>
+                        </li>
+                    </div>                    
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="main-content">
+    <div class="tabbable">
+        <ul class="nav nav-tabs" id="myTab">
+            <li class="active">
+                <a data-toggle="tab" href="#array">课程表</a>
+            </li>
+            <li>
+                <a data-toggle="tab" href="#order">订单</a>
+            </li>
+            <li>
+                <a data-toggle="tab" href="#schedule">课程</a>
+            </li>
+            <li>
+                <a data-toggle="tab" href="#conflict">上课记录</a>
+            </li>
+        </ul>
+        <div class="tab-content student">
+           
+            <!-- 课程表 -->
+            <div id="array" class="tab-pane fade in active">
+                <div class="tab-pane fade in active" id="calendarTime">
+                    <div id="calendar">
+                        <div class="classStyle">
+                            <p class="state1"><span></span>已记上课</p>
+                            <p class="state2"><span></span>我的日程</p>
+                            <p class="state3"><span></span>正常日程</p>
+                            <p class="state4"><span></span>冲突日程</p>
+                        </div>
+                    </div>
+                </div>                
+            </div>
+             <!-- 订单 -->
+             <div id="order" class="tab-pane fade">
+                <div class="result" style="margin-top:30px;">
+                    当前结果：共计<span>1</span>条记录，应收总计：<span>5840.00</span>元 | 实收总计：<span>500.00</span>元 | 学员账户变动总计：<span>0.00</span>元 | 欠费总计：<span>- 5340.00</span>元
+                </div>
+                <div class="orderTable">
+                    <table class="table table-hover">
+                        <tr>
+                            <th>订单号</th>
+                            <th>订单类型</th>
+                            <th>交易内容</th>
+                            <th>应收</th>
+                            <th>实收</th>
+                            <th>经办日期</th>
+                        </tr>
+                        <tr id="choose" th:each="order:${XbSupplementFeePage.content}">
+                            <td th:text="${order.orderNumber}"></td>
+                            <td th:if="${order.type} eq 0">报名</td>
+                            <td th:if="${order.type} eq 1">转班</td>
+                            <td style="line-height: inherit;" th:text="${order.remarks}"></td>
+                            <td th:text="${order.surplusMoney}"></td>
+                            <td th:text="${order.paymentMoney}"></td>
+                            <td th:text="${order.paymentDate}"></td>
+                        </tr>
+                    </table>
+                    <div class="orderPage">
+                        <!--<div class="page">
+                            单页显示：
+                            <select>
+                                <option>20条/页</option>
+                                <option>50条/页</option>
+                                <option>100条/页</option>
+                            </select>
+                        </div>
+                        <ul class="pagination">
+                            <li class="disabled">
+                                <a href="#">首页</a>
+                            </li>
+                            <li class="disabled">
+                                <a href="#">
+                                    <i class="ace-icon fa fa-angle-double-left"></i>
+                                </a>
+                            </li>
+                            <li class="active">
+                                <a href="#">1</a>
+                            </li>
+
+                            <li>
+                                <a href="#">2</a>
+                            </li>
+
+                            <li>
+                                <a href="#">3</a>
+                            </li>
+
+                            <li>
+                                <a href="#">4</a>
+                            </li>
+
+                            <li>
+                                <a href="#">5</a>
+                            </li>
+
+                            <li>
+                                <a href="#">
+                                    <i class="ace-icon fa fa-angle-double-right"></i>
+                                </a>
+                            </li>
+                            <li class="">
+                                <a href="#">尾页</a>
+                            </li>
+                        </ul>-->
+                    </div>
+                </div>
+            </div>
+            <!-- 课程 -->
+            <div id="schedule" class="tab-pane fade">
+                <div class="result" style="margin-top:30px;">
+                    <!--课时：剩余<span> 192.00 </span>课时/总计：<span> 192.00 </span>课时；--> 学费：剩余<span th:text="${xbStudent.surplusMoney}">  </span>元（欠费: <th:block th:text="${xbStudent.paymentMoney}"></th:block> 元）
+                </div>
+                <div class="orderTable">
+                    <table class="table table-hover">
+                        <tr>
+                            <th>状态</th>
+                            <th>班级名称</th>
+                            <th>教师</th>
+                            <th>开班日期</th>
+                            <th>剩余课时</th>
+                        </tr>
+                        <tr id="choose" th:each="course:${xbStudentRelationPage.content}">
+                            <td></td>
+                            <td th:text="${course.xbClass.className}"></td>
+                            <td th:text="${course.xbClass.teacher.employeeName}"></td>
+                            <td th:text="${course.xbClass.classBeginDate}"></td>
+                            <td th:text="${course.periodNum}"></td>
+                        </tr>
+                    </table>
+                    <div class="orderPage">
+                        <div class="page">
+                            单页显示：
+                            <select>
+                                <option>20条/页</option>
+                                <option>50条/页</option>
+                                <option>100条/页</option>
+                            </select>
+                        </div>
+                        <ul class="pagination">
+                            <li class="disabled">
+                                <a href="#">首页</a>
+                            </li>
+                            <li class="disabled">
+                                <a href="#">
+                                    <i class="ace-icon fa fa-angle-double-left"></i>
+                                </a>
+                            </li>
+                            <li class="active">
+                                <a href="#">1</a>
+                            </li>
+
+                            <li>
+                                <a href="#">2</a>
+                            </li>
+
+                            <li>
+                                <a href="#">3</a>
+                            </li>
+
+                            <li>
+                                <a href="#">4</a>
+                            </li>
+
+                            <li>
+                                <a href="#">5</a>
+                            </li>
+
+                            <li>
+                                <a href="#">
+                                    <i class="ace-icon fa fa-angle-double-right"></i>
+                                </a>
+                            </li>
+                            <li class="">
+                                <a href="#">尾页</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- 上课记录 -->
+            <div id="conflict" class="tab-pane fade conflict">
+                <div class="orderTable" style="margin-top:30px;">
+                    <table class="table table-hover">
+                        <tr>
+                            <th>上课日期</th>
+                            <th>班级</th>
+                            <th>课程</th>
+                            <th>类别</th>
+                            <th>出勤状态</th>
+                            <th>完成课时</th>
+                            <th>教师</th>
+                            <th>详情</th>
+                        </tr>
+                        <tr id="choose" th:each="record:${xbRecordClassPage.content}">
+                            <td th:text="${#dates.format(record.recordTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                            <td th:text="${record.xbClass.className}"></td>
+                            <td th:text="${record.xbClass.xbCourse.courseName}"></td>
+                            <td th:text="${record.xbClass.xbCourse.xbcoursetype.courseTypeName}"></td>
+                            <td th:if="${record.state} eq 0">
+                                <span>上课</span>
+                            </td>
+                            <td th:if="${record.state} eq 1">
+                                <span>请假</span>
+                            </td>
+                            <td th:if="${record.state} eq 2">
+                                <span>旷课</span>
+                            </td>
+                            <td th:if="${record.state} eq 3">
+                                <span>补课</span>
+                            </td>
+                            <td th:text="${record.deductPeriod}"></td>
+                            <td th:text="${record.xbClass.teacher.employeeName}"></td>
+                            <td th:text="${record.xbClass.className}"></td>
+                        </tr>
+                    </table>
+                    <div class="orderPage">
+                        <div class="page">
+                            单页显示：
+                            <select>
+                                <option>20条/页</option>
+                                <option>50条/页</option>
+                                <option>100条/页</option>
+                            </select>
+                        </div>
+                        <ul class="pagination">
+                            <li class="disabled">
+                                <a href="#">首页</a>
+                            </li>
+                            <li class="disabled">
+                                <a href="#">
+                                    <i class="ace-icon fa fa-angle-double-left"></i>
+                                </a>
+                            </li>
+                            <li class="active">
+                                <a href="#">1</a>
+                            </li>
+
+                            <li>
+                                <a href="#">2</a>
+                            </li>
+
+                            <li>
+                                <a href="#">3</a>
+                            </li>
+
+                            <li>
+                                <a href="#">4</a>
+                            </li>
+
+                            <li>
+                                <a href="#">5</a>
+                            </li>
+
+                            <li>
+                                <a href="#">
+                                    <i class="ace-icon fa fa-angle-double-right"></i>
+                                </a>
+                            </li>
+                            <li class="">
+                                <a href="#">尾页</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- 编辑 -->
+<div id="modal-table" class="modal fade in pk" tabindex="-1" aria-hidden="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header no-padding">
+                <div class="table-header">编辑信息</div>
+            </div>
+                <div class="modal-body no-padding" style="padding: 20px 0 !important;">
+
+                    <div class="form-group uploadHead">
+                        <div class="con4">
+                            <canvas id="cvs" width="150" height="150" style="border:1px solid #ccc;"></canvas>
+                            <span class="btn upload">上传头像<input type="file" class="upload_pic" id="upload" /></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>姓名</label>
+                        <input type="text" value="">
+                    </div>
+                    <div class="form-group">
+                        <label>联系电话</label>
+                        <input type="text" value="">
+                        <select name="" id="">
+                            <option value="">母亲</option>
+                            <option value="">父亲</option>
+                            <option value="">本人</option>
+                            <option value="">其他</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>性别</label>
+                        <input name="form-field-radio" type="radio" class="ace"><span class="lbl">男</span>
+                        <input name="form-field-radio" type="radio" class="ace"><span class="lbl">女</span>
+                        <input name="form-field-radio" type="radio" class="ace"><span class="lbl">未知</span>
+                    </div>
+                    <div class="form-group">
+                        <label>微信号</label>
+                        <input type="text" value="">
+                    </div>
+                    <div class="form-group">
+                        <label>生日</label>
+                        <input class="laydate-icon" id="demo">
+                    </div>
+                    <div class="form-group">
+                        <label>公立学校</label>
+                        <input type="text" value="">
+                    </div>
+                    <div class="form-group">
+                        <label>公立校班级</label>
+                        <input type="text" value="">
+                    </div>
+                    <div class="form-group">
+                        <label>居住区域</label>
+                        <textarea name="" id="" cols="50" rows="1"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>其他地区</label>
+                        <textarea name="" id="" cols="50" rows="1"></textarea>
+                    </div>
+                </div>
+            
+
+            <div class="modal-footer no-margin-top">
+                <button class="btn pull-left" data-dismiss="modal">
+                    取消
+                </button>
+                <button class="btn pull-right" data-dismiss="modal">
+                    保存
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    ! function () {
+        laydate.render({
+            elem: '#demo'
+        }); //绑定元素
+        laydate.render({
+            elem: '#demo1'
+        }); //绑定元素
+    }();
+
+
+    $(function () {
+
+        var date = new Date();
+        var d = date.getDate();
+        var m = date.getMonth();
+        var y = date.getFullYear();
+
+        $('#calendarTime #calendar').fullCalendar({
+            header: {
+                right: '',
+                center: 'prev,title,next,today',
+                left: 'agendaDay,agendaWeek,month'
+            },
+            defaultView:'agendaWeek',
+            firstDay: 1,
+            editable: true,
+            timeFormat: 'H:mm',
+            axisFormat: 'H:mm',
+            events: [{
+                    title: '科源校区诶诶我惹人\r\n张三\n5号教室',
+                    start: new Date(y, m, 1),
+                    backgroundColor: '#33a299;'
+                },
+                {
+                    title: '科源校区诶诶我惹人\r\n张三\n5号教室',
+                    start: new Date(y, m, d - 5),
+                    end: new Date(y, m, d - 2),
+                    backgroundColor: '#6aa8f1;'
+
+                },
+                {
+                    title: '科源校区诶诶我惹人\r\n张三\n5号教室',
+                    start: new Date(y, m, d - 5),
+                    end: new Date(y, m, d - 2),
+                    backgroundColor: '#6aa8f1;'
+
+                },
+                {
+                    title: '科源校区诶诶我惹人\r\n张三\n5号教室',
+                    start: new Date(y, m, 28),
+                    end: new Date(y, m, 29),
+                    backgroundColor: '#fc8038'
+                },
+                {
+                    title: '科源校区诶诶我惹人\r\n张三\n5号教室',
+                    start: new Date(y, m, d + 1, 19, 0),
+                    end: new Date(y, m, d + 1, 22, 30),
+                    backgroundColor: '#3967a3;'
+                },
+                {
+                    title: '科源校区诶诶我惹人\r\n张三\n5号教室',
+                    start: new Date(y, m, 28),
+                    end: new Date(y, m, 29),
+                    backgroundColor: '#fc8038'
+                },
+                {
+                    title: '科源校区诶诶我惹人\r\n张三\n5号教室',
+                    start: new Date(y, m, d + 1, 19, 0),
+                    end: new Date(y, m, d + 1, 22, 30),
+                    backgroundColor: '#3967a3;'
+                },
+            ],
+
+        });
+    });
+
+
+    $(function () {
+
+    var date = new Date();
+    var d = date.getDate();
+    var m = date.getMonth();
+    var y = date.getFullYear();
+
+    $('#calendarRoom #calendar').fullCalendar({
+        header: {
+            center: 'prev,title,next,today',
+        },
+        
+        defaultView:'agendaWeek',
+
+
+        firstDay: 1,
+        editable: true,
+        timeFormat: 'H:mm',
+        axisFormat: 'H:mm',
+        events: [{
+                title: '科源校区诶诶我惹人\r\n张三\n5号教室',
+                start: new Date(y, m, 1),
+                backgroundColor: '#33a299;'
+            },
+            {
+                title: '科源校区诶诶我惹人\r\n张三\n5号教室',
+                start: new Date(y, m, d - 5),
+                end: new Date(y, m, d - 2),
+                backgroundColor: '#6aa8f1;'
+
+            },
+            {
+                title: '科源校区诶诶我惹人\r\n张三\n5号教室',
+                start: new Date(y, m, d - 5),
+                end: new Date(y, m, d - 2),
+                backgroundColor: '#6aa8f1;'
+
+            },
+            {
+                title: '科源校区诶诶我惹人\r\n张三\n5号教室',
+                start: new Date(y, m, 28),
+                end: new Date(y, m, 29),
+                backgroundColor: '#fc8038'
+            },
+            {
+                title: '科源校区诶诶我惹人\r\n张三\n5号教室',
+                start: new Date(y, m, d + 1, 19, 0),
+                end: new Date(y, m, d + 1, 22, 30),
+                backgroundColor: '#3967a3;'
+            },
+            {
+                title: '科源校区诶诶我惹人\r\n张三\n5号教室',
+                start: new Date(y, m, 28),
+                end: new Date(y, m, 29),
+                backgroundColor: '#fc8038'
+            },
+            {
+                title: '科源校区诶诶我惹人\r\n张三\n5号教室',
+                start: new Date(y, m, d + 1, 19, 0),
+                end: new Date(y, m, d + 1, 22, 30),
+                backgroundColor: '#3967a3;'
+            },
+        ],
+
+    });
+    });
+
+
+
+    $(function () {
+
+    var date = new Date();
+    var d = date.getDate();
+    var m = date.getMonth();
+    var y = date.getFullYear();
+
+    $('#calendarTeacher #calendar').fullCalendar({
+        header: {
+            center: 'prev,title,next,today',
+        },
+        
+        defaultView:'agendaWeek',
+
+
+        firstDay: 1,
+        editable: true,
+        timeFormat: 'H:mm',
+        axisFormat: 'H:mm',
+        events: [{
+                title: '科源校区诶诶我惹人\r\n张三\n5号教室',
+                start: new Date(y, m, 1),
+                backgroundColor: '#33a299;'
+            },
+            {
+                title: '科源校区诶诶我惹人\r\n张三\n5号教室',
+                start: new Date(y, m, d - 5),
+                end: new Date(y, m, d - 2),
+                backgroundColor: '#6aa8f1;'
+
+            },
+            {
+                title: '科源校区诶诶我惹人\r\n张三\n5号教室',
+                start: new Date(y, m, d - 5),
+                end: new Date(y, m, d - 2),
+                backgroundColor: '#6aa8f1;'
+
+            },
+            {
+                title: '科源校区诶诶我惹人\r\n张三\n5号教室',
+                start: new Date(y, m, 28),
+                end: new Date(y, m, 29),
+                backgroundColor: '#fc8038'
+            },
+            {
+                title: '科源校区诶诶我惹人\r\n张三\n5号教室',
+                start: new Date(y, m, d + 1, 19, 0),
+                end: new Date(y, m, d + 1, 22, 30),
+                backgroundColor: '#3967a3;'
+            },
+            {
+                title: '科源校区诶诶我惹人\r\n张三\n5号教室',
+                start: new Date(y, m, 28),
+                end: new Date(y, m, 29),
+                backgroundColor: '#fc8038'
+            },
+            {
+                title: '科源校区诶诶我惹人\r\n张三\n5号教室',
+                start: new Date(y, m, d + 1, 19, 0),
+                end: new Date(y, m, d + 1, 22, 30),
+                backgroundColor: '#3967a3;'
+            },
+        ],
+
+    });
+    });
+</script>
+
+<script>
+//获取上传按钮
+var input1 = document.getElementById("upload"); 
+    
+if(typeof FileReader==='undefined'){ 
+        
+        input1.setAttribute('disabled','disabled'); 
+}else{ 
+        input1.addEventListener('change',readFile,false); 
+        
+}
+function readFile(){ 
+    var file = this.files[0];//获取上传文件列表中第一个文件
+    if(!/image\/\w+/.test(file.type)){
+    //图片文件的type值为image/png或image/jpg
+        alert("文件必须为图片！");
+        return false; 
+    } 
+    // console.log(file);
+    var reader = new FileReader();//实例一个文件对象
+    reader.readAsDataURL(file);//把上传的文件转换成url
+    //当文件读取成功便可以调取上传的接口
+    reader.onload = function(e){ 
+        var image = new Image();
+        // 设置src属性 
+        image.src = e.target.result;
+        var max=200;
+        // 绑定load事件处理器，加载完成后执行，避免同步问题
+        image.onload = function(){ 
+            // 获取 canvas DOM 对象 
+            var canvas = document.getElementById("cvs"); 
+            // 如果高度超标 宽度等比例缩放 *= 
+            /*if(image.height > max) {
+                image.width *= max / image.height; 
+                image.height = max;
+            } */
+            // 获取 canvas的 2d 环境对象, 
+            var ctx = canvas.getContext("2d"); 
+            // canvas清屏 
+            ctx.clearRect(0, 0, canvas.width, canvas.height); 
+            // 重置canvas宽高
+            /*canvas.width = image.width;
+            canvas.height = image.height;
+            if (canvas.width>max) {canvas.width = max;}*/
+            // 将图像绘制到canvas上
+            // ctx.drawImage(image, 0, 0, image.width, image.height);
+            ctx.drawImage(image, 0, 0, 200, 200);
+            // 注意，此时image没有加入到dom之中
+        };  
+    }
+};
+</script>
+</body>
+</html>

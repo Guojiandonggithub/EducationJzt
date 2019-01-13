@@ -16,10 +16,9 @@
     <link rel="stylesheet" href="../static/pages/css/font-awesome.min.css" />
     <link rel="stylesheet" href="../static/pages/css/kd.ui.plugin.css" />
     <link rel="stylesheet" href="../static/pages/css/loading.css" />
+
     <script src="../static/pages/js/jquery.min.js"></script>
     <script src="../static/pages/js/bootstrap.min.js"> </script>
-    <script src="../static/pages/js/ace.min.js"> </script>
-    <script src="../static/pages/js/ace-elements.min.js"></script>
     <script src="../static/pages/laydate/laydate.js"></script>
     <script src="../static/pages/js/kd.ui.plugin.js"></script>
     <script src="../static/pages/js/loading.js"></script>
@@ -106,10 +105,10 @@
                                         <input type="checkbox" id="sel_1" onchange="selectAll()">
                                     </th>
                                     <th>学员姓名
-                                        <div class="sort">
+                                        <!--<div class="sort">
                                             <span class="glyphicon glyphicon-triangle-top"></span>
                                             <span class="glyphicon glyphicon-triangle-bottom"></span>
-                                        </div>                                       
+                                        </div> -->
                                     </th>
                                     <th>联系电话</th>
                                     <th>所属关系</th>
@@ -125,7 +124,7 @@
                                 </tr>
                                 <tr id="chooses" th:each="studentrelation:${xbStudentPage.content}">
                                     <td><input type="checkbox"></td>
-                                    <td th:text="${studentrelation.xbStudent.studentName}"><img src="../static/pages/img/boy.png"></td>
+                                    <td th:text="${studentrelation.xbStudent.studentName}" th:onclick="'javascript:studentDetail(\''+${studentrelation.xbStudent.id}+'\')'"><img src="../static/pages/img/boy.png"></td>
                                     <td th:text="${studentrelation.xbStudent.contactPhone}"></td>
                                     <td th:text="${studentrelation.xbStudent.contactRelation}"></td>
                                     <td th:text="${studentrelation.xbStudent.surplusMoney}"></td>
@@ -225,10 +224,10 @@
                                     <th>班级</th>
                                     <th>状态</th>
                                     <th>课程</th>
-                                    <th>课程总学费</th>
+                                    <th>课程剩余金额</th>
                                     <th>校区</th>
                                     <th>教师</th>
-                                    <th>上课时间</th>
+                                    <!--<th>上课时间</th>-->
                                     <th>报名时间</th>                                
                                 </tr>
                                 <tr id="chooses" th:each="studentrelations:${xbStudentPage.content}">
@@ -238,13 +237,13 @@
                                     <td th:text="${studentrelations.xbClass.className}" style="width:200px;"></td>
                                     <td>在读</td>
                                     <td th:text="${studentrelations.xbCourse.courseName}"></td>
-                                    <td th:text="${studentrelations.xbCourse.tuitionFee}"></td>
+                                    <td th:text="${studentrelations.receivable}"></td>
                                     <td th:text="${studentrelations.sysOrgans.organName}"></td>
                                     <td th:text="${studentrelations.xbClass.teacher.employeeName}"></td>
-                                    <td>
+                                    <!--<td>
                                         <span>每周周日 14:00-15:00</span>
                                         <span>每周周日 14:00-15:00</span>
-                                    </td>
+                                    </td>-->
                                     <td th:text="${#dates.format(studentrelations.enrollDate, 'yyyy-MM-dd')}"></td>
                                 </tr>
 
@@ -569,7 +568,7 @@
 </div>
 <script>
 !function(){
-laydate({elem: '#demo'});//绑定元素
+laydate.render({elem: '#demo'});//绑定元素
 }();
 
 $(".btn-down").click(function(){
@@ -699,6 +698,11 @@ function getexpiryStulist(page){
             $('#expiryStu').html(data);
         }
     });
+}
+
+//跳转到用户详情
+function studentDetail(id) {
+    window.location.href = basePath + '/student/studentDetail?studentId=' + id ;
 }
 </script>
 </body>

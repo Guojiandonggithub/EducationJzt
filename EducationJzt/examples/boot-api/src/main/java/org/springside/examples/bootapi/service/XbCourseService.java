@@ -72,9 +72,24 @@ public class XbCourseService {
 		return xbCourseDao.findAll(spec,pageable);
 	}
 
+	@Transactional
+	public List<XbCourse> getXbCourseAllList(Map<String, Object> searchParams) {
+		searchParams.put("EQ_deleteStatus","1");
+		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
+		Specification<XbCourse> spec = DynamicSpecifications.bySearchFilter(
+				filters.values(), XbCourse.class);
+		return xbCourseDao.findAll(spec);
+	}
+
 	@Transactional(readOnly = true)
 	public List<XbCourse> findCourseList(String organId){
 		List<XbCourse> list =  (List)xbCourseDao.findByOrganIds(organId);
+		return list;
+	}
+
+	@Transactional(readOnly = true)
+	public List<XbCourse> findAllDataByOrganId(String organId){
+		List<XbCourse> list =  (List)xbCourseDao.findAllDataByOrganId(organId);
 		return list;
 	}
 

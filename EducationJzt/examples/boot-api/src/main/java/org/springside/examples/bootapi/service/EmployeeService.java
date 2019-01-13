@@ -134,6 +134,17 @@ public class EmployeeService {
 				filters.values(), SysEmployee.class);
 		return employeeDao.findAll(spec,pageable);
 	}
+
+	@Transactional
+	public List<SysEmployee>  getAccountAllList(Map<String, Object> searchParams) {
+		searchParams = HttpServletUtil.getRoleDate(searchParams);
+		searchParams.put("EQ_deleteStatus","1");
+		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
+		Specification<SysEmployee> spec = DynamicSpecifications.bySearchFilter(
+				filters.values(), SysEmployee.class);
+		return employeeDao.findAll(spec);
+	}
+
 	@Transactional
 	public List<SysEmployee> findSysEmployeeListAll(){
 		return employeeDao.findByDeleteStatus("1");

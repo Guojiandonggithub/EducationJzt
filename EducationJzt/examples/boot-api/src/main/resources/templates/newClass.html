@@ -15,6 +15,8 @@
     <link rel="stylesheet" href="../static/pages/css/font-awesome.min.css" />
     <link rel="stylesheet" href="../static/pages/css/kd.ui.plugin.css" />
     <link rel="stylesheet" href="../static/pages/css/loading.css" />
+
+
     <script src="../static/pages/js/jquery.min.js"></script>
     <script src="../static/pages/js/bootstrap.min.js"> </script>
     <script src="../static/pages/js/ace.min.js"> </script>
@@ -33,13 +35,13 @@
         <div class="main-container" id="main-container">
             <div th:replace="layout::left('13','32')">
             </div>
-            <div class="main-content" id="main-content">
+            <div class="main-content" id="main-content" >
                 <div class="breadcrumbs" id="breadcrumbs">
                     <img src="../static/pages/img/line1.png">
                     <span>新建班级</span>
                     <img src="../static/pages/img/line.png">
                 </div>
-                <div class="enrollCon">
+                <div class="enrollCon" id="donghua">
                     <h2>班级信息</h2>
                     <div class="stopClass newClass" id="jlfind">
                         <div class="form-group">
@@ -53,11 +55,11 @@
                         <div class="form-group" style="display:block; margin-top:20px !important">
                             <label for="courseId"><span>*</span>课程</label>
                             <select name="courseId" id="courseId">
-                                <option th:each="course:${xbCourseList}" th:selected="${xbClass.courseId == course.xbCourse.id}"
-                                    th:value="${course.xbCourse.id}" th:text="${course.xbCourse.courseName}"></option>
+                                <option th:each="course:${xbCourseList}" th:selected="${xbClass.courseId == course.id}"
+                                    th:value="${course.id}" th:text="${course.courseName}"></option>
                             </select>
                         </div>
-                        <div class="form-group" style="display: block;" id="donghua">
+                        <div class="form-group" style="display: block;">
                             <label for="className"><span>*</span>班级名称</label>
                             <input type="hidden" name="id" id="classId" th:value="${xbClass.id}">
                             <input type="text" th:value="${xbClass.className}" name="className" placeholder="请输入班级名称"
@@ -70,6 +72,15 @@
                                        name="classBeginDate" />
                                  <input class="laydate-icon" id="demo" th:if="${xbClass.classBeginDate!=null}" th:value="${#dates.format(xbClass.classBeginDate, 'yyyy-MM-dd')}"
                                     name="classBeginDate" />
+                            </div>
+                        </div>
+                        <div style="display:block;  margin-bottom:26px;">
+                            <label  style="width:120px; text-align: left;">结班日期</label>
+                            <div class="classDate">
+                                <input class="laydate-icon" id="demo2" th:if="${xbClass.classEndDate==null}" th:value="${xbClass.classEndDate}"
+                                       name="classEndDate" />
+                                <input class="laydate-icon" id="demo2" th:if="${xbClass.classEndDate!=null}" th:value="${#dates.format(xbClass.classEndDate, 'yyyy-MM-dd')}"
+                                       name="classEndDate" />
                             </div>
                         </div>
                         <!--<div class="form-group">
@@ -165,8 +176,11 @@
     </form>
     <script>
         ! function () {
-            laydate({
+            laydate.render({
                 elem: '#demo'
+            }); //绑定元素
+            laydate.render({
+                elem: '#demo2'
             }); //绑定元素
         }();
 
@@ -186,6 +200,9 @@
                         required:true
                     },
                     classBeginDate : {
+                        required:true
+                    },
+                    classEndDate : {
                         required:true
                     },
                     preRecruitNum : {
@@ -220,6 +237,7 @@
                 var id = $("#classId").val();
                 var organId = $("#organId").val();
                 var courseId = $("#courseId").val();
+                var teacherId = $("#teacherId").val();
                 if(id){
                     return true;
                 }
@@ -235,7 +253,7 @@
                     dataType: 'json',
                     async:false,
                     contentType:"application/json;charset=UTF-8",
-                    data: {"name":value,"organId":organId,"courseId":courseId},
+                    data: {"name":value,"organId":organId,"courseId":courseId,"teacherId":teacherId},
                     success: function(result){
                         load.stop();
                         msgcode= result.code;
@@ -341,9 +359,9 @@
                         //先创建好select里面的option元素
                         var option = document.createElement("option");
                         //转换DOM对象为JQ对象,好用JQ里面提供的方法 给option的value赋值
-                        $(option).val(data.xbCourseList[i].xbCourse.id);
+                        $(option).val(data.xbCourseList[i].id);
                         //给option的text赋值,这就是你点开下拉框能够看到的东西
-                        $(option).text(data.xbCourseList[i].xbCourse.courseName);
+                        $(option).text(data.xbCourseList[i].courseName);
                         //获取select 下拉框对象,并将option添加进select
                         $('#courseId').append(option);
                     }

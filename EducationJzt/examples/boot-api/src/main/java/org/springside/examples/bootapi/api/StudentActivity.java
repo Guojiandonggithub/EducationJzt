@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -13,6 +14,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springside.examples.bootapi.ToolUtils.HttpServletUtil;
 import org.springside.examples.bootapi.domain.*;
+import org.springside.examples.bootapi.dto.XbClassDto;
 import org.springside.examples.bootapi.service.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -74,6 +76,7 @@ public class StudentActivity {
 		model.addAttribute("organsList",organsList);
 		model.addAttribute("flag","1");
 		model.addAttribute("sysEmployee",sysEmployee);
+		model.addAttribute("xbStudent",new XbStudent());
 		model.addAttribute("employeeList",employeePage.getContent());
 		return "enroll";
 	}
@@ -121,11 +124,11 @@ public class StudentActivity {
     }
 
     @RequestMapping("/checkClassesName")
-    public void checkClassesName(@RequestParam(required = false) String name,@RequestParam(required = false) String organId,@RequestParam(required = false) String courseId,HttpServletResponse resp) {
+    public void checkClassesName(@RequestParam(required = false) String name,@RequestParam(required = false) String teacherId,@RequestParam(required = false) String organId,@RequestParam(required = false) String courseId,HttpServletResponse resp) {
         Map<String, Object> map  =  new HashMap<>();
         try {
             String code = "1000";
-			XbClass xbClass = studentService.checkClassesName(name,organId,courseId);
+			XbClass xbClass = studentService.checkClassesName(name,organId,courseId,teacherId);
             if(null!=xbClass){
                 code = "1001";
             }
@@ -264,8 +267,18 @@ public class StudentActivity {
 		}
 		model.addAttribute("room",room);
 		Map<String,Object> searhMap = new HashMap<>();
-		Page<XbClassroom> xbClassroomPage = studentService.getXbClassroomList(pageable,searhMap);
-		Page<XbClass> xbClassPage = studentService.getXbClassList(pageable,searhMap);
+		Pageable pageables = new PageRequest(0, 20);
+		Pageable pageable1;
+		Pageable pageable2;
+		if(room=="1"){
+			pageable1 = pageables;
+			pageable2 = pageable;
+		}else{
+			pageable2 = pageables;
+			pageable1 = pageable;
+		}
+		Page<XbClassroom> xbClassroomPage = studentService.getXbClassroomList(pageable1,searhMap);
+		Page<XbClass> xbClassPage = studentService.getXbClassList(pageable2,searhMap);
 		model.addAttribute("xbClassroomPage",xbClassroomPage);
 		model.addAttribute("xbClassPage",xbClassPage);
 		model.addAttribute("roomcurrentzise",xbClassroomPage.getSize());
@@ -309,11 +322,13 @@ public class StudentActivity {
 		Map<String,Object> searhMap = new HashMap<>();
 		Map<String,Object> roomsearhMap = new HashMap<>();
 		searhMap.put("EQ_organIds",organId);
-		List<XbCoursePreset> xbCoursePage = xbCoursePresetService.getXbCoursePresets(searhMap);
+		List<XbCourse> xbCoursePage = xbCourseService.findAllDataByOrganId(organId);
+		//List<XbCourse> xbCoursePage = xbCourseService.getXbCourseAllList(searhMap);
+		//List<XbCoursePreset> xbCoursePage = xbCoursePresetService.getXbCoursePresets(searhMap);
 		Map<String,Object> ygsearhMap = new HashMap<>();
 		ygsearhMap.put("EQ_isAttendClass","0");
 		ygsearhMap.put("EQ_organId",organId);
-		List<SysEmployee> employeeList = employeeService.getAccountList(pageable,ygsearhMap).getContent();
+		List<SysEmployee> employeeList = employeeService.getAccountAllList(ygsearhMap);
 		roomsearhMap.put("EQ_organId",organId);
 		List<XbClassroom> xbClassroomList = studentService.getXbClassroomList(pageable,roomsearhMap).getContent();
 		model.addAttribute("xbClass",xbClass);
@@ -334,11 +349,12 @@ public class StudentActivity {
 		Map<String,Object> roomsearhMap = new HashMap<>();
 		searhMap.put("EQ_organIds",organId);
 		searhMap.put("EQ_xbCourse.state","0");
-		List<XbCoursePreset> xbCoursePage = xbCoursePresetService.getXbCoursePresets(searhMap);
+		List<XbCourse> xbCoursePage = xbCourseService.findAllDataByOrganId(organId);
+		//List<XbCoursePreset> xbCoursePage = xbCoursePresetService.getXbCoursePresets(searhMap);
 		roomsearhMap.put("EQ_organId",organId);
 		List<XbClassroom> xbClassroomList = studentService.getXbClassroomList(pageable,roomsearhMap).getContent();
 		roomsearhMap.put("EQ_isAttendClass",0);
-		List<SysEmployee> employeeList = employeeService.getAccountList(pageable,roomsearhMap).getContent();
+		List<SysEmployee> employeeList = employeeService.getAccountAllList(roomsearhMap);
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("status","0");
 		jsonObject.put("xbClassroomList",com.alibaba.fastjson.JSONObject.toJSON(xbClassroomList));
@@ -505,6 +521,13 @@ public class StudentActivity {
                 Page<XbStudentRelation> xbStudentRelationPage = studentService.getXbStudentRelationList(pageable,xbClassearhMap);
                 if(xbStudentRelationPage.getTotalElements()<xbClassList.get(i).studentNum){
                     xbClassPages.add(xbClassList.get(i));
+					String courseId = xbClassList.get(i).courseId;
+					String organId = xbClassList.get(i).organId;
+					Map<String,Object> searchMap = new HashMap<>();
+					searchMap.put("EQ_courseId",courseId);
+					searchMap.put("EQ_organIds",organId);
+					List<XbCoursePreset> xbCourseList = xbCoursePresetService.getXbCoursePresets(searchMap);
+					xbClassList.get(i).xbCoursePresetList.addAll(xbCourseList);
                 }
             }
 			model.addAttribute("xbClassPage",xbClassPages);
@@ -571,27 +594,31 @@ public class StudentActivity {
 	 * @return
 	 */
 	@RequestMapping("/chooseClass")
-	public String chooseClass(@RequestParam(required = false) String classIds,ModelMap model, Pageable pageable){
+	public String chooseClass(@RequestParam(required = false) String xbClassparams,ModelMap model, Pageable pageable){
 		List<XbCoursePreset> xbCoursePresetList = new ArrayList<>();
+		List<XbClassDto> xbStudentRelationList = com.alibaba.fastjson.JSONArray.parseArray(xbClassparams,XbClassDto.class);
 		BigDecimal money = new BigDecimal(0);
-			if(null!=classIds&&!classIds.equals("")){
-				String[] str = classIds.split(",");
-				for (int i = 0; i < str.length; i++) {
+			if(xbStudentRelationList.size()>0){
+				for (int i = 0; i < xbStudentRelationList.size(); i++) {
 					List<XbClass> classList = new ArrayList<>();
-					XbClass xbClass = studentService.getXbClass(str[i]);
+					XbClass xbClass = studentService.getXbClass(xbStudentRelationList.get(i).ids);
 					classList.add(xbClass);
 					Map<String,Object> xbClasssearhMap = new HashMap<>();
 					xbClasssearhMap.put("EQ_courseId",xbClass.courseId);
 					xbClasssearhMap.put("EQ_organIds",xbClass.organId);
 					List<XbCoursePreset> xbCourseList = xbCoursePresetService.getXbCoursePresets(xbClasssearhMap);
-					xbCourseList.get(0).setXbClassList(classList);
-					BigDecimal totalmoney = xbCourseList.get(0).money;//每个课程总金额
-					if(xbCourseList.get(0).xbCourse.chargingMode.equals("0")){
-						totalmoney = xbCourseList.get(0).money.multiply(new BigDecimal(xbCourseList.get(0).periodNum));
-						xbCourseList.get(0).money = totalmoney;
+					for (int j = 0; j < xbCourseList.size(); j++) {
+						if(xbCourseList.get(j).getId().equals(xbStudentRelationList.get(i).indexs)){
+							xbCourseList.get(j).setXbClassList(classList);
+							BigDecimal totalmoney = xbCourseList.get(j).money;//每个课程总金额
+							if(xbCourseList.get(j).xbCourse.chargingMode.equals("0")){
+								totalmoney = xbCourseList.get(j).money.multiply(new BigDecimal(xbCourseList.get(j).periodNum));
+								xbCourseList.get(j).money = totalmoney;
+							}
+							money = money.add(totalmoney);
+							xbCoursePresetList.add(xbCourseList.get(j));
+						}
 					}
-					money = money.add(totalmoney);
-					xbCoursePresetList.addAll(xbCourseList);
 				}
 			}
 			model.addAttribute("xbCourseLists",xbCoursePresetList);
@@ -750,5 +777,26 @@ public class StudentActivity {
 		model.addAttribute("xbClass",xbClass);
 		model.addAttribute("xbStudentRelationPage",xbStudentRelationPage);
 		return "manageClass";
+	}
+
+	/*
+	 * 跳转到详情
+	 * @return
+	 */
+	@RequestMapping("/studentDetail")
+	public String studentDetail(@RequestParam(required = false) String studentId,ModelMap model,Pageable pageable){
+		XbStudent xbStudent = studentService.getXbStudent(studentId);
+		Map<String, Object> searchParams = new HashMap<>();
+		searchParams.put("EQ_studentId",studentId);
+		Page<XbStudentRelation> xbStudentRelationPage = studentService.getXbStudentRelationList(pageable,searchParams);
+		model.addAttribute("xbStudent",xbStudent);
+		model.addAttribute("xbStudentRelationPage",xbStudentRelationPage);//课程列表
+		Page<XbSupplementFee> XbSupplementFeePage = studentService.getXbSupplementFeeList(pageable,searchParams);
+		model.addAttribute("XbSupplementFeePage",XbSupplementFeePage);//订单列表
+		model.addAttribute("feecurrentzise",XbSupplementFeePage.getSize());
+		Page<XbRecordClass> xbRecordClassPage = studentService.getRecordClassPage(pageable,searchParams);
+		model.addAttribute("xbRecordClassPage",xbRecordClassPage);//上课记录
+		model.addAttribute("accordingcurrentzise",xbRecordClassPage.getSize());
+		return "stuinfoDetail";
 	}
 }

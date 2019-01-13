@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springside.examples.bootapi.domain.XbCourse;
 
+import java.util.List;
+
 /**
  * 基于Spring Data JPA的Dao接口, 自动根据接口生成实现.
  *
@@ -22,4 +24,9 @@ import org.springside.examples.bootapi.domain.XbCourse;
             "LEFT JOIN xb_course_preset t1 ON t.id= t1.course_id " +
             "LEFT JOIN sys_organs t2 ON t1.organ_ids = t2.id where t2.id=?1 ",nativeQuery = true)
         XbCourse findByOrganIds(String id);
+
+    @Query(value = " SELECT distinct t.* FROM xb_course t " +
+            "LEFT JOIN xb_course_preset t1 ON t.id= t1.course_id " +
+            "where t1.organ_ids=?1 and t.delete_status='1' ",nativeQuery = true)
+         public List<XbCourse> findAllDataByOrganId(String orgaId);
 }

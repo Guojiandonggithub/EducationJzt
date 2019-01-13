@@ -17,6 +17,8 @@
     <link rel="stylesheet" href="../static/pages/css/font-awesome.min.css" />
     <link rel="stylesheet" href="../static/pages/css/kd.ui.plugin.css" />
     <link rel="stylesheet" href="../static/pages/css/loading.css" />
+
+
     <script src="../static/pages/js/jquery.min.js"></script>
     <script src="../static/pages/js/bootstrap.min.js"> </script>
     <script src="../static/pages/js/ace.min.js"> </script>
@@ -143,6 +145,7 @@
                                         <th>手机号</th>
                                         <th id="donghua">所属校区</th>
                                         <th>是否教师</th>
+                                        <th>所属角色</th>
                                         <!--<th>机构账号</th>-->
                                         <th>操作</th>
                                     </tr>
@@ -157,7 +160,7 @@
                                         <td th:if="${employee.isAttendClass eq 1}">
                                             否
                                         </td>
-                                        <!--<td>15847278368（ 教师  ）</td>-->
+                                        <td th:text="${employee.sysRole.roleName}"></td>
                                         <td>
                                             <a th:href="@{/accounts/getEmployee(id=${employee.id})}"><img src="../static/pages/img/edit.png">编辑</a>
                                             <a href="#" th:onclick="'javascript:deleteEmployee(\''+${employee.id}+'\')'"><img src="../static/pages/img/del.png">删除</a>
@@ -207,7 +210,7 @@
     </div>
 <script>
 !function(){
-laydate({elem: '#demo'});//绑定元素
+laydate.render({elem: '#demo'});//绑定元素
 }();
 
 $(function(){

@@ -1,6 +1,5 @@
 package org.springside.examples.bootapi.ToolUtils.common.util;
 
-import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.websuites.core.response.IResult;
 import com.websuites.core.response.Result;
@@ -10,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springside.examples.bootapi.api.AccountActivity;
 
+import java.io.*;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
@@ -723,6 +723,19 @@ public class UtilTools {
             zero+="0";
         }
         return new DecimalFormat("#,##0."+zero).format(Double.parseDouble(num));
+    }
+
+    public static<T> T deepClone(T src) throws IOException, ClassNotFoundException {
+        Object obj = null;
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
+        objectOutputStream.writeObject(src);
+        objectOutputStream.close();
+        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
+        ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
+        obj = objectInputStream.readObject();
+        objectInputStream.close();
+        return (T) obj;
     }
 
 }

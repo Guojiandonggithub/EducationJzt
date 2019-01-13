@@ -116,6 +116,39 @@ public class FeeRelatedActivity {
 	}
 
 	/**
+	 * 报名选择学员
+	 * @return
+	 */
+	@RequestMapping("/enrollchooseStudent")
+	public void enrollchooseStudent(@RequestParam(required = false) String studentId, ModelMap model, Pageable pageable, HttpServletResponse resp){
+		Map<String,Object> resultMap = new HashMap<>();
+		if(null!=studentId&&!studentId.equals("")){
+			resultMap.put("LIKE_studentName",studentId);
+		}
+		resultMap.put("EQ_id",studentId);
+		XbStudent xbStudentold = studentService.getXbStudent(studentId);
+		XbStudent xbStudentnew = new XbStudent();
+		xbStudentnew.id = xbStudentold.id;
+		xbStudentnew.sex = xbStudentold.sex;
+		xbStudentnew.studentName = xbStudentold.studentName;
+		xbStudentnew.contactPhone = xbStudentold.contactPhone;
+		xbStudentnew.advisoryChannel = xbStudentold.advisoryChannel;
+		try {
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("status","1");
+			jsonObject.put("msg", "查询成功");
+			jsonObject.put("data", com.alibaba.fastjson.JSONObject.toJSON(xbStudentnew));
+			logger.info("查询返回json参数="+jsonObject.toString());
+			resp.setContentType("application/json;charset=UTF-8");
+			resp.getWriter().println(jsonObject.toJSONString());
+			resp.getWriter().close();
+		} catch (IOException e) {
+			logger.info(e.toString());
+		}
+		//return "changeClass::changeClassFragment";
+	}
+
+	/**
 	 * 获取相同课程类别班级
 	 * @return
 	 */

@@ -15,6 +15,8 @@
     <link rel="stylesheet" href="../static/pages/css/bootstrap.min.css" />
     <link rel="stylesheet" href="../static/pages/css/font-awesome.min.css" />
     <link rel="stylesheet" href="../static/pages/css/kd.ui.plugin.css" />
+    <link rel="stylesheet" href="../static/pages/css/loading.css" />
+
 
     <script src="../static/pages/js/jquery.min.js"></script>
     <script src="../static/pages/js/bootstrap.min.js"> </script>
@@ -22,6 +24,7 @@
     <script src="../static/pages/js/ace-elements.min.js"></script>
     <script src="../static/pages/laydate/laydate.js"></script>
     <script src="../static/pages/js/kd.ui.plugin.js"></script>
+    <script src="../static/pages/js/loading.js"></script>
 
 
 </head>
@@ -42,10 +45,10 @@
                     <li class="active" style="margin-bottom:22px;">
                         <a data-toggle="tab" href="#studentList">记上课</a>
                     </li>
-                    <!--<li>
+                    <li>
                     <a data-toggle="tab" href="#divideList">上课记录</a>
-                </li>
-                <li>
+                    </li>
+                <!--<li>
                     <a data-toggle="tab" href="#expiryStu">补课管理</a>
                 </li>-->
                 </ul>
@@ -85,7 +88,7 @@
                             <div class="orderTable">
                                 <table class="table table-hover">
                                     <tr>
-                                        <th>星标</th>
+                                       <!-- <th>星标</th>-->
                                         <th>班级/一对一</th>
                                         <th>教师</th>
                                         <th>课程</th>
@@ -100,9 +103,9 @@
                                         <th>操作</th>
                                     </tr>
                                     <tr id="choose" th:each="cls:${classPage}">
-                                        <td>
+                                        <!--<td>
                                             <span class="glyphicon glyphicon-star-empty"></span>
-                                        </td>
+                                        </td>-->
                                         <td th:text="${cls.className}"><img src="../static/pages/img/ban.png">昆区分校作文张三1班</td>
                                         <td th:text="${cls.teacher.employeeName}">李四</td>
                                         <td th:text="${cls.xbCourse.courseName}">作文1</td>
@@ -156,13 +159,14 @@
                                 <a data-toggle="tab" href="#classAbo" id="classBtn">按班级</a>
                             </li>
                             <li>
-                                <a data-toggle="tab" href="#studentAbo" id="stuBtn">按学员</a>
+                                <a data-toggle="tab" href="#studentAbo" onclick="getaccordingListPage('');"  id="stuBtn">按学员</a>
                             </li>
                         </ul>
                         <!-- 按班级 -->
+                        <th:block th:fragment="accordingClass">
                         <div id="classAbo" class="tab-pane fade in active">
                             <div class="screen">
-                                <div class="screenTop">
+                                <!--<div class="screenTop">
                                     <select class="selectName">
                                         <option value="AZ">学员姓名</option>
                                         <option value="AL">手机尾号</option>
@@ -216,12 +220,12 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="screenBot tags">
+                                </div>-->
+                                <!--<div class="screenBot tags">
                                     上课日期：
                                     <span class="tag">开始时间：16:10，结束时间:17:30<button type="button" class="close">×</button></span>
                                     <p>清空筛选</p>
-                                </div>
+                                </div>-->
                             </div>
                             <div class="orderCon">
                                 <div class="export">
@@ -244,25 +248,25 @@
                                                 </div>
                                             </th>
                                             <th>班级/一对一
-                                                <div class="sort">
+                                                <!--<div class="sort">
                                                     <span class="glyphicon glyphicon-triangle-top"></span>
                                                     <span class="glyphicon glyphicon-triangle-bottom"></span>
-                                                </div>
+                                                </div>-->
                                             </th>
                                             <th>课程</th>
                                             <th>教师</th>
-                                            <th>222</th>
-                                            <th>333</th>
-                                            <th>333</th>
-                                            <th>333</th>
+                                            <th>科目</th>
+                                            <th>上课</th>
+                                            <th>请假</th>
+                                            <th>旷课</th>
                                             <th>补课</th>
                                             <th>学员课时</th>
-                                            <th>创建时间
+                                            <!--<th>创建时间
                                                 <div class="sort">
                                                     <span class="glyphicon glyphicon-triangle-top"></span>
                                                     <span class="glyphicon glyphicon-triangle-bottom"></span>
                                                 </div>
-                                            </th>
+                                            </th>-->
                                             <th>操作</th>
                                             <th>
                                                 <span href="#modal-table" data-toggle="modal" class="glyphicon glyphicon-option-vertical"
@@ -411,7 +415,7 @@
                                 </div>
                             </div>
                             <!-- 实到/应到学员 -->
-                            <div id="modal-table" class="modal fade in" tabindex="-1" aria-hidden="false" style="display: block;">
+                            <!--<div id="modal-table" class="modal fade in" tabindex="-1" aria-hidden="false" style="display: block;">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header no-padding">
@@ -458,13 +462,16 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div>-->
                         </div>
+                        </th:block>
                         <!-- 按学员 -->
-                        <div id="studentAbo" class="tab-pane fade studentAbo">
+                            <div id="studentAbo" class="tab-pane fade studentAbo">
+                                <th:block th:fragment="accordingStudent" th:if="${xbRecordClassPage}">
+                                <form id="accordingStudentform">
                             <div class="screen">
                                 <div class="screenTop">
-                                    <select class="selectName">
+                                    <!--<select class="selectName">
                                         <option value="AZ">学员姓名</option>
                                         <option value="AL">手机尾号</option>
                                         <option value="AK">微信号</option>
@@ -516,13 +523,13 @@
                                                 </select>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div>-->
                                 </div>
-                                <div class="screenBot tags">
+                                <!--<div class="screenBot tags">
                                     上课日期：
                                     <span class="tag">开始时间：16:10，结束时间:17:30<button type="button" class="close">×</button></span>
                                     <p>清空筛选</p>
-                                </div>
+                                </div>-->
                             </div>
                             <div class="orderCon">
                                 <div class="export">
@@ -533,22 +540,22 @@
                                     </div>
                                 </div>
                                 <div class="result">
-                                    当前结果：共计<span>111</span>条记录
+                                    当前结果：共计<span th:text="${xbRecordClassPage.getTotalElements()}"></span>条记录
                                 </div>
                                 <div class="orderTable">
                                     <table class="table table-hover">
                                         <tr>
                                             <th>上课时间
-                                                <div class="sort">
+                                                <!--<div class="sort">
                                                     <span class="glyphicon glyphicon-triangle-top"></span>
                                                     <span class="glyphicon glyphicon-triangle-bottom"></span>
-                                                </div>
+                                                </div>-->
                                             </th>
                                             <th>学员姓名
-                                                <div class="sort">
+                                                <!--<div class="sort">
                                                     <span class="glyphicon glyphicon-triangle-top"></span>
                                                     <span class="glyphicon glyphicon-triangle-bottom"></span>
-                                                </div>
+                                                </div>-->
                                             </th>
                                             <th>联系电话</th>
                                             <th>班级/一对一</th>
@@ -557,85 +564,35 @@
                                             <th>学员课时</th>
                                             <th>教师</th>
                                             <th>教师留言</th>
-                                            <th>操作</th>
+                                            <!--<th>操作</th>
                                             <th>
                                                 <span href="#modal-table" data-toggle="modal" class="glyphicon glyphicon-option-vertical"
                                                     aria-hidden="true"></span>
-                                            </th>
+                                            </th>-->
                                         </tr>
-                                        <tr id="choose">
-                                            <td>2018-10-31</td>
-                                            <td>李四</td>
-                                            <td>15023121213</td>
-                                            <td><img src="../static/pages/img/ban.png">昆区分校作文张三1班</td>
-                                            <td>作文1</td>
-                                            <td class="statesk">
+                                        <tr id="choose" th:each="record:${xbRecordClassPage.content}">
+                                            <td th:text="${record.recordTime}"></td>
+                                            <td th:text="${record.xbStudent.studentName}"></td>
+                                            <td th:text="${record.xbStudent.contactPhone}"></td>
+                                            <td th:text="${record.xbClass.sysOrgans.organName}+${record.xbClass.xbCourse.courseName}+${record.xbClass.teacher.employeeName}+${record.xbClass.className}"><img src="../static/pages/img/ban.png"></td>
+                                            <td th:text="${record.xbClass.xbCourse.courseName}"></td>
+                                            <td th:if="${record.state} eq 0" class="statesk">
                                                 <span>上课</span>
                                             </td>
-                                            <td>1.00</td>
-                                            <td>李四</td>
-                                            <td></td>
-                                            <td>
-                                                <div class="btn-group open">
-                                                    <p data-toggle="dropdown" class="down" aria-expanded="true">
-                                                        操作
-                                                        <span class="ace-icon fa fa-caret-down icon-on-right" style="float: right;margin: 3px 0 0 3px;"></span>
-                                                    </p>
-                                                    <ul class="dropdown-menu dropdown-default" style="display:none;">
-                                                        <li>
-                                                            <a href="classEdit.html">编辑</a>
-                                                        </li>
-                                                        <li>
-                                                            <a href="#">删除班级</a>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </td>
-                                            <td></td>
-                                        </tr>
-                                        <tr id="choose">
-                                            <td>2018-10-31</td>
-                                            <td>李四</td>
-                                            <td>15023121213</td>
-                                            <td><img src="../static/pages/img/ban.png">昆区分校作文张三1班</td>
-                                            <td>作文1</td>
-                                            <td class="statesk stateqj">
+                                            <td th:if="${record.state} eq 1" class="statesk stateqj">
                                                 <span>请假</span>
                                             </td>
-                                            <td>1.00</td>
-                                            <td>李四</td>
-                                            <td></td>
-                                            <td>
-                                                <div class="btn-group open">
-                                                    <p data-toggle="dropdown" class="down" aria-expanded="true">
-                                                        操作
-                                                        <span class="ace-icon fa fa-caret-down icon-on-right" style="float: right;margin: 3px 0 0 3px;"></span>
-                                                    </p>
-                                                    <ul class="dropdown-menu dropdown-default" style="display:none;">
-                                                        <li>
-                                                            <a href="classEdit.html">编辑</a>
-                                                        </li>
-                                                        <li>
-                                                            <a href="#">删除班级</a>
-                                                        </li>
-                                                    </ul>
-                                                </div>
+                                            <td th:if="${record.state} eq 2" class="statesk stateqj">
+                                                <span>旷课</span>
                                             </td>
-                                            <td></td>
-                                        </tr>
-                                        <tr id="choose">
-                                            <td>2018-10-31</td>
-                                            <td>李四</td>
-                                            <td>15023121213</td>
-                                            <td><img src="../static/pages/img/ban.png">昆区分校作文张三1班</td>
-                                            <td>作文1</td>
-                                            <td class="statesk statebk">
+                                            <td th:if="${record.state} eq 3" class="statesk statebk">
                                                 <span>补课</span>
                                             </td>
-                                            <td>1.00</td>
-                                            <td>李四</td>
-                                            <td></td>
-                                            <td>
+                                            <td th:text="${record.deductPeriod}"></td>
+                                            <td th:text="${record.xbClass.teacher.employeeName}"></td>
+                                            <td th:text="${record.teacherLeave}"></td>
+
+                                            <td></td><!--<td>
                                                 <div class="btn-group open">
                                                     <p data-toggle="dropdown" class="down" aria-expanded="true">
                                                         操作
@@ -651,63 +608,47 @@
                                                     </ul>
                                                 </div>
                                             </td>
-                                            <td></td>
-                                        </tr>
+                                        </tr>-->
                                     </table>
                                     <div class="orderPage">
                                         <div class="page">
                                             单页显示：
-                                            <select>
-                                                <option>20条/页</option>
-                                                <option>50条/页</option>
-                                                <option>100条/页</option>
+                                            <select id="size" th:name="size" onchange="getaccordingListPage('');">
+                                                <option th:selected="${accordingcurrentzise eq 20}" th:value="20">20条/页</option>
+                                                <option th:selected="${accordingcurrentzise eq 5}" th:value="5">5条/页</option>
+                                                <option th:selected="${accordingcurrentzise eq 10}" th:value="10">10条/页</option>
+                                                <option th:selected="${accordingcurrentzise eq 15}" th:value="15">15条/页</option>
                                             </select>
                                         </div>
-                                        <ul class="pagination">
+                                        <ul class="pagination" th:if="${xbRecordClassPage.getTotalPages() gt 0}">
                                             <li class="disabled">
-                                                <a href="#">首页</a>
+                                                <a href="#" th:onclick="'javascript:getaccordingListPage(\''+0+'\')'">首页</a>
                                             </li>
-                                            <li class="disabled">
-                                                <a href="#">
+                                            <li class="disabled" th:if="${xbRecordClassPage.getNumber()-1} ge 0">
+                                                <a href="#" th:onclick="'javascript:getaccordingListPage(\''+${xbRecordClassPage.getNumber()-1}+'\')'">
                                                     <i class="ace-icon fa fa-angle-double-left"></i>
                                                 </a>
                                             </li>
-                                            <li class="active">
-                                                <a href="#">1</a>
+                                            <li th:class="${i} eq ${xbRecordClassPage.getNumber()+1}?'active':''" th:each="i:${#numbers.sequence(1,xbRecordClassPage.getTotalPages())}">
+                                                <a href="#" th:onclick="'javascript:getaccordingListPage(\''+${i}+'\')'"
+                                                   th:text="${i}"></a>
                                             </li>
-
-                                            <li>
-                                                <a href="#">2</a>
-                                            </li>
-
-                                            <li>
-                                                <a href="#">3</a>
-                                            </li>
-
-                                            <li>
-                                                <a href="#">4</a>
-                                            </li>
-
-                                            <li>
-                                                <a href="#">5</a>
-                                            </li>
-
-                                            <li>
-                                                <a href="#">
+                                            <li th:if="${xbRecordClassPage.getTotalPages()} ge ${xbRecordClassPage.getNumber()+2} ">
+                                                <a href="#" th:onclick="'javascript:getaccordingListPage(\''+${xbRecordClassPage.getNumber()+2}+'\')'">
                                                     <i class="ace-icon fa fa-angle-double-right"></i>
                                                 </a>
                                             </li>
-                                            <li class="">
-                                                <a href="#">尾页</a>
-                                            </li>
+                                            <!-- <li class="">
+                                             <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${currentnumber}+'\')'">尾页</a>
+                                         </li>-->
                                         </ul>
                                     </div>
                                 </div>
                             </div>
-
-
-
+                                </form>
+                            </th:block>
                         </div>
+
                     </div>
                     <!-- 补课管理 -->
                     <div id="expiryStu" class="tab-pane fade expiryStu lesson">
@@ -925,7 +866,7 @@
     </div>
     <script>
         ! function () {
-            laydate({
+            laydate.render({
                 elem: '#demo'
             }); //绑定元素
         }();
@@ -963,6 +904,35 @@
             }
             window.location.href = basePath + '/recordClass/getRecordClassList?size=' + size +'&page='+page+'&data='+JSON.stringify(data);
         }
+
+        function getaccordingListPage(page){
+            var data= serializeObject("#accordingStudentform");
+            var size = $('#qianfeisize option:selected').val();//选中的值
+            if(page){
+                page = page -1;
+            }
+            var load = new Loading();
+            load.init({
+                target: "#divideList"
+            });
+            load.start();
+            $.ajax({
+                type: 'get',
+                //dataType: 'json',
+                url: basePath + '/recordClass/accordingStudent?page='+page+'&size='+size+'&room=0', //+'&data='+JSON.stringify(data),
+                data: {data:data},
+                contentType:"application/json;charset=UTF-8",
+                cache: false,
+                async: true,
+                success: function (data) {
+                    load.stop();
+                    console.log(data);
+                    $("#studentAbo").html("");
+                    $('#studentAbo').html(data);
+                }
+            });
+        }
+
 
         function serializeObject(form)
         {

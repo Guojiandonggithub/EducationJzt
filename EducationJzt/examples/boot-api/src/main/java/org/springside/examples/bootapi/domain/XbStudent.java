@@ -45,6 +45,7 @@ public class XbStudent {
     public String handlePerson;
     public String salesPerson;
     public String deleteStatus;
+    public String advisoryChannel;
 
     public XbStudent() {
 

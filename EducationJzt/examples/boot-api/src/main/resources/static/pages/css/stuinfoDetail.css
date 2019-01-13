@@ -1,0 +1,171 @@
+
+.user-infor-position {
+    margin-bottom: 20px;
+    position: relative;
+}
+.user-infor-l {
+    position: absolute;
+    width: 120px;
+    min-height: 168px;
+    padding: 10px 0 0;
+    background: #dfe7ee;
+    border: 1px #d4dfe5 solid;
+    box-sizing: border-box;
+    top: 0;
+    bottom: 0;
+}
+.user-inner {
+    display: inline-block;
+    position: relative;
+    padding-top: 60px;
+    width: 100%;
+}
+.user-inner .img-com {
+    position: absolute;
+    top: 0;
+    left: 23px;
+    z-index: 1;
+    width: 78px;
+    text-align: center;
+}
+.img-com img {
+    max-width: 78px;
+    height: 78px;
+}
+.user-stat {
+    font-size: 12px;
+    padding: 1px 3px;
+}
+.user-infor-name {
+    width: 112px;
+    margin: 10px 0 8px 0;
+}
+.txt-hide {
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-align: center;
+    margin-top:20px;
+}
+.td_edit {
+    display: inline-block;
+    color: #227ccc!important;
+    cursor: pointer;
+    margin-left: 6px;
+}
+.td_delete {
+    display: inline-block;
+    color: #227ccc!important;
+    cursor: pointer;
+}
+.td_edit + .td_delete {
+    margin-left: 15px;
+}
+.user-infor-r {
+    margin-left: 120px;
+    min-height: 168px;
+    padding: 10px 20px;
+    border: 1px #d4dfe5 solid;
+    box-sizing: border-box;
+    background: #fff;
+}
+.block-box-title {
+    border-left: 4px solid #5094e7;
+    padding-left: 10px;
+    font-size: 16px;
+    min-height: 16px;
+    color: #333;
+    margin-bottom: 20px;
+    line-height: 1;
+    text-align: left;
+}
+.user-infor-ul li {
+    display: inline-block;
+    min-width: 275px;
+    height: 29px;
+    line-height: 29px;
+    text-align: left;
+    font-size: 14px;
+    padding-right: 20px;
+    color: #30404f;
+    list-style: none;
+    width: 275px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: top;
+}
+.text-tips {
+    font-size: 14px;
+    color: #889bb0;
+}
+.btn-white {
+    height: 30px;
+    font-size: 14px;
+    color: #30404f;
+    background: #fff;
+    border-radius: 4px;
+    border: 1px solid #b9bec5;
+    cursor: pointer;
+    padding: 0 10px;
+    outline: 0;
+    min-width: 100px;
+    box-sizing: border-box;
+    line-height: 28px;
+    text-align: center;
+    vertical-align: middle;
+}
+.user-infor-ul .li-block {
+    display: block;
+    width: auto;
+}
+#order table tr th{
+    background:#e9edf2;
+}
+
+#order table tr td{
+    background:#fff;
+    height: 44px;
+    color: #344c67;
+    text-align: center;
+    line-height:44px;
+    word-break: break-all;
+}
+#schedule table tr td{
+    background:#fff;
+    height: 44px;
+    color: #344c67;
+    text-align: center;
+    line-height:44px;
+    word-break: break-all;
+}
+#conflict table tr td{
+    background:#fff;
+    height: 44px;
+    color: #344c67;
+    text-align: center;
+    line-height:44px;
+    word-break: break-all;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

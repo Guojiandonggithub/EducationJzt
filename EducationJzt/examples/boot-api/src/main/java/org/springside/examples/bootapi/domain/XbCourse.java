@@ -45,10 +45,10 @@ public class XbCourse {
     @OneToOne()
     @JoinColumn(name="courseTypeId",referencedColumnName = "id",insertable = false,updatable = false)
     public XbCourseType xbcoursetype;
+    public String deleteStatus;
     public String createTime;
     @Transient
     List<XbCoursePreset> xbCoursePresetList;
-    public String deleteStatus;
     public XbCourse() {
 
     }

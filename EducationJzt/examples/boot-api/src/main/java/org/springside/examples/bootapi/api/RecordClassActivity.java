@@ -42,6 +42,28 @@ public class RecordClassActivity {
 	public XbCoursePresetService xbCoursePresetService;
 
 	/*
+	 * 查询按学员列表
+	 * @return
+	 */
+	@RequestMapping("/accordingStudent")
+	public String accordingStudent(@RequestParam(required = false) String data, ModelMap model, Pageable pageable){
+		Map<String,Object> resultMap = new HashMap<>();
+		Map<String,Object> searhMap = new HashMap<>();
+		if(null!=data){
+			resultMap = com.alibaba.fastjson.JSONObject.parseObject(data,Map.class);
+		}
+		String classesName  = (String)resultMap.get("classesName");
+		if(null!=classesName&&!classesName.equals("")){
+			searhMap.put("LIKE_className",classesName);
+		}
+		Page<XbRecordClass> xbRecordClassPage = studentService.getRecordClassPage(pageable,searhMap);
+		model.addAttribute("xbRecordClassPage",xbRecordClassPage);
+		model.addAttribute("classesName",classesName);
+		model.addAttribute("accordingcurrentzise",xbRecordClassPage.getSize());
+		return "attendClass::accordingStudent";
+	}
+
+	/*
 	 * 跳转到记上课
 	 * @return
 	 */

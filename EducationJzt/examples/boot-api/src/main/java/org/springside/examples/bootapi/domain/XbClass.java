@@ -5,7 +5,9 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 // JPA实体类的标识
 
@@ -62,6 +64,8 @@ public class XbClass {
     public String classroomId;
     public String classroomName;
     public String remarks;
+    @Transient
+    public List<XbCoursePreset> xbCoursePresetList = new ArrayList<>();
 
     public XbClass() {
 

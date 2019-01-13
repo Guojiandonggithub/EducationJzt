@@ -200,14 +200,25 @@ public class XbStudentService {
 	}
 	@Transactional
 	public XbClassroom checkClassroomName(String classroomName){
-		return xbClassroomDao.findAllByClassroomName(classroomName);
+		return xbClassroomDao.findAllByClassroomNameAndDeleteStatus(classroomName,"1");
 	}
 	@Transactional
 	public XbStudent checkStudentName(String name,String contactPhone){
 		return studentDao.findAllByStudentNameAndContactPhone(name,contactPhone);
 	}
 	@Transactional
-	public XbClass checkClassesName(String name,String organId,String courseId){
-		return xbClassDao.findAllByClassNameAndOrganIdAndCourseIdAndDeleteStatus(name,organId,courseId,"1");
+	public XbClass checkClassesName(String name,String organId,String courseId,String teacherId){
+		return xbClassDao.findAllByClassNameAndOrganIdAndCourseIdAndDeleteStatusAndTeacherId(name,organId,courseId,"1",teacherId);
 	}
+
+	@Transactional
+	public Page<XbRecordClass>  getRecordClassPage(Pageable pageable,Map<String, Object> searchParams) {
+		searchParams = HttpServletUtil.getRoleDate(searchParams);
+		//searchParams.put("EQ_deleteStatus","1");
+		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
+		Specification<XbRecordClass> spec = DynamicSpecifications.bySearchFilter(
+				filters.values(), XbRecordClass.class);
+		return xbRecordClassDao.findAll(spec,pageable);
+	}
+
 }

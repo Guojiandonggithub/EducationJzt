@@ -3,10 +3,8 @@ package org.springside.examples.bootapi.domain;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Transient;
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -23,8 +21,20 @@ public class XbRecordClass {
     @GenericGenerator(name="idGenerator", strategy="uuid") //这个是hibernate的注解/生成32位UUID
     @GeneratedValue(generator="idGenerator")
     public String id;
+    @NotNull(message="班级不能为空")
     public String attendId;
+
+    @OneToOne()
+    @JoinColumn(name="attendId",referencedColumnName = "id",insertable = false,updatable = false)
+    public XbClass xbClass;
+
+    @NotNull(message="学生不能为空")
     public String studentId;
+
+    @OneToOne()
+    @JoinColumn(name="studentId",referencedColumnName = "id",insertable = false,updatable = false)
+    public XbStudent xbStudent;
+
     public String studentName;
     public String studentImg;
     public String state;

@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="../static/pages/css/madal.css" />
     <link rel="stylesheet" href="../static/pages/css/kd.ui.plugin.css" />
     <link rel="stylesheet" href="../static/pages/css/loading.css" />
+
     <script src="../static/pages/js/jquery.min.js"></script>
     <script src="../static/pages/js/ace.min.js"> </script>
     <script src="../static/pages/js/bootstrap.min.js"> </script>
@@ -41,8 +42,8 @@
             <div class="enrollCon">
                 <h2>基本信息</h2>
                 <div class="openMore">
-                    <button class="more" type="button">展开更多</button>
-                    <!--<button class="choice" href="#modal-table2" type="button" class="blue" data-toggle="modal">选择已有学员</button>-->
+                    <!--<button class="more" type="button">展开更多</button>-->
+                    <button class="choice" href="#modal-table2" type="button" class="blue" data-toggle="modal" onclick="getStudentList()">选择已有学员</button>
                 </div>
                 <div class="headPic">
                     <span>头像</span>
@@ -52,10 +53,11 @@
                     <div class="form-group">
                         <label class="col-sm-1" for="studentName">学员姓名</label>
                         <input type="text" name="studentName" id="studentName" placeholder="请输入学生姓名">
+                        <input type="hidden" name="id" id="studentId">
                     </div>
                     <div class="form-group enrollNum">
                         <label class="col-sm-1">联系电话</label>
-                        <input type="text" name="contactPhone"  placeholder="请输入联系电话" >
+                        <input type="text" name="contactPhone" id="contactPhone"  placeholder="请输入联系电话" >
                         <select name="contactRelation" id="contactRelation">
                             <option value="母亲">母亲</option>
                             <option value="父亲">父亲</option>
@@ -171,7 +173,7 @@
                 <div style="width:200px; margin-left: 8px; display: inline-block; ">
                     <div class="cash">
                         <select name="classIds">
-                            <option th:each="classes:${course.xbClassList}"  th:value="${classes.id}" th:text="${classes.className}"></option>
+                            <option th:each="classes:${course.xbClassList}"  th:value="${classes.id}" th:text="${classes.teacher.employeeName}+${classes.className}"></option>
                         </select>
                         <input type="hidden" id="courseId" name="courseId" th:value="${course.xbCourse.id}">
                         <input type="hidden" id="receivable" name="receivable" th:value="${course.money}">
@@ -386,7 +388,7 @@
                         <th>班级名称</th>
                         <th>课程</th>
                         <th>人数</th>
-                        <!--<th>学费标准 </th>-->
+                        <th>学费标准 </th>
                         <th>教师</th>
                         <!--<th>开班</th>
                         <th>上课时段</th>-->
@@ -404,12 +406,16 @@
                     <th:block th:if="${xbClassPage}" th:fragment="classlist">
                     <tr th:each="clas,clasint:${xbClassPage}" >
                         <td>
-                            <input name="form-field-checkbox" name="classcheckboxname" type="checkbox" th:value="${clas.id}" onchange="classbox();">
+                            <input name="form-field-checkbox" name="classcheckboxname" type="checkbox" th:value="${clas.id}" onchange="classbox()">
                         </td>
                         <td th:text="${clas.className}"><img src="../static/pages/img/man.png"></td>
                         <td th:text="${clas.xbCourse.courseName}"></td>
                         <td class="numberPer" th:text="${clas.establishNum}"></td>
-                        <!--<td>5700.00元/期(190课时)</td>-->
+                        <td>
+                            <select th:name="sfbz" th:id="sfbz+${clasint.index}">
+                                <option th:each="preset:${clas.xbCoursePresetList}"  th:value="${preset.id}" th:text="${preset.money}+'元('+${preset.periodNum}+'课时)'"></option>
+                            </select>
+                        </td>
                         <td th:text="${clas.teacher.employeeName}"></td>
                         <!--<td>10-22</td>
                         <td>
@@ -442,54 +448,57 @@
             </div>
             <div class="modalFrom">
                 <div class="form-group" style="margin-right:0 !important;">
-                    <select name="nameormobile">
+                    <select name="" id="">
                         <option value="">学员姓名</option>
-                        <option value="">手机号</option>
+                        <!--<option value="">张三</option>
+                    <option value="">李四</option>-->
                     </select>
                 </div>
                 <form class="form-search">
-                        <span class="input-icon">
-                            <input type="text" placeholder="请输入学员姓名或手机号" class="nav-search-input" id="nav-search-input" autocomplete="off">
-                            <i class="ace-icon fa fa-search nav-search-icon"></i>
-                        </span>
+                            <span class="input-icon">
+                                <input type="text" oninput="getStudentList()" id="studentNames" placeholder="请输入学员名称">
+                                <!--<i class="ace-icon fa fa-search nav-search-icon"></i>-->
+                            </span>
                 </form>
-                <div class="form-group">
-                    <label>校区</label>
-                    <select  id="organId">
-                        <option value="">全部校区</option>
-                        <option th:each="orgs:${organsList}"  th:value="${orgs.id}" th:text="${orgs.organName}"></option>
-                    </select>
-                </div>
+                <!--<div class="form-group">
+                <label>校区</label>
+                <select name="" id="">
+                    <option value="">全部校区</option>
+                    <option value="">111</option>
+                    <option value="">222</option>
+                </select>
+            </div>-->
             </div>
-            <div class="modal-body no-padding" style="height: 200px;overflow-y: auto">
+            <div class="modal-body no-padding" style="height: 200px;overflow-y: auto" id="donghua">
                 <table class="table table-striped  table-hover no-margin-bottom no-border-top">
                     <thead>
                     <tr>
                         <th></th>
                         <th>姓名</th>
                         <th>联系方式</th>
-                        <!--<th>公立学校</th>-->
                         <th>在读课程</th>
                     </tr>
                     </thead>
                     <tbody style="display: none;">
-                    <tr class="none">
-                        <td>
-                            <img src="../static/pages/img/none.png">
-                            <span>很抱歉，这里什么都没有</span>
-                        </td>
-                    </tr>
+                    <!--<tr class="none">
+                <td>
+                    <img src="img/none.png">
+                    <span>很抱歉，这里什么都没有</span>
+                </td>
+            </tr>-->
                     </tbody>
-                    <tbody>
-                    <tr>
-                        <td>
-                            <input name="form-field-checkbox" type="radio">
-                        </td>
-                        <td><img src="../static/pages/img/boy.png">张三</td>
-                        <td>15874747474</td>
-                        <!--<td ></td>-->
-                        <td><img src="../static/pages/img/ke.png">在读课程</td>
-                    </tr>
+                    <tbody th:id="userchoose">
+                    <th:block th:if="${xbStudentPage}" th:fragment="studentList">
+                        <tr th:each="stu : ${xbStudentPage.content}">
+                            <td>
+                                <input name="form-field-checkbox" name="studio" type="radio" th:value="${stu.id}">
+                            </td>
+                            <td th:text="${stu.studentName}"><img src="../static/pages/img/boy.png"></td>
+                            <td th:text="${stu.contactPhone}"></td>
+                            <td></td>
+                            <!--<td><img src="../static/pages/img/ke.png">在读课程</td>-->
+                        </tr>
+                    </th:block>
                     </tbody>
                 </table>
             </div>
@@ -498,8 +507,7 @@
                 <button class="btn pull-left" data-dismiss="modal">
                     取消
                 </button>
-                <p>已选择班级<span>0</span>个</p>
-                <button class="btn pull-right" data-dismiss="modal">
+                <button class="btn pull-right" data-dismiss="modal"  type="button" onclick="chooseUser();">
                     确定
                 </button>
             </div>
@@ -510,8 +518,8 @@
 
 <script>
     !function(){
-        laydate({elem:'#demo'});//绑定元素
-        laydate({elem:'#demo1'});
+        laydate.render({elem:'#demo'});//绑定元素
+        laydate.render({elem:'#demo1'});
     }();
     $(function(){
         //$(".apply").hide();
@@ -569,6 +577,10 @@
             }
         });
         jQuery.validator.addMethod('checkName', function (value, element) {
+            var studentId = $("#studentId").val();
+            if(studentId){
+                return false;
+            }
             var msgcode=null;
             $.ajax({
                 url: basePath + "/student/checkStudentName",
@@ -819,9 +831,20 @@
 
     function chooseClass(){
         $("#enrollCon").hide();
-        var classIds = $("input:checkbox[name='classcheckboxname']:checked").map(function(index,elem) {
-            return $(elem).val();
-        }).get().join(',');
+        var list = [];
+        var bb = {
+            ids:"",
+            indexs:""
+        };
+        $('input:checkbox[name=\'classcheckboxname\']').each(function (index, domEle) {
+            if(domEle.checked){
+                bb = {};
+                bb.ids = domEle.value;
+                bb.indexs = $("#sfbz"+index).val();
+                list.push(bb);
+            }
+        });
+        console.log(list);
         var load = new Loading();
         load.init({
             target: "#modal-content-banji"
@@ -831,7 +854,7 @@
             type: 'get',
             //dataType: 'json',
             url: basePath + '/student/chooseClass',
-            data: {classIds:classIds},
+            data: {xbClassparams:JSON.stringify(list)},
             contentType:"application/json;charset=UTF-8",
             cache: false,
             async: true,
@@ -912,6 +935,65 @@
             }
         });
     }
+
+    function getStudentList() {
+        var load = new Loading();
+        load.init({
+            target: "#donghua"
+        });
+        load.start();
+        $.ajax({
+            type: 'get',
+            //dataType: 'json',
+            url: basePath + '/feeRelated/getStudentList',
+            data: {
+                studentName: $("#studentNames").val()
+            },
+            contentType: "application/json;charset=UTF-8",
+            cache: false,
+            async: true,
+            success: function (data) {
+                load.stop();
+                console.log(data);
+                $("#userchoose").html("");
+                $('#userchoose').append(data);
+            }
+        });
+    };
+
+    function chooseUser() {
+        var load = new Loading();
+        load.init({
+            target: "#donghua"
+        });
+        var val = $('input:radio[name="studio"]:checked').val();
+        if (val == null) {
+            $.kd.kdAlert("什么也没选中!");
+            return false;
+        }
+        load.start();
+        $.ajax({
+            type: 'get',
+            dataType: 'json',
+            url: basePath + '/feeRelated/enrollchooseStudent',
+            data: {
+                studentId: val
+            },
+            contentType: "application/json;charset=UTF-8",
+            async: true,
+            success: function (data) {
+                load.stop();
+                console.log(data);
+                $('#studentName').val(data.data.studentName);
+                $("#studentId").val(data.data.id);
+                $("#contactPhone").val(data.data.contactPhone);
+                $("#contactRelation").val(data.data.contactRelation);
+                $("input[name='"+data.data.sex +"']").attr('checked','true');
+                $("input[name='"+data.data.advisoryChannel+"']").attr('checked','true');
+            }
+        });
+    };
+
     </script>
     </body>
     </html>
