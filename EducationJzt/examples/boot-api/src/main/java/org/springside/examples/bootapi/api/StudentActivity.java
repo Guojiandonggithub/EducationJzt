@@ -449,6 +449,12 @@ public class StudentActivity {
 			}
 			xbStudent.surplusMoney = su;
 			xbStudent.paymentMoney = pay;
+			String id = xbStudent.id;
+			if(null!=id&&!"".equals(id)){
+				XbStudent xbStudent1 = studentService.getXbStudent(id);
+				Integer periodNum = xbStudent1.totalPeriodNum;
+				xbStudent.totalPeriodNum = xbStudent.totalPeriodNum+periodNum;
+			}
 			xbStudent = studentService.saveXbStudent(xbStudent);
 			xbSupplementFee.studentId = xbStudent.id;
 			String content = "";
@@ -501,7 +507,7 @@ public class StudentActivity {
 	 * @return
 	 */
 	@RequestMapping("/getClassList")
-	public String getClassList(@RequestParam(required = false) String orginId,@RequestParam(required = false) String classesName,ModelMap model, Pageable pageable){
+	public String getClassList(@RequestParam(required = false) String chargingMode,@RequestParam(required = false) String orginId,@RequestParam(required = false) String classesName,ModelMap model, Pageable pageable){
 		List<SysOrgans> organsList = organsService.getOrgansList();
 		if(organsList.size()>0){
 			Map<String,Object> xbCoursesearhMap = new HashMap<>();
@@ -512,6 +518,10 @@ public class StudentActivity {
 			if(null!=classesName&&!classesName.equals("")){
 				xbCoursesearhMap.put("LIKE_className",classesName);
 			}
+			if(null==chargingMode||chargingMode.equals("")){
+				chargingMode = "0";
+			}
+			xbCoursesearhMap.put("EQ_xbCourse.chargingMode",chargingMode);
 			Page<XbClass> xbClassPage = studentService.getXbClassList(pageable,xbCoursesearhMap);
             List<XbClass> xbClassList = xbClassPage.getContent();
             List<XbClass> xbClassPages = new ArrayList<>();
@@ -566,6 +576,7 @@ public class StudentActivity {
 	public String chooseCourse(@RequestParam(required = false) String courseIds,ModelMap model, Pageable pageable){
 		List<XbCoursePreset> xbCourseList = new ArrayList<>();
 		BigDecimal money = new BigDecimal(0);
+		Integer num = 0;
 			if(null!=courseIds&&!courseIds.equals("")){
 				String[] str = courseIds.split(",");
 				for (int i = 0; i < str.length; i++) {
@@ -581,11 +592,13 @@ public class StudentActivity {
 						xbCoursePreset.money = totalmoney;
 					}
 					money = money.add(totalmoney);
+					num = num + xbCoursePreset.periodNum;
 					xbCourseList.add(xbCoursePreset);
 				}
 			}
 			model.addAttribute("xbCourseLists",xbCourseList);
-			model.addAttribute("money",money);
+			model.addAttribute("money",money);//总金额
+			model.addAttribute("periodNum",num);//总课时
 			model.addAttribute("organName",xbCourseList.get(0).sysorgans.organName);
 		return "enroll::baoming";
 	}
@@ -599,6 +612,7 @@ public class StudentActivity {
 		List<XbCoursePreset> xbCoursePresetList = new ArrayList<>();
 		List<XbClassDto> xbStudentRelationList = com.alibaba.fastjson.JSONArray.parseArray(xbClassparams,XbClassDto.class);
 		BigDecimal money = new BigDecimal(0);
+		Integer num = 0;
 			if(xbStudentRelationList.size()>0){
 				for (int i = 0; i < xbStudentRelationList.size(); i++) {
 					List<XbClass> classList = new ArrayList<>();
@@ -617,6 +631,7 @@ public class StudentActivity {
 								xbCourseList.get(j).money = totalmoney;
 							}
 							money = money.add(totalmoney);
+							num = num + xbCourseList.get(j).periodNum;
 							xbCoursePresetList.add(xbCourseList.get(j));
 						}
 					}
@@ -624,6 +639,7 @@ public class StudentActivity {
 			}
 			model.addAttribute("xbCourseLists",xbCoursePresetList);
 			model.addAttribute("money",money);
+			model.addAttribute("periodNum",num);//总课时
 			model.addAttribute("organName",xbCoursePresetList.get(0).sysorgans.organName);
 		return "enroll::baoming";
 	}
