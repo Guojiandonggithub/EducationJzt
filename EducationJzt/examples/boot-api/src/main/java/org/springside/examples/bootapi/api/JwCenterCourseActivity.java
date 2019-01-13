@@ -216,13 +216,13 @@ public class JwCenterCourseActivity {
      * 编辑校区
      */
     private IResult designatedCampusEdit(List<Map<String,String >> list,XbCourse xbcourse){
-        /*for(Map map:list){
+        for(Map map:list){
             if( checkCourseTypeAndNameAndSchoolByOne(xbcourse.courseName,xbcourse.courseTypeId,(String)map.get("organIds"),xbcourse.id)){
                 XbCourseType xbct = xbCourseTypeService.findXbCourseTypeById(xbcourse.courseTypeId);
                 SysOrgans syso = organsService.findOrganbyId((String)map.get("organIds"));
                 return UtilTools.makerErsResults("课程名称【"+xbcourse.courseName+"】 课程类别【"+xbct.getCourseTypeName()+"】 校区【"+syso.organName+"】已存在,不能重复");
             }
-        }*/
+        }
         for(Map map:list){
             //开始存课程
             Date date  = new Date();
@@ -266,13 +266,13 @@ public class JwCenterCourseActivity {
         xbcourse.setCreateDate(DateUtil.getDateStr(date));
         xbcourse.setCreateTime(DateUtil.getTimeStr(date));
         //验证
-        /*for(Map map:list){
+        for(Map map:list){
             if( checkCourseTypeAndNameAndSchoolByOne(xbcourse.courseName,xbcourse.courseTypeId,(String)map.get("organIds"),"")){
                 XbCourseType xbct = xbCourseTypeService.findXbCourseTypeById(xbcourse.courseTypeId);
                 SysOrgans syso = organsService.findOrganbyId((String)map.get("organIds"));
                 return UtilTools.makerErsResults("课程名称【"+xbcourse.courseName+"】课程类别【"+xbct.getCourseTypeName()+"】校区【"+syso.organName+"】已存在,不能重复");
             }
-        }*/
+        }
         XbCourse xbcnew = new XbCourse();
         BeanUtils.copyProperties(xbcourse,xbcnew);
         xbcnew.deleteStatus = "1";

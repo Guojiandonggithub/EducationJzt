@@ -36,7 +36,7 @@
 <div class="main-container" id="main-container">
     <div th:replace="layout::left('13','37')">
     </div>
-    <div class="main-content">
+    <div class="main-content" id="main-content">
         <div class="breadcrumbs" id="breadcrumbs">
             <img src="../static/pages/img/line1.png">
             <span th:text="${typename}">新建课程</span>
@@ -262,7 +262,7 @@
             function saveCourse() {
                 var load = new Loading();
                 load.init({
-                    target: "#control-position"
+                    target: "#main-content"
                 });
 
                 if ($("#dJFrom").valid()) {
@@ -273,6 +273,7 @@
                 if(typename=="修改课程" || typename=="新增定价标准"){
                     datafrom.chargingMode =  $("input[name='chargingMode']:checked").val();
                     datafrom.type =  $("input[name='type']:checked").val();
+                    datafrom.openingType =  $("input[name='openingType']:checked").val();
                 }
                 if(datafrom.courseTypeId=="-1"){
                     $.kd.kdMsg("请选择课程类别");
@@ -357,6 +358,7 @@
                         var msg = data.msg;
                         if (status == "0") {
                             $.kd.kdAlert(data.msg,function(){
+                                load.start();
                                 window.location.href =
                                     basePath + "/jwcentercourse/tocourse"
                             });

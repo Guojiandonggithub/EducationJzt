@@ -246,13 +246,14 @@
                                             </li>
                                             <li th:if="${xbAttendList.getNumber()+1 <xbAttendList.getTotalPages()-4}"><a>...</a></li>
                                             <!--最后5页处理-->
-                                            <li th:if="${xbAttendList.getNumber()+1 >=xbAttendList.getTotalPages()-4}"
+                                            <li th:if="${xbAttendList.getNumber()+1 >=xbAttendList.getTotalPages()-4 || xbAttendList.getTotalPages()>5}"
                                                 th:class="${i} eq ${xbAttendList.getNumber()+1}?'active':''"
                                                 th:each="i:${#numbers.sequence(xbAttendList.getTotalPages()-5,xbAttendList.getTotalPages()-1)}">
                                                 <a  th:onclick="'javascript:getOrgansListPage(\''+${i-1}+'\')'" th:text="${i}"></a>
                                             </li>
                                             <!--最后一页-->
-                                            <li th:class="${xbAttendList.getNumber()+1==xbAttendList.getTotalPages()}?'active':''">
+                                            <li th:if="${xbAttendList.getTotalPages()>5}"
+                                                    th:class="${xbAttendList.getNumber()+1==xbAttendList.getTotalPages()}?'active':''">
                                                 <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${xbAttendList.getTotalPages()-1}+'\')'"
                                                    th:text="${xbAttendList.getTotalPages()}"></a>
                                             </li>
@@ -698,7 +699,7 @@
         }
         var load = new Loading();
         load.init({
-            target: "#schedule"
+            target: "#modal-content"
         });
         load.start();
         data.weekType = strgetSelectValue;
@@ -717,6 +718,7 @@
                 var msg = data.msg;
                 if (status == "00") {
                     $.kd.kdAlert(msg,function () {
+                        load.start();
                         window.location.href = basePath + '/jw_center_arranging_course/to_arranging_course';
                     });
                 }else {
