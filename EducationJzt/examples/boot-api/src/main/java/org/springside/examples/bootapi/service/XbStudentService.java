@@ -140,6 +140,14 @@ public class XbStudentService {
 		return xbClassDao.getXbClassByDeleteStatus("1");
 	}
 	@Transactional
+	public List<XbClass> getXBclassListAll(Map<String, Object> searchParams) {
+		searchParams.put("EQ_deleteStatus","1");
+		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
+		Specification<XbClass> spec = DynamicSpecifications.bySearchFilter(
+				filters.values(), XbClass.class);
+		return xbClassDao.findAll(spec);
+	}
+	@Transactional
 	public XbClassroom saveXbClassroom(XbClassroom classroom) {
 		classroom.deleteStatus = "1";
 		return xbClassroomDao.save(classroom);

@@ -155,7 +155,7 @@
                                             <option th:selected="${classcurrentzise eq 15}" value="15">15条/页</option>
                                         </select>
                                     </div>
-                                    <ul class="pagination" th:if="${xbClassPage.getTotalPages() gt 0}">
+                                    <!--<ul class="pagination" th:if="${xbClassPage.getTotalPages() gt 0}">
                                         <li class="disabled">
                                             <a href="#" th:onclick="'javascript:getClassListPage(\''+0+'\')'">首页</a>
                                         </li>
@@ -173,9 +173,56 @@
                                                 <i class="ace-icon fa fa-angle-double-right"></i>
                                             </a>
                                         </li>
-                                        <!-- <li class="">
+                                        &lt;!&ndash; <li class="">
                                          <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${currentnumber}+'\')'">尾页</a>
-                                     </li>-->
+                                     </li>&ndash;&gt;
+                                    </ul>-->
+                                    <ul class="pagination" th:if="${xbClassPage.getTotalPages() gt 0}" >
+                                        <!--上一页-->
+                                        <li  th:if="${xbClassPage.getNumber()-1} ge 0">
+                                            <a  th:onclick="'javascript:getClassListPage(\''+${xbClassPage.getNumber()-1}+'\')'">
+                                                <i class="ace-icon fa ">上一页</i>
+                                            </a>
+                                        </li>
+                                        <!--第1页-->
+                                        <li th:class=" ${xbClassPage.getNumber()==0}?'active':''">
+                                            <a  th:onclick="'javascript:getClassListPage(\''+0+'\')'">1</a>
+                                        </li>
+                                        <!--小于等于5页处理-->
+                                        <li th:if="${ xbClassPage.getNumber()+1<=5 && xbClassPage.getTotalPages()>1}"
+                                            th:class="${i} eq ${xbClassPage.getNumber()+1}?'active':''"
+                                            th:each="i:${#numbers.sequence(2,xbClassPage.getTotalPages()<=2?2:(xbClassPage.getTotalPages()>5?6:xbClassPage.getTotalPages()))}">
+                                            <a  th:onclick="'javascript:getClassListPage(\''+${i-1}+'\')'" th:text="${i}"></a>
+                                        </li>
+                                        <li th:if="${xbClassPage.getNumber()+1>5}"><a>...</a></li>
+                                        <!--大于5页或者小于总数-5页-->
+                                        <li th:if="${xbClassPage.getNumber()+1>5 && xbClassPage.getNumber()+1<xbClassPage.getTotalPages()-4}"
+                                            th:class="${i} eq ${xbClassPage.getNumber()+1}?'active':''"
+                                            th:each="i:${#numbers.sequence((xbClassPage.getNumber()+1)-2,(xbClassPage.getNumber()+1)+2)}">
+                                            <a  th:onclick="'javascript:getClassListPage(\''+${i-1}+'\')'" th:text="${i}"></a>
+                                        </li>
+                                        <li th:if="${xbClassPage.getNumber()+1 <xbClassPage.getTotalPages()-4}"><a>...</a></li>
+                                        <!--最后5页处理-->
+                                        <li th:if="${xbClassPage.getNumber()+1 >=xbClassPage.getTotalPages()-4 && xbClassPage.getTotalPages()>5}"
+                                            th:class="${i} eq ${xbClassPage.getNumber()+1}?'active':''"
+                                            th:each="i:${#numbers.sequence(xbClassPage.getTotalPages()-5,xbClassPage.getTotalPages()-1)}">
+                                            <a  th:onclick="'javascript:getClassListPage(\''+${i-1}+'\')'" th:text="${i}"></a>
+                                        </li>
+                                        <!--最后一页-->
+                                        <li th:if="${xbClassPage.getTotalPages()>5}"
+                                            th:class="${xbClassPage.getNumber()+1==xbClassPage.getTotalPages()}?'active':''">
+                                            <a href="#" th:onclick="'javascript:getClassListPage(\''+${xbClassPage.getTotalPages()-1}+'\')'"
+                                               th:text="${xbClassPage.getTotalPages()}"></a>
+                                        </li>
+                                        <!--下一页-->
+                                        <li th:if="${xbClassPage.getTotalPages()} gt ${xbClassPage.getNumber()+1}">
+                                            <a th:onclick="'javascript:getClassListPage(\''+${xbClassPage.getNumber()+1}+'\')'">
+                                                <i class="ace-icon fa ">下一页</i>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <span style="color: #020202;" th:text="'共'+${xbClassPage.getTotalPages()}+'页/'+${xbClassPage.getTotalElements()}+'条记录'"></span>
+                                        </li>
                                     </ul>
                                 </div>
                             </div>
@@ -230,7 +277,7 @@
                                             <option th:selected="${roomcurrentzise eq 15}" value="15">15条/页</option>
                                         </select>
                                     </div>
-                                    <ul class="pagination" th:if="${xbClassroomPage.getTotalPages() gt 0}">
+                                    <!--<ul class="pagination" th:if="${xbClassroomPage.getTotalPages() gt 0}">
                                         <li class="disabled">
                                             <a href="#" th:onclick="'javascript:getOrgansListPage(\''+0+'\')'">首页</a>
                                         </li>
@@ -248,9 +295,56 @@
                                                 <i class="ace-icon fa fa-angle-double-right"></i>
                                             </a>
                                         </li>
-                                        <!-- <li class="">
+                                        &lt;!&ndash; <li class="">
                                          <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${currentnumber}+'\')'">尾页</a>
-                                     </li>-->
+                                     </li>&ndash;&gt;
+                                    </ul>-->
+                                    <ul class="pagination" th:if="${xbClassroomPage.getTotalPages() gt 0}" >
+                                        <!--上一页-->
+                                        <li  th:if="${xbClassroomPage.getNumber()-1} ge 0">
+                                            <a  th:onclick="'javascript:getOrgansListPage(\''+${xbClassroomPage.getNumber()-1}+'\')'">
+                                                <i class="ace-icon fa ">上一页</i>
+                                            </a>
+                                        </li>
+                                        <!--第1页-->
+                                        <li th:class=" ${xbClassroomPage.getNumber()==0}?'active':''">
+                                            <a  th:onclick="'javascript:getOrgansListPage(\''+0+'\')'">1</a>
+                                        </li>
+                                        <!--小于等于5页处理-->
+                                        <li th:if="${ xbClassroomPage.getNumber()+1<=5 && xbClassroomPage.getTotalPages()>1}"
+                                            th:class="${i} eq ${xbClassroomPage.getNumber()+1}?'active':''"
+                                            th:each="i:${#numbers.sequence(2,xbClassroomPage.getTotalPages()<=2?2:(xbClassroomPage.getTotalPages()>5?6:xbClassroomPage.getTotalPages()))}">
+                                            <a  th:onclick="'javascript:getOrgansListPage(\''+${i-1}+'\')'" th:text="${i}"></a>
+                                        </li>
+                                        <li th:if="${xbClassroomPage.getNumber()+1>5}"><a>...</a></li>
+                                        <!--大于5页或者小于总数-5页-->
+                                        <li th:if="${xbClassroomPage.getNumber()+1>5 && xbClassroomPage.getNumber()+1<xbClassroomPage.getTotalPages()-4}"
+                                            th:class="${i} eq ${xbClassroomPage.getNumber()+1}?'active':''"
+                                            th:each="i:${#numbers.sequence((xbClassroomPage.getNumber()+1)-2,(xbClassroomPage.getNumber()+1)+2)}">
+                                            <a  th:onclick="'javascript:getOrgansListPage(\''+${i-1}+'\')'" th:text="${i}"></a>
+                                        </li>
+                                        <li th:if="${xbClassroomPage.getNumber()+1 <xbClassroomPage.getTotalPages()-4}"><a>...</a></li>
+                                        <!--最后5页处理-->
+                                        <li th:if="${xbClassroomPage.getNumber()+1 >=xbClassroomPage.getTotalPages()-4 && xbClassroomPage.getTotalPages()>5}"
+                                            th:class="${i} eq ${xbClassroomPage.getNumber()+1}?'active':''"
+                                            th:each="i:${#numbers.sequence(xbClassroomPage.getTotalPages()-5,xbClassroomPage.getTotalPages()-1)}">
+                                            <a  th:onclick="'javascript:getOrgansListPage(\''+${i-1}+'\')'" th:text="${i}"></a>
+                                        </li>
+                                        <!--最后一页-->
+                                        <li th:if="${xbClassroomPage.getTotalPages()>5}"
+                                            th:class="${xbClassroomPage.getNumber()+1==xbClassroomPage.getTotalPages()}?'active':''">
+                                            <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${xbClassroomPage.getTotalPages()-1}+'\')'"
+                                               th:text="${xbClassroomPage.getTotalPages()}"></a>
+                                        </li>
+                                        <!--下一页-->
+                                        <li th:if="${xbClassroomPage.getTotalPages()} gt ${xbClassroomPage.getNumber()+1}">
+                                            <a th:onclick="'javascript:getOrgansListPage(\''+${xbClassroomPage.getNumber()+1}+'\')'">
+                                                <i class="ace-icon fa ">下一页</i>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <span style="color: #020202;" th:text="'共'+${xbClassroomPage.getTotalPages()}+'页/'+${xbClassroomPage.getTotalElements()}+'条记录'"></span>
+                                        </li>
                                     </ul>
                                 </div>
                             </div>
@@ -374,9 +468,9 @@
             });
             load.start();
             var size = $('#size option:selected').val(); //选中的值
-            if (page) {
+            /*if (page) {
                 page = page - 1;
-            }
+            }*/
             window.location.href = basePath + '/student/getXbClassroomList?page=' + page + '&size=' + size;
         }
 
@@ -479,6 +573,10 @@
             })
         }
     </script>
+<style>
+
+    a{cursor:pointer}
+</style>
 </body>
 
 </html>

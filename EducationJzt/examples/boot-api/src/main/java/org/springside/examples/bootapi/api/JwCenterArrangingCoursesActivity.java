@@ -2,6 +2,7 @@ package org.springside.examples.bootapi.api;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,13 +16,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import org.springside.examples.bootapi.ToolUtils.BaseAction;
 import org.springside.examples.bootapi.ToolUtils.DateUtil;
 import org.springside.examples.bootapi.ToolUtils.HttpServletUtil;
 import org.springside.examples.bootapi.domain.*;
-import org.springside.examples.bootapi.service.EmployeeService;
-import org.springside.examples.bootapi.service.XbAttendClassService;
-import org.springside.examples.bootapi.service.XbStudentService;
-import org.springside.examples.bootapi.service.XbSubjectService;
+import org.springside.examples.bootapi.service.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -44,7 +43,67 @@ public class JwCenterArrangingCoursesActivity {
     public XbStudentService xbStudentService;
     @Autowired
     public EmployeeService employeeService;
-
+    @Autowired
+    public OrgansService organsService;
+    @Autowired
+    public XbCoursePresetService xbCoursePresetService;
+    @Autowired
+    public BaseAction baseAction;
+    @RequestMapping("/findCourseByorgid")
+    public void findCourseByorgid(@RequestParam String orgid,
+                                     HttpServletResponse resp){
+        Map<String,Object> searmap = new HashMap<>();
+        searmap.put("EQ_organId",orgid);
+        List<XbCoursePreset> syslist = xbCoursePresetService.getXbCourseListByOrgid(orgid);
+        JSONArray jsonArray = new JSONArray();
+        JSONObject jsonObjinti = new JSONObject();
+        jsonObjinti.put("id", "0");
+        jsonObjinti.put("courseName", "不选择");
+        jsonArray.add(jsonObjinti);
+        for(XbCoursePreset s : syslist){
+            JSONObject jsonObj = new JSONObject();
+            jsonObj.put("id", s.xbCourse.id);
+            jsonObj.put("courseName", s.sysorgans.organName+s.xbCourse.courseName);
+            jsonArray.add(jsonObj);
+        }
+        baseAction.writeJson(resp,jsonArray);
+    }
+    @RequestMapping("/findClassListByorgid")
+    public void findClassListByorgid(@RequestParam String orgid,
+            HttpServletResponse resp){
+        Map<String,Object> searmap = new HashMap<>();
+        searmap.put("EQ_organId",orgid);
+        List<XbClass> syslist = xbStudentService.getXBclassListAll(searmap);
+        JSONArray jsonArray = new JSONArray();
+        JSONObject jsonObjinti = new JSONObject();
+        jsonObjinti.put("id", "0");
+        jsonObjinti.put("className", "不选择");
+        jsonArray.add(jsonObjinti);
+        for(XbClass s : syslist){
+            JSONObject jsonObj = new JSONObject();
+            jsonObj.put("id", s.id);
+            jsonObj.put("className", s.sysOrgans.organName+s.className);
+            jsonArray.add(jsonObj);
+        }
+        baseAction.writeJson(resp,jsonArray);
+    }
+    @RequestMapping("/findSysOragList")
+    public void findSysOragList(HttpServletResponse resp){
+        Map<String,Object> searmap = new HashMap<>();
+        List<SysOrgans> syslist = organsService.getOrgansListAll(searmap);
+        JSONArray jsonArray = new JSONArray();
+        JSONObject jsonObjinti = new JSONObject();
+        jsonObjinti.put("id", "0");
+        jsonObjinti.put("organName", "不选择");
+        jsonArray.add(jsonObjinti);
+        for(SysOrgans s : syslist){
+            JSONObject jsonObj = new JSONObject();
+            jsonObj.put("id", s.id);
+            jsonObj.put("organName", s.organName);
+            jsonArray.add(jsonObj);
+        }
+        baseAction.writeJson(resp,jsonArray);
+    }
     /**
      * 点击班级级联查询
      * @return
@@ -150,6 +209,20 @@ public class JwCenterArrangingCoursesActivity {
         }else if(!subjectId.equals("0")){
             searhMap.put("EQ_subjectId",subjectId);
         }
+        //班级
+        String classId_combobox = (String)resultMap.get("classId_combobox");
+        if(null==classId_combobox){
+            classId_combobox = "0";
+        }else if(!classId_combobox.equals("0")){
+            searhMap.put("EQ_classId",classId_combobox);
+        }
+        //课程
+        String courseId_combobox = (String)resultMap.get("courseId_combobox");
+        if(null==courseId_combobox){
+            courseId_combobox = "0";
+        }else if(!courseId_combobox.equals("0")){
+            searhMap.put("EQ_xbclass.xbCourse.id",courseId_combobox);
+        }
        Page<XbAttendClass> xbAttendList = xbAttendClassService.findXbAttendClassPageAll(pageable,searhMap);
         for(XbAttendClass xbattendclass : xbAttendList){
             xbattendclass.ydstudentnum = xbAttendClassService.getYdstudentnum(xbattendclass.classId,xbattendclass.startDateTime);
@@ -161,6 +234,13 @@ public class JwCenterArrangingCoursesActivity {
         model.addAttribute("type",type);
         model.addAttribute("courtype",courtype);
         model.addAttribute("subjectId",subjectId);
+        model.addAttribute("classId_combobox",classId_combobox);
+        model.addAttribute("courseId_combobox",courseId_combobox);
+        String sysorgId_combobox = (String)resultMap.get("sysorgId_combobox");
+        if(null==sysorgId_combobox) {
+            sysorgId_combobox = "0";
+        }
+        model.addAttribute("sysorgId_combobox",sysorgId_combobox);
     }
     private boolean checkCourseClassAndTimeInterval(String classId,String timeInterval,String startDateTime,String id){
         Map<String,Object> searmap = new HashMap<>();

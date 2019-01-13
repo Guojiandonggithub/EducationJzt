@@ -92,4 +92,7 @@ public class XbCoursePresetService {
 	public XbCoursePreset getXbCoursePreset(String id){
 		return xbCoursePresetDao.findOne(id);
 	}
+	public List<XbCoursePreset> getXbCourseListByOrgid(String orgid){
+		return xbCoursePresetDao.findCourseListByOrginid(orgid);
+	}
 }
