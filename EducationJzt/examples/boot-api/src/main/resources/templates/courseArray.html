@@ -235,8 +235,9 @@
                                                 <a  th:onclick="'javascript:getOrgansListPage(\''+0+'\')'">1</a>
                                             </li>
                                             <!--小于等于5页处理-->
-                                            <li th:if="${ xbAttendList.getNumber()+1<=5}" th:class="${i} eq ${xbAttendList.getNumber()+1}?'active':''"
-                                                th:each="i:${#numbers.sequence(2,6)}">
+                                            <li th:if="${ xbAttendList.getNumber()+1<=5 && xbAttendList.getTotalPages()>1}"
+                                                th:class="${i} eq ${xbAttendList.getNumber()+1}?'active':''"
+                                                th:each="i:${#numbers.sequence(2,xbAttendList.getTotalPages()<=2?2:(xbAttendList.getTotalPages()>5?6:xbAttendList.getTotalPages()))}">
                                                 <a  th:onclick="'javascript:getOrgansListPage(\''+${i-1}+'\')'" th:text="${i}"></a>
                                             </li>
                                             <li th:if="${xbAttendList.getNumber()+1>5}"><a>...</a></li>
@@ -248,7 +249,7 @@
                                             </li>
                                             <li th:if="${xbAttendList.getNumber()+1 <xbAttendList.getTotalPages()-4}"><a>...</a></li>
                                             <!--最后5页处理-->
-                                            <li th:if="${xbAttendList.getNumber()+1 >=xbAttendList.getTotalPages()-4 || xbAttendList.getTotalPages()>5}"
+                                            <li th:if="${xbAttendList.getNumber()+1 >=xbAttendList.getTotalPages()-4 && xbAttendList.getTotalPages()>5}"
                                                 th:class="${i} eq ${xbAttendList.getNumber()+1}?'active':''"
                                                 th:each="i:${#numbers.sequence(xbAttendList.getTotalPages()-5,xbAttendList.getTotalPages()-1)}">
                                                 <a  th:onclick="'javascript:getOrgansListPage(\''+${i-1}+'\')'" th:text="${i}"></a>
@@ -376,7 +377,8 @@
                                     <div class="form-group">
                                         <label><i>*</i>班级</label>
                                         <select id="classId" name="classId" th:onchange="|javascript:classToFindAll()|">
-                                            <option th:each="cla,claSta:${xbClassList}" th:value="${cla.id}" th:text="'班级：'+${cla.className}+'  课程：'+${cla.xbCourse.courseName}">
+                                            <option th:each="cla,claSta:${xbClassList}" th:value="${cla.id}"
+                                                    th:text="${cla.sysOrgans.organName}+''+${cla.xbCourse.courseName}+''+${cla.teacher.employeeName}+''+${cla.className}">
                                             </option>
                                         </select>
                                     </div>
