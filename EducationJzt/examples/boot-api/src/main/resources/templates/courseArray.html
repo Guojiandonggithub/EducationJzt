@@ -252,7 +252,7 @@
                                                     <a  th:onclick="'javascript:getOrgansListPage(\''+0+'\')'">1</a>
                                                 </li>
                                                 <!--小于等于5页处理-->
-                                                <li th:if="${ xbAttendList.getNumber()+1<=5 && xbAttendList.getTotalPages()>1}"
+                                                <li th:if="${ xbAttendList.getNumber()+1<5 && xbAttendList.getTotalPages()>1}"
                                                     th:class="${i} eq ${xbAttendList.getNumber()+1}?'active':''"
                                                     th:each="i:${#numbers.sequence(2,xbAttendList.getTotalPages()<=2?2:(xbAttendList.getTotalPages()>5?6:xbAttendList.getTotalPages()))}">
                                                     <a  th:onclick="'javascript:getOrgansListPage(\''+${i-1}+'\')'" th:text="${i}"></a>
@@ -349,7 +349,7 @@
                                         </select>
                                         <input type="hidden" id="xbAttendConflicListsize" th:value="${xbAttendConflicListsize}"/>
                                     </div>
-                                    <ul class="pagination" th:if="${xbAttendConflicList?.getTotalPages() gt 0}" >
+                                    <!--<ul class="pagination" th:if="${xbAttendConflicList?.getTotalPages() gt 0}" >
                                         <li class="disabled">
                                             <a href="#" th:onclick="'javascript:getxbAttendConflicListPage(\''+0+'\')'">首页</a>
                                         </li>
@@ -365,6 +365,53 @@
                                             <a href="#" th:onclick="'javascript:getxbAttendConflicListPage(\''+${xbAttendConflicList?.getNumber()+2}+'\')'">
                                                 <i class="ace-icon fa fa-angle-double-right"></i>
                                             </a>
+                                        </li>
+                                    </ul>-->
+                                    <ul class="pagination" th:if="${xbAttendConflicList.getTotalPages() gt 0}" >
+                                        <!--上一页-->
+                                        <li  th:if="${xbAttendConflicList.getNumber()-1} ge 0">
+                                            <a  th:onclick="'javascript:getxbAttendConflicListPage(\''+${xbAttendConflicList.getNumber()-1}+'\')'">
+                                                <i class="ace-icon fa ">上一页</i>
+                                            </a>
+                                        </li>
+                                        <!--第1页-->
+                                        <li th:class=" ${xbAttendConflicList.getNumber()==0}?'active':''">
+                                            <a  th:onclick="'javascript:getxbAttendConflicListPage(\''+0+'\')'">1</a>
+                                        </li>
+
+                                        <li th:if="${ xbAttendConflicList.getNumber()+1<5 && xbAttendConflicList.getTotalPages()>1}"
+                                            th:class="${i} eq ${xbAttendConflicList.getNumber()+1}?'active':''"
+                                            th:each="i:${#numbers.sequence(2,xbAttendConflicList.getTotalPages()<=2?2:(xbAttendConflicList.getTotalPages()>5?6:xbAttendConflicList.getTotalPages()))}">
+                                            <a  th:onclick="'javascript:getxbAttendConflicListPage(\''+${i-1}+'\')'" th:text="${i}"></a>
+                                        </li>
+                                        <li th:if="${xbAttendConflicList.getNumber()+1>5}"><a>...</a></li>
+                                        <!--大于5页或者小于总数-5页-->
+                                        <li th:if="${xbAttendConflicList.getNumber()+1>5 && xbAttendConflicList.getNumber()+1<xbAttendConflicList.getTotalPages()-4}"
+                                            th:class="${i} eq ${xbAttendConflicList.getNumber()+1}?'active':''"
+                                            th:each="i:${#numbers.sequence((xbAttendConflicList.getNumber()+1)-2,(xbAttendConflicList.getNumber()+1)+2)}">
+                                            <a  th:onclick="'javascript:getxbAttendConflicListPage(\''+${i-1}+'\')'" th:text="${i}"></a>
+                                        </li>
+                                        <li th:if="${xbAttendConflicList.getNumber()+1 <xbAttendConflicList.getTotalPages()-4}"><a>...</a></li>
+                                        <!--最后5页处理-->
+                                        <li th:if="${xbAttendConflicList.getNumber()+1 >=xbAttendConflicList.getTotalPages()-4 && xbAttendConflicList.getTotalPages()>5}"
+                                            th:class="${i} eq ${xbAttendConflicList.getNumber()+1}?'active':''"
+                                            th:each="i:${#numbers.sequence(xbAttendConflicList.getTotalPages()-5,xbAttendConflicList.getTotalPages()-1)}">
+                                            <a  th:onclick="'javascript:getxbAttendConflicListPage(\''+${i-1}+'\')'" th:text="${i}"></a>
+                                        </li>
+                                        <!--最后一页-->
+                                        <li th:if="${xbAttendConflicList.getTotalPages()>5}"
+                                            th:class="${xbAttendConflicList.getNumber()+1==xbAttendConflicList.getTotalPages()}?'active':''">
+                                            <a href="#" th:onclick="'javascript:getxbAttendConflicListPage(\''+${xbAttendConflicList.getTotalPages()-1}+'\')'"
+                                               th:text="${xbAttendConflicList.getTotalPages()}"></a>
+                                        </li>
+                                        <!--下一页-->
+                                        <li th:if="${xbAttendConflicList.getTotalPages()} gt ${xbAttendConflicList.getNumber()+1}">
+                                            <a th:onclick="'javascript:getxbAttendConflicListPage(\''+${xbAttendConflicList.getNumber()+1}+'\')'">
+                                                <i class="ace-icon fa ">下一页</i>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <span style="color: #020202;" th:text="'共'+${xbAttendConflicList.getTotalPages()}+'页/'+${xbAttendConflicList.getTotalElements()}+'条记录'"></span>
                                         </li>
                                     </ul>
                                 </div>
@@ -899,10 +946,15 @@
     }
     //搜索日程冲突
     function getxbAttendConflicListPage(page){
+        var load = new Loading();
+        load.init({
+            target: "#conflict"
+        });
+        load.start();
         var size = $('#conflicsize option:selected').val();//选中的值
-        if(page){
+        /*if(page){
             page = page -1;
-        }
+        }*/
         if(size){
             size = "10";
         }
@@ -915,12 +967,14 @@
             contentType: 'application/json',
             async: true,
             success: function(data) {
+                load.stop();
                 console.log("查询排课冲突回调成功")
                 //$.kd.kdAlert("查询排课冲突成功");
                 $("#xbAttendConflicList_tbodyid").html("");
                 $("#xbAttendConflicList_tbodyid").append(data);
             },
             error:function(){
+                load.stop();
                 console.log("查询排课冲突失败")
             }
         });

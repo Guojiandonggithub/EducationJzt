@@ -236,7 +236,7 @@
                                             </select>
                                             <input type="hidden" id="prelistsize" th:value="${prelistsize}"/>
                                         </div>
-                                        <ul class="pagination" th:if="${prelist.getTotalPages() gt 0}" >
+                                        <!--<ul class="pagination" th:if="${prelist.getTotalPages() gt 0}" >
                                             <li class="disabled">
                                                 <a href="#" th:onclick="'javascript:getOrgansListPage(\''+0+'\')'">首页</a>
                                             </li>
@@ -252,6 +252,53 @@
                                                 <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${prelist.getNumber()+2}+'\')'">
                                                     <i class="ace-icon fa fa-angle-double-right"></i>
                                                 </a>
+                                            </li>
+                                        </ul>-->
+                                        <ul class="pagination" th:if="${prelist.getTotalPages() gt 0}" >
+                                            <!--上一页-->
+                                            <li  th:if="${prelist.getNumber()-1} ge 0">
+                                                <a  th:onclick="'javascript:getOrgansListPage(\''+${prelist.getNumber()-1}+'\')'">
+                                                    <i class="ace-icon fa ">上一页</i>
+                                                </a>
+                                            </li>
+                                            <!--第1页-->
+                                            <li th:class=" ${prelist.getNumber()==0}?'active':''">
+                                                <a  th:onclick="'javascript:getOrgansListPage(\''+0+'\')'">1</a>
+                                            </li>
+                                            <!--小于等于5页处理-->
+                                            <li th:if="${ prelist.getNumber()+1<5 && prelist.getTotalPages()>1}"
+                                                th:class="${i} eq ${prelist.getNumber()+1}?'active':''"
+                                                th:each="i:${#numbers.sequence(2,prelist.getTotalPages()<=2?2:(prelist.getTotalPages()>5?6:prelist.getTotalPages()))}">
+                                                <a  th:onclick="'javascript:getOrgansListPage(\''+${i-1}+'\')'" th:text="${i}"></a>
+                                            </li>
+                                            <li th:if="${prelist.getNumber()+1>5}"><a>...</a></li>
+                                            <!--大于5页或者小于总数-5页-->
+                                            <li th:if="${prelist.getNumber()+1>5 && prelist.getNumber()+1<prelist.getTotalPages()-4}"
+                                                th:class="${i} eq ${prelist.getNumber()+1}?'active':''"
+                                                th:each="i:${#numbers.sequence((prelist.getNumber()+1)-2,(prelist.getNumber()+1)+2)}">
+                                                <a  th:onclick="'javascript:getOrgansListPage(\''+${i-1}+'\')'" th:text="${i}"></a>
+                                            </li>
+                                            <li th:if="${prelist.getNumber()+1 <prelist.getTotalPages()-4}"><a>...</a></li>
+                                            <!--最后5页处理-->
+                                            <li th:if="${prelist.getNumber()+1 >=prelist.getTotalPages()-4 && prelist.getTotalPages()>5}"
+                                                th:class="${i} eq ${prelist.getNumber()+1}?'active':''"
+                                                th:each="i:${#numbers.sequence(prelist.getTotalPages()-5,prelist.getTotalPages()-1)}">
+                                                <a  th:onclick="'javascript:getOrgansListPage(\''+${i-1}+'\')'" th:text="${i}"></a>
+                                            </li>
+                                            <!--最后一页-->
+                                            <li th:if="${prelist.getTotalPages()>5}"
+                                                th:class="${prelist.getNumber()+1==prelist.getTotalPages()}?'active':''">
+                                                <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${prelist.getTotalPages()-1}+'\')'"
+                                                   th:text="${prelist.getTotalPages()}"></a>
+                                            </li>
+                                            <!--下一页-->
+                                            <li th:if="${prelist.getTotalPages()} gt ${prelist.getNumber()+1}">
+                                                <a th:onclick="'javascript:getOrgansListPage(\''+${prelist.getNumber()+1}+'\')'">
+                                                    <i class="ace-icon fa ">下一页</i>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <span style="color: #020202;" th:text="'共'+${prelist.getTotalPages()}+'页/'+${prelist.getTotalElements()}+'条记录'"></span>
                                             </li>
                                         </ul>
                                     </div>

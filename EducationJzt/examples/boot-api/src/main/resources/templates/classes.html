@@ -74,6 +74,8 @@
                                         <th>
                                             <input type="checkbox" id="sel_1" onchange="selectAll()">
                                         </th>
+
+                                        <th>序号</th>
                                         <th>班级名称</th>
                                         <th>人数
                                             <div class="sort">
@@ -99,8 +101,9 @@
                                                 aria-hidden="true"></span>
                                         </th>
                                     </tr>
-                                    <tr id="chooses" th:each="xbclass:${xbClassPage.content}">
+                                    <tr id="chooses" th:each="xbclass,xbclassta:${xbClassPage.content}">
                                         <td><input type="checkbox"></td>
+                                        <td th:text="${xbclassta.count}+${xbClassPage.getNumber()*20}">序号</td>
                                         <td th:text="${xbclass.sysOrgans.organName}+${xbclass.xbCourse.xbcoursetype.courseTypeName}+${xbclass.teacher.employeeName}+${xbclass.className}" class="className" th:onclick="'javascript:classDetail(\''+${xbclass.id}+'\')'"><img src="../static/pages/img/ban.png"></td>
                                         <td class="prog" th:text="${xbclass.establishNum}">
                                             <div class="progress progress-small progress-striped active">
@@ -189,7 +192,7 @@
                                             <a  th:onclick="'javascript:getClassListPage(\''+0+'\')'">1</a>
                                         </li>
                                         <!--小于等于5页处理-->
-                                        <li th:if="${ xbClassPage.getNumber()+1<=5 && xbClassPage.getTotalPages()>1}"
+                                        <li th:if="${ xbClassPage.getNumber()+1<5 && xbClassPage.getTotalPages()>1}"
                                             th:class="${i} eq ${xbClassPage.getNumber()+1}?'active':''"
                                             th:each="i:${#numbers.sequence(2,xbClassPage.getTotalPages()<=2?2:(xbClassPage.getTotalPages()>5?6:xbClassPage.getTotalPages()))}">
                                             <a  th:onclick="'javascript:getClassListPage(\''+${i-1}+'\')'" th:text="${i}"></a>
@@ -245,7 +248,7 @@
                                         <th>操作</th>
                                     </tr>
                                     <tr id="choosetype" class="choose" th:each="classroom,rooms:${xbClassroomPage.content}">
-                                        <td th:text="${rooms.index+1}">序号</td>
+                                        <td th:text="${rooms.count}+${xbClassroomPage.getNumber()*20}">序号</td>
                                         <td th:text="${classroom.classroomName}"></td>
                                         <td th:text="${classroom.sysOrgans.organName}">所属校区</td>
                                         <td>
@@ -311,7 +314,7 @@
                                             <a  th:onclick="'javascript:getOrgansListPage(\''+0+'\')'">1</a>
                                         </li>
                                         <!--小于等于5页处理-->
-                                        <li th:if="${ xbClassroomPage.getNumber()+1<=5 && xbClassroomPage.getTotalPages()>1}"
+                                        <li th:if="${ xbClassroomPage.getNumber()+1<5 && xbClassroomPage.getTotalPages()>1}"
                                             th:class="${i} eq ${xbClassroomPage.getNumber()+1}?'active':''"
                                             th:each="i:${#numbers.sequence(2,xbClassroomPage.getTotalPages()<=2?2:(xbClassroomPage.getTotalPages()>5?6:xbClassroomPage.getTotalPages()))}">
                                             <a  th:onclick="'javascript:getOrgansListPage(\''+${i-1}+'\')'" th:text="${i}"></a>
@@ -455,9 +458,9 @@
             });
             load.start();
             var size = $('#size option:selected').val(); //选中的值
-            if (page) {
+           /* if (page) {
                 page = page - 1;
-            }
+            }*/
             window.location.href = basePath + '/student/getXbClassroomList?page=' + page + '&size=' + size + '&room=0';
         }
         //班级列表
