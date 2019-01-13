@@ -289,6 +289,8 @@
                 }
                 var list = [];
                 //全部校区
+                    var zero = false;
+                    var mon = false;
                 if (datafrom.openingType == "0") {
                     /*$("#dingjiaiform tr:not(:first)").each(function () {
                         $("input[name='openingTypes']:checked").each(function (j) {
@@ -315,6 +317,12 @@
                                 obj.periodNum = x.eq(3).val();
                                 obj.money = x.eq(2).val();
                             }
+                            if(parseFloat(obj.periodNum) ==0  ){
+                                zero =true;
+                            }
+                            if(parseFloat(obj.money) ==0){
+                                mon = true;
+                            }
                             obj.id = x.eq(4).val();
                             list.push(obj);
                         });
@@ -334,11 +342,34 @@
                             obj.periodNum = x.eq(3).val();
                             obj.money = x.eq(2).val();
                         }
+                        if(parseFloat(obj.periodNum) ==0 ){
+                            zero =true;
+
+                        }
+                        if(parseFloat(obj.money) ==0){
+                            mon = true;
+                        }
                         obj.id = x.eq(4).val();
                         list.push(obj);
                    });
                 }
-                    load.start();
+                if(zero && datafrom.chargingMode=="0"){
+                        $.kd.kdMsg("课时不能为0");
+                        return ;
+                }
+                if(zero && datafrom.chargingMode=="2"){
+                    $.kd.kdMsg("按期课时不能为0");
+                    return ;
+                }
+                if(mon && datafrom.chargingMode=="0"){
+                    $.kd.kdMsg("按课时金额不能为0");
+                    return ;
+                }
+                if(mon && datafrom.chargingMode=="2"){
+                    $.kd.kdMsg("按期数金额不能为0");
+                    return ;
+                }
+                load.start();
                 datafrom.xbcoursepresetlist = list;
                 $.ajax({
                     url: basePath + '/jwcentercourse/savecourse',
