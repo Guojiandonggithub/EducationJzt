@@ -47,7 +47,7 @@
             <th:block th:if="${xbStudent.sex} eq 0"><img src="../static/pages/img/boy.png"></th:block>
             <th:block th:if="${xbStudent.sex} eq 1"><img src="../static/pages/img/girl.png.png"></th:block>
         </p>
-        <a class="td_edit" href="#modal-table" role="button"  data-toggle="modal"><img src="../static/pages/img/edit.png">编辑</a>
+        <a class="td_edit" href="#modal-table" role="button" data-toggle="modal"><img src="../static/pages/img/edit.png">编辑</a>
         <a class="td_delete"><img src="../static/pages/img/del.png">删除</a>
     </div>
     <div class=" user-infor-r">
@@ -55,6 +55,7 @@
             <div class="user-infor-list">
                 <ul class="user-infor-ul clearfix">
                     <div class="block-box-title" style="position: relative;top: 8px;">基本信息</div>
+                    <input type="text" name="id" id="id" th:value="${xbStudent.id}"/>
                     <div style="padding-left:15px;">
                         <li>
                             <span class="text-tips">联系电话（<span th:text="${xbStudent.contactRelation}"></span>）：</span><th:block th:text="${xbStudent.contactPhone}"></th:block>
@@ -229,7 +230,7 @@
                         </tr>
                     </table>
                     <div class="orderPage">
-                        <div class="page">
+                        <!--<div class="page">
                             单页显示：
                             <select>
                                 <option>20条/页</option>
@@ -274,7 +275,7 @@
                             <li class="">
                                 <a href="#">尾页</a>
                             </li>
-                        </ul>
+                        </ul>-->
                     </div>
                 </div>
             </div>
@@ -315,7 +316,7 @@
                         </tr>
                     </table>
                     <div class="orderPage">
-                        <div class="page">
+                        <!--<div class="page">
                             单页显示：
                             <select>
                                 <option>20条/页</option>
@@ -360,7 +361,7 @@
                             <li class="">
                                 <a href="#">尾页</a>
                             </li>
-                        </ul>
+                        </ul>-->
                     </div>
                 </div>
             </div>
@@ -378,31 +379,31 @@
             </div>
                 <div class="modal-body no-padding" style="padding: 20px 0 !important;">
 
-                    <div class="form-group uploadHead">
+                    <!--<div class="form-group uploadHead">
                         <div class="con4">
                             <canvas id="cvs" width="150" height="150" style="border:1px solid #ccc;"></canvas>
                             <span class="btn upload">上传头像<input type="file" class="upload_pic" id="upload" /></span>
                         </div>
-                    </div>
+                    </div>-->
                     <div class="form-group">
                         <label>姓名</label>
-                        <input type="text" value="">
+                        <input type="text" name="studentName" th:value="${xbStudent.studentName}">
                     </div>
                     <div class="form-group">
                         <label>联系电话</label>
-                        <input type="text" value="">
-                        <select name="" id="">
-                            <option value="">母亲</option>
-                            <option value="">父亲</option>
-                            <option value="">本人</option>
-                            <option value="">其他</option>
+                        <input type="text" name="contactPhone" th:value="${xbStudent.contactPhone}">
+                        <select name="contactRelation" id="contactRelation" th:value="${xbStudent.contactRelation}">
+                            <option value="母亲">母亲</option>
+                            <option value="父亲">父亲</option>
+                            <option value="本人">本人</option>
+                            <option value="其他">其他</option>
                         </select>
                     </div>
                     <div class="form-group">
                         <label>性别</label>
-                        <input name="form-field-radio" type="radio" class="ace"><span class="lbl">男</span>
-                        <input name="form-field-radio" type="radio" class="ace"><span class="lbl">女</span>
-                        <input name="form-field-radio" type="radio" class="ace"><span class="lbl">未知</span>
+                        <input name="form-field-radio" th:attr="checked=${xbStudent.sex == '0'?true:false}" value="0" name="sex" type="radio" class="ace"><span class="lbl">男</span>
+                        <input name="form-field-radio" th:attr="checked=${xbStudent.sex == '1'?true:false}" value="1" name="sex" type="radio" class="ace"><span class="lbl">女</span>
+                        <input name="form-field-radio" th:attr="checked=${xbStudent.sex == '2'?true:false}" value="2" name="sex" type="radio" class="ace"><span class="lbl">未知</span>
                     </div>
                     <div class="form-group">
                         <label>微信号</label>

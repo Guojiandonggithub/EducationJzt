@@ -526,6 +526,7 @@ public class StudentActivity {
 					Map<String,Object> searchMap = new HashMap<>();
 					searchMap.put("EQ_courseId",courseId);
 					searchMap.put("EQ_organIds",organId);
+					searchMap.put("EQ_deleteStatus","1");
 					List<XbCoursePreset> xbCourseList = xbCoursePresetService.getXbCoursePresets(searchMap);
 					xbClassList.get(i).xbCoursePresetList.addAll(xbCourseList);
                 }
