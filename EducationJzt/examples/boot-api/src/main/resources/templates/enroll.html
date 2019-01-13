@@ -739,11 +739,12 @@
 
     function getCourseList(type){
         var typename = "";
-        if(type=='1'){
+        /*if(type=='1'){
             typename="chooseSub"
         }else{
             typename="modal-content"
-        }
+        }*/
+        typename="modal-content";
         var load = new Loading();
         load.init({
             target: "#"+typename
@@ -768,11 +769,12 @@
 
     function getClassList(type){
         var typename = "";
-        if(type=='1'){
+       /* if(type=='1'){
             typename="chooseClass"
         }else{
             typename="modal-content-banji"
-        }
+        }*/
+        typename="modal-content-banji";
         var load = new Loading();
         load.init({
             target: "#"+typename
