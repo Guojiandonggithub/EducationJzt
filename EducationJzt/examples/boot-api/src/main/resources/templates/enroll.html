@@ -176,7 +176,7 @@
                             <option th:each="classes:${course.xbClassList}"  th:value="${classes.id}" th:text="${classes.teacher.employeeName}+${classes.className}"></option>
                         </select>
                         <input type="hidden" id="courseId" name="courseId" th:value="${course.xbCourse.id}">
-                        <input type="hidden" id="receivable" name="receivable" th:value="${course.money}">
+                        <input type="hidden" id="receivable" name="receivable" th:value="${course.lsmoney}">
                         <input type="hidden" name="organIds" th:value="${course.sysorgans.id}">
                         <input type="hidden" name="periodNum" th:value="${course.periodNum}">
                     </div>
@@ -188,11 +188,11 @@
             <div class="" style="margin:10px 0 0 20px; padding-bottom:15px;">
                 <label>定价标准</label>
             </div>
-            <p class="incomeNum"><b id="tuitionFeess" th:text="${course.money}"></b>元</p>
+            <p class="incomeNum"><b id="tuitionFeess" th:text="${course.lsmoney}"></b>元</p>
         </div>
         <div class="income" style="border:0;">
             <p class="incomeAll"><img src="../static/pages/img/money.png">应收</p>
-            <p class="incomeNum"><b th:text="${course.money}">0</b>元</p>
+            <p class="incomeNum"><b th:text="${course.lsmoney}">0</b>元</p>
         </div>
     <div class="">
         <ul class="normal-ul">
@@ -375,9 +375,12 @@
                     </select>
                 </div>
                 <div class="form-group" style="margin-right:0 !important;">
-                    <select id="chargingMode" name="chargingMode" onchange="getClassList();">
+                    <!--<select id="chargingMode" name="chargingMode" onchange="getClassList();">
                         <option value="0">按课时</option>
                         <option value="2">按期</option>
+                    </select>-->
+                    <select id="type" name="type" onchange="getClassList();">
+                        <option th:each="type:${xbCourseTypeList}"  th:value="${type.id}" th:text="${type.courseTypeName}"></option>
                     </select>
                 </div>
                 <form class="form-search">
@@ -422,7 +425,7 @@
                         <td class="numberPer" th:text="${clas.establishNum}"></td>
                         <td>
                             <select th:name="sfbz" th:id="sfbz+${clasint.index}">
-                                <option th:each="preset:${clas.xbCoursePresetList}"  th:value="${preset.id}" th:text="${preset.money}+'元('+${preset.periodNum}+'课时)'"></option>
+                                <option th:each="preset:${clas.xbCoursePresetList}"  th:value="${preset.id}" th:text="${clas.xbCourse.chargingMode== '0'}?${preset.money*preset.periodNum}+'元('+${preset.periodNum}+'课时)':${preset.money}+'元('+${preset.periodNum}+'课时)'"></option>
                             </select>
                         </td>
                         <td th:text="${clas.teacher.employeeName}"></td>
@@ -793,7 +796,7 @@
             type: 'get',
             //dataType: 'json',
             url: basePath + '/student/getClassList',
-            data: {orginId:$("#classorgan").val(),classesName:$("#classesName").val(),chargingMode:$("#chargingMode").val()},
+            data: {orginId:$("#classorgan").val(),classesName:$("#classesName").val(),type:$("#type").val()},
             contentType:"application/json;charset=UTF-8",
             cache: false,
             async: true,

@@ -26,6 +26,8 @@ public class XbCoursePreset {
     public String courseId;
     public Integer periodNum;
     public BigDecimal money;
+    @Transient
+    public BigDecimal lsmoney;
 
     public String organIds;
     public String organNames;
@@ -87,13 +89,5 @@ public class XbCoursePreset {
 
     public void setOrganNames(String organNames) {
         this.organNames = organNames;
-    }
-
-    public List<XbClass> getXbClassList() {
-        return xbClassList;
-    }
-
-    public void setXbClassList(List<XbClass> xbClassList) {
-        this.xbClassList = xbClassList;
     }
 }

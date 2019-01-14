@@ -50,6 +50,9 @@ public class StudentActivity {
 	@Autowired
 	public XbCoursePresetService xbCoursePresetService;
 
+	@Autowired
+	public XbCourseTypeService xbCourseTypeService;
+
 	/*
 	 * 跳转到学员
 	 * @return
@@ -61,6 +64,7 @@ public class StudentActivity {
 			student = studentService.getXbStudent(id);
 		}*/
 		Map<String,Object> searhMap = new HashMap<>();
+		List<XbCourseType> xbCourseTypeList = xbCourseTypeService.findXbCourseTypeList(searhMap);
 		Page<XbClass> classPage = studentService.getXbClassList(pageable,searhMap);
 		List<SysOrgans> organsList = organsService.getOrgansList();
 		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
@@ -78,6 +82,7 @@ public class StudentActivity {
 		model.addAttribute("sysEmployee",sysEmployee);
 		model.addAttribute("xbStudent",new XbStudent());
 		model.addAttribute("employeeList",employeePage.getContent());
+		model.addAttribute("xbCourseTypeList",xbCourseTypeList);
 		return "enroll";
 	}
 
@@ -507,10 +512,11 @@ public class StudentActivity {
 	 * @return
 	 */
 	@RequestMapping("/getClassList")
-	public String getClassList(@RequestParam(required = false) String chargingMode,@RequestParam(required = false) String orginId,@RequestParam(required = false) String classesName,ModelMap model, Pageable pageable){
+	public String getClassList(@RequestParam(required = false) String type,@RequestParam(required = false) String orginId,@RequestParam(required = false) String classesName,ModelMap model, Pageable pageable){
 		List<SysOrgans> organsList = organsService.getOrgansList();
 		if(organsList.size()>0){
 			Map<String,Object> xbCoursesearhMap = new HashMap<>();
+			List<XbCourseType> xbCourseTypeList = xbCourseTypeService.findXbCourseTypeList(xbCoursesearhMap);
 			if(null==orginId&&!orginId.equals("")){
 				orginId = organsList.get(0).id;
 			}
@@ -518,10 +524,10 @@ public class StudentActivity {
 			if(null!=classesName&&!classesName.equals("")){
 				xbCoursesearhMap.put("LIKE_className",classesName);
 			}
-			if(null==chargingMode||chargingMode.equals("")){
-				chargingMode = "0";
+			if(null==type||type.equals("")){
+				type = xbCourseTypeList.get(0).id;
 			}
-			xbCoursesearhMap.put("EQ_xbCourse.chargingMode",chargingMode);
+			xbCoursesearhMap.put("EQ_xbCourse.xbcoursetype.id",type);
 			Page<XbClass> xbClassPage = studentService.getXbClassList(pageable,xbCoursesearhMap);
             List<XbClass> xbClassList = xbClassPage.getContent();
             List<XbClass> xbClassPages = new ArrayList<>();
@@ -542,6 +548,7 @@ public class StudentActivity {
                 }
             }
 			model.addAttribute("xbClassPage",xbClassPages);
+			model.addAttribute("xbCourseTypeList",xbCourseTypeList);
 		}
 		return "enroll::classlist";
 	}
@@ -575,7 +582,7 @@ public class StudentActivity {
 	@RequestMapping("/chooseCourse")
 	public String chooseCourse(@RequestParam(required = false) String courseIds,ModelMap model, Pageable pageable){
 		List<XbCoursePreset> xbCourseList = new ArrayList<>();
-		BigDecimal money = new BigDecimal(0);
+		BigDecimal moneys = new BigDecimal(0);
 		Integer num = 0;
 			if(null!=courseIds&&!courseIds.equals("")){
 				String[] str = courseIds.split(",");
@@ -585,19 +592,19 @@ public class StudentActivity {
 					Map<String,Object> xbClasssearhMap = new HashMap<>();
 					xbClasssearhMap.put("EQ_courseId",xbCoursePreset.getCourseId());
 					Page<XbClass> classPage = studentService.getXbClassList(pageable,xbClasssearhMap);
-					xbCoursePreset.setXbClassList(classPage.getContent());
+					xbCoursePreset.xbClassList = classPage.getContent();
 					BigDecimal totalmoney = xbCoursePreset.money;//每个课程总金额
 					if(xbCoursePreset.xbCourse.chargingMode.equals("0")){
 						totalmoney = xbCoursePreset.money.multiply(new BigDecimal(xbCoursePreset.periodNum));
-						xbCoursePreset.money = totalmoney;
+						xbCoursePreset.lsmoney = totalmoney;
 					}
-					money = money.add(totalmoney);
+					moneys= moneys.add(totalmoney);
 					num = num + xbCoursePreset.periodNum;
 					xbCourseList.add(xbCoursePreset);
 				}
 			}
 			model.addAttribute("xbCourseLists",xbCourseList);
-			model.addAttribute("money",money);//总金额
+			model.addAttribute("money",moneys);//总金额
 			model.addAttribute("periodNum",num);//总课时
 			model.addAttribute("organName",xbCourseList.get(0).sysorgans.organName);
 		return "enroll::baoming";
@@ -611,7 +618,7 @@ public class StudentActivity {
 	public String chooseClass(@RequestParam(required = false) String xbClassparams,ModelMap model, Pageable pageable){
 		List<XbCoursePreset> xbCoursePresetList = new ArrayList<>();
 		List<XbClassDto> xbStudentRelationList = com.alibaba.fastjson.JSONArray.parseArray(xbClassparams,XbClassDto.class);
-		BigDecimal money = new BigDecimal(0);
+		BigDecimal moneys = new BigDecimal(0);
 		Integer num = 0;
 			if(xbStudentRelationList.size()>0){
 				for (int i = 0; i < xbStudentRelationList.size(); i++) {
@@ -623,22 +630,23 @@ public class StudentActivity {
 					xbClasssearhMap.put("EQ_organIds",xbClass.organId);
 					List<XbCoursePreset> xbCourseList = xbCoursePresetService.getXbCoursePresets(xbClasssearhMap);
 					for (int j = 0; j < xbCourseList.size(); j++) {
-						if(xbCourseList.get(j).getId().equals(xbStudentRelationList.get(i).indexs)){
-							xbCourseList.get(j).setXbClassList(classList);
-							BigDecimal totalmoney = xbCourseList.get(j).money;//每个课程总金额
-							if(xbCourseList.get(j).xbCourse.chargingMode.equals("0")){
-								totalmoney = xbCourseList.get(j).money.multiply(new BigDecimal(xbCourseList.get(j).periodNum));
-								xbCourseList.get(j).money = totalmoney;
+						XbCoursePreset xbCoursePreset = xbCourseList.get(j);
+						if(xbCoursePreset.getId().equals(xbStudentRelationList.get(i).indexs)){
+							xbCoursePreset.xbClassList = classList;
+							BigDecimal totalmoney = xbCoursePreset.money;//每个课程总金额
+							if(xbCoursePreset.xbCourse.chargingMode.equals("0")){
+								totalmoney = xbCoursePreset.money.multiply(new BigDecimal(xbCoursePreset.periodNum));
+								xbCoursePreset.lsmoney = totalmoney;
 							}
-							money = money.add(totalmoney);
-							num = num + xbCourseList.get(j).periodNum;
-							xbCoursePresetList.add(xbCourseList.get(j));
+							moneys = moneys.add(totalmoney);
+							num = num + xbCoursePreset.periodNum;
+							xbCoursePresetList.add(xbCoursePreset);
 						}
 					}
 				}
 			}
 			model.addAttribute("xbCourseLists",xbCoursePresetList);
-			model.addAttribute("money",money);
+			model.addAttribute("money",moneys);
 			model.addAttribute("periodNum",num);//总课时
 			model.addAttribute("organName",xbCoursePresetList.get(0).sysorgans.organName);
 		return "enroll::baoming";
