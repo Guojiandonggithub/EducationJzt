@@ -130,13 +130,15 @@ public class RecordClassActivity {
 				}
 				Page<XbStudentRelation> xbStudentRelations = studentService.getXbStudentRelationList(pageable,searhMap);
 				XbStudentRelation xbStudentRelation = xbStudentRelations.getContent().get(0);
-				Integer periodNum = xbStudentRelation.periodNum;
+				//Integer periodNum = xbStudentRelation.periodNum;
+				BigDecimal bigDecimal = xbStudentRelation.periodNum;
 				BigDecimal receivable = xbStudentRelation.receivable;
-				BigDecimal bigDecimal = new BigDecimal(periodNum.toString());
+				//BigDecimal bigDecimal = new BigDecimal(periodNum.toString());
 				money = deductPeriod.multiply(money);
 				receivable = receivable.subtract(money);
 				bigDecimal = bigDecimal.subtract(deductPeriod);
-				xbStudentRelation.periodNum = Integer.parseInt(bigDecimal.toString());
+				//xbStudentRelation.periodNum = Integer.parseInt(bigDecimal.toString());
+				xbStudentRelation.periodNum = bigDecimal;
 				xbStudentRelation.receivable = receivable;
 				studentService.saveXbStudentRelation(xbStudentRelation);
 				studentService.saveXbRecordClass(xbRecordClass);

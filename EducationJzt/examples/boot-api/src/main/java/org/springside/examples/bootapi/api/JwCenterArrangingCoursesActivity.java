@@ -127,7 +127,8 @@ public class JwCenterArrangingCoursesActivity {
         findXbAttendClassPageListAll(model,pageable,data);
         findXbAttendConflicListi(model);
         model.addAttribute("xbSubjectList",xbSubjectService.findSubjectAll());
-        model.addAttribute("xbClassList",xbStudentService.findXbClassListAll());
+        Map<String,Object> searmap = new HashMap<>();
+        model.addAttribute("xbClassList",xbStudentService.findXbClassListAll(searmap));
         model.addAttribute("xbClassroomList",xbStudentService.findXbClassRoomListAll());
         model.addAttribute("sysEmployeeList",employeeService.findSysEmployeeListAll());
         return "courseArray";

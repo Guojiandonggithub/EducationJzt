@@ -136,8 +136,17 @@ public class XbStudentService {
 		return xbClassroomDao.getXbClassroomByDeleteStatus("1");
 	}
 	@Transactional
-	public List<XbClass> findXbClassListAll(){
-		return xbClassDao.getXbClassByDeleteStatus("1");
+	public List<XbClass> findXbClassListAll(Map<String, Object> searchParams){
+		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
+		SysEmployee sysEmployee = (SysEmployee)request.getSession().getAttribute("sysEmployee");
+		if("管理员".equals(sysEmployee.sysRole.roleName)){
+			searchParams.put("EQ_organId",sysEmployee.organId);
+		}
+		searchParams.put("EQ_deleteStatus","1");
+		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
+		Specification<XbClass> spec = DynamicSpecifications.bySearchFilter(
+				filters.values(), XbClass.class);
+		return xbClassDao.findAll(spec);
 	}
 	@Transactional
 	public List<XbClass> getXBclassListAll(Map<String, Object> searchParams) {

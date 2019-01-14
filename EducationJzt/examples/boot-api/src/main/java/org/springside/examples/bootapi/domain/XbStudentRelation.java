@@ -44,7 +44,7 @@ public class XbStudentRelation {
     public BigDecimal receivable;
     public String remarksIn;
     public String remarksOut;
-    public Integer periodNum;
+    public BigDecimal periodNum;
     public Date enrollDate;
     @Transient
     public String relationId;

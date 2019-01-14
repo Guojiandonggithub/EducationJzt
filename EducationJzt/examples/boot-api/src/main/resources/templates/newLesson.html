@@ -216,7 +216,7 @@
                                             <span class="txt">课时</span>
                                             <span class="txt">=</span>
                                             <div class="numCon">
-                                                <input id="XbCoursePresetmoney" name="money" type="text" th:value="${pre?.money}" />
+                                                <input id="XbCoursePresetmoney" name="money" type="text" th:value="${#numbers.formatDecimal(pre?.money, 1, 2)}" />
                                             </div>
                                             <input type="hidden" id="preid" name="id" th:value="${pre?.id}" />
                                             <span class="txt">元</span>
@@ -231,7 +231,7 @@
                                         <div class="form-group">
                                             <label>按期数</label>
                                             <div class="numCon">
-                                                <input id="XbCoursePresetmoney" name="money" type="text" th:value="${pre?.money}" />
+                                                <input id="XbCoursePresetmoney" name="money" type="text" th:value="${#numbers.formatDecimal(pre?.money, 1, 2)}" />
                                             </div>
                                             <span class="txt">元/期</span>
                                             <span class="txt">包含</span>
