@@ -157,7 +157,7 @@
                             <option th:selected="${feecurrentzise eq 15}" value="15">15条/页</option>
                         </select>
                     </div>
-                    <ul class="pagination" th:if="${XbSupplementFeePage.getTotalPages() gt 0}">
+                    <ul class="pagination" th:if="${XbSupplementFeePage}">
                         <li class="disabled">
                             <a href="#" th:onclick="'javascript:getFeeListPage(\''+0+'\')'">首页</a>
                         </li>

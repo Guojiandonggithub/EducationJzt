@@ -90,7 +90,7 @@
                                     </select>
                                     <input type="hidden" id="currentzise" th:value="${currentzise}"/>
                                 </div>
-                                <ul class="pagination" th:if="${rolePage.getTotalPages() gt 0}" >
+                                <ul class="pagination" th:if="${rolePage}" >
                                     <li class="disabled">
                                         <a href="#" th:onclick="'javascript:getOrgansListPage(\''+0+'\')'">首页</a>
                                     </li>
@@ -260,9 +260,9 @@ function selectAll(){
         });
         load.start();
         var size = $('#size option:selected').val();//选中的值
-        if(page){
+        /*if(page){
             page = page -1;
-        }
+        }*/
         window.location.href = basePath + '/accounts/getRoleList?page='+page+'&size='+size;
     }
 

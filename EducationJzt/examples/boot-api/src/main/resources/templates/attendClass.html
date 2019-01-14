@@ -147,7 +147,7 @@
                                          <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${currentnumber}+'\')'">尾页</a>
                                      </li>&ndash;&gt;
                                     </ul>-->
-                                    <ul class="pagination" th:if="${classPage.getTotalPages() gt 0}" >
+                                    <ul class="pagination" th:if="${classPage}" >
                                         <!--上一页-->
                                         <li  th:if="${classPage.getNumber()-1} ge 0">
                                             <a  th:onclick="'javascript:getClassListPage(\''+${classPage.getNumber()-1}+'\')'">
@@ -667,7 +667,7 @@
                                                 <option th:selected="${accordingcurrentzise eq 15}" th:value="15">15条/页</option>
                                             </select>
                                         </div>
-                                        <ul class="pagination" th:if="${xbRecordClassPage.getTotalPages() gt 0}">
+                                        <ul class="pagination" th:if="${xbRecordClassPage}">
                                             <li class="disabled">
                                                 <a href="#" th:onclick="'javascript:getaccordingListPage(\''+0+'\')'">首页</a>
                                             </li>
@@ -946,18 +946,18 @@
         function getClassListPage(page) {
             var data= serializeObject("#recordForm");
             var size = $('#size option:selected').val(); //选中的值
-            if(page){
+            /*if(page){
                 page = page -1;
-            }
+            }*/
             window.location.href = basePath + '/recordClass/getRecordClassList?size=' + size +'&page='+page+'&data='+JSON.stringify(data);
         }
 
         function getaccordingListPage(page){
             var data= serializeObject("#accordingStudentform");
             var size = $('#qianfeisize option:selected').val();//选中的值
-            if(page){
+            /*if(page){
                 page = page -1;
-            }
+            }*/
             var load = new Loading();
             load.init({
                 target: "#divideList"

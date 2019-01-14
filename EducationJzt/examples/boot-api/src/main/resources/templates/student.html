@@ -167,7 +167,7 @@
                                          <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${currentnumber}+'\')'">尾页</a>
                                      </li>&ndash;&gt;
                                 </ul>-->
-                                <ul class="pagination" th:if="${xbStudentPage.getTotalPages() gt 0}" >
+                                <ul class="pagination" th:if="${xbStudentPage}" >
                                     <!--上一页-->
                                     <li  th:if="${xbStudentPage.getNumber()-1} ge 0">
                                         <a  th:onclick="'javascript:getOrgansListPage(\''+${xbStudentPage.getNumber()-1}+'\')'">
@@ -327,7 +327,7 @@
                                      <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${currentnumber}+'\')'">尾页</a>
                                  </li>&ndash;&gt;
                                 </ul>-->
-                                <ul class="pagination" th:if="${xbStudentPage.getTotalPages() gt 0}" >
+                                <ul class="pagination" th:if="${xbStudentPage}" >
                                     <!--上一页-->
                                     <li  th:if="${xbStudentPage.getNumber()-1} ge 0">
                                         <a  th:onclick="'javascript:xbStudentsPage(\''+${xbStudentPage.getNumber()-1}+'\')'">
@@ -496,7 +496,7 @@
                                      <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${currentnumber}+'\')'">尾页</a>
                                  </li>&ndash;&gt;
                                 </ul>-->
-                                <ul class="pagination" th:if="${expiryStuPage.getTotalPages() gt 0}" >
+                                <ul class="pagination" th:if="${expiryStuPage}" >
                                     <!--上一页-->
                                     <li  th:if="${expiryStuPage.getNumber()-1} ge 0">
                                         <a  th:onclick="'javascript:getexpiryStulist(\''+${expiryStuPage.getNumber()-1}+'\')'">
@@ -653,7 +653,7 @@
                                      <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${currentnumber}+'\')'">尾页</a>
                                  </li>&ndash;&gt;
                                 </ul>-->
-                                <ul class="pagination" th:if="${xbqianfeiPage.getTotalPages() gt 0}" >
+                                <ul class="pagination" th:if="${xbqianfeiPage}" >
                                     <!--上一页-->
                                     <li  th:if="${xbqianfeiPage.getNumber()-1} ge 0">
                                         <a  th:onclick="'javascript:getqianfeilist(\''+${xbqianfeiPage.getNumber()-1}+'\')'">

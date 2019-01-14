@@ -386,9 +386,9 @@ function selectAll(){
         });
         load.start();
         var size = $('#size option:selected').val();//选中的值
-        if(page){
+        /*if(page){
             page = page -1;
-        }
+        }*/
         window.location.href = basePath + '/accounts/getOrgansList?page='+page+'&size='+size;
     }
 
