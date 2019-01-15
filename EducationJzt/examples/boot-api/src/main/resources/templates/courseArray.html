@@ -133,11 +133,11 @@
                                     <label class="control-label">筛选条件</label>
                                     校区：<input id="sysorgId_combobox" name="sysorgId_combobox"  th:value="${sysorgId_combobox}"
                                               class="easyui-combobox"
-                                           style="padding: 3px;border-radius: 5px !important;margin-top: 13px;width: 105px;">
+                                           style="padding: 3px;border-radius: 5px !important;margin-top: 13px;width: 105px;color: #3c546c;">
+                                    教师：<input id="courseId_combobox" name="courseId_combobox" type="text" th:value="${courseId_combobox}" class="ace"
+                                              style="padding: 3px;border-radius: 5px !important;margin-top: 13px;width: 130px;color: #3c546c">
                                     班级：<input id="classId_combobox" name="classId_combobox" type="text" th:value="${classId_combobox}" class="ace"
-                                           style="padding: 3px;border-radius: 5px !important;margin-top: 13px;width: 105px;">
-                                    课程：<input id="courseId_combobox" name="courseId_combobox" type="text" th:value="${courseId_combobox}" class="ace"
-                                           style="padding: 3px;border-radius: 5px !important;margin-top: 13px;width: 105px;">
+                                           style="padding: 3px;border-radius: 5px !important;margin-top: 13px;width: 170px;color: #3c546c">
                                     <div class="form-group" style="display: inline;">
                                         <button type="button" th:onclick="'javascript:getOrgansListPage(\'\')'">搜索</button>
                                     </div>

@@ -30,7 +30,7 @@ function comboboxSysorg(){
                 addable:false,
                 editable:false,
                 required:true,
-                textField:'courseName'
+                textField:'employeeName'
 
             });
         },
@@ -51,7 +51,7 @@ function comboboxSysorg(){
                 addable:false,
                 editable:false,
                 required:true,
-                textField:'courseName'
+                textField:'employeeName'
 
             });
         },

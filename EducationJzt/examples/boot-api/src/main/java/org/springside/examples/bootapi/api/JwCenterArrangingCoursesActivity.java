@@ -54,16 +54,18 @@ public class JwCenterArrangingCoursesActivity {
                                      HttpServletResponse resp){
         Map<String,Object> searmap = new HashMap<>();
         searmap.put("EQ_organId",orgid);
-        List<XbCoursePreset> syslist = xbCoursePresetService.getXbCourseListByOrgid(orgid);
+        //List<XbCoursePreset> syslist = xbCoursePresetService.getXbCourseListByOrgid(orgid);
+
+        List<SysEmployee> syslist =  employeeService.getAccountAllList(searmap);
         JSONArray jsonArray = new JSONArray();
         JSONObject jsonObjinti = new JSONObject();
         jsonObjinti.put("id", "0");
-        jsonObjinti.put("courseName", "不选择");
+        jsonObjinti.put("employeeName", "不选择");
         jsonArray.add(jsonObjinti);
-        for(XbCoursePreset s : syslist){
+        for(SysEmployee s : syslist){
             JSONObject jsonObj = new JSONObject();
-            jsonObj.put("id", s.xbCourse.id);
-            jsonObj.put("courseName", s.sysorgans.organName+s.xbCourse.courseName);
+            jsonObj.put("id", s.id);
+            jsonObj.put("employeeName", s.sysOrgans.organName+s.employeeName);
             jsonArray.add(jsonObj);
         }
         baseAction.writeJson(resp,jsonArray);
@@ -82,7 +84,7 @@ public class JwCenterArrangingCoursesActivity {
         for(XbClass s : syslist){
             JSONObject jsonObj = new JSONObject();
             jsonObj.put("id", s.id);
-            jsonObj.put("className", s.sysOrgans.organName+s.className);
+            jsonObj.put("className", s.sysOrgans.organName+s.className+s.xbCourse.courseName);
             jsonArray.add(jsonObj);
         }
         baseAction.writeJson(resp,jsonArray);
@@ -222,7 +224,7 @@ public class JwCenterArrangingCoursesActivity {
         if(null==courseId_combobox){
             courseId_combobox = "0";
         }else if(!courseId_combobox.equals("0")){
-            searhMap.put("EQ_xbclass.xbCourse.id",courseId_combobox);
+            searhMap.put("EQ_teacherId",courseId_combobox);
         }
        Page<XbAttendClass> xbAttendList = xbAttendClassService.findXbAttendClassPageAll(pageable,searhMap);
         for(XbAttendClass xbattendclass : xbAttendList){
