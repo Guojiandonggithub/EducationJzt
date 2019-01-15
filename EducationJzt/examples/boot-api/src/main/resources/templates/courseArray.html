@@ -35,6 +35,7 @@
     <script src="../static/pages/js/loading.js"></script>
     <script src="../static/pages/js/jquery.easyui.min.js"></script>
     <script src="../static/pages/js/course_combobox.js"></script>
+    <script src="../static/pages/js/laydate.js"></script>
 </head>
 
 <body>
@@ -202,7 +203,7 @@
                                                                        '${less.startDateTime}','${less.endDateTime}','${less.timeInterval}',
                                                                        '${less.teacherId}','${less.tutorId}','${less.classRoomId}',
                                                                        '${less.subjectId}','${less.classTheme}')|">编辑</a>
-                                                                    <a style="cursor:pointer" th:onclick="|javascript:attendClassRemove('${less.id}','1')|">删除</a>
+                                                                    <a style="cursor:pointer" th:onclick="|javascript:attendClassRemove('${less.id}','1',${xbAttendList.getNumber()})|">删除</a>
                                                                 </li>
                                                             </ul>
                                                         </div>
@@ -222,63 +223,56 @@
                                                 </select>
                                                 <input type="hidden" id="xbAttendListsize" th:value="${xbAttendListsize}"/>
                                             </div>
-                                            <!--<ul class="pagination" th:if="${xbAttendList.getTotalPages() gt 0}" >
-                                                <li class="disabled">
-                                                    <a href="#" th:onclick="'javascript:getOrgansListPage(\''+0+'\')'">首页</a>
-                                                </li>
-                                                <li  th:if="${xbAttendList.getNumber()-1} ge 0">
-                                                    <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${xbAttendList.getNumber()-1}+'\')'">
-                                                        <i class="ace-icon fa fa-angle-double-left"></i>
-                                                    </a>
-                                                </li>
-                                                <li th:class="${i} eq ${xbAttendList.getNumber()+1}?'active':''" th:each="i:${#numbers.sequence(1,xbAttendList?.getTotalPages())}">
-                                                    <a  th:onclick="'javascript:getOrgansListPage(\''+${i}+'\')'" th:text="${i}"></a>
-                                                </li>
-                                                <li th:if="${xbAttendList.getTotalPages()} ge ${xbAttendList.getNumber()+3} ">
-                                                    <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${xbAttendList.getNumber()+3}+'\')'">
-                                                        <i class="ace-icon fa fa-angle-double-right"></i>
-                                                    </a>
-                                                </li>
-                                            </ul>-->
-                                            <ul class="pagination" th:if="${xbAttendList}" >
-                                                <!--上一页-->
-                                                <li  th:if="${xbAttendList.getNumber()-1} ge 0">
+                                            <ul class="pagination" th:if="${xbAttendList}">
+                                                <!-- 上一页 -->
+                                                <li th:if="${xbAttendList.getNumber()+1 == 1}"><span>上一页</span></li>
+                                                <li th:if="${xbAttendList.getNumber()+1 > 1}">
                                                     <a  th:onclick="'javascript:getOrgansListPage(\''+${xbAttendList.getNumber()-1}+'\')'">
                                                         <i class="ace-icon fa ">上一页</i>
                                                     </a>
                                                 </li>
-                                                <!--第1页-->
-                                                <li th:class=" ${xbAttendList.getNumber()==0}?'active':''">
-                                                    <a  th:onclick="'javascript:getOrgansListPage(\''+0+'\')'">1</a>
+                                                <!-- 首页 -->
+                                                <li th:if="${xbAttendList.getNumber()+1 == 1}" class="active"><span>1</span></li>
+                                                <li th:if="${xbAttendList.getNumber()+1 > 1}">
+                                                    <a  th:onclick="'javascript:getOrgansListPage(\''+${0}+'\')'">1</a>
                                                 </li>
-                                                <!--小于等于5页处理-->
-                                                <li th:if="${ xbAttendList.getNumber()+1<5 && xbAttendList.getTotalPages()>1}"
-                                                    th:class="${i} eq ${xbAttendList.getNumber()+1}?'active':''"
-                                                    th:each="i:${#numbers.sequence(2,xbAttendList.getTotalPages()<=2?2:(xbAttendList.getTotalPages()>5?6:xbAttendList.getTotalPages()))}">
-                                                    <a  th:onclick="'javascript:getOrgansListPage(\''+${i-1}+'\')'" th:text="${i}"></a>
-                                                </li>
-                                                <li th:if="${xbAttendList.getNumber()+1>5}"><a>...</a></li>
-                                                <!--大于5页或者小于总数-5页-->
-                                                <li th:if="${xbAttendList.getNumber()+1>5 && xbAttendList.getNumber()+1<xbAttendList.getTotalPages()-4}"
-                                                    th:class="${i} eq ${xbAttendList.getNumber()+1}?'active':''"
-                                                    th:each="i:${#numbers.sequence((xbAttendList.getNumber()+1)-2,(xbAttendList.getNumber()+1)+2)}">
-                                                    <a  th:onclick="'javascript:getOrgansListPage(\''+${i-1}+'\')'" th:text="${i}"></a>
-                                                </li>
-                                                <li th:if="${xbAttendList.getNumber()+1 <xbAttendList.getTotalPages()-4}"><a>...</a></li>
-                                                <!--最后5页处理-->
-                                                <li th:if="${xbAttendList.getNumber()+1 >=xbAttendList.getTotalPages()-4 && xbAttendList.getTotalPages()>5}"
-                                                    th:class="${i} eq ${xbAttendList.getNumber()+1}?'active':''"
-                                                    th:each="i:${#numbers.sequence(xbAttendList.getTotalPages()-5,xbAttendList.getTotalPages()-1)}">
-                                                    <a  th:onclick="'javascript:getOrgansListPage(\''+${i-1}+'\')'" th:text="${i}"></a>
-                                                </li>
-                                                <!--最后一页-->
-                                                <li th:if="${xbAttendList.getTotalPages()>5}"
-                                                        th:class="${xbAttendList.getNumber()+1==xbAttendList.getTotalPages()}?'active':''">
+
+                                                <th:block th:if="${xbAttendList.getTotalPages()>2 && xbAttendList.getTotalPages()<=10}"
+                                                          th:each="i:${#numbers.sequence(2,xbAttendList.getTotalPages()-1)}">
+                                                    <li th:if="${xbAttendList.getNumber()+1 == i}"  class="active"><span th:text="${i}">页码</span></li>
+                                                    <li th:if="${xbAttendList.getNumber()+1 != i}"><a  th:onclick="'javascript:getOrgansListPage(\''+${i-1}+'\')'" th:text="${i}"></a></li>
+                                                </th:block>
+                                                <th:block th:if="${xbAttendList.getTotalPages() > 10}">
+                                                    <th:block th:if="${(xbAttendList.getNumber()+1-(5/2)) <= 2}" th:each="i:${#numbers.sequence(2,2+5-1)}">
+                                                        <li th:if="${xbAttendList.getNumber()+1 == i}"  class="active"><span th:text="${i}">页码</span></li>
+                                                        <li th:if="${xbAttendList.getNumber()+1 != i}"><a  th:onclick="'javascript:getOrgansListPage(\''+${i-1}+'\')'" th:text="${i}"></a></li>
+                                                    </th:block>
+                                                    <!-- ... -->
+                                                    <li th:if="${(xbAttendList.getNumber()+1-(5/2))>2}"><span>...</span></li>
+
+                                                    <th:block th:if="${((xbAttendList.getNumber()+1-(5/2))>2) && ((xbAttendList.getNumber()+1+(5/2)-(5%2==0?1:0)) < (xbAttendList.getTotalPages()-1))}"
+                                                              th:each="i:${#numbers.sequence(xbAttendList.getNumber()+1-(5/2),xbAttendList.getNumber()+1+(5/2)-(5%2==0?1:0))}">
+                                                        <li th:if="${xbAttendList.getNumber()+1 == i}"  class="active"><span th:text="${i}">页码</span></li>
+                                                        <li th:if="${xbAttendList.getNumber()+1 != i}"><a  th:onclick="'javascript:getOrgansListPage(\''+${i-1}+'\')'" th:text="${i}"></a></li>
+                                                    </th:block>
+
+                                                    <!-- ... -->
+                                                    <li th:if="${(xbAttendList.getNumber()+1+(5/2)-(5%2==0?1:0)) < (xbAttendList.getTotalPages()-1)}"><span>...</span></li>
+                                                    <th:block th:if="${(xbAttendList.getNumber()+1+(5/2)-(5%2==0?1:0)) >= (xbAttendList.getTotalPages()-1)}" th:each="i:${#numbers.sequence(xbAttendList.getTotalPages()-5,xbAttendList.getTotalPages()-1)}">
+                                                        <li th:if="${xbAttendList.getNumber()+1 == i}"  class="active"><span th:text="${i}">页码</span></li>
+                                                        <li th:if="${xbAttendList.getNumber()+1 != i}"><a  th:onclick="'javascript:getOrgansListPage(\''+${i-1}+'\')'" th:text="${i}"></a></li>
+                                                    </th:block>
+                                                </th:block>
+                                                <!-- 最后一页 -->
+                                                <li th:if="${xbAttendList.getTotalPages()>1 && xbAttendList.getNumber()+1 == xbAttendList.getTotalPages()}" class="active"><span th:text="${xbAttendList.getTotalPages()}">页码</span></li>
+                                                <li th:if="${xbAttendList.getTotalPages()>1 && xbAttendList.getNumber()+1 != xbAttendList.getTotalPages()}">
+
                                                     <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${xbAttendList.getTotalPages()-1}+'\')'"
                                                        th:text="${xbAttendList.getTotalPages()}"></a>
                                                 </li>
-                                                <!--下一页-->
-                                                <li th:if="${xbAttendList.getTotalPages()} gt ${xbAttendList.getNumber()+1}">
+                                                <!-- 下一页 -->
+                                                <li th:if="${xbAttendList.getNumber()+1 >= xbAttendList.getTotalPages()}"><span>下一页</span></li>
+                                                <li th:if="${xbAttendList.getNumber()+1 < xbAttendList.getTotalPages()}">
                                                     <a th:onclick="'javascript:getOrgansListPage(\''+${xbAttendList.getNumber()+1}+'\')'">
                                                         <i class="ace-icon fa ">下一页</i>
                                                     </a>
@@ -287,7 +281,6 @@
                                                     <span style="color: #020202;" th:text="'共'+${xbAttendList.getTotalPages()}+'页/'+${xbAttendList.getTotalElements()}+'条记录'"></span>
                                                 </li>
                                             </ul>
-
                                         </div>
                                     </div>
                                 </div>
@@ -349,63 +342,56 @@
                                         </select>
                                         <input type="hidden" id="xbAttendConflicListsize" th:value="${xbAttendConflicListsize}"/>
                                     </div>
-                                    <!--<ul class="pagination" th:if="${xbAttendConflicList?.getTotalPages() gt 0}" >
-                                        <li class="disabled">
-                                            <a href="#" th:onclick="'javascript:getxbAttendConflicListPage(\''+0+'\')'">首页</a>
-                                        </li>
-                                        <li class="disabled" th:if="${xbAttendConflicList?.getNumber()-1} ge 0">
-                                            <a href="#" th:onclick="'javascript:getxbAttendConflicListPage(\''+${xbAttendConflicList?.getNumber()-1}+'\')'">
-                                                <i class="ace-icon fa fa-angle-double-left"></i>
-                                            </a>
-                                        </li>
-                                        <li  th:class="${i} eq ${xbAttendConflicList?.getNumber()+1}?'active':''" th:each="i:${#numbers.sequence(1,xbAttendConflicList?.getTotalPages())}">
-                                            <a  th:onclick="'javascript:getxbAttendConflicListPage(\''+${i}+'\')'" th:text="${i}"></a>
-                                        </li>
-                                        <li th:if="${xbAttendConflicList?.getTotalPages()} ge ${xbAttendConflicList?.getNumber()+2} ">
-                                            <a href="#" th:onclick="'javascript:getxbAttendConflicListPage(\''+${xbAttendConflicList?.getNumber()+2}+'\')'">
-                                                <i class="ace-icon fa fa-angle-double-right"></i>
-                                            </a>
-                                        </li>
-                                    </ul>-->
-                                    <ul class="pagination" th:if="${xbAttendConflicList}" >
-                                        <!--上一页-->
-                                        <li  th:if="${xbAttendConflicList.getNumber()-1} ge 0">
+                                    <ul class="pagination" th:if="${xbAttendConflicList}">
+                                        <!-- 上一页 -->
+                                        <li th:if="${xbAttendConflicList.getNumber()+1 == 1}"><span>上一页</span></li>
+                                        <li th:if="${xbAttendConflicList.getNumber()+1 > 1}">
                                             <a  th:onclick="'javascript:getxbAttendConflicListPage(\''+${xbAttendConflicList.getNumber()-1}+'\')'">
                                                 <i class="ace-icon fa ">上一页</i>
                                             </a>
                                         </li>
-                                        <!--第1页-->
-                                        <li th:class=" ${xbAttendConflicList.getNumber()==0}?'active':''">
-                                            <a  th:onclick="'javascript:getxbAttendConflicListPage(\''+0+'\')'">1</a>
+                                        <!-- 首页 -->
+                                        <li th:if="${xbAttendConflicList.getNumber()+1 == 1}" class="active"><span>1</span></li>
+                                        <li th:if="${xbAttendConflicList.getNumber()+1 > 1}">
+                                            <a  th:onclick="'javascript:getxbAttendConflicListPage(\''+${0}+'\')'">1</a>
                                         </li>
 
-                                        <li th:if="${ xbAttendConflicList.getNumber()+1<5 && xbAttendConflicList.getTotalPages()>1}"
-                                            th:class="${i} eq ${xbAttendConflicList.getNumber()+1}?'active':''"
-                                            th:each="i:${#numbers.sequence(2,xbAttendConflicList.getTotalPages()<=2?2:(xbAttendConflicList.getTotalPages()>5?6:xbAttendConflicList.getTotalPages()))}">
-                                            <a  th:onclick="'javascript:getxbAttendConflicListPage(\''+${i-1}+'\')'" th:text="${i}"></a>
-                                        </li>
-                                        <li th:if="${xbAttendConflicList.getNumber()+1>5}"><a>...</a></li>
-                                        <!--大于5页或者小于总数-5页-->
-                                        <li th:if="${xbAttendConflicList.getNumber()+1>5 && xbAttendConflicList.getNumber()+1<xbAttendConflicList.getTotalPages()-4}"
-                                            th:class="${i} eq ${xbAttendConflicList.getNumber()+1}?'active':''"
-                                            th:each="i:${#numbers.sequence((xbAttendConflicList.getNumber()+1)-2,(xbAttendConflicList.getNumber()+1)+2)}">
-                                            <a  th:onclick="'javascript:getxbAttendConflicListPage(\''+${i-1}+'\')'" th:text="${i}"></a>
-                                        </li>
-                                        <li th:if="${xbAttendConflicList.getNumber()+1 <xbAttendConflicList.getTotalPages()-4}"><a>...</a></li>
-                                        <!--最后5页处理-->
-                                        <li th:if="${xbAttendConflicList.getNumber()+1 >=xbAttendConflicList.getTotalPages()-4 && xbAttendConflicList.getTotalPages()>5}"
-                                            th:class="${i} eq ${xbAttendConflicList.getNumber()+1}?'active':''"
-                                            th:each="i:${#numbers.sequence(xbAttendConflicList.getTotalPages()-5,xbAttendConflicList.getTotalPages()-1)}">
-                                            <a  th:onclick="'javascript:getxbAttendConflicListPage(\''+${i-1}+'\')'" th:text="${i}"></a>
-                                        </li>
-                                        <!--最后一页-->
-                                        <li th:if="${xbAttendConflicList.getTotalPages()>5}"
-                                            th:class="${xbAttendConflicList.getNumber()+1==xbAttendConflicList.getTotalPages()}?'active':''">
+                                        <th:block th:if="${xbAttendConflicList.getTotalPages()>2 && xbAttendConflicList.getTotalPages()<=10}"
+                                                  th:each="i:${#numbers.sequence(2,xbAttendConflicList.getTotalPages()-1)}">
+                                            <li th:if="${xbAttendConflicList.getNumber()+1 == i}"  class="active"><span th:text="${i}">页码</span></li>
+                                            <li th:if="${xbAttendConflicList.getNumber()+1 != i}"><a  th:onclick="'javascript:getxbAttendConflicListPage(\''+${i-1}+'\')'" th:text="${i}"></a></li>
+                                        </th:block>
+                                        <th:block th:if="${xbAttendConflicList.getTotalPages() > 10}">
+                                            <th:block th:if="${(xbAttendConflicList.getNumber()+1-(5/2)) <= 2}" th:each="i:${#numbers.sequence(2,2+5-1)}">
+                                                <li th:if="${xbAttendConflicList.getNumber()+1 == i}"  class="active"><span th:text="${i}">页码</span></li>
+                                                <li th:if="${xbAttendConflicList.getNumber()+1 != i}"><a  th:onclick="'javascript:getxbAttendConflicListPage(\''+${i-1}+'\')'" th:text="${i}"></a></li>
+                                            </th:block>
+                                            <!-- ... -->
+                                            <li th:if="${(xbAttendConflicList.getNumber()+1-(5/2))>2}"><span>...</span></li>
+
+                                            <th:block th:if="${((xbAttendConflicList.getNumber()+1-(5/2))>2) && ((xbAttendConflicList.getNumber()+1+(5/2)-(5%2==0?1:0)) < (xbAttendConflicList.getTotalPages()-1))}"
+                                                      th:each="i:${#numbers.sequence(xbAttendConflicList.getNumber()+1-(5/2),xbAttendConflicList.getNumber()+1+(5/2)-(5%2==0?1:0))}">
+                                                <li th:if="${xbAttendConflicList.getNumber()+1 == i}"  class="active"><span th:text="${i}">页码</span></li>
+                                                <li th:if="${xbAttendConflicList.getNumber()+1 != i}"><a  th:onclick="'javascript:getxbAttendConflicListPage(\''+${i-1}+'\')'" th:text="${i}"></a></li>
+                                            </th:block>
+
+                                            <!-- ... -->
+                                            <li th:if="${(xbAttendConflicList.getNumber()+1+(5/2)-(5%2==0?1:0)) < (xbAttendConflicList.getTotalPages()-1)}"><span>...</span></li>
+                                            <th:block th:if="${(xbAttendConflicList.getNumber()+1+(5/2)-(5%2==0?1:0)) >= (xbAttendConflicList.getTotalPages()-1)}" th:each="i:${#numbers.sequence(xbAttendConflicList.getTotalPages()-5,xbAttendConflicList.getTotalPages()-1)}">
+                                                <li th:if="${xbAttendConflicList.getNumber()+1 == i}"  class="active"><span th:text="${i}">页码</span></li>
+                                                <li th:if="${xbAttendConflicList.getNumber()+1 != i}"><a  th:onclick="'javascript:getxbAttendConflicListPage(\''+${i-1}+'\')'" th:text="${i}"></a></li>
+                                            </th:block>
+                                        </th:block>
+                                        <!-- 最后一页 -->
+                                        <li th:if="${xbAttendConflicList.getTotalPages()>1 && xbAttendConflicList.getNumber()+1 == xbAttendConflicList.getTotalPages()}" class="active"><span th:text="${xbAttendConflicList.getTotalPages()}">页码</span></li>
+                                        <li th:if="${xbAttendConflicList.getTotalPages()>1 && xbAttendConflicList.getNumber()+1 != xbAttendConflicList.getTotalPages()}">
+
                                             <a href="#" th:onclick="'javascript:getxbAttendConflicListPage(\''+${xbAttendConflicList.getTotalPages()-1}+'\')'"
                                                th:text="${xbAttendConflicList.getTotalPages()}"></a>
                                         </li>
-                                        <!--下一页-->
-                                        <li th:if="${xbAttendConflicList.getTotalPages()} gt ${xbAttendConflicList.getNumber()+1}">
+                                        <!-- 下一页 -->
+                                        <li th:if="${xbAttendConflicList.getNumber()+1 >= xbAttendConflicList.getTotalPages()}"><span>下一页</span></li>
+                                        <li th:if="${xbAttendConflicList.getNumber()+1 < xbAttendConflicList.getTotalPages()}">
                                             <a th:onclick="'javascript:getxbAttendConflicListPage(\''+${xbAttendConflicList.getNumber()+1}+'\')'">
                                                 <i class="ace-icon fa ">下一页</i>
                                             </a>
@@ -437,113 +423,112 @@
                         <input id="id" name="id" type="hidden" value="" />
                         <div class="modal-body no-padding">
                             <div id="classl" class="tab-pane fade in active">
-                                <div class="grounInline">
-                                    <div class="form-group">
-                                        <label><i>*</i>班级</label>
-                                        <select id="classId" name="classId" th:onchange="|javascript:classToFindAll()|">
-                                            <option th:each="cla,claSta:${xbClassList}" th:value="${cla.id}"
-                                                    th:text="${cla.sysOrgans.organName}+''+${cla.xbCourse.courseName}+''+${cla.teacher.employeeName}+''+${cla.className}">
-                                            </option>
-                                        </select>
+                                    <div class="grounInline">
+                                        <div class="form-group">
+                                            <label><i>*</i>班级</label>
+                                            <select id="classId" name="classId" th:onchange="|javascript:classToFindAll()|">
+                                                <option th:each="cla,claSta:${xbClassList}" th:value="${cla.id}"
+                                                        th:text="${cla.sysOrgans.organName}+''+${cla.xbCourse.courseName}+''+${cla.teacher.employeeName}+''+${cla.className}">
+                                                </option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>科目</label>
+                                            <select name="subjectId" id="subjectId">
+                                                <option th:each="sub,subSta:${xbSubjectList}" th:value="${sub.id}" th:text="${sub.subjectName}"></option>
+                                            </select>
+                                        </div>
+                                        <div id="scheduleModediv" class="form-group">
+                                            <label><i>*</i>排课日程方式</label>
+                                            <input name="scheduleMode" type="radio" class="ace" value="1" th:onclick="|paikeFan('1')|"><span
+                                                class="lbl">单次</span>
+                                            <input name="scheduleMode" type="radio" class="ace" value="2" th:onclick="|paikeFan('2')|"><span
+                                                class="lbl">重复</span>
+                                        </div>
                                     </div>
-                                    <div class="form-group">
-                                        <label>科目</label>
-                                        <select name="subjectId" id="subjectId">
-                                            <option th:each="sub,subSta:${xbSubjectList}" th:value="${sub.id}" th:text="${sub.subjectName}"></option>
-                                        </select>
+                                    <div id="singleStrarDate" class="form-group">
+                                        <label><i>*</i>上课日期</label>
+                                        <input class="laydate-icon" id="startDateTime" name="startDateTime">
+                                        <span id="manyStrarDate" style="display: none;">
+                                            至
+                                            <input class="laydate-icon" id="endDateTime" name="endDateTime">
+                                        </span>
                                     </div>
-                                    <div id="scheduleModediv" class="form-group">
-                                        <label><i>*</i>排课日程方式</label>
-                                        <input name="scheduleMode" type="radio" class="ace" value="1" th:onclick="|paikeFan('1')|"><span
-                                            class="lbl">单次</span>
-                                        <input name="scheduleMode" type="radio" class="ace" value="2" th:onclick="|paikeFan('2')|"><span
-                                            class="lbl">重复</span>
+                                    <div id="manyWeek" class="manyWeek" style="display: none;">
+                                        <label><i>*</i>重复设置</label>
+                                        <input type="checkbox" name="weekType" value="0"><span>全选</span>
+                                        <input type="checkbox" name="weekType" value="1"><span>周一</span>
+                                        <input type="checkbox" name="weekType" value="2"><span>周二</span>
+                                        <input type="checkbox" name="weekType" value="3"><span>周三</span>
+                                        <input type="checkbox" name="weekType" value="4"><span>周四</span>
+                                        <input type="checkbox" name="weekType" value="5"><span>周五</span>
+                                        <input type="checkbox" name="weekType" value="6"><span>周六</span>
+                                        <input type="checkbox" name="weekType" value="7"><span>周日</span>
                                     </div>
-                                </div>
-                                <div id="singleStrarDate" class="form-group">
-                                    <label><i>*</i>上课日期</label>
-                                    <input class="laydate-icon" id="startDateTime" name="startDateTime">
-                                    <span id="manyStrarDate" style="display: none;">
-                                        至
-                                        <input class="laydate-icon" id="endDateTime" name="endDateTime">
-                                    </span>
-                                </div>
-
-                                <div id="manyWeek" class="manyWeek" style="display: none;">
-                                    <label><i>*</i>重复设置</label>
-                                    <input type="checkbox" name="weekType" value="0"><span>全选</span>
-                                    <input type="checkbox" name="weekType" value="1"><span>周一</span>
-                                    <input type="checkbox" name="weekType" value="2"><span>周二</span>
-                                    <input type="checkbox" name="weekType" value="3"><span>周三</span>
-                                    <input type="checkbox" name="weekType" value="4"><span>周四</span>
-                                    <input type="checkbox" name="weekType" value="5"><span>周五</span>
-                                    <input type="checkbox" name="weekType" value="6"><span>周六</span>
-                                    <input type="checkbox" name="weekType" value="7"><span>周日</span>
-                                </div>
-                                <div class="grounInline">
-                                    <div class="form-group">
-                                        <label><i>*</i>上课时段</label>
-                                        <select name="timeInterval" id="timeInterval">
-                                            <option value="">选择时段</option>
-                                            <option value="8:30-10:00">8:30-10:00</option>
-                                            <option value="9:00-10:30">9:00-10:30</option>
-                                            <option value="10:30-11:20">10:30-11:20</option>
-                                            <option value="10:30-12:00">10:30-12:00</option>
-                                            <option value="14:00-15:30">14:00-15:30</option>
-                                            <option value="15:30-17:00">15:30-17:00</option>
-                                            <option value="16:00-17:30">16:00-17:30</option>
-                                            <option value="17:00-18:30">17:00-18:30</option>
-                                            <option value="17:30-19:00">17:30-19:00</option>
-                                            <option value="18:30-20:00">18:30-20:00</option>
-                                        </select>
+                                    <div class="grounInline">
+                                        <div class="form-group">
+                                            <label><i>*</i>上课时段</label>
+                                            <!--<select name="timeInterval" id="timeInterval">
+                                                <option value="">选择时段</option>
+                                                <option value="8:30-10:00">8:30-10:00</option>
+                                                <option value="9:00-10:30">9:00-10:30</option>
+                                                <option value="10:30-11:20">10:30-11:20</option>
+                                                <option value="10:30-12:00">10:30-12:00</option>
+                                                <option value="14:00-15:30">14:00-15:30</option>
+                                                <option value="15:30-17:00">15:30-17:00</option>
+                                                <option value="16:00-17:30">16:00-17:30</option>
+                                                <option value="17:00-18:30">17:00-18:30</option>
+                                                <option value="17:30-19:00">17:30-19:00</option>
+                                                <option value="18:30-20:00">18:30-20:00</option>
+                                            </select>-->
+                                            <input id="timeInterval" name="timeInterval"  type="text"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="">上课主题</label>
+                                            <input id="classTheme" name="classTheme" type="text">
+                                        </div>
                                     </div>
-                                    <div class="form-group">
-                                        <label for="">上课主题</label>
-                                        <input id="classTheme" name="classTheme" type="text">
-                                    </div>
-                                </div>
                                 <div id="teacherfromgroupid">
-                                    <th:block th:if="${XbClass}" th:fragment="teacherfra">
-                                        <div class="grounInline">
-                                            <div class="form-group">
-                                                <label><i>*</i>教师</label>
-                                                <input name="teacherId" id="teacherId" type="hidden" th:value="${XbClass.teacher.id}">
-                                                <input name="teacherName" id="teacherName" type="text" disabled="disabled"
-                                                    th:value="${XbClass.teacher.employeeName}">
-                                            </div>
-                                            <div class="form-group">
-                                                <label><i>*</i>助教</label>
-                                                <input name="tutorId" id="tutorId" type="hidden" th:value="${XbClass.teacher.id}">
-                                                <input name="tutorName" id="tutorName" type="text" disabled="disabled"
-                                                    th:value="${XbClass.teacher.employeeName}">
-                                            </div>
+                                <th:block th:if="${XbClass}" th:fragment="teacherfra">
+                                    <div class="grounInline">
+                                        <div class="form-group">
+                                            <label><i>*</i>教师</label>
+                                            <input name="teacherId" id="teacherId" type="hidden" th:value="${XbClass.teacher.id}">
+                                            <input name="teacherName" id="teacherName" type="text" disabled="disabled"
+                                                th:value="${XbClass.teacher.employeeName}">
                                         </div>
-                                        <div class="grounInline">
-                                            <div class="form-group">
-                                                <label><i>*</i>教室</label>
-                                                <input name="classRoomId" id="classRoomId" type="hidden" th:value="${XbClass.xbClassroom.id}">
-                                                <input name="classRoomName" id="classRoomName" type="text" disabled="disabled"
-                                                    th:value="${XbClass.xbClassroom.classroomName}">
-                                            </div>
-                                            <div class="form-group">
-                                                <label><i>*</i>上课方式</label>
-                                                <input name="wayOfTeaching" id="wayOfTeaching" type="hidden" th:value="${XbClass.xbCourse.type}">
-                                                <input th:if="${XbClass.xbCourse.type} eq '1'" name="wayOfTeachingName"
-                                                    id="wayOfTeachingName" type="text" disabled="disabled" th:value="一对一">
-                                                <input th:if="${XbClass.xbCourse.type} eq '0'" name="wayOfTeachingName"
-                                                    id="wayOfTeachingName" type="text" disabled="disabled" th:value="班课">
-                                            </div>
+                                        <div class="form-group">
+                                            <label><i>*</i>助教</label>
+                                            <input name="tutorId" id="tutorId" type="hidden" th:value="${XbClass.teacher.id}">
+                                            <input name="tutorName" id="tutorName" type="text" disabled="disabled"
+                                                th:value="${XbClass.teacher.employeeName}">
                                         </div>
-                                        <div class="modal-footer no-margin-top">
-                                            <button class="btn pull-left" data-dismiss="modal" onclick="cecalAttendClass()">
-                                                取消
-                                            </button>
-                                            <button class="btn pull-right"  onclick="saveAttendClass()" type="button">
-                                                保存
-                                            </button>
+                                    </div>
+                                    <div class="grounInline">
+                                        <div class="form-group">
+                                            <label><i>*</i>教室</label>
+                                            <input name="classRoomId" id="classRoomId" type="hidden" th:value="${XbClass.xbClassroom.id}">
+                                            <input name="classRoomName" id="classRoomName" type="text" disabled="disabled"
+                                                th:value="${XbClass.xbClassroom.classroomName}">
                                         </div>
-                                    </th:block>
-
+                                        <div class="form-group">
+                                            <label><i>*</i>上课方式</label>
+                                            <input name="wayOfTeaching" id="wayOfTeaching" type="hidden" th:value="${XbClass.xbCourse.type}">
+                                            <input th:if="${XbClass.xbCourse.type} eq '1'" name="wayOfTeachingName"
+                                                id="wayOfTeachingName" type="text" disabled="disabled" th:value="一对一">
+                                            <input th:if="${XbClass.xbCourse.type} eq '0'" name="wayOfTeachingName"
+                                                id="wayOfTeachingName" type="text" disabled="disabled" th:value="班课">
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer no-margin-top">
+                                        <button class="btn pull-left" data-dismiss="modal" onclick="cecalAttendClass()">
+                                            取消
+                                        </button>
+                                        <button class="btn pull-right"  onclick="saveAttendClass()" type="button">
+                                            保存
+                                        </button>
+                                    </div>
+                                </th:block>
                                 </div>
                             </div>
                         </div>
@@ -660,6 +645,13 @@
 <!--新建日程函数群-->
 <script type="text/javascript" th:inline="javascript">
     var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/;
+
+    //时间范围
+    laydate.render({
+        elem: '#timeInterval'
+        ,type: 'time'
+        ,range: true
+    });
     $(function(){
         var a = $("#xbAttendListsize").val();
         if(a!=5){
@@ -719,9 +711,9 @@
             $(":radio[name='scheduleMode'][value='1']").prop("checked", "checked");
             $("#scheduleModediv").hide();
             $("#startDateTime").val(startDateTime);
-            if (endDateTime != '') {
+            /*if (endDateTime != '') {
                 $("#endDateTime").val(endDateTime);
-            }
+            }*/
             $("#timeInterval").val(timeInterval);
             $("#subjectId").val(subjectid);
             $("#classTheme").val(classTheme);
@@ -860,33 +852,33 @@
         $(".orderTable .rcct").append(html.join(""));
     }
     //删除排课
-    function attendClassRemove(id,type){
+    function attendClassRemove(id,type,page){
         var load = new Loading();
         load.init({
             target: "#schedule"
         });
-        if(confirm("确定要删除这条排课信息?")) {
-            load.start();
-            $.ajax({
-                url: basePath+ '/jw_center_arranging_course/remove_xbAttend_class',
-                type: 'get',
-                contentType: 'application/json',
-                data: {id:id},
-                async: true,
-                success: function(data) {
-                    load.stop();
-                console.log("删除排课回调成功")
-                $.kd.kdAlert("删除排课成功",function(){
-                    $("#xbAttendList_tbodyid").html("");
-                    $("#xbAttendList_tbodyid").append(data);
+            $.kd.kdConfirm("确定要删除这条排课信息",function(){
+                load.start();
+                $.ajax({
+                    url: basePath+ '/jw_center_arranging_course/remove_xbAttend_class',
+                    type: 'get',
+                    contentType: 'application/json',
+                    data: {id:id,page:page},
+                    async: true,
+                    success: function(data) {
+                        load.stop();
+                    console.log("删除排课回调成功")
+                    $.kd.kdAlert("删除排课成功",function(){
+                        $("#xbAttendList_tbodyid").html("");
+                        $("#xbAttendList_tbodyid").append(data);
+                    });
+                    },
+                    error:function(){
+                        load.stop();
+                        console.log("删除排课回调失败")
+                    }
                 });
-                },
-                error:function(){
-                    load.stop();
-                    console.log("删除排课回调失败")
-                }
-            });
-        }
+            })
     };
     //删除排课冲突
     function attendClassConflicRemove(id,type){
