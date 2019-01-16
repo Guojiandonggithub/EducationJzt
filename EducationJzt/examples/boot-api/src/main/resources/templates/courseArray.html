@@ -956,7 +956,7 @@
     function getxbAttendConflicListPage(page){
         var load = new Loading();
         load.init({
-            target: "#conflict"
+            target: "#main-container"
         });
         load.start();
         var size = $('#conflicsize option:selected').val();//选中的值
@@ -991,7 +991,7 @@
     function getOrgansListPage(page){
         var load = new Loading();
         load.init({
-            target: "#orderTable"
+            target: "#main-container"
         });
         load.start();
         var data= serializeObject("#searchform");
