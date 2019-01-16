@@ -101,4 +101,9 @@ public class XbAttendClassService {
 		 list =xbAttendClassDao.findSDStudentNum(classId,startDateTime);
 		return list.size();
 	}
+
+	public List findListsByClassId(String classId) {
+		List list =xbAttendClassDao.findListsByClassId(classId);
+		return list;
+	}
 }

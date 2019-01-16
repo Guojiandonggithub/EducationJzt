@@ -48,6 +48,8 @@ public class XbStudentRelation {
     public Date enrollDate;
     @Transient
     public String relationId;
+    public BigDecimal totalReceivable;
+    public BigDecimal totalPeriodNum;
 
     public XbStudentRelation() {
 

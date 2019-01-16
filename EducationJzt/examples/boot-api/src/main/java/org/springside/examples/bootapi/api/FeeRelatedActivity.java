@@ -133,6 +133,7 @@ public class FeeRelatedActivity {
 		xbStudentnew.studentName = xbStudentold.studentName;
 		xbStudentnew.contactPhone = xbStudentold.contactPhone;
 		xbStudentnew.advisoryChannel = xbStudentold.advisoryChannel;
+		xbStudentnew.contactRelation = xbStudentold.contactRelation;
 		try {
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put("status","1");

@@ -53,6 +53,9 @@ public class StudentActivity {
 	@Autowired
 	public XbCourseTypeService xbCourseTypeService;
 
+	@Autowired
+	public XbAttendClassService xbAttendClassService;
+
 	/*
 	 * 跳转到学员
 	 * @return
@@ -284,6 +287,20 @@ public class StudentActivity {
 		}
 		Page<XbClassroom> xbClassroomPage = studentService.getXbClassroomList(pageable1,searhMap);
 		Page<XbClass> xbClassPage = studentService.getXbClassList(pageable2,searhMap);
+		List<XbClass> xbClassList = xbClassPage.getContent();
+		for (int i = 0; i < xbClassList.size(); i++) {
+			String sktime="";
+			List lists = xbAttendClassService.findListsByClassId(xbClassList.get(i).id);
+			if(lists.size()>0){
+				for (int j = 0; j < lists.size(); j++) {
+					Object[] str = (Object[])lists.get(j);
+					sktime = sktime+ str[0]+str[1]+"<br/>";
+				}
+			}
+			xbClassList.get(i).sktime = sktime;
+			System.out.println(sktime);//拼接成字符串付给班级
+		}
+
 		model.addAttribute("xbClassroomPage",xbClassroomPage);
 		model.addAttribute("xbClassPage",xbClassPage);
 		model.addAttribute("roomcurrentzise",xbClassroomPage.getSize());
@@ -467,6 +484,8 @@ public class StudentActivity {
 				studentRelation.studentId = xbStudent.id;
 				XbCourse xbCourse = xbCourseService.findById(studentRelation.courseId);
 				content = content+xbCourse.courseName +",";
+				studentRelation.totalPeriodNum = studentRelation.periodNum;
+				studentRelation.totalReceivable = studentRelation.receivable;
 				studentService.saveXbStudentRelation(studentRelation);
 			}
 			if(content.endsWith(",")){
@@ -696,7 +715,7 @@ public class StudentActivity {
 			}
 		}
 		Iterable<SysOrgans> organsList = organsService.getOrgansList();
-		searhMap.put("GT_xbStudent.paymentMoney","0");
+		searhMap.put("NEQ_xbStudent.paymentMoney","0");
 		Page<XbStudentRelation> xbStudentPage = studentService.getXbStudentRelationList(pageable,searhMap);
 		Map<String,Object> studentMap = new HashMap<>();
 		studentMap.put( "GT_paymentMoney","0");

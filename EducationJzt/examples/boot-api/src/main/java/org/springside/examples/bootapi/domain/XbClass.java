@@ -69,6 +69,8 @@ public class XbClass {
     public String remarks;
     @Transient
     public List<XbCoursePreset> xbCoursePresetList = new ArrayList<>();
+    @Transient
+    public String sktime;
 
     public XbClass() {
 

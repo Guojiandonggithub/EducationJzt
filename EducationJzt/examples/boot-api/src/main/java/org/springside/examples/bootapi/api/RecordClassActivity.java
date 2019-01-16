@@ -20,8 +20,8 @@ import org.springside.examples.bootapi.service.XbCoursePresetService;
 import org.springside.examples.bootapi.service.XbStudentService;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -111,6 +111,8 @@ public class RecordClassActivity {
 				String classId = xbRecordClass.classId;
 				String organId = xbRecordClass.organId;
 				String courseId = xbRecordClass.courseId;
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				xbRecordClass.recordTime = sdf.parse(xbRecordClass.recordTimeTemp);
 				Map<String,Object> searhMap = new HashMap<>();
 				Map<String,Object> courseMap = new HashMap<>();
 				if(null!=classId){
@@ -150,7 +152,7 @@ public class RecordClassActivity {
 			resp.setContentType("text/html;charset=UTF-8");
 			resp.getWriter().println(jsonObject.toJSONString());
 			resp.getWriter().close();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			logger.info(e.toString());
 		}
 	}

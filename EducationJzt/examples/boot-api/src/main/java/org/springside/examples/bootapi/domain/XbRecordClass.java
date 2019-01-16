@@ -45,6 +45,8 @@ public class XbRecordClass {
     public String studentPhoto;
     public Date recordTime;
     @Transient
+    public String recordTimeTemp;
+    @Transient
     public String classId;
     @Transient
     public String courseId;

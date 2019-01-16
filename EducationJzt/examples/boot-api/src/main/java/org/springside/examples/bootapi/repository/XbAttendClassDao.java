@@ -4,9 +4,7 @@ package org.springside.examples.bootapi.repository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
-import org.springside.examples.bootapi.domain.SysOrgans;
 import org.springside.examples.bootapi.domain.XbAttendClass;
-import org.springside.examples.bootapi.domain.XbCoursePreset;
 
 import java.util.List;
 
@@ -33,5 +31,8 @@ public interface XbAttendClassDao extends PagingAndSortingRepository<XbAttendCla
     List findYDStudentNum(String classId,String startDateTime);
     @Query(value="SELECT *  FROM xb_record_class t WHERE t.attend_id = ? AND t.record_time = ? AND t.state = '0';",nativeQuery = true)
     List findSDStudentNum(String classId,String startDateTime);
+
+    @Query(value=" select c.week_day,c.time_interval from xb_attend_class c where c.class_id = ?1 and c.delete_status='1' group by  c.week_day,c.time_interval;",nativeQuery = true)
+    List findListsByClassId(String classIde);
 
 }

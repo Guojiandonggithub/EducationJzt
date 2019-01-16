@@ -718,7 +718,7 @@
                 cache: false,
                 async: true,
                 success: function (data) {
-                    load.stop();
+                    //load.stop();
                     var status = data.status;
                     var msg = data.msg;
                     $.kd.kdAlert("编辑成功！",function () {
@@ -1002,8 +1002,8 @@
                 $("#studentId").val(data.data.id);
                 $("#contactPhone").val(data.data.contactPhone);
                 $("#contactRelation").val(data.data.contactRelation);
-                $("input[name='"+data.data.sex +"']").attr('checked','true');
-                $("input[name='"+data.data.advisoryChannel+"']").attr('checked','true');
+                $("input[name='sex'][value='"+data.data.sex+"']").attr("checked",true);
+                $("input[name='advisoryChannel'][value='"+data.data.advisoryChannel+"']").attr("checked",true);
             }
         });
     };
