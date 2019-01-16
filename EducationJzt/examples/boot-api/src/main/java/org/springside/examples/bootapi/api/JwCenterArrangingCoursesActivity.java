@@ -111,11 +111,13 @@ public class JwCenterArrangingCoursesActivity {
      * @return
      */
     @RequestMapping("/classToFindAll")
-    public String classToFindAll(@RequestParam String id,ModelMap model){
+    public String classToFindAll(@RequestParam String id,@RequestParam String type
+            ,ModelMap model){
        XbClass xbc = xbStudentService.getXbClass(id);
        //SysEmployee sse = xbc.teacher;
        //model.addAttribute("SysEmployee",sse);
        model.addAttribute("XbClass",xbc);
+       model.addAttribute("type",type);
        return "courseArray::teacherfra";
     }
     /**

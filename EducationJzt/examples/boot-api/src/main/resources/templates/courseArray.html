@@ -223,7 +223,7 @@
                                                 </select>
                                                 <input type="hidden" id="xbAttendListsize" th:value="${xbAttendListsize}"/>
                                             </div>
-                                            <ul class="pagination" th:if="${xbAttendList}">
+                                            <ul class="pagination" th:if="${xbAttendList.getTotalPages()>0}">
                                                 <!-- 上一页 -->
                                                 <li th:if="${xbAttendList.getNumber()+1 == 1}"><span>上一页</span></li>
                                                 <li th:if="${xbAttendList.getNumber()+1 > 1}">
@@ -426,7 +426,8 @@
                                     <div class="grounInline">
                                         <div class="form-group">
                                             <label><i>*</i>班级</label>
-                                            <select id="classId" name="classId" th:onchange="|javascript:classToFindAll()|">
+                                            <select id="classId" name="classId" "
+                                                    th:onchange="|javascript:classToFindAll('add')|">
                                                 <option th:each="cla,claSta:${xbClassList}" th:value="${cla.id}"
                                                         th:text="${cla.sysOrgans.organName}+''+${cla.xbCourse.courseName}+''+${cla.teacher.employeeName}+''+${cla.className}">
                                                 </option>
@@ -438,32 +439,7 @@
                                                 <option th:each="sub,subSta:${xbSubjectList}" th:value="${sub.id}" th:text="${sub.subjectName}"></option>
                                             </select>
                                         </div>
-                                        <div id="scheduleModediv" class="form-group">
-                                            <label><i>*</i>排课日程方式</label>
-                                            <input name="scheduleMode" type="radio" class="ace" value="1" th:onclick="|paikeFan('1')|"><span
-                                                class="lbl">单次</span>
-                                            <input name="scheduleMode" type="radio" class="ace" value="2" th:onclick="|paikeFan('2')|"><span
-                                                class="lbl">重复</span>
-                                        </div>
-                                    </div>
-                                    <div id="singleStrarDate" class="form-group">
-                                        <label><i>*</i>上课日期</label>
-                                        <input class="laydate-icon" id="startDateTime" name="startDateTime">
-                                        <span id="manyStrarDate" style="display: none;">
-                                            至
-                                            <input class="laydate-icon" id="endDateTime" name="endDateTime">
-                                        </span>
-                                    </div>
-                                    <div id="manyWeek" class="manyWeek" style="display: none;">
-                                        <label><i>*</i>重复设置</label>
-                                        <input type="checkbox" name="weekType" value="0"><span>全选</span>
-                                        <input type="checkbox" name="weekType" value="1"><span>周一</span>
-                                        <input type="checkbox" name="weekType" value="2"><span>周二</span>
-                                        <input type="checkbox" name="weekType" value="3"><span>周三</span>
-                                        <input type="checkbox" name="weekType" value="4"><span>周四</span>
-                                        <input type="checkbox" name="weekType" value="5"><span>周五</span>
-                                        <input type="checkbox" name="weekType" value="6"><span>周六</span>
-                                        <input type="checkbox" name="weekType" value="7"><span>周日</span>
+
                                     </div>
                                     <div class="grounInline">
                                         <div class="form-group">
@@ -490,6 +466,46 @@
                                     </div>
                                 <div id="teacherfromgroupid">
                                 <th:block th:if="${XbClass}" th:fragment="teacherfra">
+                                    <script>
+                                        //时间范围
+                                        laydate.render({
+                                            elem: '#startDateTime'
+                                        });
+                                        //时间范围
+                                        laydate.render({
+                                            elem: '#endDateTime'
+                                        });
+
+                                    </script>
+                                    <div id="scheduleModediv" class="form-group">
+                                        <label><i>*</i>排课日程方式</label>
+                                        <input id="scheduleMode1" name="scheduleMode" type="radio" th:attr ="checked=${type eq 'edit'?true:false}"  class="ace" value="1" th:onclick="|paikeFan('1')|"><span
+                                            class="lbl">单次</span>
+                                        <input id="scheduleMode2" name="scheduleMode" type="radio" th:if="${type eq 'add'}" th:attr ="checked=${type eq 'add'?true:false}" class="ace" value="2" th:onclick="|paikeFan('2')|">
+                                        <span th:if="${type eq 'add'}"
+                                            class="lbl">重复</span>
+                                    </div>
+                                    <div id="singleStrarDate" class="form-group">
+                                        <label><i>*</i>上课日期</label>
+                                        <input class="laydate-icon" id="startDateTime" name="startDateTime"
+                                               th:value="${XbClass.classBeginDate}">
+                                        <span id="manyStrarDate" th:if="${type eq 'add'}">
+                                            至
+                                            <input class="laydate-icon" id="endDateTime" name="endDateTime"
+                                                   th:value="${XbClass.classEndDate}">
+                                        </span>
+                                    </div>
+                                    <div id="manyWeek" class="manyWeek" th:if="${type eq 'add'}"">
+                                        <label><i>*</i>重复设置</label>
+                                        <input type="checkbox" checked="checked" name="weekType" value="0"><span>全选</span>
+                                        <input type="checkbox" name="weekType" value="1"><span>周一</span>
+                                        <input type="checkbox" name="weekType" value="2"><span>周二</span>
+                                        <input type="checkbox" name="weekType" value="3"><span>周三</span>
+                                        <input type="checkbox" name="weekType" value="4"><span>周四</span>
+                                        <input type="checkbox" name="weekType" value="5"><span>周五</span>
+                                        <input type="checkbox" name="weekType" value="6"><span>周六</span>
+                                        <input type="checkbox" name="weekType" value="7"><span>周日</span>
+                                    </div>
                                     <div class="grounInline">
                                         <div class="form-group">
                                             <label><i>*</i>教师</label>
@@ -688,9 +704,7 @@
             $("#scheduleMode").removeAttr("checked");
             $("#scheduleModediv").show();
             $("#startDateTime").val("");
-            if (endDateTime != '') {
-                $("#endDateTime").val("");
-            }
+            $("#endDateTime").val("");
             $("#timeInterval").val("");
             $("#classRoomId").val("");
             $("#classRoomName").val("");
@@ -700,7 +714,8 @@
             $("#tutorId").val("");
             $("#teacherName").val("");
             $("#tutorName").val("");
-
+            $("#classId").attr("disabled",false);
+            $("#classId").css("color","black");
         }
     //日程编辑
     function attendClassEdit(id, xbclassid, wayOfTeaching, scheduleMode, startDateTime, endDateTime, timeInterval,
@@ -711,13 +726,12 @@
             $(":radio[name='scheduleMode'][value='1']").prop("checked", "checked");
             $("#scheduleModediv").hide();
             $("#startDateTime").val(startDateTime);
-            /*if (endDateTime != '') {
-                $("#endDateTime").val(endDateTime);
-            }*/
             $("#timeInterval").val(timeInterval);
             $("#subjectId").val(subjectid);
             $("#classTheme").val(classTheme);
-            classToFindAll();
+            $("#classId").attr("disabled","disabled");
+            $("#classId").css("color","#a29b9b");
+            classToFindAll('edit');
         }
 
         //新建日程
@@ -740,7 +754,7 @@
             $.kd.kdMsg("请选择上课日期");
             return false;
         }
-        if(data.scheduleMode=="2" && data.endDateTime=="" || data.endDateTime == undefined){
+        if(data.scheduleMode=="2" && (data.endDateTime=="" || data.endDateTime == undefined)){
             $.kd.kdMsg("请选择完整上课日期");
             return false;
         }
@@ -912,7 +926,7 @@
        // }
     }
     //班级下拉级联
-    function classToFindAll(){
+    function classToFindAll(type){
         var load = new Loading();
         load.init({
             target: "#modal-content"
@@ -923,7 +937,7 @@
             url: basePath + '/jw_center_arranging_course/classToFindAll',
             type: 'get',
             contentType: 'application/json',
-            data: {id: calssId},
+            data: {id: calssId,type:type},
             async: true,
             success: function (data) {
                 load.stop();

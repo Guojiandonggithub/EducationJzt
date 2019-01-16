@@ -2,6 +2,7 @@ package org.springside.examples.bootapi.domain;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -36,7 +37,9 @@ public class XbClass {
     @NotNull(message="课程不能为空")
     public String courseId;
     public String courseName;
+    @Temporal(TemporalType.DATE)
     public Date classBeginDate;
+    @Temporal(TemporalType.DATE)
     public Date classEndDate;
     public Integer preRecruitNum;
     public Integer establishNum;
