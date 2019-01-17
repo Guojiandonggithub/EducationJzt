@@ -215,7 +215,7 @@
                                                                 <a th:href="@{/jwcentercourse/goaddcourse(type=add,courseId=${obj.xbCourse.id},presetid=${obj.id})}"  >新增定价标准</a>
                                                             </li>
                                                             <li>
-                                                                <a style="cursor:pointer" th:onclick="|sourceRemove('${obj.id}')|">删除</a>
+                                                                <a style="cursor:pointer" th:onclick="|sourceRemove('${obj.id}','${prelist.getNumber()}')|">删除</a>
                                                             </li>
                                                         </ul>
                                                     </div>
@@ -254,45 +254,57 @@
                                                 </a>
                                             </li>
                                         </ul>-->
-                                        <ul class="pagination" th:if="${prelist}" >
-                                            <!--上一页-->
-                                            <li  th:if="${prelist.getNumber()-1} ge 0">
+                                        <ul class="pagination" th:if="${prelist.getTotalPages()>0}">
+                                            <!-- 上一页 -->
+                                            <li th:if="${prelist.getNumber()+1 == 1}"><span>上一页</span></li>
+                                            <li th:if="${prelist.getNumber()+1 > 1}">
                                                 <a  th:onclick="'javascript:getOrgansListPage(\''+${prelist.getNumber()-1}+'\')'">
                                                     <i class="ace-icon fa ">上一页</i>
                                                 </a>
                                             </li>
-                                            <!--第1页-->
-                                            <li th:class=" ${prelist.getNumber()==0}?'active':''">
-                                                <a  th:onclick="'javascript:getOrgansListPage(\''+0+'\')'">1</a>
+                                            <!-- 首页 -->
+                                            <li th:if="${prelist.getNumber()+1 == 1}" class="active"><span>1</span></li>
+                                            <li th:if="${prelist.getNumber()+1 > 1}">
+                                                <a  th:onclick="'javascript:getOrgansListPage(\''+${0}+'\')'">1</a>
                                             </li>
-                                            <!--小于等于5页处理-->
-                                            <li th:if="${ prelist.getNumber()+1<5 && prelist.getTotalPages()>1}"
-                                                th:class="${i} eq ${prelist.getNumber()+1}?'active':''"
-                                                th:each="i:${#numbers.sequence(2,prelist.getTotalPages()<=2?2:(prelist.getTotalPages()>5?6:prelist.getTotalPages()))}">
-                                                <a  th:onclick="'javascript:getOrgansListPage(\''+${i-1}+'\')'" th:text="${i}"></a>
-                                            </li>
-                                            <li th:if="${prelist.getNumber()+1>5}"><a>...</a></li>
-                                            <!--大于5页或者小于总数-5页-->
-                                            <li th:if="${prelist.getNumber()+1>5 && prelist.getNumber()+1<prelist.getTotalPages()-4}"
-                                                th:class="${i} eq ${prelist.getNumber()+1}?'active':''"
-                                                th:each="i:${#numbers.sequence((prelist.getNumber()+1)-2,(prelist.getNumber()+1)+2)}">
-                                                <a  th:onclick="'javascript:getOrgansListPage(\''+${i-1}+'\')'" th:text="${i}"></a>
-                                            </li>
-                                            <li th:if="${prelist.getNumber()+1 <prelist.getTotalPages()-4}"><a>...</a></li>
-                                            <!--最后5页处理-->
-                                            <li th:if="${prelist.getNumber()+1 >=prelist.getTotalPages()-4 && prelist.getTotalPages()>5}"
-                                                th:class="${i} eq ${prelist.getNumber()+1}?'active':''"
-                                                th:each="i:${#numbers.sequence(prelist.getTotalPages()-5,prelist.getTotalPages()-1)}">
-                                                <a  th:onclick="'javascript:getOrgansListPage(\''+${i-1}+'\')'" th:text="${i}"></a>
-                                            </li>
-                                            <!--最后一页-->
-                                            <li th:if="${prelist.getTotalPages()>5}"
-                                                th:class="${prelist.getNumber()+1==prelist.getTotalPages()}?'active':''">
+
+                                            <th:block th:if="${prelist.getTotalPages()>2 && prelist.getTotalPages()<=10}">
+                                                <th:block th:each="i:${#numbers.sequence(2,prelist.getTotalPages()-1)}">
+                                                    <li th:if="${prelist.getNumber()+1 == i}"  class="active"><span th:text="${i}">页码</span></li>
+                                                    <li th:if="${prelist.getNumber()+1 != i}"><a  th:onclick="'javascript:getOrgansListPage(\''+${i-1}+'\')'" th:text="${i}"></a></li>
+                                                </th:block>
+                                            </th:block>
+                                            <th:block th:if="${prelist.getTotalPages() > 10}">
+                                                <th:block th:if="${(prelist.getNumber()+1-(5/2)) <= 2}" th:each="i:${#numbers.sequence(2,2+5-1)}">
+                                                    <li th:if="${prelist.getNumber()+1 == i}"  class="active"><span th:text="${i}">页码</span></li>
+                                                    <li th:if="${prelist.getNumber()+1 != i}"><a  th:onclick="'javascript:getOrgansListPage(\''+${i-1}+'\')'" th:text="${i}"></a></li>
+                                                </th:block>
+                                                <!-- ... -->
+                                                <li th:if="${(prelist.getNumber()+1-(5/2))>2}"><span>...</span></li>
+
+                                                <th:block th:if="${((prelist.getNumber()+1-(5/2))>2) && ((prelist.getNumber()+1+(5/2)-(5%2==0?1:0)) < (prelist.getTotalPages()-1))}"
+                                                          th:each="i:${#numbers.sequence(prelist.getNumber()+1-(5/2),prelist.getNumber()+1+(5/2)-(5%2==0?1:0))}">
+                                                    <li th:if="${prelist.getNumber()+1 == i}"  class="active"><span th:text="${i}">页码</span></li>
+                                                    <li th:if="${prelist.getNumber()+1 != i}"><a  th:onclick="'javascript:getOrgansListPage(\''+${i-1}+'\')'" th:text="${i}"></a></li>
+                                                </th:block>
+
+                                                <!-- ... -->
+                                                <li th:if="${(prelist.getNumber()+1+(5/2)-(5%2==0?1:0)) < (prelist.getTotalPages()-1)}"><span>...</span></li>
+                                                <th:block th:if="${(prelist.getNumber()+1+(5/2)-(5%2==0?1:0)) >= (prelist.getTotalPages()-1)}" th:each="i:${#numbers.sequence(prelist.getTotalPages()-5,prelist.getTotalPages()-1)}">
+                                                    <li th:if="${prelist.getNumber()+1 == i}"  class="active"><span th:text="${i}">页码</span></li>
+                                                    <li th:if="${prelist.getNumber()+1 != i}"><a  th:onclick="'javascript:getOrgansListPage(\''+${i-1}+'\')'" th:text="${i}"></a></li>
+                                                </th:block>
+                                            </th:block>
+                                            <!-- 最后一页 -->
+                                            <li th:if="${prelist.getTotalPages()>1 && prelist.getNumber()+1 == prelist.getTotalPages()}" class="active"><span th:text="${prelist.getTotalPages()}">页码</span></li>
+                                            <li th:if="${prelist.getTotalPages()>1 && prelist.getNumber()+1 != prelist.getTotalPages()}">
+
                                                 <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${prelist.getTotalPages()-1}+'\')'"
                                                    th:text="${prelist.getTotalPages()}"></a>
                                             </li>
-                                            <!--下一页-->
-                                            <li th:if="${prelist.getTotalPages()} gt ${prelist.getNumber()+1}">
+                                            <!-- 下一页 -->
+                                            <li th:if="${prelist.getNumber()+1 >= prelist.getTotalPages()}"><span>下一页</span></li>
+                                            <li th:if="${prelist.getNumber()+1 < prelist.getTotalPages()}">
                                                 <a th:onclick="'javascript:getOrgansListPage(\''+${prelist.getNumber()+1}+'\')'">
                                                     <i class="ace-icon fa ">下一页</i>
                                                 </a>
@@ -549,7 +561,7 @@
         });
     }
     //删除课程
-    function sourceRemove(id) {
+    function sourceRemove(id,page) {
         var load = new Loading();
         load.init({
             target: "#control-position"
@@ -560,7 +572,7 @@
                 url: basePath + '/jwcentercourse/removecourse',
                 type: 'get',
                 contentType: 'application/json',
-                data: {id: id},
+                data: {id: id,page:page},
                 async: true,
                 success: function (data) {
                     load.stop();
@@ -905,7 +917,7 @@
     function getOrgansListPage(page){
         var load = new Loading();
         load.init({
-            target: "#control-position"
+            target: "#main-container"
         });
         load.start();
         var data= serializeObject("#searchform");

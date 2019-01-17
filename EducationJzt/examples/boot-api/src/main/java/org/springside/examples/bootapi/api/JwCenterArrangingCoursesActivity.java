@@ -40,6 +40,8 @@ public class JwCenterArrangingCoursesActivity {
     @Autowired
     public XbSubjectService xbSubjectService;
     @Autowired
+    public XbCourseTypeService xbCourseTypeService;
+    @Autowired
     public XbStudentService xbStudentService;
     @Autowired
     public EmployeeService employeeService;
@@ -139,7 +141,9 @@ public class JwCenterArrangingCoursesActivity {
         logger.info("跳转到排课");
         findXbAttendClassPageListAll(model,pageable,data);
         findXbAttendConflicListi(model);
-        model.addAttribute("xbSubjectList",xbSubjectService.findSubjectAll());
+        //model.addAttribute("xbSubjectList",xbSubjectService.findSubjectAll());
+        Map<String, Object> searchParams = new HashMap<>();
+        model.addAttribute("xbCourseTypeList",xbCourseTypeService.findXbCourseTypeList(searchParams));
         Map<String,Object> searmap = new HashMap<>();
         model.addAttribute("xbClassList",xbStudentService.findXbClassListAll(searmap));
         model.addAttribute("xbClassroomList",xbStudentService.findXbClassRoomListAll());
@@ -216,12 +220,19 @@ public class JwCenterArrangingCoursesActivity {
         }else if(!courtype.equals("-1")){
             searhMap.put("EQ_wayOfTeaching",courtype);
         }
-        //授课模式
+        /*//授课模式
         String subjectId = (String)resultMap.get("subjectId");
         if(null==subjectId){
             subjectId = "0";
         }else if(!subjectId.equals("0")){
             searhMap.put("EQ_subjectId",subjectId);
+        }*/
+        //授课模式
+        String courseTypeId = (String)resultMap.get("courseTypeId");
+        if(null==courseTypeId){
+            courseTypeId = "0";
+        }else if(!courseTypeId.equals("0")){
+            searhMap.put("EQ_xbclass.xbCourse.xbcoursetype.id",courseTypeId);
         }
         //班级
         String classId_combobox = (String)resultMap.get("classId_combobox");
@@ -247,7 +258,8 @@ public class JwCenterArrangingCoursesActivity {
         model.addAttribute("searhname",searhname);
         model.addAttribute("type",type);
         model.addAttribute("courtype",courtype);
-        model.addAttribute("subjectId",subjectId);
+       // model.addAttribute("subjectId",subjectId);
+        model.addAttribute("courseTypeId",courseTypeId);
         model.addAttribute("classId_combobox",classId_combobox);
         model.addAttribute("courseId_combobox",courseId_combobox);
         String sysorgId_combobox = (String)resultMap.get("sysorgId_combobox");

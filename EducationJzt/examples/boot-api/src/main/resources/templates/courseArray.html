@@ -115,7 +115,7 @@
                                         <span class="lbl" th:text="一对一"></span>
                                     </label></div>
                                 </div>
-                                <div class="control-group">
+                                <!--<div class="control-group">
                                     <label class="control-label">科目</label>
                                     <input  th:attr ="checked=${subjectId == '0'?true:false}"
                                             name="subjectId" type="radio" th:value="0" class="ace"
@@ -127,6 +127,21 @@
                                                    name="subjectId" type="radio" th:value="${orgs.id}" class="ace"
                                                    th:onclick="'javascript:getOrgansListPage(\'\')'">
                                             <span class="lbl" th:text="${orgs.subjectName}"></span>
+                                        </label>
+                                    </div>
+                                </div>-->
+                                <div class="control-group">
+                                    <label class="control-label">类别</label>
+                                    <input  th:attr ="checked=${courseTypeId == '0'?true:false}"
+                                            name="courseTypeId" type="radio" th:value="0" class="ace"
+                                            th:onclick="'javascript:getOrgansListPage(\'\')'">
+                                    <span class="lbl" th:text="全部"></span>
+                                    <div class="checkbox" th:each="type:${xbCourseTypeList}">
+                                        <label>
+                                            <input th:attr ="checked=${courseTypeId == type.id?true:false}"
+                                                   name="courseTypeId" type="radio" th:value="${type.id}" class="ace"
+                                                   th:onclick="'javascript:getOrgansListPage(\'\')'">
+                                            <span class="lbl" th:text="${type.courseTypeName}"></span>
                                         </label>
                                     </div>
                                 </div>
@@ -164,7 +179,8 @@
                                                 <th>课程</th>
                                                 <th>教师</th>
                                                 <th>教室</th>
-                                                <th>科目</th>
+                                                <!--<th>科目</th>-->
+                                                <th>类型</th>
                                                 <th>记上课状态</th>
                                                 <th>实到/应到</th>
                                                 <th>操作</th>
@@ -185,7 +201,8 @@
                                                     <td th:text="${less.xbclass.xbCourse.courseName}">课程</td>
                                                     <td th:text="${less.sysemployee.employeeName}">教师</td>
                                                     <td th:text="${less.xbclassroom.classroomName}">教室</td>
-                                                    <td th:text="${less.xbsubject.subjectName}">科目</td>
+                                                    <!--<td th:text="${less.xbsubject.subjectName}">科目</td>-->
+                                                    <td th:text="${less.xbclass.xbCourse.xbcoursetype.courseTypeName}">类型</td>
                                                     <td th:if="${less.ydstudentnum} gt 0">/</td>
                                                     <td th:if="${less.ydstudentnum} eq 0"></td>
                                                     <td th:text="${less.sdstudentnum}+'人/'+${less.ydstudentnum}+'人'"></td>
@@ -356,11 +373,11 @@
                                         <li th:if="${xbAttendConflicList.getNumber()+1 > 1}">
                                             <a  th:onclick="'javascript:getxbAttendConflicListPage(\''+${0}+'\')'">1</a>
                                         </li>
-
-                                        <th:block th:if="${xbAttendConflicList.getTotalPages()>2 && xbAttendConflicList.getTotalPages()<=10}"
-                                                  th:each="i:${#numbers.sequence(2,xbAttendConflicList.getTotalPages()-1)}">
-                                            <li th:if="${xbAttendConflicList.getNumber()+1 == i}"  class="active"><span th:text="${i}">页码</span></li>
-                                            <li th:if="${xbAttendConflicList.getNumber()+1 != i}"><a  th:onclick="'javascript:getxbAttendConflicListPage(\''+${i-1}+'\')'" th:text="${i}"></a></li>
+                                        <th:block th:if="${xbAttendConflicList.getTotalPages()>2 && xbAttendConflicList.getTotalPages()<=10}">
+                                            <th:block th:each="i:${#numbers.sequence(2,xbAttendConflicList.getTotalPages()-1)}">
+                                                <li th:if="${xbAttendConflicList.getNumber()+1 == i}"  class="active"><span th:text="${i}">页码</span></li>
+                                                <li th:if="${xbAttendConflicList.getNumber()+1 != i}"><a  th:onclick="'javascript:getxbAttendConflicListPage(\''+${i-1}+'\')'" th:text="${i}"></a></li>
+                                            </th:block>
                                         </th:block>
                                         <th:block th:if="${xbAttendConflicList.getTotalPages() > 10}">
                                             <th:block th:if="${(xbAttendConflicList.getNumber()+1-(5/2)) <= 2}" th:each="i:${#numbers.sequence(2,2+5-1)}">

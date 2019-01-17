@@ -111,26 +111,64 @@
                                     </select>
                                     <input type="hidden" id="currentzise" th:value="${currentzise}"/>
                                 </div>
-                                <ul class="pagination" >
-                                    <li class="disabled">
-                                        <a href="#" th:onclick="'javascript:getOrgansListPage(\''+0+'\')'">首页</a>
-                                    </li>
-                                    <li class="disabled" th:if="${organsPage.getNumber()-1} ge 0">
-                                        <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${organsPage.getNumber()-1}+'\')'">
-                                            <i class="ace-icon fa fa-angle-double-left"></i>
+                                <ul class="pagination" th:if="${organsPage.getTotalPages()>0}">
+                                    <!-- 上一页 -->
+                                    <li th:if="${organsPage.getNumber()+1 == 1}"><span>上一页</span></li>
+                                    <li th:if="${organsPage.getNumber()+1 > 1}">
+                                        <a  th:onclick="'javascript:getOrgansListPage(\''+${organsPage.getNumber()-1}+'\')'">
+                                            <i class="ace-icon fa ">上一页</i>
                                         </a>
                                     </li>
-                                        <li th:class="${i} eq ${organsPage.getNumber()+1}?'active':''" th:each="i:${#numbers.sequence(1,organsPage.getTotalPages())}">
-                                            <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${i}+'\')'" th:text="${i}"></a>
-                                        </li>
-                                    <li th:if="${organsPage.getTotalPages()} ge ${organsPage.getNumber()+2} ">
-                                        <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${organsPage.getNumber()+2}+'\')'">
-                                            <i class="ace-icon fa fa-angle-double-right"></i>
+                                    <!-- 首页 -->
+                                    <li th:if="${organsPage.getNumber()+1 == 1}" class="active"><span>1</span></li>
+                                    <li th:if="${organsPage.getNumber()+1 > 1}">
+                                        <a  th:onclick="'javascript:getOrgansListPage(\''+${0}+'\')'">1</a>
+                                    </li>
+
+                                    <th:block th:if="${organsPage.getTotalPages()>2 && organsPage.getTotalPages()<=10}">
+                                        <th:block th:each="i:${#numbers.sequence(2,organsPage.getTotalPages()-1)}">
+                                            <li th:if="${organsPage.getNumber()+1 == i}"  class="active"><span th:text="${i}">页码</span></li>
+                                            <li th:if="${organsPage.getNumber()+1 != i}"><a  th:onclick="'javascript:getOrgansListPage(\''+${i-1}+'\')'" th:text="${i}"></a></li>
+                                        </th:block>
+                                    </th:block>
+                                    <th:block th:if="${organsPage.getTotalPages() > 10}">
+                                        <th:block th:if="${(organsPage.getNumber()+1-(5/2)) <= 2}" th:each="i:${#numbers.sequence(2,2+5-1)}">
+                                            <li th:if="${organsPage.getNumber()+1 == i}"  class="active"><span th:text="${i}">页码</span></li>
+                                            <li th:if="${organsPage.getNumber()+1 != i}"><a  th:onclick="'javascript:getOrgansListPage(\''+${i-1}+'\')'" th:text="${i}"></a></li>
+                                        </th:block>
+                                        <!-- ... -->
+                                        <li th:if="${(organsPage.getNumber()+1-(5/2))>2}"><span>...</span></li>
+
+                                        <th:block th:if="${((organsPage.getNumber()+1-(5/2))>2) && ((organsPage.getNumber()+1+(5/2)-(5%2==0?1:0)) < (organsPage.getTotalPages()-1))}"
+                                                  th:each="i:${#numbers.sequence(organsPage.getNumber()+1-(5/2),organsPage.getNumber()+1+(5/2)-(5%2==0?1:0))}">
+                                            <li th:if="${organsPage.getNumber()+1 == i}"  class="active"><span th:text="${i}">页码</span></li>
+                                            <li th:if="${organsPage.getNumber()+1 != i}"><a  th:onclick="'javascript:getOrgansListPage(\''+${i-1}+'\')'" th:text="${i}"></a></li>
+                                        </th:block>
+
+                                        <!-- ... -->
+                                        <li th:if="${(organsPage.getNumber()+1+(5/2)-(5%2==0?1:0)) < (organsPage.getTotalPages()-1)}"><span>...</span></li>
+                                        <th:block th:if="${(organsPage.getNumber()+1+(5/2)-(5%2==0?1:0)) >= (organsPage.getTotalPages()-1)}" th:each="i:${#numbers.sequence(organsPage.getTotalPages()-5,organsPage.getTotalPages()-1)}">
+                                            <li th:if="${organsPage.getNumber()+1 == i}"  class="active"><span th:text="${i}">页码</span></li>
+                                            <li th:if="${organsPage.getNumber()+1 != i}"><a  th:onclick="'javascript:getOrgansListPage(\''+${i-1}+'\')'" th:text="${i}"></a></li>
+                                        </th:block>
+                                    </th:block>
+                                    <!-- 最后一页 -->
+                                    <li th:if="${organsPage.getTotalPages()>1 && organsPage.getNumber()+1 == organsPage.getTotalPages()}" class="active"><span th:text="${organsPage.getTotalPages()}">页码</span></li>
+                                    <li th:if="${organsPage.getTotalPages()>1 && organsPage.getNumber()+1 != organsPage.getTotalPages()}">
+
+                                        <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${organsPage.getTotalPages()-1}+'\')'"
+                                           th:text="${organsPage.getTotalPages()}"></a>
+                                    </li>
+                                    <!-- 下一页 -->
+                                    <li th:if="${organsPage.getNumber()+1 >= organsPage.getTotalPages()}"><span>下一页</span></li>
+                                    <li th:if="${organsPage.getNumber()+1 < organsPage.getTotalPages()}">
+                                        <a th:onclick="'javascript:getOrgansListPage(\''+${organsPage.getNumber()+1}+'\')'">
+                                            <i class="ace-icon fa ">下一页</i>
                                         </a>
                                     </li>
-                                   <!-- <li class="">
-                                        <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${currentnumber}+'\')'">尾页</a>
-                                    </li>-->
+                                    <li>
+                                        <span style="color: #020202;" th:text="'共'+${organsPage.getTotalPages()}+'页/'+${organsPage.getTotalElements()}+'条记录'"></span>
+                                    </li>
                                 </ul>
                             </div>
                         </div>    

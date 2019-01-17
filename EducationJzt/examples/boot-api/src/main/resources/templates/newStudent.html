@@ -199,45 +199,57 @@
                                              <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${currentnumber}+'\')'">尾页</a>
                                          </li>&ndash;&gt;
                                     </ul>-->
-                                    <ul class="pagination" th:if="${employeePage}" >
-                                        <!--上一页-->
-                                        <li  th:if="${employeePage.getNumber()-1} ge 0">
+                                    <ul class="pagination" th:if="${employeePage.getTotalPages()>0}">
+                                        <!-- 上一页 -->
+                                        <li th:if="${employeePage.getNumber()+1 == 1}"><span>上一页</span></li>
+                                        <li th:if="${employeePage.getNumber()+1 > 1}">
                                             <a  th:onclick="'javascript:getOrgansListPage(\''+${employeePage.getNumber()-1}+'\')'">
                                                 <i class="ace-icon fa ">上一页</i>
                                             </a>
                                         </li>
-                                        <!--第1页-->
-                                        <li th:class=" ${employeePage.getNumber()==0}?'active':''">
-                                            <a  th:onclick="'javascript:getOrgansListPage(\''+0+'\')'">1</a>
+                                        <!-- 首页 -->
+                                        <li th:if="${employeePage.getNumber()+1 == 1}" class="active"><span>1</span></li>
+                                        <li th:if="${employeePage.getNumber()+1 > 1}">
+                                            <a  th:onclick="'javascript:getOrgansListPage(\''+${0}+'\')'">1</a>
                                         </li>
-                                        <!--小于等于5页处理-->
-                                        <li th:if="${ employeePage.getNumber()+1<5 && employeePage.getTotalPages()>1}"
-                                            th:class="${i} eq ${employeePage.getNumber()+1}?'active':''"
-                                            th:each="i:${#numbers.sequence(2,employeePage.getTotalPages()<=2?2:(employeePage.getTotalPages()>5?6:employeePage.getTotalPages()))}">
-                                            <a  th:onclick="'javascript:getOrgansListPage(\''+${i-1}+'\')'" th:text="${i}"></a>
-                                        </li>
-                                        <li th:if="${employeePage.getNumber()+1>5}"><a>...</a></li>
-                                        <!--大于5页或者小于总数-5页-->
-                                        <li th:if="${employeePage.getNumber()+1>5 && employeePage.getNumber()+1<employeePage.getTotalPages()-4}"
-                                            th:class="${i} eq ${employeePage.getNumber()+1}?'active':''"
-                                            th:each="i:${#numbers.sequence((employeePage.getNumber()+1)-2,(employeePage.getNumber()+1)+2)}">
-                                            <a  th:onclick="'javascript:getOrgansListPage(\''+${i-1}+'\')'" th:text="${i}"></a>
-                                        </li>
-                                        <li th:if="${employeePage.getNumber()+1 <employeePage.getTotalPages()-4}"><a>...</a></li>
-                                        <!--最后5页处理-->
-                                        <li th:if="${employeePage.getNumber()+1 >=employeePage.getTotalPages()-4 && employeePage.getTotalPages()>5}"
-                                            th:class="${i} eq ${employeePage.getNumber()+1}?'active':''"
-                                            th:each="i:${#numbers.sequence(employeePage.getTotalPages()-5,employeePage.getTotalPages()-1)}">
-                                            <a  th:onclick="'javascript:getOrgansListPage(\''+${i-1}+'\')'" th:text="${i}"></a>
-                                        </li>
-                                        <!--最后一页-->
-                                        <li th:if="${employeePage.getTotalPages()>5}"
-                                            th:class="${employeePage.getNumber()+1==employeePage.getTotalPages()}?'active':''">
+
+                                        <th:block th:if="${employeePage.getTotalPages()>2 && employeePage.getTotalPages()<=10}">
+                                            <th:block th:each="i:${#numbers.sequence(2,employeePage.getTotalPages()-1)}">
+                                                <li th:if="${employeePage.getNumber()+1 == i}"  class="active"><span th:text="${i}">页码</span></li>
+                                                <li th:if="${employeePage.getNumber()+1 != i}"><a  th:onclick="'javascript:getOrgansListPage(\''+${i-1}+'\')'" th:text="${i}"></a></li>
+                                            </th:block>
+                                        </th:block>
+                                        <th:block th:if="${employeePage.getTotalPages() > 10}">
+                                            <th:block th:if="${(employeePage.getNumber()+1-(5/2)) <= 2}" th:each="i:${#numbers.sequence(2,2+5-1)}">
+                                                <li th:if="${employeePage.getNumber()+1 == i}"  class="active"><span th:text="${i}">页码</span></li>
+                                                <li th:if="${employeePage.getNumber()+1 != i}"><a  th:onclick="'javascript:getOrgansListPage(\''+${i-1}+'\')'" th:text="${i}"></a></li>
+                                            </th:block>
+                                            <!-- ... -->
+                                            <li th:if="${(employeePage.getNumber()+1-(5/2))>2}"><span>...</span></li>
+
+                                            <th:block th:if="${((employeePage.getNumber()+1-(5/2))>2) && ((employeePage.getNumber()+1+(5/2)-(5%2==0?1:0)) < (employeePage.getTotalPages()-1))}"
+                                                      th:each="i:${#numbers.sequence(employeePage.getNumber()+1-(5/2),employeePage.getNumber()+1+(5/2)-(5%2==0?1:0))}">
+                                                <li th:if="${employeePage.getNumber()+1 == i}"  class="active"><span th:text="${i}">页码</span></li>
+                                                <li th:if="${employeePage.getNumber()+1 != i}"><a  th:onclick="'javascript:getOrgansListPage(\''+${i-1}+'\')'" th:text="${i}"></a></li>
+                                            </th:block>
+
+                                            <!-- ... -->
+                                            <li th:if="${(employeePage.getNumber()+1+(5/2)-(5%2==0?1:0)) < (employeePage.getTotalPages()-1)}"><span>...</span></li>
+                                            <th:block th:if="${(employeePage.getNumber()+1+(5/2)-(5%2==0?1:0)) >= (employeePage.getTotalPages()-1)}" th:each="i:${#numbers.sequence(employeePage.getTotalPages()-5,employeePage.getTotalPages()-1)}">
+                                                <li th:if="${employeePage.getNumber()+1 == i}"  class="active"><span th:text="${i}">页码</span></li>
+                                                <li th:if="${employeePage.getNumber()+1 != i}"><a  th:onclick="'javascript:getOrgansListPage(\''+${i-1}+'\')'" th:text="${i}"></a></li>
+                                            </th:block>
+                                        </th:block>
+                                        <!-- 最后一页 -->
+                                        <li th:if="${employeePage.getTotalPages()>1 && employeePage.getNumber()+1 == employeePage.getTotalPages()}" class="active"><span th:text="${employeePage.getTotalPages()}">页码</span></li>
+                                        <li th:if="${employeePage.getTotalPages()>1 && employeePage.getNumber()+1 != employeePage.getTotalPages()}">
+
                                             <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${employeePage.getTotalPages()-1}+'\')'"
                                                th:text="${employeePage.getTotalPages()}"></a>
                                         </li>
-                                        <!--下一页-->
-                                        <li th:if="${employeePage.getTotalPages()} gt ${employeePage.getNumber()+1}">
+                                        <!-- 下一页 -->
+                                        <li th:if="${employeePage.getNumber()+1 >= employeePage.getTotalPages()}"><span>下一页</span></li>
+                                        <li th:if="${employeePage.getNumber()+1 < employeePage.getTotalPages()}">
                                             <a th:onclick="'javascript:getOrgansListPage(\''+${employeePage.getNumber()+1}+'\')'">
                                                 <i class="ace-icon fa ">下一页</i>
                                             </a>
@@ -316,7 +328,7 @@ function deleteEmployee(id){
     function getOrgansListPage(page){
         var load = new Loading();
         load.init({
-            target: "#control-position"
+            target: "#main-container"
         });
         load.start();
         var data= serializeObject("#searchform");
@@ -356,5 +368,9 @@ function deleteEmployee(id){
             });*/
         });
 </script>
+    <style>
+        a{
+            cursor: pointer}
+    </style>
 </body>
 </html>

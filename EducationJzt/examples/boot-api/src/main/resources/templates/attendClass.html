@@ -147,45 +147,57 @@
                                          <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${currentnumber}+'\')'">尾页</a>
                                      </li>&ndash;&gt;
                                     </ul>-->
-                                    <ul class="pagination" th:if="${classPage}" >
-                                        <!--上一页-->
-                                        <li  th:if="${classPage.getNumber()-1} ge 0">
+                                    <ul class="pagination" th:if="${classPage.getTotalPages()>0}">
+                                        <!-- 上一页 -->
+                                        <li th:if="${classPage.getNumber()+1 == 1}"><span>上一页</span></li>
+                                        <li th:if="${classPage.getNumber()+1 > 1}">
                                             <a  th:onclick="'javascript:getClassListPage(\''+${classPage.getNumber()-1}+'\')'">
                                                 <i class="ace-icon fa ">上一页</i>
                                             </a>
                                         </li>
-                                        <!--第1页-->
-                                        <li th:class=" ${classPage.getNumber()==0}?'active':''">
-                                            <a  th:onclick="'javascript:getClassListPage(\''+0+'\')'">1</a>
+                                        <!-- 首页 -->
+                                        <li th:if="${classPage.getNumber()+1 == 1}" class="active"><span>1</span></li>
+                                        <li th:if="${classPage.getNumber()+1 > 1}">
+                                            <a  th:onclick="'javascript:getClassListPage(\''+${0}+'\')'">1</a>
                                         </li>
-                                        <!--小于等于5页处理-->
-                                        <li th:if="${ classPage.getNumber()+1<5 && classPage.getTotalPages()>1}"
-                                            th:class="${i} eq ${classPage.getNumber()+1}?'active':''"
-                                            th:each="i:${#numbers.sequence(2,classPage.getTotalPages()<=2?2:(classPage.getTotalPages()>5?6:classPage.getTotalPages()))}">
-                                            <a  th:onclick="'javascript:getClassListPage(\''+${i-1}+'\')'" th:text="${i}"></a>
-                                        </li>
-                                        <li th:if="${classPage.getNumber()+1>5}"><a>...</a></li>
-                                        <!--大于5页或者小于总数-5页-->
-                                        <li th:if="${classPage.getNumber()+1>5 && classPage.getNumber()+1<classPage.getTotalPages()-4}"
-                                            th:class="${i} eq ${classPage.getNumber()+1}?'active':''"
-                                            th:each="i:${#numbers.sequence((classPage.getNumber()+1)-2,(classPage.getNumber()+1)+2)}">
-                                            <a  th:onclick="'javascript:getClassListPage(\''+${i-1}+'\')'" th:text="${i}"></a>
-                                        </li>
-                                        <li th:if="${classPage.getNumber()+1 <classPage.getTotalPages()-4}"><a>...</a></li>
-                                        <!--最后5页处理-->
-                                        <li th:if="${classPage.getNumber()+1 >=classPage.getTotalPages()-4 && classPage.getTotalPages()>5}"
-                                            th:class="${i} eq ${classPage.getNumber()+1}?'active':''"
-                                            th:each="i:${#numbers.sequence(classPage.getTotalPages()-5,classPage.getTotalPages()-1)}">
-                                            <a  th:onclick="'javascript:getClassListPage(\''+${i-1}+'\')'" th:text="${i}"></a>
-                                        </li>
-                                        <!--最后一页-->
-                                        <li th:if="${classPage.getTotalPages()>5}"
-                                            th:class="${classPage.getNumber()+1==classPage.getTotalPages()}?'active':''">
+
+                                        <th:block th:if="${classPage.getTotalPages()>2 && classPage.getTotalPages()<=10}">
+                                            <th:block th:each="i:${#numbers.sequence(2,classPage.getTotalPages()-1)}">
+                                                <li th:if="${classPage.getNumber()+1 == i}"  class="active"><span th:text="${i}">页码</span></li>
+                                                <li th:if="${classPage.getNumber()+1 != i}"><a  th:onclick="'javascript:getClassListPage(\''+${i-1}+'\')'" th:text="${i}"></a></li>
+                                            </th:block>
+                                        </th:block>
+                                        <th:block th:if="${classPage.getTotalPages() > 10}">
+                                            <th:block th:if="${(classPage.getNumber()+1-(5/2)) <= 2}" th:each="i:${#numbers.sequence(2,2+5-1)}">
+                                                <li th:if="${classPage.getNumber()+1 == i}"  class="active"><span th:text="${i}">页码</span></li>
+                                                <li th:if="${classPage.getNumber()+1 != i}"><a  th:onclick="'javascript:getClassListPage(\''+${i-1}+'\')'" th:text="${i}"></a></li>
+                                            </th:block>
+                                            <!-- ... -->
+                                            <li th:if="${(classPage.getNumber()+1-(5/2))>2}"><span>...</span></li>
+
+                                            <th:block th:if="${((classPage.getNumber()+1-(5/2))>2) && ((classPage.getNumber()+1+(5/2)-(5%2==0?1:0)) < (classPage.getTotalPages()-1))}"
+                                                      th:each="i:${#numbers.sequence(classPage.getNumber()+1-(5/2),classPage.getNumber()+1+(5/2)-(5%2==0?1:0))}">
+                                                <li th:if="${classPage.getNumber()+1 == i}"  class="active"><span th:text="${i}">页码</span></li>
+                                                <li th:if="${classPage.getNumber()+1 != i}"><a  th:onclick="'javascript:getClassListPage(\''+${i-1}+'\')'" th:text="${i}"></a></li>
+                                            </th:block>
+
+                                            <!-- ... -->
+                                            <li th:if="${(classPage.getNumber()+1+(5/2)-(5%2==0?1:0)) < (classPage.getTotalPages()-1)}"><span>...</span></li>
+                                            <th:block th:if="${(classPage.getNumber()+1+(5/2)-(5%2==0?1:0)) >= (classPage.getTotalPages()-1)}" th:each="i:${#numbers.sequence(classPage.getTotalPages()-5,classPage.getTotalPages()-1)}">
+                                                <li th:if="${classPage.getNumber()+1 == i}"  class="active"><span th:text="${i}">页码</span></li>
+                                                <li th:if="${classPage.getNumber()+1 != i}"><a  th:onclick="'javascript:getClassListPage(\''+${i-1}+'\')'" th:text="${i}"></a></li>
+                                            </th:block>
+                                        </th:block>
+                                        <!-- 最后一页 -->
+                                        <li th:if="${classPage.getTotalPages()>1 && classPage.getNumber()+1 == classPage.getTotalPages()}" class="active"><span th:text="${classPage.getTotalPages()}">页码</span></li>
+                                        <li th:if="${classPage.getTotalPages()>1 && classPage.getNumber()+1 != classPage.getTotalPages()}">
+
                                             <a href="#" th:onclick="'javascript:getClassListPage(\''+${classPage.getTotalPages()-1}+'\')'"
                                                th:text="${classPage.getTotalPages()}"></a>
                                         </li>
-                                        <!--下一页-->
-                                        <li th:if="${classPage.getTotalPages()} gt ${classPage.getNumber()+1}">
+                                        <!-- 下一页 -->
+                                        <li th:if="${classPage.getNumber()+1 >= classPage.getTotalPages()}"><span>下一页</span></li>
+                                        <li th:if="${classPage.getNumber()+1 < classPage.getTotalPages()}">
                                             <a th:onclick="'javascript:getClassListPage(\''+${classPage.getNumber()+1}+'\')'">
                                                 <i class="ace-icon fa ">下一页</i>
                                             </a>
@@ -667,27 +679,64 @@
                                                 <option th:selected="${accordingcurrentzise eq 15}" th:value="15">15条/页</option>
                                             </select>
                                         </div>
-                                        <ul class="pagination" th:if="${xbRecordClassPage}">
-                                            <li class="disabled">
-                                                <a href="#" th:onclick="'javascript:getaccordingListPage(\''+0+'\')'">首页</a>
-                                            </li>
-                                            <li class="disabled" th:if="${xbRecordClassPage.getNumber()-1} ge 0">
-                                                <a href="#" th:onclick="'javascript:getaccordingListPage(\''+${xbRecordClassPage.getNumber()-1}+'\')'">
-                                                    <i class="ace-icon fa fa-angle-double-left"></i>
+                                        <ul class="pagination" th:if="${xbRecordClassPage.getTotalPages()>0}">
+                                            <!-- 上一页 -->
+                                            <li th:if="${xbRecordClassPage.getNumber()+1 == 1}"><span>上一页</span></li>
+                                            <li th:if="${xbRecordClassPage.getNumber()+1 > 1}">
+                                                <a  th:onclick="'javascript:getaccordingListPage(\''+${xbRecordClassPage.getNumber()-1}+'\')'">
+                                                    <i class="ace-icon fa ">上一页</i>
                                                 </a>
                                             </li>
-                                            <li th:class="${i} eq ${xbRecordClassPage.getNumber()+1}?'active':''" th:each="i:${#numbers.sequence(1,xbRecordClassPage.getTotalPages())}">
-                                                <a href="#" th:onclick="'javascript:getaccordingListPage(\''+${i}+'\')'"
-                                                   th:text="${i}"></a>
+                                            <!-- 首页 -->
+                                            <li th:if="${xbRecordClassPage.getNumber()+1 == 1}" class="active"><span>1</span></li>
+                                            <li th:if="${xbRecordClassPage.getNumber()+1 > 1}">
+                                                <a  th:onclick="'javascript:getaccordingListPage(\''+${0}+'\')'">1</a>
                                             </li>
-                                            <li th:if="${xbRecordClassPage.getTotalPages()} ge ${xbRecordClassPage.getNumber()+2} ">
-                                                <a href="#" th:onclick="'javascript:getaccordingListPage(\''+${xbRecordClassPage.getNumber()+2}+'\')'">
-                                                    <i class="ace-icon fa fa-angle-double-right"></i>
+
+                                            <th:block th:if="${xbRecordClassPage.getTotalPages()>2 && xbRecordClassPage.getTotalPages()<=10}">
+                                                <th:block th:each="i:${#numbers.sequence(2,xbRecordClassPage.getTotalPages()-1)}">
+                                                    <li th:if="${xbRecordClassPage.getNumber()+1 == i}"  class="active"><span th:text="${i}">页码</span></li>
+                                                    <li th:if="${xbRecordClassPage.getNumber()+1 != i}"><a  th:onclick="'javascript:getaccordingListPage(\''+${i-1}+'\')'" th:text="${i}"></a></li>
+                                                </th:block>
+                                            </th:block>
+                                            <th:block th:if="${xbRecordClassPage.getTotalPages() > 10}">
+                                                <th:block th:if="${(xbRecordClassPage.getNumber()+1-(5/2)) <= 2}" th:each="i:${#numbers.sequence(2,2+5-1)}">
+                                                    <li th:if="${xbRecordClassPage.getNumber()+1 == i}"  class="active"><span th:text="${i}">页码</span></li>
+                                                    <li th:if="${xbRecordClassPage.getNumber()+1 != i}"><a  th:onclick="'javascript:getaccordingListPage(\''+${i-1}+'\')'" th:text="${i}"></a></li>
+                                                </th:block>
+                                                <!-- ... -->
+                                                <li th:if="${(xbRecordClassPage.getNumber()+1-(5/2))>2}"><span>...</span></li>
+
+                                                <th:block th:if="${((xbRecordClassPage.getNumber()+1-(5/2))>2) && ((xbRecordClassPage.getNumber()+1+(5/2)-(5%2==0?1:0)) < (xbRecordClassPage.getTotalPages()-1))}"
+                                                          th:each="i:${#numbers.sequence(xbRecordClassPage.getNumber()+1-(5/2),xbRecordClassPage.getNumber()+1+(5/2)-(5%2==0?1:0))}">
+                                                    <li th:if="${xbRecordClassPage.getNumber()+1 == i}"  class="active"><span th:text="${i}">页码</span></li>
+                                                    <li th:if="${xbRecordClassPage.getNumber()+1 != i}"><a  th:onclick="'javascript:getaccordingListPage(\''+${i-1}+'\')'" th:text="${i}"></a></li>
+                                                </th:block>
+
+                                                <!-- ... -->
+                                                <li th:if="${(xbRecordClassPage.getNumber()+1+(5/2)-(5%2==0?1:0)) < (xbRecordClassPage.getTotalPages()-1)}"><span>...</span></li>
+                                                <th:block th:if="${(xbRecordClassPage.getNumber()+1+(5/2)-(5%2==0?1:0)) >= (xbRecordClassPage.getTotalPages()-1)}" th:each="i:${#numbers.sequence(xbRecordClassPage.getTotalPages()-5,xbRecordClassPage.getTotalPages()-1)}">
+                                                    <li th:if="${xbRecordClassPage.getNumber()+1 == i}"  class="active"><span th:text="${i}">页码</span></li>
+                                                    <li th:if="${xbRecordClassPage.getNumber()+1 != i}"><a  th:onclick="'javascript:getaccordingListPage(\''+${i-1}+'\')'" th:text="${i}"></a></li>
+                                                </th:block>
+                                            </th:block>
+                                            <!-- 最后一页 -->
+                                            <li th:if="${xbRecordClassPage.getTotalPages()>1 && xbRecordClassPage.getNumber()+1 == xbRecordClassPage.getTotalPages()}" class="active"><span th:text="${xbRecordClassPage.getTotalPages()}">页码</span></li>
+                                            <li th:if="${xbRecordClassPage.getTotalPages()>1 && xbRecordClassPage.getNumber()+1 != xbRecordClassPage.getTotalPages()}">
+
+                                                <a href="#" th:onclick="'javascript:getaccordingListPage(\''+${xbRecordClassPage.getTotalPages()-1}+'\')'"
+                                                   th:text="${xbRecordClassPage.getTotalPages()}"></a>
+                                            </li>
+                                            <!-- 下一页 -->
+                                            <li th:if="${xbRecordClassPage.getNumber()+1 >= xbRecordClassPage.getTotalPages()}"><span>下一页</span></li>
+                                            <li th:if="${xbRecordClassPage.getNumber()+1 < xbRecordClassPage.getTotalPages()}">
+                                                <a th:onclick="'javascript:getaccordingListPage(\''+${xbRecordClassPage.getNumber()+1}+'\')'">
+                                                    <i class="ace-icon fa ">下一页</i>
                                                 </a>
                                             </li>
-                                            <!-- <li class="">
-                                             <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${currentnumber}+'\')'">尾页</a>
-                                         </li>-->
+                                            <li>
+                                                <span style="color: #020202;" th:text="'共'+${xbRecordClassPage.getTotalPages()}+'页/'+${xbRecordClassPage.getTotalElements()}+'条记录'"></span>
+                                            </li>
                                         </ul>
                                     </div>
                                 </div>
@@ -944,6 +993,11 @@
         var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/ ;
 
         function getClassListPage(page) {
+            var load = new Loading();
+            load.init({
+                target: "#main-container"
+            });
+            load.start();
             var data= serializeObject("#recordForm");
             var size = $('#size option:selected').val(); //选中的值
             /*if(page){
@@ -960,7 +1014,7 @@
             }*/
             var load = new Loading();
             load.init({
-                target: "#divideList"
+                target: "#main-container"
             });
             load.start();
             $.ajax({
@@ -998,6 +1052,9 @@
             return o;
         };
     </script>
+<style>
+    a{cursor:pointer}
+</style>
 </body>
 
 </html>

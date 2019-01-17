@@ -157,27 +157,64 @@
                             <option th:selected="${feecurrentzise eq 15}" value="15">15条/页</option>
                         </select>
                     </div>
-                    <ul class="pagination" th:if="${XbSupplementFeePage}">
-                        <li class="disabled">
-                            <a href="#" th:onclick="'javascript:getFeeListPage(\''+0+'\')'">首页</a>
-                        </li>
-                        <li class="disabled" th:if="${XbSupplementFeePage.getNumber()-1} ge 0">
-                            <a href="#" th:onclick="'javascript:getFeeListPage(\''+${XbSupplementFeePage.getNumber()-1}+'\')'">
-                                <i class="ace-icon fa fa-angle-double-left"></i>
+                    <ul class="pagination" th:if="${XbSupplementFeePage.getTotalPages()>0}">
+                        <!-- 上一页 -->
+                        <li th:if="${XbSupplementFeePage.getNumber()+1 == 1}"><span>上一页</span></li>
+                        <li th:if="${XbSupplementFeePage.getNumber()+1 > 1}">
+                            <a  th:onclick="'javascript:getFeeListPage(\''+${XbSupplementFeePage.getNumber()-1}+'\')'">
+                                <i class="ace-icon fa ">上一页</i>
                             </a>
                         </li>
-                        <li th:class="${i} eq ${XbSupplementFeePage.getNumber()+1}?'active':''" th:each="i:${#numbers.sequence(1,XbSupplementFeePage.getTotalPages())}">
-                            <a href="#" th:onclick="'javascript:getFeeListPage(\''+${i}+'\')'"
-                               th:text="${i}"></a>
+                        <!-- 首页 -->
+                        <li th:if="${XbSupplementFeePage.getNumber()+1 == 1}" class="active"><span>1</span></li>
+                        <li th:if="${XbSupplementFeePage.getNumber()+1 > 1}">
+                            <a  th:onclick="'javascript:getFeeListPage(\''+${0}+'\')'">1</a>
                         </li>
-                        <li th:if="${XbSupplementFeePage.getTotalPages()} ge ${XbSupplementFeePage.getNumber()+2} ">
-                            <a href="#" th:onclick="'javascript:getFeeListPage(\''+${XbSupplementFeePage.getNumber()+2}+'\')'">
-                                <i class="ace-icon fa fa-angle-double-right"></i>
+
+                        <th:block th:if="${XbSupplementFeePage.getTotalPages()>2 && XbSupplementFeePage.getTotalPages()<=10}">
+                            <th:block th:each="i:${#numbers.sequence(2,XbSupplementFeePage.getTotalPages()-1)}">
+                                <li th:if="${XbSupplementFeePage.getNumber()+1 == i}"  class="active"><span th:text="${i}">页码</span></li>
+                                <li th:if="${XbSupplementFeePage.getNumber()+1 != i}"><a  th:onclick="'javascript:getFeeListPage(\''+${i-1}+'\')'" th:text="${i}"></a></li>
+                            </th:block>
+                        </th:block>
+                        <th:block th:if="${XbSupplementFeePage.getTotalPages() > 10}">
+                            <th:block th:if="${(XbSupplementFeePage.getNumber()+1-(5/2)) <= 2}" th:each="i:${#numbers.sequence(2,2+5-1)}">
+                                <li th:if="${XbSupplementFeePage.getNumber()+1 == i}"  class="active"><span th:text="${i}">页码</span></li>
+                                <li th:if="${XbSupplementFeePage.getNumber()+1 != i}"><a  th:onclick="'javascript:getFeeListPage(\''+${i-1}+'\')'" th:text="${i}"></a></li>
+                            </th:block>
+                            <!-- ... -->
+                            <li th:if="${(XbSupplementFeePage.getNumber()+1-(5/2))>2}"><span>...</span></li>
+
+                            <th:block th:if="${((XbSupplementFeePage.getNumber()+1-(5/2))>2) && ((XbSupplementFeePage.getNumber()+1+(5/2)-(5%2==0?1:0)) < (XbSupplementFeePage.getTotalPages()-1))}"
+                                      th:each="i:${#numbers.sequence(XbSupplementFeePage.getNumber()+1-(5/2),XbSupplementFeePage.getNumber()+1+(5/2)-(5%2==0?1:0))}">
+                                <li th:if="${XbSupplementFeePage.getNumber()+1 == i}"  class="active"><span th:text="${i}">页码</span></li>
+                                <li th:if="${XbSupplementFeePage.getNumber()+1 != i}"><a  th:onclick="'javascript:getFeeListPage(\''+${i-1}+'\')'" th:text="${i}"></a></li>
+                            </th:block>
+
+                            <!-- ... -->
+                            <li th:if="${(XbSupplementFeePage.getNumber()+1+(5/2)-(5%2==0?1:0)) < (XbSupplementFeePage.getTotalPages()-1)}"><span>...</span></li>
+                            <th:block th:if="${(XbSupplementFeePage.getNumber()+1+(5/2)-(5%2==0?1:0)) >= (XbSupplementFeePage.getTotalPages()-1)}" th:each="i:${#numbers.sequence(XbSupplementFeePage.getTotalPages()-5,XbSupplementFeePage.getTotalPages()-1)}">
+                                <li th:if="${XbSupplementFeePage.getNumber()+1 == i}"  class="active"><span th:text="${i}">页码</span></li>
+                                <li th:if="${XbSupplementFeePage.getNumber()+1 != i}"><a  th:onclick="'javascript:getFeeListPage(\''+${i-1}+'\')'" th:text="${i}"></a></li>
+                            </th:block>
+                        </th:block>
+                        <!-- 最后一页 -->
+                        <li th:if="${XbSupplementFeePage.getTotalPages()>1 && XbSupplementFeePage.getNumber()+1 == XbSupplementFeePage.getTotalPages()}" class="active"><span th:text="${XbSupplementFeePage.getTotalPages()}">页码</span></li>
+                        <li th:if="${XbSupplementFeePage.getTotalPages()>1 && XbSupplementFeePage.getNumber()+1 != XbSupplementFeePage.getTotalPages()}">
+
+                            <a href="#" th:onclick="'javascript:getFeeListPage(\''+${XbSupplementFeePage.getTotalPages()-1}+'\')'"
+                               th:text="${XbSupplementFeePage.getTotalPages()}"></a>
+                        </li>
+                        <!-- 下一页 -->
+                        <li th:if="${XbSupplementFeePage.getNumber()+1 >= XbSupplementFeePage.getTotalPages()}"><span>下一页</span></li>
+                        <li th:if="${XbSupplementFeePage.getNumber()+1 < XbSupplementFeePage.getTotalPages()}">
+                            <a th:onclick="'javascript:getFeeListPage(\''+${XbSupplementFeePage.getNumber()+1}+'\')'">
+                                <i class="ace-icon fa ">下一页</i>
                             </a>
                         </li>
-                        <!-- <li class="">
-                         <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${currentnumber}+'\')'">尾页</a>
-                     </li>-->
+                        <li>
+                            <span style="color: #020202;" th:text="'共'+${XbSupplementFeePage.getTotalPages()}+'页/'+${XbSupplementFeePage.getTotalElements()}+'条记录'"></span>
+                        </li>
                     </ul>
                 </div>
             </div>
