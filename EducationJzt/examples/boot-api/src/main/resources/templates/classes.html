@@ -130,24 +130,24 @@
                                             <Span class="recruit">停止招生</Span>
                                         </td>
                                         <td class="classDel">
-                                            <div class="btn-group open">
-                                                <p data-toggle="dropdown" class="down" aria-expanded="true">
-                                                    操作
-                                                    <span class="ace-icon fa fa-caret-down icon-on-right"></span>
-                                                </p>
-                                                <ul class="dropdown-menu dropdown-default" style="display: none;">
-                                                    <li>
-                                                        <a href="#" th:onclick="'javascript:finishClass(\''+${xbclass.id}+'\')'">结班</a>
-                                                    </li>
-                                                    <li>
-                                                        <a th:href="@{'/student/getXbClass?id='+${xbclass.id}}">编辑</a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="#" th:onclick="'javascript:deleteClass(\''+${xbclass.id}+'\')'">删除班级</a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </td>
+                                        <div class="btn-group open">
+                                            <p data-toggle="dropdown" class="down" aria-expanded="true">
+                                                操作
+                                                <span class="ace-icon fa fa-caret-down icon-on-right"></span>
+                                            </p>
+                                            <ul class="dropdown-menu dropdown-default" style="display: none;">
+                                                <li>
+                                                    <a href="#" th:onclick="'javascript:finishClass(\''+${xbclass.id}+'\')'">结班</a>
+                                                </li>
+                                                <li>
+                                                    <a th:href="@{'/student/getXbClass?id='+${xbclass.id}}">编辑</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#" th:onclick="'javascript:deleteClass(\''+${xbclass.id}+'\')'">删除班级</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
                                         <td></td>
                                     </tr>
                                 </table>
@@ -596,7 +596,7 @@
                     },
                     error: function () {
                         load.stop();
-                        $.kd.kdMsg("删除失败");
+                        $.kd.kdMsg("结班失败");
                         console.log("回调失败")
                     }
                 });

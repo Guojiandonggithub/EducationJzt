@@ -198,6 +198,13 @@ public class XbStudentService {
 	}
 
 	@Transactional
+	public void finishCourse(String id) {
+		XbStudentRelation xbStudentRelation = xbStudentRelationDao.findOne(id);
+		xbStudentRelation.studentStart=1;//1结课
+		xbStudentRelationDao.save(xbStudentRelation);
+	}
+
+	@Transactional
 	public XbClass getXbClass(String id) {
 		return xbClassDao.findOne(id);
 	}

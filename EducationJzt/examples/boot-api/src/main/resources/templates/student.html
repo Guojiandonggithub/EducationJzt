@@ -118,6 +118,8 @@
                                     <th>剩余课时/天数</th>
                                     <th>课时剩余总金额</th>
                                     <th>报名时间</th>
+                                    <th>课程状态</th>
+                                    <th>操作</th>
                                     <th>
                                         <span href="#modal-table"  data-toggle="modal" class="glyphicon glyphicon-option-vertical" aria-hidden="true"></span>
                                     </th>
@@ -133,6 +135,18 @@
                                     <td th:text="${studentrelation.periodNum}">课时</td>
                                     <td th:text="${studentrelation.receivable}">课时</td>
                                     <td  th:text="${#dates.format(studentrelation.enrollDate, 'yyyy-MM-dd')}"></td>
+                                    <td  th:if="${studentrelation.studentStart} eq 0">在读</td>
+                                    <td  th:if="${studentrelation.studentStart} eq 1">结课</td>
+                                    <td  th:if="${studentrelation.studentStart} eq 2">转班</td>
+                                    <td  th:if="${studentrelation.studentStart} eq 3">退费</td>
+                                    <td class="classDel">
+                                        <div class="btn-group open">
+                                            <p data-toggle="dropdown" class="down" aria-expanded="true" th:onclick="'javascript:finishCourse(\''+${studentrelation.id}+'\')'">
+                                                结课
+                                                <span class="ace-icon fa fa-caret-down icon-on-right"></span>
+                                            </p>
+                                        </div>
+                                    </td>
                                     <td></td>
                                 </tr>
                             </table>
@@ -940,6 +954,36 @@ function getexpiryStulist(page){
 function studentDetail(id) {
     window.location.href = basePath + '/student/studentDetail?studentId=' + id ;
 }
+    //结课
+    function finishCourse(id) {
+        $.kd.kdConfirm("确定要进行结课操作吗？",function(){
+            var load = new Loading();
+            load.init({
+                target: "#donghua"
+            });
+            load.start();
+            $.ajax({
+                url: basePath + '/student/finish/course/' + id,
+                type: 'get',
+                dataType: 'json',
+                contentType: 'application/json',
+                async: true,
+                success: function (data) {
+                    load.stop();
+                    var status = data.status;
+                    var msg = data.msg;
+                    $.kd.kdAlert(msg,function () {
+                        window.location.href = basePath + '/student/getXbStudentList';
+                    });
+                },
+                error: function () {
+                    load.stop();
+                    $.kd.kdMsg("结课失败");
+                    console.log("回调失败")
+                }
+            });
+        })
+    }
 </script>
 <style>
     a{cursor: pointer}

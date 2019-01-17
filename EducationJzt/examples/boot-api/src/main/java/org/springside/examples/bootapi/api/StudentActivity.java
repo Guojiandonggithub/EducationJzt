@@ -452,6 +452,23 @@ public class StudentActivity {
 			logger.info(e.toString());
 		}
 	}
+
+	@RequestMapping("/finish/course/{id}")
+	public void finishcourse(@PathVariable String id, HttpServletResponse resp,Pageable pageable){
+
+		Map<String, Object> map  =  new HashMap<>();
+		try {
+            JSONObject jsonObject = new JSONObject();
+			studentService.finishCourse(id);
+			jsonObject.put("status","1");
+			jsonObject.put("msg", "结课成功");
+			resp.setContentType("text/html;charset=UTF-8");
+			resp.getWriter().println(jsonObject.toJSONString());
+			resp.getWriter().close();
+		} catch (IOException e) {
+			logger.info(e.toString());
+		}
+	}
 	@RequestMapping("/save/enroll")
 	public void saveOrgans(@RequestParam String studentEntity,@RequestParam String xbStudentRelation, HttpServletResponse resp) {
 		Map<String, Object> map  =  new HashMap<>();
@@ -486,6 +503,7 @@ public class StudentActivity {
 				content = content+xbCourse.courseName +",";
 				studentRelation.totalPeriodNum = studentRelation.periodNum;
 				studentRelation.totalReceivable = studentRelation.receivable;
+				studentRelation.studentStart = 0;//在读
 				studentService.saveXbStudentRelation(studentRelation);
 			}
 			if(content.endsWith(",")){
