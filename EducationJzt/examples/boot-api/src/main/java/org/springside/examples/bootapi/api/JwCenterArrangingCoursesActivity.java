@@ -51,7 +51,7 @@ public class JwCenterArrangingCoursesActivity {
     public BaseAction baseAction;
     @RequestMapping("/findCourseByorgid")
     public void findCourseByorgid(@RequestParam String orgid,
-                                     HttpServletResponse resp){
+                                     HttpServletResponse resp,ModelMap model){
         Map<String,Object> searmap = new HashMap<>();
         searmap.put("EQ_organId",orgid);
         //List<XbCoursePreset> syslist = xbCoursePresetService.getXbCourseListByOrgid(orgid);
@@ -69,10 +69,13 @@ public class JwCenterArrangingCoursesActivity {
             jsonArray.add(jsonObj);
         }
         baseAction.writeJson(resp,jsonArray);
+        model.addAttribute("classId_combobox","0");
+        model.addAttribute("courseId_combobox","0");
+        model.addAttribute("sysorgId_combobox","0");
     }
     @RequestMapping("/findClassListByorgid")
     public void findClassListByorgid(@RequestParam String orgid,
-            HttpServletResponse resp){
+            HttpServletResponse resp,ModelMap model){
         Map<String,Object> searmap = new HashMap<>();
         searmap.put("EQ_organId",orgid);
         List<XbClass> syslist = xbStudentService.getXBclassListAll(searmap);
@@ -88,9 +91,12 @@ public class JwCenterArrangingCoursesActivity {
             jsonArray.add(jsonObj);
         }
         baseAction.writeJson(resp,jsonArray);
+        model.addAttribute("classId_combobox","0");
+        model.addAttribute("courseId_combobox","0");
+        model.addAttribute("sysorgId_combobox","0");
     }
     @RequestMapping("/findSysOragList")
-    public void findSysOragList(HttpServletResponse resp){
+    public void findSysOragList(HttpServletResponse resp,ModelMap model){
         Map<String,Object> searmap = new HashMap<>();
         List<SysOrgans> syslist = organsService.getOrgansListAll(searmap);
         JSONArray jsonArray = new JSONArray();
@@ -105,6 +111,9 @@ public class JwCenterArrangingCoursesActivity {
             jsonArray.add(jsonObj);
         }
         baseAction.writeJson(resp,jsonArray);
+        model.addAttribute("classId_combobox","0");
+        model.addAttribute("courseId_combobox","0");
+        model.addAttribute("sysorgId_combobox","0");
     }
     /**
      * 点击班级级联查询

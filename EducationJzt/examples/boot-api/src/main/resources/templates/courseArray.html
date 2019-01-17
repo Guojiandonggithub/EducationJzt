@@ -237,10 +237,11 @@
                                                     <a  th:onclick="'javascript:getOrgansListPage(\''+${0}+'\')'">1</a>
                                                 </li>
 
-                                                <th:block th:if="${xbAttendList.getTotalPages()>2 && xbAttendList.getTotalPages()<=10}"
-                                                          th:each="i:${#numbers.sequence(2,xbAttendList.getTotalPages()-1)}">
-                                                    <li th:if="${xbAttendList.getNumber()+1 == i}"  class="active"><span th:text="${i}">页码</span></li>
-                                                    <li th:if="${xbAttendList.getNumber()+1 != i}"><a  th:onclick="'javascript:getOrgansListPage(\''+${i-1}+'\')'" th:text="${i}"></a></li>
+                                                <th:block th:if="${xbAttendList.getTotalPages()>2 && xbAttendList.getTotalPages()<=10}">
+                                                    <th:block th:each="i:${#numbers.sequence(2,xbAttendList.getTotalPages()-1)}">
+                                                        <li th:if="${xbAttendList.getNumber()+1 == i}"  class="active"><span th:text="${i}">页码</span></li>
+                                                        <li th:if="${xbAttendList.getNumber()+1 != i}"><a  th:onclick="'javascript:getOrgansListPage(\''+${i-1}+'\')'" th:text="${i}"></a></li>
+                                                     </th:block>
                                                 </th:block>
                                                 <th:block th:if="${xbAttendList.getTotalPages() > 10}">
                                                     <th:block th:if="${(xbAttendList.getNumber()+1-(5/2)) <= 2}" th:each="i:${#numbers.sequence(2,2+5-1)}">
@@ -662,12 +663,12 @@
 <script type="text/javascript" th:inline="javascript">
     var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/;
 
-    //时间范围
+    /*//时间范围
     laydate.render({
         elem: '#timeInterval'
         ,type: 'time'
         ,range: true
-    });
+    });*/
     $(function(){
         var a = $("#xbAttendListsize").val();
         if(a!=5){
@@ -996,9 +997,9 @@
         load.start();
         var data= serializeObject("#searchform");
         var size = $('#size option:selected').val();//选中的值
-        // if(page){
-        //     page = page -1;
-        // }
+         if(page==""){
+             page = 1;
+         }
         if(size){
             size = "10";
         }
@@ -1021,7 +1022,7 @@
         return o;
     };
     </script>
-    <script>
+<script>
         ! function () {
             laydate.render({
                 elem: '#startDateTime'
@@ -1342,6 +1343,31 @@
             calendarTimeShow();
         });
     </script>
+<script>
+    laydate.render({
+        elem: '#timeInterval'
+        ,type: 'time'
+        ,range: true
+        ,format: 'HH:mm'//保留时分
+        ,btns: ['clear', 'confirm']
+        ,ready: formatminutes
+
+    });
+
+    function  formatminutes(date) {
+        var aa = $(".laydate-time-list li ol")[1];
+        var showtime = $($(".laydate-time-list li ol")[1]).find("li");
+        /*for (var i = 0; i < showtime.length; i++) {
+            var t00 = showtime[i].innerText;
+            if (t00 != "00" && t00 != "20" && t00 != "30" && t00 != "40" && t00 != "50") {
+                //分进行过滤 只保留0 10 20 30 40 50 一次性显示六十个太多没必要
+                showtime[i].remove()
+            }
+        }*/
+        $($(".laydate-time-list li ol")[2]).find("li").remove();  //清空秒
+    }
+
+</script>
 </body>
 <style>
     .tanchu {
@@ -1360,6 +1386,18 @@
         height: 15px;
     }
     a{cursor:pointer}
+    .layui-laydate-content>.layui-laydate-list {
+        padding-bottom: 0px;
+        overflow: hidden;
+    }
+    .layui-laydate-content>.layui-laydate-list>li{
+        width:50%
+    }
+
+    .merge-box .scrollbox .merge-list {
+        padding-bottom: 5px;
+    }
 </style>
+
 
 </html>

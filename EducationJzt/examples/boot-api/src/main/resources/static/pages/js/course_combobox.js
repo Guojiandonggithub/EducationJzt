@@ -54,6 +54,8 @@ function comboboxSysorg(){
                 textField:'employeeName'
 
             });
+            $("input[name='courseId_combobox']").val("0");
+            $("input[name='classId_combobox']").val("0");
         },
     });
 }
