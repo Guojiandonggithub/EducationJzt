@@ -87,7 +87,7 @@ public class JwCenterArrangingCoursesActivity {
         for(XbClass s : syslist){
             JSONObject jsonObj = new JSONObject();
             jsonObj.put("id", s.id);
-            jsonObj.put("className", s.sysOrgans.organName+s.className+s.xbCourse.courseName);
+            jsonObj.put("className", s.className+s.xbCourse.courseName);
             jsonArray.add(jsonObj);
         }
         baseAction.writeJson(resp,jsonArray);
