@@ -394,20 +394,12 @@ public class JwCenterArrangingCoursesActivity {
      * @return
      */
     @PostMapping("/to_arranging_course_fullcalendar")
-    public String toArrangingCourseFullcalendar(HttpServletRequest req,
+    public void toArrangingCourseFullcalendar(HttpServletRequest req,
                                                 HttpServletResponse resp,
             @RequestParam(value="start",defaultValue = "") String start,
-            @RequestParam(value="fend",defaultValue = "") String fend){
+            @RequestParam(value="end",defaultValue = "") String end){
         logger.info("跳转到排课");
-        Map<String, Object> searchParams = new HashMap<>();
-        List<XbAttendClass> listentity = xbAttendClassService.findXbAttendClassAll(searchParams);
-        for(XbAttendClass xba:listentity){
-            XbClass xbclass = xbStudentService.getXbClassById(xba.getClassId());
-            XbClass responxbclass = new XbClass();
-            responxbclass.setId(xbclass.getId());
-            responxbclass.setClassName(xbclass.getClassName());
-            xba.setXbclass(responxbclass);
-        }
+        List<Map<String,Object>> listentity = xbAttendClassService.findXbAttendListRiChengBySQL(start,end);
         JSONObject jsonObject = new JSONObject();
         if(listentity.size()>0){
             jsonObject.put("msg", "查询排课成功");
@@ -418,7 +410,7 @@ public class JwCenterArrangingCoursesActivity {
             jsonObject.put("msg", "查询排课失败");
         }
         HttpServletUtil.reponseWriter(jsonObject,resp);
-        return "courseArray";
+        //return "courseArray";
     }
     @RequestMapping("/remove_xbAttend_class")
     public String removeCourse(@RequestParam String id, HttpServletResponse resp,ModelMap model,@PageableDefault(value=10) Pageable pageable){

@@ -18,7 +18,9 @@ import org.springside.examples.bootapi.ToolUtils.common.modules.persistence.Dyna
 import org.springside.examples.bootapi.ToolUtils.common.modules.persistence.SearchFilter;
 import org.springside.examples.bootapi.domain.SysEmployee;
 import org.springside.examples.bootapi.domain.XbAttendClass;
+import org.springside.examples.bootapi.domain.XbAttendClassRicheng;
 import org.springside.examples.bootapi.repository.XbAttendClassDao;
+import org.springside.examples.bootapi.repository.XbAttendClassRichengDao;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
@@ -33,6 +35,8 @@ public class XbAttendClassService {
 	private static Logger logger = LoggerFactory.getLogger(XbAttendClassService.class);
 	@Autowired
 	private XbAttendClassDao xbAttendClassDao;
+	@Autowired
+	private XbAttendClassRichengDao xbAttendClassRichengDao;
 
 	// 注入配置值
 	@Value("${app.loginTimeoutSecs:600}")
@@ -104,6 +108,11 @@ public class XbAttendClassService {
 
 	public List findListsByClassId(String classId) {
 		List list =xbAttendClassDao.findListsByClassId(classId);
+		return list;
+	}
+	public List findXbAttendListRiChengBySQL(String start,String end) {
+		List<XbAttendClassRicheng> list = new ArrayList<>();
+		 list =xbAttendClassRichengDao.findXbAttendListRiCheng(start,end);
 		return list;
 	}
 }

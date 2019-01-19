@@ -91,8 +91,8 @@
             var load = new Loading();
             load.init({
                 target: "#orderTable"
-            });
-            load.start();
+            })
+            //load.start();
             var date = new Date();
             var d = date.getDate();
             var m = date.getMonth();
@@ -110,6 +110,7 @@
                 timeFormat: 'H:mm',
                 axisFormat: 'H:mm',
                 events: function(start, end, callback) {
+                    load.start();
                     var fstart = $.fullCalendar.formatDate(start, "yyyy-MM-dd");
                     var fend = $.fullCalendar.formatDate(end, "yyyy-MM-dd");
                     $.ajax({
@@ -121,23 +122,22 @@
                             end: fend
                         },
                         success: function(data) {
-                            load.stop();
                             if (data) {
                                 var event = [];
                                 var listentity = data.listentity;
                                 $.each(listentity, function(i) {
-                                    var d = listentity[i];
-                                    var id = d.id;
-                                    var time = d.timeInterval.split("-");
-                                    var date = d.startDateTime.split("-");
-                                    var className =d.xbclass.className;
+                                    var dd = listentity[i];
+                                    var id = dd.id;
+                                    var time = dd.timeInterval.split("-");
+                                    var date = dd.startDateTime.split("-");
+                                    var className =dd.className;
                                     var y = date[0];
                                     var m = date[1];
                                     var d = date[2];
-                                    var starthhtime = time[0].split(":")[0];
-                                    var startmmtime = time[0].split(":")[1];
-                                    var endhhtime = time[1].split(":")[0];
-                                    var endtmmtime = time[1].split(":")[1];
+                                    var starthhtime = time[0].split(":")[0].trim();
+                                    var startmmtime = time[0].split(":")[1].trim();
+                                    var endhhtime = time[1].split(":")[0].trim();
+                                    var endtmmtime = time[1].split(":")[1].trim();
                                     event.push({
                                         _id: id,
                                         title:className,
@@ -146,6 +146,7 @@
                                         allDay: false
                                     });
                                 });
+                                load.stop();
                                 callback(event);
                             }
                         },
