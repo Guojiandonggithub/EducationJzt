@@ -124,10 +124,13 @@ public class JwCenterArrangingCoursesActivity {
     @RequestMapping("/classToFindAll")
     public String classToFindAll(@RequestParam String id,@RequestParam String type
             ,ModelMap model){
-       XbClass xbc = xbStudentService.getXbClass(id);
+
+      XbAttendClass xba = xbAttendClassService.findById(id);
+       XbClass xbc = xbStudentService.getXbClass(xba.xbclass.id);
        //SysEmployee sse = xbc.teacher;
        //model.addAttribute("SysEmployee",sse);
        model.addAttribute("XbClass",xbc);
+       model.addAttribute("XbAttendClass",xba);
        model.addAttribute("type",type);
        return "courseArray::teacherfra";
     }
@@ -141,7 +144,7 @@ public class JwCenterArrangingCoursesActivity {
         logger.info("跳转到排课");
         findXbAttendClassPageListAll(model,pageable,data);
         findXbAttendConflicListi(model);
-        //model.addAttribute("xbSubjectList",xbSubjectService.findSubjectAll());
+        model.addAttribute("xbSubjectList",xbSubjectService.findSubjectAll());
         Map<String, Object> searchParams = new HashMap<>();
         model.addAttribute("xbCourseTypeList",xbCourseTypeService.findXbCourseTypeList(searchParams));
         Map<String,Object> searmap = new HashMap<>();
@@ -407,6 +410,7 @@ public class JwCenterArrangingCoursesActivity {
             jsonObject.put("status","0");
         }else{
             jsonObject.put("status","1");
+            jsonObject.put("listentity", com.alibaba.fastjson.JSONObject.toJSON(listentity));
             jsonObject.put("msg", "查询排课失败");
         }
         HttpServletUtil.reponseWriter(jsonObject,resp);

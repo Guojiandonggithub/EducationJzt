@@ -23,8 +23,26 @@ public class XbAttendClassRicheng {
     public String startDateTime;
     @Column(name="time_interval")
     public String timeInterval;
-    @Column(name="class_name")
-    public String className;
     @Column(name="delete_status")
     public String deleteStatus;
+    @Column(name="classroom_name")
+    public String classroomName;
+    @Column(name="organ_name")
+    public String organName;
+    @Column(name="course_type_name")
+    public String courseTypeName;
+    @Column(name="class_name")
+    public String className;
+    @Column(name="employee_name")
+    public String employeeName;
+    @Column(name="subject_id")
+    public String subjectId;
+    @Column(name="xb_class_id")
+    public String xbClassId;
+    @Column(name="class_theme")
+    public String classTheme;
+
+
+
+
 }
