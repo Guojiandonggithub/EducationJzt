@@ -35,13 +35,19 @@
             <span>停课</span>
             <img src="../static/pages/img/line.png">
         </div>
-        <div class="enrollCon">
-            <div class="chooseInfo" id= "chooseUser" style="display:none">
-                <p><span id="name">学员姓名：</span>张三</p>
-                <p><span id="phone">联系方式：</span></p>
-                <button href="#modal-table" data-toggle="modal" oninput="getCourseList()">重新选择</button>
+        <div class="enrollCon" id="stopClassId">
+            <button class="choiceStu" type="button" href="#modal-table" data-toggle="modal" id="chooseid" onclick="getStudentList()"
+                    style="margin-bottom:22px;">选择学员</button>
+            <div class="chooseInfo">
+                <p><span>学员姓名：</span>
+                    <th:block th:text="${xbStudent.studentName}"></th:block>
+                </p>
+                <p><span>联系方式：</span>
+                    <th:block th:text="${xbStudent.contactPhone}"></th:block>
+                    <input type="hidden" name="studentId" id="studentId" th:value="${xbStudent.id}"/>
+                </p>
+                <button href="#modal-table" data-toggle="modal" type="button" oninput="getStudentList()">重新选择</button>
             </div>
-            <button class="choiceStu" href="#modal-table" data-toggle="modal" id="chooseid" onclick="getCourseList()">选择学员</button>
             <div class="stopClass">
                 <div class="form-group">
                     <label>选择课程</label>
@@ -71,37 +77,33 @@
             <h3>经办信息</h3>
             <div class="pad">
                 <div class="form-group">
-                    <label class="col-sm-1">学员姓名</label>
-                    <select name="" id="">
-                        <option value="">青山分校</option>
-                        <option value="">111</option>
-                        <option value="">222</option>
+                    <label class="col-sm-1">经办校区</label>
+                    <select name="organId" id="jborganId" onchange="getEmployee();">
+                        <option th:each="orgs:${sysOrgansList}"  th:value="${orgs.id}" th:text="${orgs.organName}"></option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-1">销售来源</label>
-                    <input type="text" placeholder="请输入销售来源">
+                    <input type="text" name="salesSource" placeholder="请输入销售来源">
                 </div>
                 <div class="form-group">
                     <label class="col-sm-1">经办日期</label>
-                    <input class="laydate-icon" id="demo" >
+                    <input class="laydate-icon" name="handleDate" id="demo" th:value="${#dates.format(new java.util.Date().getTime(), 'yyyy-MM-dd')}">
                 </div>
                 <div class="form-group">
                     <label class="col-sm-1">经办人</label>
-                    <input type="text" placeholder="管理员">
+                    <input type="text" th:value="${sysEmployee.employeeName}" name="handlePerson" disabled="disabled">
                 </div>
                 <div class="form-group" style="margin-right:0 !important;">
                     <label class="col-sm-1">销售员</label>
-                    <select name="" id="">
-                        <option value="">请输入销售员</option>
-                        <option value="">111</option>
-                        <option value="">222</option>
+                    <select name="salesPerson" id="salesPerson">
+                        <option th:each="emp:${employeeList}"  th:value="${emp.employeeName}" th:text="${emp.employeeName}"></option>
                     </select>
                 </div>
             </div>
         </div>
         <div class="enrollCon">
-            <button class="save">保存</button>
+            <button class="save" type="button" onclick="stopClass();">保存</button>
         </div>
     </div>
     <!-- 选择已有学员 -->
@@ -207,21 +209,28 @@
     };
 
     function chooseUser(){
-        var val=$('input:radio[name="studio"]:checked').val();
-        if(val==null){
+        var load = new Loading();
+        load.init({
+            target: "#modal-table"
+        });
+        var val = $('input:radio[name="studio"]:checked').val();
+        if (val == null) {
             $.kd.kdAlert("什么也没选中!");
             return false;
         }
+        load.start();
         $.ajax({
             type: 'get',
             dataType: 'json',
-            url: basePath + '/student/chooseStudent',
+            url: basePath + '/student/stopchooseStudent',
             data: {studentId:val},
             contentType:"application/json;charset=UTF-8",
             cache: false,
             async: true,
             success: function (data) {
-                $.kd.kdAlert(data.msg);
+                load.stop();
+                console.log(data);
+                $("#changeClassId").html(data);
                 /*$("#chooseUser").show();
                 $('#modal-table').modal('hide')
                 $("#chooseid").hide();

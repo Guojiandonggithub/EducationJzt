@@ -87,6 +87,11 @@ public class XbStudentService {
 	}
 
 	@Transactional
+	public XbStudentRelation getXbStudentRelation(String id) {
+		return xbStudentRelationDao.findOne(id);
+	}
+
+	@Transactional
 	public XbStudent saveXbStudent(XbStudent student) {
 		return studentDao.save(student);
 	}
@@ -244,5 +249,16 @@ public class XbStudentService {
 				filters.values(), XbRecordClass.class);
 		return xbRecordClassDao.findAll(spec,pageable);
 	}
+
+	@Transactional
+	public List getXbRecordClassdtoList(int page,int pagesize){
+		return xbRecordClassDao.findRecordLists(page,pagesize);
+	}
+
+	@Transactional
+	public int findRecordTotalCount(){
+		return xbRecordClassDao.findRecordTotalCount();
+	}
+
 
 }

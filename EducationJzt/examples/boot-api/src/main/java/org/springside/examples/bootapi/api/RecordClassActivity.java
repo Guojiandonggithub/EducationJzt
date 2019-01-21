@@ -12,11 +12,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springside.examples.bootapi.domain.XbClass;
-import org.springside.examples.bootapi.domain.XbCoursePreset;
-import org.springside.examples.bootapi.domain.XbRecordClass;
-import org.springside.examples.bootapi.domain.XbStudentRelation;
+import org.springside.examples.bootapi.domain.*;
+import org.springside.examples.bootapi.service.OrgansService;
 import org.springside.examples.bootapi.service.XbCoursePresetService;
+import org.springside.examples.bootapi.service.XbCourseTypeService;
 import org.springside.examples.bootapi.service.XbStudentService;
 
 import javax.servlet.http.HttpServletResponse;
@@ -41,6 +40,12 @@ public class RecordClassActivity {
 	@Autowired
 	public XbCoursePresetService xbCoursePresetService;
 
+	@Autowired
+	private OrgansService organsService;
+
+	@Autowired
+	public XbCourseTypeService xbCourseTypeService;
+
 	/*
 	 * 查询按学员列表
 	 * @return
@@ -64,7 +69,7 @@ public class RecordClassActivity {
 	}
 
 	/*
-	 * 跳转到记上课
+	 * 跳转到记上课列表
 	 * @return
 	 */
 	@RequestMapping("/getRecordClassList")
@@ -75,13 +80,46 @@ public class RecordClassActivity {
 			resultMap = com.alibaba.fastjson.JSONObject.parseObject(data,Map.class);
 		}
 		String classesName  = (String)resultMap.get("classesName");
+		String type = (String)resultMap.get("type");
+		String chargingMode = (String)resultMap.get("chargingMode");
+		String organId = (String)resultMap.get("organId");
+		String conrseType = (String)resultMap.get("conrseType");
+		if(null==organId){
+			organId = "0";
+		}else if(!organId.equals("0")){
+			searhMap.put("EQ_organId",organId);
+		}
 		if(null!=classesName&&!classesName.equals("")){
 			searhMap.put("LIKE_className",classesName);
 		}
+		if(null==type){
+			type = "2";
+		}else if(!type.equals("2")){
+			searhMap.put("EQ_xbCourse.type",type);
+		}
+		if(null==chargingMode){
+			chargingMode = "3";
+		}else if(!chargingMode.equals("3")){
+			searhMap.put("EQ_xbCourse.chargingMode",chargingMode);
+		}
+		if(null==conrseType){
+			conrseType = "";
+		}else if(!conrseType.equals("")){
+			searhMap.put("EQ_xbCourse.xbcoursetype.id",conrseType);
+		}
+		Iterable<SysOrgans> organsList = organsService.getOrgansList();
 		Page<XbClass> classPage = studentService.getXbClassList(pageable,searhMap);
+		Map<String,Object> searhtypeMap = new HashMap<>();
+		List<XbCourseType> coursetypelist = xbCourseTypeService.findXbCourseTypeList(searhtypeMap);
 		model.addAttribute("classPage",classPage);
 		model.addAttribute("classesName",classesName);
 		model.addAttribute("currentzise",classPage.getSize());
+		model.addAttribute("organId",organId);
+		model.addAttribute("type",type);
+		model.addAttribute("chargingMode",chargingMode);
+		model.addAttribute("organsList",organsList);
+		model.addAttribute("coursetypelist",coursetypelist);
+		model.addAttribute("conrseType",conrseType);
 		return "attendClass";
 	}
 
@@ -157,5 +195,34 @@ public class RecordClassActivity {
 		}
 	}
 
+	/*
+	 * 查询上课记录按班级
+	 * @return
+	 */
+	@RequestMapping("/getRecordClassListByClass")
+	public String getRecordClassListByClass(@RequestParam(required = false) String data, ModelMap model, Pageable pageable){
+		Map<String,Object> resultMap = new HashMap<>();
+		Map<String,Object> searhMap = new HashMap<>();
+		if(null!=data){
+			resultMap = com.alibaba.fastjson.JSONObject.parseObject(data,Map.class);
+		}
+		String classesName  = (String)resultMap.get("classesName");
+
+		List recordLists = studentService.getXbRecordClassdtoList(pageable.getOffset(),pageable.getPageSize());
+		int totalElements = studentService.findRecordTotalCount();
+		int size = pageable.getPageSize();
+		int number = pageable.getPageNumber();
+		int totalPages = totalElements/size;
+		if(totalPages==0){
+			number = 1;
+		}
+		totalPages = totalPages + 1;
+		model.addAttribute("recordLists",recordLists);
+		model.addAttribute("recordcurrentzise",size);
+		model.addAttribute("number",number);
+		model.addAttribute("totalPages",totalPages);
+		model.addAttribute("totalElements",totalElements);
+		return "attendClass::accordingClass";
+	}
 
 }

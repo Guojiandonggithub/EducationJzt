@@ -44,23 +44,23 @@
                 </li>
                 <li>
                     <a href="/feeRelated/changeClass">
-                        <span><img src="../static/pages/img/bf.png"></span>
+                        <span><img src="../static/pages/img/fk.png"></span>
                         <p>转班</p>
                     </a>
                 </li>
-                <!--<li>
-                    <a href="/forward/subsidy">
+                <li>
+                    <a href="/feeRelated/subsidy">
                         <span><img src="../static/pages/img/bf.png"></span>
                         <p>补费</p>
                     </a>
                 </li>
                 <li>
-                    <a href="/forward/stopClass">
+                    <a href="/feeRelated/stopClass">
                         <span><img src="../static/pages/img/tk.png"></span>
                         <p>停课</p>
                     </a>
                 </li>
-                <li>
+                <!--<li>
                     <a href="/forward/repeat">
                         <span><img src="../static/pages/img/fk.png"></span>
                         <p>复课</p>
@@ -118,6 +118,7 @@
                         <td th:text="${ment.xbStudent.studentName}"></td>
                         <td th:if="${ment.type} eq '0'">报名</td>
                         <td th:if="${ment.type} eq '1'">转班</td>
+                        <td th:if="${ment.type} eq '2'">补费</td>
                         <td th:text="${ment.remarks}" class="orderTxt"></td>
                         <td th:text="${ment.surplusMoney}"></td>
                         <td th:text="${ment.paymentMoney}"></td>

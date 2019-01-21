@@ -38,6 +38,15 @@ public class XbSupplementFee {
     public String classId;
     @Transient
     public String toClassId;
+    @Transient
+    public String receivable;
+    @Transient
+    public String balanceamount;
+    @Transient
+    public String choosecourseId;
+    @Transient
+    public String subsidyMoney;
+
     public XbSupplementFee() {
 
     }
