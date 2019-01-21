@@ -27,7 +27,7 @@
     <script src="../static/pages/js/bootstrap.min.js"> </script>
     <script src="../static/pages/js/ace.min.js"> </script>
     <script src="../static/pages/js/ace-elements.min.js"></script>
-    <!--<script src="../static/pages/laydate/laydate.js"></script>-->
+    <script src="../static/pages/laydate/laydate.js"></script>
     <script src="../static/pages/js/fullcalendar.min.js"></script>
     <script src="../static/pages/js/jquery-ui-1.10.2.custom.min.js"></script>
     <script src="../static/pages/js/kd.ui.plugin.js"></script>
@@ -487,8 +487,11 @@
                                     </div>
                                     <div id="singleStrarDate" class="form-group">
                                         <label><i>*</i>上课日期</label>
-                                        <input class="laydate-icon" id="startDateTime" name="startDateTime"
-                                               th:value="${XbAttendClass.startDateTime}">
+
+                                        <input th:if="${type eq 'add'}" class="laydate-icon" id="startDateTime" name="startDateTime"
+                                               th:value="${XbClass?.classBeginDate}">
+                                        <input th:if="${type eq 'edit'}" class="laydate-icon" id="startDateTime" name="startDateTime"
+                                               th:value="${XbAttendClass?.startDateTime}">
                                         <!--<input class="laydate-icon" id="startDateTime" name="startDateTime"
                                                    th:value="${XbClass.classBeginDate}">-->
                                         <span id="manyStrarDate" th:if="${type eq 'add'}">
@@ -664,12 +667,6 @@
 <script type="text/javascript" th:inline="javascript">
     var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/;
 
-    /*//时间范围
-    laydate.render({
-        elem: '#timeInterval'
-        ,type: 'time'
-        ,range: true
-    });*/
     $(function(){
         var a = $("#xbAttendListsize").val();
         if(a!=5){
@@ -935,13 +932,18 @@
             target: "#modal-content"
         });
         load.start();
-       //var calssId = $("#classId option:selected").val();
-        var id = $("#id").val();
+        var id = "";
+        if(type=="add"){
+             id = $("#classId option:selected").val();
+        }else{
+             id = $("#id").val()
+        }
+       ;
         $.ajax({
             url: basePath + '/jw_center_arranging_course/classToFindAll',
             type: 'get',
             contentType: 'application/json',
-            data: {id: id,type:type},
+            data: {id:id,type:type},
             async: true,
             success: function (data) {
                 load.stop();
@@ -1356,7 +1358,6 @@
         ,ready: formatminutes
 
     });
-
     function  formatminutes(date) {
         var aa = $(".laydate-time-list li ol")[1];
         var showtime = $($(".laydate-time-list li ol")[1]).find("li");

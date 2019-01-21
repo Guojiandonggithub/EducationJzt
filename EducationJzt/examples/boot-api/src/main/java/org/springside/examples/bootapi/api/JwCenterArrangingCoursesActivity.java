@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.web.HateoasPageableHandlerMethodArgumentResolver;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -124,9 +125,15 @@ public class JwCenterArrangingCoursesActivity {
     @RequestMapping("/classToFindAll")
     public String classToFindAll(@RequestParam String id,@RequestParam String type
             ,ModelMap model){
+        XbAttendClass xba = new XbAttendClass();
+        XbClass xbc = new XbClass();
+        if(type.equals("add")){
+            xbc = xbStudentService.getXbClass(id);
+        }else{
+            xba = xbAttendClassService.findById(id);
+            xbc = xbStudentService.getXbClass(xba.xbclass.id);
+        }
 
-      XbAttendClass xba = xbAttendClassService.findById(id);
-       XbClass xbc = xbStudentService.getXbClass(xba.xbclass.id);
        //SysEmployee sse = xbc.teacher;
        //model.addAttribute("SysEmployee",sse);
        model.addAttribute("XbClass",xbc);
@@ -400,9 +407,32 @@ public class JwCenterArrangingCoursesActivity {
     public void toArrangingCourseFullcalendar(HttpServletRequest req,
                                                 HttpServletResponse resp,
             @RequestParam(value="start",defaultValue = "") String start,
-            @RequestParam(value="end",defaultValue = "") String end){
+            @RequestParam(value="end",defaultValue = "") String end,
+            @RequestParam(value="studentid",defaultValue = "") String studentid,
+            @RequestParam(value="classid",defaultValue = "") String classid,
+            @RequestParam(value="type",defaultValue = "") String type){
         logger.info("跳转到排课");
-        List<Map<String,Object>> listentity = xbAttendClassService.findXbAttendListRiChengBySQL(start,end);
+       // List<Map<String,Object>> listentity = xbAttendClassService.findXbAttendListRiChengBySQL(start,end);
+        Map<String, Object> searchParams = new HashMap<>();
+        searchParams.put("GTE_startDateTime",start);
+        searchParams.put("LT_startDateTime",end);
+        if(StringUtils.isNotEmpty(type)){
+            if(type.equals("xy")){
+                Map<String,Object> studentmap = new HashMap<>();
+                studentmap.put("EQ_studentId",studentid);
+                List<XbStudentRelation> xbslist =  xbStudentService.getXbRelationList(studentmap);
+                if(xbslist.size()>0){
+                    List<String> idlist = new ArrayList<String>();
+                    for(XbStudentRelation xbstu:xbslist){
+                        idlist.add(xbstu.classId);
+                    }
+                    searchParams.put("IN_xbClassId",idlist);
+                }
+            }else if(type.equals("bj")){
+                searchParams.put("EQ_xbClassId",classid);
+            }
+        }
+        List<Map<String,Object>> listentity = xbAttendClassService.findXbAttendRiChengListAll(searchParams);
         JSONObject jsonObject = new JSONObject();
         if(listentity.size()>0){
             jsonObject.put("msg", "查询排课成功");

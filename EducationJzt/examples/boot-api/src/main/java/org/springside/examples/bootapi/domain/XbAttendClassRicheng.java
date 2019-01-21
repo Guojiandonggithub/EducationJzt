@@ -27,6 +27,8 @@ public class XbAttendClassRicheng {
     public String deleteStatus;
     @Column(name="classroom_name")
     public String classroomName;
+    @Column(name="organ_id")
+    public String organId;
     @Column(name="organ_name")
     public String organName;
     @Column(name="course_type_name")

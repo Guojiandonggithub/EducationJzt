@@ -20,6 +20,7 @@
     <link rel="stylesheet" href="../static/pages/css/fullcalendar.css">
     <link rel="stylesheet" href="../static/pages/css/lessonTable.css">
     <link rel="stylesheet" href="../static/pages/css/kd.ui.plugin.css" />
+    <link rel="stylesheet" href="../static/pages/css/loading.css" />
 
     <script src="../static/pages/js/jquery-1.9.1.min.js"></script>
     <script src="../static/pages/js/bootstrap.min.js"> </script>
@@ -29,6 +30,8 @@
     <script src="../static/pages/js/fullcalendar.min.js"></script>
     <script src="../static/pages/js/jquery-ui-1.10.2.custom.min.js"></script>
     <script src="../static/pages/js/kd.ui.plugin.js"></script>
+    <script src="../static/pages/js/loading.js"></script>
+
 
 </head>
 
@@ -83,9 +86,9 @@
                     <li class="active">
                         <a data-toggle="tab" href="#studentList">学员</a>
                     </li>
-                    <!--<li>
+                    <li>
                         <a data-toggle="tab" href="#divideList">课表</a>
-                    </li>-->
+                    </li>
                 </ul>
                 <div class="tab-content student manageClass">
                     <!-- 学员 -->
@@ -227,6 +230,7 @@
                         </div>
                     </div>
                     <!-- 课表 -->
+                    <input id="classid" type="hidden" th:value="${xbClass.id}">
                     <div id="divideList" class="tab-pane fade divideList">
                         <div id="calendar">
                             <div class="classStyle">
@@ -366,91 +370,154 @@
             </div>
         </div>
     </div>
-<script>
-$(function () {
+<script type="text/javascript" th:inline="javascript">
+    ! function () {
+        laydate.render({
+            elem: '#demo'
+        }); //绑定元素
+    }();
 
-var date = new Date();
-var d = date.getDate();
-var m = date.getMonth();
-var y = date.getFullYear();
+    $(".down").click(function () {
+        $(this).siblings(".dropdown-menu").toggle();
+    });
+    $(".tag .close").click(function () {
+        $(this).parent(".tag").hide();
+    });
+    var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/;
+    $(function () {
+       /* var load = new Loading();
+        load.init({
+            target: "#main-container"
+        })*/
+        //load.start();
+        var date = new Date();
+        var d = date.getDate();
+        var m = date.getMonth();
+        var y = date.getFullYear();
+        var classid = $("#classid").val();
+        var url = basePath+"/jw_center_arranging_course/to_arranging_course_fullcalendar";
+        $('#calendar').fullCalendar({
+            header: {
+                right: '',
+                center: 'prev,title,next,today',
+                left: 'agendaDay,agendaWeek,month'
+            },
+            //自定义图标
+            buttonIcons:{
+                prev:'left-single-arrow',
+                next: 'right-single-arrow',
+                prevYear: 'left-double-arrow',
+                nextYear: 'right-double-arrow'
+            },
+            currentTimezone: 'Asia/Beijing',
+            height:"700",aspectRatio:1.6,handleWindowResize:true,
+            eventLimit: true,
+            views: {
+                agenda: {
+                    eventLimit: 3//最大容纳数量
+                }
+            },
+            defaultView:'agendaWeek',
+            editable:false,//是否可拖动
+            monthNames: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"],
+            monthNamesShort: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"],
+            dayNames: ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"],
+            dayNamesShort: ["周日", "周一", "周二", "周三", "周四", "周五", "周六"],
+            firstDay: 1,
+            editable: true,
+            timeFormat: 'H:mm',
+            axisFormat: 'H:mm',
+            events: function(start, end, callback) {
+                //load.start();
+                var fstart = $.fullCalendar.formatDate(start, "yyyy-MM-dd");
+                var fend = $.fullCalendar.formatDate(end, "yyyy-MM-dd");
+                $.ajax({
+                    type: "post",
+                    url: url,//我是用ajax获取后台数据的，这里填写地址
+                    dataType: "json",
+                    data: {
+                        start: fstart,
+                        end: fend,
+                        classid:classid,
+                        type:"bj"
+                    },
+                    success: function(data) {
+                        if (data) {
+                            var event = [];
+                            var listentity = data.listentity;
+                            $.each(listentity, function(i) {
+                                var dd = listentity[i];
+                                var time = dd.timeInterval.split("-");
+                                var date = dd.startDateTime.split("-");
+                                var y = date[0];var m = date[1];var d = date[2];
+                                var starthh = time[0].split(":")[0].trim();
+                                var startmm = time[0].split(":")[1].trim();
+                                var endhh = time[1].split(":")[0].trim();
+                                var endtmm = time[1].split(":")[1].trim();
+                                event.push({
+                                    _id: dd.id,
+                                    title:dd.className,
+                                    start: new Date(y, m-1, d ,starthh,startmm),
+                                    end: new Date(y, m-1, d ,endhh,endtmm),
+                                    allDay: false,
+                                    roomname:dd.classroomName,
+                                    type:dd.organName+dd.courseTypeName+dd.className,
+                                    teachername:dd.employeeName,
+                                    xbClassId:dd.xbClassId,
+                                    startDateTime:dd.startDateTime,
+                                    timeInterval:dd.timeInterval,
+                                    subjectId:dd.subjectId,
+                                    classTheme:dd.classTheme
 
-$('#calendar').fullCalendar({
-    header: {
-        right: '',
-        center: 'prev,title,next,today',
-        left: 'agendaDay,agendaWeek,month'
-    },
+                                });
+                            });
+                            //load.stop();
+                            callback(event);
+                        }
+                        //load.stop();
+                    },
+                    error:function(){
+                        $.kd.kdAlert("错了")
+                    }
+                });
+            },
+            //点击事件
+            eventClick: function(event) {
+                /*$('#modal-table').modal('show');
+                $("#id").val(event._id);
+                $("#newdayattend").text("编辑日程");
+                $("#classId").val(event.xbClassId);
+                $(":radio[name='scheduleMode'][value='1']").prop("checked", "checked");
+                $("#scheduleModediv").hide();
+                $("#startDateTime").val(event.startDateTime);
+                $("#timeInterval").val(event.timeInterval);
+                $("#subjectId").val(event.subjectId);
+                $("#classTheme").val(event.classTheme);
+                $("#classId").attr("disabled","disabled");
+                $("#classId").css("color","#a29b9b");
+                classToFindAll('edit');*/
+            },
+            loading: function (bool) {
+                if (bool) $('#loading').show();
+                else $('#loading').hide();
+            },
+            //#region 鼠标放上去显示信息
+            eventMouseover: function (calEvent, jsEvent, view) {
+                var fstart = $.fullCalendar.formatDate(calEvent.start, "yyyy年MM月dd号 HH:mm");
+                var fend = $.fullCalendar.formatDate(calEvent.end, "yyyy年MM月dd号 HH:mm");
+                $(this).attr('title', "开始时间："+fstart+"" +
+                    "\r\n结束时间："+fend+"" +
+                    "\r\n教室："+calEvent.roomname+
+                    "\r\n班课/一对一："+calEvent.type+
+                    "\r\n教师："+calEvent.teachername);
+                $(this).css('background',"#66b8b2");
+            },
+            eventMouseout: function (event, jsEvent, view) {
+                $(this).css('background',"");
+            },
+        });
 
-    firstDay: 1,
-    editable: true,
-    timeFormat: 'H:mm',
-    axisFormat: 'H:mm',
-    events: [{
-            title: '科源校区诶诶我惹人\r\n张三\n5号教室',
-            start: new Date(y, m, 1),
-            backgroundColor: '#33a299;'
-        },
-        {
-            title: '科源校区诶诶我惹人\r\n张三\n5号教室',
-            start: new Date(y, m, d - 5),
-            end: new Date(y, m, d - 2),
-            backgroundColor: '#6aa8f1;'
-
-        },
-        {
-            title: '科源校区诶诶我惹人\r\n张三\n5号教室',
-            start: new Date(y, m, d - 5),
-            end: new Date(y, m, d - 2),
-            backgroundColor: '#6aa8f1;'
-
-        },
-        {
-            title: '科源校区诶诶我惹人\r\n张三\n5号教室',
-            start: new Date(y, m, 28),
-            end: new Date(y, m, 29),
-            backgroundColor: '#fc8038'
-        },
-        {
-            title: '科源校区诶诶我惹人\r\n张三\n5号教室',
-            start: new Date(y, m, d + 1, 19, 0),
-            end: new Date(y, m, d + 1, 22, 30),
-            backgroundColor: '#3967a3;'
-        },
-        {
-            title: '科源校区诶诶我惹人\r\n张三\n5号教室',
-            start: new Date(y, m, 28),
-            end: new Date(y, m, 29),
-            backgroundColor: '#fc8038'
-        },
-        {
-            title: '科源校区诶诶我惹人\r\n张三\n5号教室',
-            start: new Date(y, m, d + 1, 19, 0),
-            end: new Date(y, m, d + 1, 22, 30),
-            backgroundColor: '#3967a3;'
-        },
-    ],
-
-});
-
-});
-
-
-
-
-
-! function () {
-    laydate.render({
-        elem: '#demo'
-    }); //绑定元素
-}();
-
-$(".down").click(function () {
-    $(this).siblings(".dropdown-menu").toggle();
-});
-$(".tag .close").click(function () {
-    $(this).parent(".tag").hide();
-});
-
+    });
 
 function selectAll() {
     var isCheck = $("#sel_1").is(':checked'); //获得全选复选框是否选中
@@ -467,11 +534,6 @@ $(".skList").hover(function () {
     $(this).siblings(".infoShow").toggle(300);
 });
 
-
-
-
-
-        
 </script>
 
 </body>

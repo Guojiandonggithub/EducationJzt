@@ -115,4 +115,16 @@ public class XbAttendClassService {
 		 list =xbAttendClassRichengDao.findXbAttendListRiCheng(start,end);
 		return list;
 	}
+	public List findXbAttendRiChengListAll(Map<String, Object> searchParams) {
+		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
+		SysEmployee sysEmployee = (SysEmployee)request.getSession().getAttribute("sysEmployee");
+		if("管理员".equals(sysEmployee.sysRole.roleName)){
+			searchParams.put("EQ_organId",sysEmployee.organId);
+		}
+		searchParams.put("EQ_deleteStatus","1");
+		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
+		Specification<XbAttendClassRicheng> spec = DynamicSpecifications.bySearchFilter(
+				filters.values(), XbAttendClassRicheng.class);
+		return xbAttendClassRichengDao.findAll(spec);
+	}
 }

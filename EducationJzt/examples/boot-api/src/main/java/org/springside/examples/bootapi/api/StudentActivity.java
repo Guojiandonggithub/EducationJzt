@@ -861,4 +861,5 @@ public class StudentActivity {
 		model.addAttribute("accordingcurrentzise",xbRecordClassPage.getSize());
 		return "stuinfoDetail";
 	}
+
 }
