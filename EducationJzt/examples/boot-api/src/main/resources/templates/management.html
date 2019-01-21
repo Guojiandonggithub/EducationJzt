@@ -247,11 +247,14 @@ $(".tag .close").click(function(){
         });
         load.start();
         var size = $('#size option:selected').val(); //选中的值
-        if (page) {
+        /*if (page) {
             page = page - 1;
-        }
+        }*/
         window.location.href = basePath + '/student/getManagementList?page=' + page + '&size=' + size;
     }
 </script>
+<style>
+    a{cursor:pointer}
+</style>
 </body>
 </html>
