@@ -119,7 +119,7 @@
                                     <th>课时剩余总金额</th>
                                     <th>报名时间</th>
                                     <th>课程状态</th>
-                                    <th>操作</th>
+                                    <!--<th>操作</th>-->
                                     <th>
                                         <span href="#modal-table"  data-toggle="modal" class="glyphicon glyphicon-option-vertical" aria-hidden="true"></span>
                                     </th>
@@ -139,14 +139,14 @@
                                     <td  th:if="${studentrelation.studentStart} eq 1">结课</td>
                                     <td  th:if="${studentrelation.studentStart} eq 2">转班</td>
                                     <td  th:if="${studentrelation.studentStart} eq 3">退费</td>
-                                    <td class="classDel">
+                                    <!--<td class="classDel">
                                         <div class="btn-group open">
                                             <p data-toggle="dropdown" class="down" aria-expanded="true" th:onclick="'javascript:finishCourse(\''+${studentrelation.id}+'\')'">
                                                 结课
                                                 <span class="ace-icon fa fa-caret-down icon-on-right"></span>
                                             </p>
                                         </div>
-                                    </td>
+                                    </td>-->
                                     <td></td>
                                 </tr>
                             </table>
@@ -280,9 +280,9 @@
                         </div>
                     </div>
                     <div class="orderCon">
-                        <div class="export">
+                        <!--<div class="export">
                             <button type="button" class="btn btn-primary">导出当前结果</button>
-                        </div> 
+                        </div> -->
                         <div class="result">
                             当前结果：学员共计<span th:text="${xbStudentsPage.getTotalElements()}"></span>名，报读课程数总计：<span th:text="${xbStudentPage.getTotalElements()}"></span>条
                         </div>

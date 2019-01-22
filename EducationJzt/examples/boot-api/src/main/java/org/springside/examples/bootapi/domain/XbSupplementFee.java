@@ -46,6 +46,8 @@ public class XbSupplementFee {
     public String choosecourseId;
     @Transient
     public String subsidyMoney;
+    @Transient
+    public String shengyu;
 
     public XbSupplementFee() {
 

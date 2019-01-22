@@ -439,7 +439,7 @@ public class FeeRelatedActivity {
 
 
 	/**
-	 * 转班
+	 * 补费
 	 * @param studentEntity
 	 * @param resp
 	 */
@@ -485,44 +485,87 @@ public class FeeRelatedActivity {
 	 * @return
 	 */
 	@RequestMapping("/stopchooseStudent")
-	public void stopchooseStudent(@RequestParam(required = false) String studentId , HttpServletResponse resp){
-		BigDecimal moneys = new BigDecimal(0);
-		Integer num = 0;
-		XbCoursePreset xbCoursePreset = new XbCoursePreset();
-		xbCoursePreset = xbCoursePresetService.getXbCoursePreset(studentId);
-		Map<String,Object> xbClasssearhMap = new HashMap<>();
-		xbClasssearhMap.put("EQ_courseId",xbCoursePreset.getCourseId());
-		List<XbClass> classPage = studentService.findXbClassListAll(xbClasssearhMap);
-		XbCoursePresetDto xbCoursePresetDto = new XbCoursePresetDto();
-		for (int i = 0; i < classPage.size(); i++) {
-			XbClassesDto xbClassesDto = new XbClassesDto();
-			xbClassesDto.id = classPage.get(i).id;
-			xbClassesDto.className = classPage.get(i).className;
-			xbClassesDto.teacherName = classPage.get(i).teacher.employeeName;
-			String choosecourseId = xbCoursePreset.id;
-			xbCoursePresetDto.choosecourseId = choosecourseId;
-			xbCoursePresetDto.courseName = classPage.get(i).xbCourse.courseName;
-			xbCoursePresetDto.xbClassList.add(xbClassesDto);
+	public String stopchooseStudent(@RequestParam(required = false) String studentId ,@RequestParam(required = false) String classId , ModelMap model){
+
+		XbStudent xbStudent = studentService.getXbStudent(studentId);
+		Map<String,Object> studentMap = new HashMap<>();
+		studentMap.put("EQ_studentId",studentId);
+		studentMap.put("EQ_xbCourse.deleteStatus","1");
+		XbStudentRelation xbStudentRelation = new XbStudentRelation();
+		List<XbStudentRelation> xbStudentPage = studentService.getXbRelationList(studentMap);
+		String balanceamount = "0.00";
+		if(xbStudentPage.size()>0){
+			xbStudentRelation = xbStudentPage.get(0);
 		}
-		xbCoursePresetDto.totalPeriodNum = String.valueOf(xbCoursePreset.periodNum);
-		XbCourse xbc = xbCourseService.findById(xbCoursePreset.getCourseId());
-		if(xbc.chargingMode.equals("0")){
-			BigDecimal bde = new BigDecimal(xbCoursePreset.periodNum);
-			xbCoursePreset.money=xbCoursePreset.money.multiply(bde);
+		if(null!=classId&&!classId.equals("")){
+			xbStudentRelation = studentService.getXbStudentRelation(classId);
 		}
-		xbCoursePresetDto.totalReceivable = String.valueOf(xbCoursePreset.money);
+		List<XbStudentRelation> xbClassPage = new ArrayList<>();
+		model.addAttribute("xbStudent",xbStudent);
+		model.addAttribute("xbClassList",xbStudentPage);
+		model.addAttribute("xbStudentRelation",xbStudentRelation);
+		model.addAttribute("classId",classId);
+
+		return "stopClass::changeClassFragment";
+	}
+
+	/**
+	 * 停课
+	 * @param studentEntity
+	 * @param resp
+	 */
+	@RequestMapping("/saveStopClass")
+	public void saveStopClass(@RequestParam String studentEntity, HttpServletResponse resp) {
 		try {
+			XbSupplementFee xbSupplementFee = com.alibaba.fastjson.JSONObject.parseObject(studentEntity,XbSupplementFee.class);
+			xbSupplementFee.type = "3";//停课
+			String studentId = xbSupplementFee.studentId;
+			String shengyu = xbSupplementFee.shengyu;
+			XbStudent xbStudent = studentService.getXbStudent(studentId);
+			BigDecimal shengyubd = new BigDecimal(shengyu);
+			xbStudent.surplusMoney = xbStudent.surplusMoney.add(shengyubd);
+			studentService.saveXbStudent(xbStudent);//更新余额
+
+			//报名课程变更为停课状态
+			String classId = xbSupplementFee.classId;
+			XbStudentRelation xbStudentRelation = studentService.getXbStudentRelation(classId);
+			xbSupplementFee.surplusMoney = xbStudentRelation.receivable;
+			xbStudentRelation.studentStart = 1;
+			xbStudentRelation.receivable = xbStudentRelation.receivable.subtract(shengyubd);
+			studentService.saveXbStudentRelation(xbStudentRelation);
+
+			//添加办理中心记录
+			HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
+			SysEmployee sysEmployee = (SysEmployee)request.getSession().getAttribute("sysEmployee");
+			xbSupplementFee.paymentMoney = shengyubd;
+			xbSupplementFee.handlePerson = sysEmployee.employeeName;
+			xbSupplementFee.remarks = xbStudentRelation.sysOrgans.organName+xbStudentRelation.xbCourse.courseName+"进行停课";
+			studentService.saveXbSupplementFee(xbSupplementFee);
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put("status","1");
-			jsonObject.put("msg", "查询成功");
-			jsonObject.put("data", com.alibaba.fastjson.JSONObject.toJSON(xbCoursePresetDto));
-			logger.info("查询返回json参数="+jsonObject.toString());
-			resp.setContentType("application/json;charset=UTF-8");
+			jsonObject.put("msg", "编辑成功");
+			logger.info("编辑机构返回json参数="+jsonObject.toString());
+			resp.setContentType("text/html;charset=UTF-8");
 			resp.getWriter().println(jsonObject.toJSONString());
 			resp.getWriter().close();
 		} catch (IOException e) {
 			logger.info(e.toString());
 		}
+	}
+
+	/**
+	 * 跳转到查询学员
+	 * @return
+	 */
+	@RequestMapping("/getStopStudentList")
+	public String getStopStudentList(@RequestParam(required = false) String studentName, ModelMap model, Pageable pageable){
+		Map<String,Object> resultMap = new HashMap<>();
+		if(null!=studentName&&!studentName.equals("")){
+			resultMap.put("LIKE_studentName",studentName);
+		}
+		Page<XbStudent> xbStudentsPage = studentService.getXbStudentList(pageable,resultMap);
+		model.addAttribute("xbStudentPage",xbStudentsPage);
+		return "stopClass::studentList";
 	}
 
 }

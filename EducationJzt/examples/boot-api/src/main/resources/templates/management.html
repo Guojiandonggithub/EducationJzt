@@ -89,9 +89,9 @@
             </div>
         </div>
         <div class="orderCon">
-            <div class="export">
+            <!--<div class="export">
                 <button type="button" class="btn btn-primary">导出当前结果</button>
-            </div> 
+            </div> -->
             <div class="result">
                 <!--当前结果：总计<span th:text="${XbSupplementFeePage.getTotalElements()}"></span>条记录，应收款项总计：<span>111</span>元，实收总计：<span>111</span>元 |  欠费总计：<span>111</span>元-->
             </div>
@@ -119,6 +119,7 @@
                         <td th:if="${ment.type} eq '0'">报名</td>
                         <td th:if="${ment.type} eq '1'">转班</td>
                         <td th:if="${ment.type} eq '2'">补费</td>
+                        <td th:if="${ment.type} eq '3'">停课</td>
                         <td th:text="${ment.remarks}" class="orderTxt"></td>
                         <td th:text="${ment.surplusMoney}"></td>
                         <td th:text="${ment.paymentMoney}"></td>

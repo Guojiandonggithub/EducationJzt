@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="../static/pages/css/bootstrap.min.css">
     <link rel="stylesheet" href="../static/pages/css/font-awesome.min.css" />
     <link rel="stylesheet" href="../static/pages/css/kd.ui.plugin.css" />
-
+    <link rel="stylesheet" href="../static/pages/css/loading.css" />
 
     <script src="../static/pages/js/jquery.min.js"></script>
     <script src="../static/pages/js/bootstrap.min.js"> </script>
@@ -22,14 +22,16 @@
     <script src="../static/pages/js/ace-elements.min.js"></script>
     <script src="../static/pages/laydate/laydate.js"></script>
     <script src="../static/pages/js/kd.ui.plugin.js"></script>
+    <script src="../static/pages/js/loading.js"></script>
 
 </head>
 <body>
 <div th:replace="layout::top"></div>
+<form id="stopform">
 <div class="main-container" id="main-container">
     <div th:replace="layout::left('12','')">
     </div>
-    <div class="main-content">
+        <div class="main-content">
         <div class="breadcrumbs" id="breadcrumbs">
             <img src="../static/pages/img/line1.png">
             <span>停课</span>
@@ -38,6 +40,7 @@
         <div class="enrollCon" id="stopClassId">
             <button class="choiceStu" type="button" href="#modal-table" data-toggle="modal" id="chooseid" onclick="getStudentList()"
                     style="margin-bottom:22px;">选择学员</button>
+            <th:block th:if="${xbStudent}" th:fragment="changeClassFragment">
             <div class="chooseInfo">
                 <p><span>学员姓名：</span>
                     <th:block th:text="${xbStudent.studentName}"></th:block>
@@ -51,27 +54,29 @@
             <div class="stopClass">
                 <div class="form-group">
                     <label>选择课程</label>
-                    <select name="courseName" id="courseName">
+                    <select name="classId" id="classId" th:onchange="|javascript:chooseCourse('${xbStudent.id}')|">
+                        <option th:each="cla:${xbClassList}" th:selected="${cla.id}eq ${classId}" th:value="${cla.id}" th:text="${cla.sysOrgans.organName}+${cla.xbCourse.courseName}+${cla.xbClass.teacher.employeeName}+${cla.xbClass.className}"></option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label>学费剩余</label>
-                    <span>总学费：0.00（0.00课时）</span>
-                    <span>剩余：0.00（0.00课时）</span>
+                    <span>总学费：<th:block th:text="${xbStudentRelation.totalReceivable} + '（'+${xbStudentRelation.totalPeriodNum}+'课时）'"></th:block></span>
+                    <span>剩余：<th:block th:text="${xbStudentRelation.receivable} + '（'+${xbStudentRelation.periodNum}+'课时）'"></th:block></span>
                 </div>
                 <div class="form-group">
                     <label for="">实际剩余</label>
-                    <input type="text" value="0.00"><span>元</span><span>转到学员账户</span>
+                    <input type="text" name="shengyu" value="0.00"><span>元</span><span>转到学员账户</span>
                 </div>
                 <div class="form-group">
                     <label for="">对内备注</label>
-                    <input type="text" placeholder="该备注只有内部操作人员可见" class="remark">
+                    <input type="text" name="remarksIn" placeholder="该备注只有内部操作人员可见" class="remark">
                 </div>
                 <div class="form-group">
                     <label for="">对外备注</label>
-                    <input type="text" placeholder="该备注将会被打印且会在校宝家中显示" class="remark">
+                    <input type="text" name="remarksOut" placeholder="该备注将会被打印且会在校宝家中显示" class="remark">
                 </div>
             </div>
+            </th:block>
         </div>
         <div class="enrollCon handleInfo subInfo">
             <h3>经办信息</h3>
@@ -183,7 +188,7 @@
     </div>
 
 </div>
-
+</form>
 <script>
     !function(){
         laydate.render({elem: '#demo'});//绑定元素
@@ -191,16 +196,22 @@
 </script>
 <script type="text/javascript" th:inline="javascript">
     var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/;
-    function getCourseList(){
+    function getStudentList(){
+        var load = new Loading();
+        load.init({
+            target: "#modal-table"
+        });
+        load.start();
         $.ajax({
             type: 'get',
             //dataType: 'json',
-            url: basePath + '/student/getStudentList',
+            url: basePath + '/feeRelated/getStopStudentList',
             data: {studentName:$("#studentName").val()},
             contentType:"application/json;charset=UTF-8",
             cache: false,
             async: true,
             success: function (data) {
+                load.stop();
                 console.log(data);
                 $("#userchoose").html("");
                 $('#userchoose').append(data);
@@ -221,8 +232,8 @@
         load.start();
         $.ajax({
             type: 'get',
-            dataType: 'json',
-            url: basePath + '/student/stopchooseStudent',
+            //dataType: 'json',
+            url: basePath + '/feeRelated/stopchooseStudent',
             data: {studentId:val},
             contentType:"application/json;charset=UTF-8",
             cache: false,
@@ -230,26 +241,79 @@
             success: function (data) {
                 load.stop();
                 console.log(data);
-                $("#changeClassId").html(data);
-                /*$("#chooseUser").show();
-                $('#modal-table').modal('hide')
-                $("#chooseid").hide();
-                console.log(data.xbCourseList)
-                $('#courseName').empty();
-                $("#name").html(data.xbCoursePage[0].xbStudent.studentName);
-                $("#phone").html(data.xbCoursePage[0].xbStudent.contactPhone);
-                for (var i = 0; i < data.xbCoursePage.length; i++) {
-                    //先创建好select里面的option元素
-                    var option = document.createElement("option");
-                    //转换DOM对象为JQ对象,好用JQ里面提供的方法 给option的value赋值
-                    $(option).val(data.xbCoursePage[i].xbCourse.id);
-                    //给option的text赋值,这就是你点开下拉框能够看到的东西
-                    $(option).text(data.xbCoursePage[i].xbCourse.courseName);
-                    //获取select 下拉框对象,并将option添加进select
-                    $('#courseName').append(option);
-                }*/
+                $("#stopClassId").html(data);
             }
         });
+    };
+
+    function stopClass(){
+        var studentId = $('#studentId').val();
+        if (studentId) {
+            var data= serializeObject("#stopform");
+            console.log(data);
+            $.ajax({
+                type: 'get',
+                dataType: 'json',
+                url: basePath + '/feeRelated/saveStopClass',
+                data: {studentEntity:JSON.stringify(data)},
+                contentType:"application/json;charset=UTF-8",
+                cache: false,
+                async: true,
+                success: function (data) {
+                    $.kd.kdAlert("停课成功！",function () {
+                        window.location.href = basePath + '/student/getManagementList';
+                    });
+                }
+            });
+        }else{
+            $.kd.kdAlert("请先选择学员！");
+        }
+    }
+
+    function chooseCourse(){
+        var classId = $("#classId").val();
+        var studentId = $("#studentId").val();
+        var load = new Loading();
+        load.init({
+            target: "#modal-table"
+        });
+        var val = $('input:radio[name="studio"]:checked').val();
+        if (val == null) {
+            $.kd.kdAlert("什么也没选中!");
+            return false;
+        }
+        load.start();
+        $.ajax({
+            type: 'get',
+            //dataType: 'json',
+            url: basePath + '/feeRelated/stopchooseStudent',
+            data: {classId:classId,studentId:studentId},
+            contentType:"application/json;charset=UTF-8",
+            cache: false,
+            async: true,
+            success: function (data) {
+                load.stop();
+                console.log(data);
+                $("#stopClassId").html(data);
+            }
+        });
+    };
+
+    function serializeObject(form)
+    {
+        var o = {};
+        var a = $(form).serializeArray();
+        $.each(a, function() {
+            if (o[this.name]) {
+                if (!o[this.name].push) {
+                    o[this.name] = [o[this.name]];
+                }
+                o[this.name].push(this.value || '');
+            } else {
+                o[this.name] = this.value || '';
+            }
+        });
+        return o;
     };
 </script>
 </body>
