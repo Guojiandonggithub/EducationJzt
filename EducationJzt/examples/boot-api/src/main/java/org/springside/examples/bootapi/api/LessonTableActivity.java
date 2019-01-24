@@ -8,9 +8,12 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import org.springside.examples.bootapi.domain.SysOrgans;
+import org.springside.examples.bootapi.domain.XbCourseType;
 import org.springside.examples.bootapi.service.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -33,6 +36,8 @@ public class LessonTableActivity {
 	public XbStudentService xbStudentService;
 	@Autowired
 	public XbSubjectService xbSubjectService;
+	@Autowired
+	public XbCourseTypeService xbCourseTypeService;
 	/**
 	 * 跳转到课程表
 	 * @return
@@ -43,6 +48,11 @@ public class LessonTableActivity {
 		Map<String,Object> searmap = new HashMap<>();
 		model.addAttribute("xbClassList",xbStudentService.findXbClassListAll(searmap));
 		model.addAttribute("xbSubjectList",xbSubjectService.findSubjectAll());
+		Iterable<SysOrgans> organsList = organsService.getOrgansList();
+		model.addAttribute("organsList",organsList);
+		Map<String,Object> searhtypeMap = new HashMap<>();
+		List<XbCourseType> coursetypelist = xbCourseTypeService.findXbCourseTypeList(searhtypeMap);
+		model.addAttribute("coursetypelist",coursetypelist);
 		return "lessonTable";
 	}
 

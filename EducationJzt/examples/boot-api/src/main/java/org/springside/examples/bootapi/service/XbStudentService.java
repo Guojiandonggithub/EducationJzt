@@ -38,6 +38,8 @@ public class XbStudentService {
 	private XbRecordClassDao xbRecordClassDao;
 	@Autowired
 	private XbSupplementFeeDao xbSupplementFeeDao;
+	@Autowired
+	private XbClassViewDao xbClassViewDao;
 
 	@Transactional
 	public Page<XbSupplementFee>  getXbSupplementFeeList(Pageable pageable, Map<String, Object> searchParams) {
@@ -160,6 +162,14 @@ public class XbStudentService {
 		Specification<XbClass> spec = DynamicSpecifications.bySearchFilter(
 				filters.values(), XbClass.class);
 		return xbClassDao.findAll(spec);
+	}
+	@Transactional
+	public List<XbClassView> getXBclassViewListAll(Map<String, Object> searchParams) {
+		searchParams.put("EQ_deleteStatus","1");
+		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
+		Specification<XbClassView> spec = DynamicSpecifications.bySearchFilter(
+				filters.values(), XbClassView.class);
+		return xbClassViewDao.findAll(spec);
 	}
 	@Transactional
 	public XbClassroom saveXbClassroom(XbClassroom classroom) {

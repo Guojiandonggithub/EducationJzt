@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="../static/pages/css/ace.min.css" id="main-ace-style" />
     <link rel="stylesheet" href="../static/pages/css/index.css">
     <link rel="stylesheet" href="../static/pages/css/student.css">
+    <link rel="stylesheet" href="../static/pages/css/newStudent.css"/>
     <link rel="stylesheet" href="../static/pages/css/management.css">
     <link rel="stylesheet" href="../static/pages/css/fullcalendar.css">
     <link rel="stylesheet" href="../static/pages/css/lessonTable.css">
@@ -47,24 +48,61 @@
                         <span>课程表</span>
                         <img src="../static/pages/img/line.png">
                     </div>
-                    <!--<div class="screen" style="height:80px;">
+                    <div class="screen" style="height:80px;">
                         <div class="screenTop">
-                            <select class="selectName">
-                                <option value="AZ">教师姓名</option>
-                                <option value="AL">111</option>
-                                <option value="AK">222</option>
+                            <select  id="seartype" class="selectName" name="type">
+                                <option value="TE_NAME" selected="selected" th:selected="${type eq 'TE_NAME'}">教师姓名</option>
+                                <option value="CLA_NAME" th:selected="${type eq 'CLA_NAME'}">教室名称</option>
+                                <option value="CLAss_NAME" th:selected="${type eq 'CLAss_NAME'}">班级名称</option>
                             </select>
                             <div class="nav-search" id="nav-search">
                                 <form class="form-search">
                                     <span class="input-icon">
-                                        <input type="text" placeholder="请输入姓名、支持拼音缩写" class="nav-search-input" id="nav-search-input"
+                                        <input id="searchcontent" type="text" placeholder="请输入姓名、支持拼音缩写" class="nav-search-input"
                                             autocomplete="off">
                                         <i class="ace-icon fa fa-search nav-search-icon"></i>
                                     </span>
                                 </form>
                             </div>
+                            <div class="form-group" style="display: inline;">
+                                <button type="button" th:onclick="'javascript:getOrgansListPage(\'\')'">搜索</button>
+                            </div>
                         </div>
-                    </div>-->
+
+                    </div>
+                    <div id="control-position" class="control-position">
+                        <div class="control-group">
+                            <label class="control-label">校区</label>
+                            <input  th:attr ="checked=${organId == '0'?true:false}"
+                                    name="organId" type="radio" th:value="0" class="ace"
+                                    th:onclick="'javascript:getOrgansListPage(\'\')'">
+                            <span class="lbl" th:text="全部"></span>
+                            <div class="checkbox" th:each="orgs:${organsList}">
+                                <label>
+                                    <input th:attr ="checked=${organId == orgs.id?true:false}"
+                                           name="organId" type="radio" th:value="${orgs.id}" class="ace"
+                                           th:onclick="'javascript:getOrgansListPage(\'\')'">
+                                    <span class="lbl" th:text="${orgs.organName}"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">课程类别</label>
+                            <input  th:attr ="checked=${typeId == '0'?true:false}"
+                                    name="typeId" type="radio" th:value="0" class="ace"
+                                    th:onclick="'javascript:getOrgansListPage(\'\')'">
+                            <span class="lbl" th:text="全部"></span>
+                            <div class="checkbox" th:each="types:${coursetypelist}">
+                                <label>
+                                    <input th:attr ="checked=${typeId == types.id?true:false}"
+                                           name="typeId" type="radio" th:value="${types.id}" class="ace"
+                                           th:onclick="'javascript:getOrgansListPage(\'\')'">
+                                    <span class="lbl" th:text="${types.courseTypeName}"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="orderCon">
                         <!--<div class="export">
                             <button type="button" class="btn btn-primary">导出课表</button>
@@ -73,9 +111,9 @@
                             <div id="calendar">
                                 <div class="classStyle">
                                     <p class="state1"><span></span>已记上课</p>
-                                    <p class="state2"><span></span>我的日程</p>
+                                    <!--<p class="state2"><span></span>我的日程</p>-->
                                     <p class="state3"><span></span>正常日程</p>
-                                    <p class="state4"><span></span>冲突日程</p>
+                                    <!--<p class="state4"><span></span>冲突日程</p>-->
                                 </div>
                             </div>
                         </div>
@@ -210,6 +248,10 @@
         </form>
 <script type="text/javascript" th:inline="javascript">
     var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/;
+    //条件查询
+    function getOrgansListPage(){
+        $('#calendar'). fullCalendar ( 'refetchEvents' );
+    }
     $(function () {
         var load = new Loading();
         load.init({
@@ -256,6 +298,10 @@
                 load.start();
                 var fstart = $.fullCalendar.formatDate(start, "yyyy-MM-dd");
                 var fend = $.fullCalendar.formatDate(end, "yyyy-MM-dd");
+                var organId  = $('input:radio[name="organId"]:checked').val();
+                var typeId  = $('input:radio[name="typeId"]:checked').val();
+                var seartype  = $("#seartype").val();
+                var searchcontent  = $("#searchcontent").val();
                 $.ajax({
                     type: "post",
                     url: url,//我是用ajax获取后台数据的，这里填写地址
@@ -263,6 +309,10 @@
                     data: {
                         start: fstart,
                         end: fend,
+                        organId:organId,
+                        courseTypeId:typeId,
+                        seartype:seartype,
+                        searchcontent:searchcontent,
                         type:"kcb"
                     },
                     success: function(data) {
@@ -278,6 +328,7 @@
                                 var startmm = time[0].split(":")[1].trim();
                                 var endhh = time[1].split(":")[0].trim();
                                 var endtmm = time[1].split(":")[1].trim();
+                                var isGoToClass = dd.isGoToClass;
                                 event.push({
                                     _id: dd.id,
                                     title:dd.className,
@@ -291,6 +342,8 @@
                                     startDateTime:dd.startDateTime,
                                     timeInterval:dd.timeInterval,
                                     subjectId:dd.subjectId,
+                                    backgroundColor:isGoToClass=='1'?"#3967a3":"#33a299",
+                                    isGoToClass:isGoToClass,
                                     classTheme:dd.classTheme
 
                                 });
@@ -334,10 +387,20 @@
                     "\r\n教室："+calEvent.roomname+
                     "\r\n班课/一对一："+calEvent.type+
                     "\r\n教师："+calEvent.teachername);
-                $(this).css('background',"#66b8b2");
+                if(calEvent.isGoToClass=="1"){
+                    $(this).css('background',"#8ba3c3");
+                }else{
+                    $(this).css('background',"#66b8b2");
+                }
+
             },
             eventMouseout: function (event, jsEvent, view) {
-                $(this).css('background',"");
+                if(event.isGoToClass=="1"){
+                    $(this).css('background',"#3967a3");
+                }else{
+                    $(this).css('background',"#33a299");
+                }
+
             },
         });
 

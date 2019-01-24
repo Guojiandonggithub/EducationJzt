@@ -81,16 +81,16 @@ public class JwCenterArrangingCoursesActivity {
             HttpServletResponse resp,ModelMap model){
         Map<String,Object> searmap = new HashMap<>();
         searmap.put("EQ_organId",orgid);
-        List<XbClass> syslist = xbStudentService.getXBclassListAll(searmap);
+        List<XbClassView> syslist = xbStudentService.getXBclassViewListAll(searmap);
         JSONArray jsonArray = new JSONArray();
         JSONObject jsonObjinti = new JSONObject();
         jsonObjinti.put("id", "0");
         jsonObjinti.put("className", "不选择");
         jsonArray.add(jsonObjinti);
-        for(XbClass s : syslist){
+        for(XbClassView s : syslist){
             JSONObject jsonObj = new JSONObject();
             jsonObj.put("id", s.id);
-            jsonObj.put("className", s.className+s.xbCourse.courseName);
+            jsonObj.put("className", s.className+s.courseName);
             jsonArray.add(jsonObj);
         }
         baseAction.writeJson(resp,jsonArray);
@@ -410,10 +410,28 @@ public class JwCenterArrangingCoursesActivity {
             @RequestParam(value="end",defaultValue = "") String end,
             @RequestParam(value="studentid",defaultValue = "") String studentid,
             @RequestParam(value="classid",defaultValue = "") String classid,
-            @RequestParam(value="type",defaultValue = "") String type){
+            @RequestParam(value="type",defaultValue = "") String type,
+            @RequestParam(value="organId",defaultValue = "") String organId ,
+            @RequestParam(value="courseTypeId",defaultValue = "") String courseTypeId ,
+            @RequestParam(value="seartype",defaultValue = "") String seartype ,
+            @RequestParam(value="searchcontent",defaultValue = "") String searchcontent ,
+            ModelMap model){
         logger.info("跳转到排课");
        // List<Map<String,Object>> listentity = xbAttendClassService.findXbAttendListRiChengBySQL(start,end);
         Map<String, Object> searchParams = new HashMap<>();
+
+        if(StringUtils.isEmpty(seartype)){
+            seartype = "TE_NAME";
+        }
+        if(StringUtils.isNotEmpty(searchcontent)){
+            if(seartype.equals("TE_NAME")){
+                searchParams.put("LIKE_employeeName",searchcontent);
+            }else if(seartype.equals("CLA_NAME")){
+                searchParams.put("LIKE_classroomName",searchcontent);
+            }else if(seartype.equals("CLAss_NAME")){
+                searchParams.put("LIKE_className",searchcontent);
+            }
+        }
         searchParams.put("GTE_startDateTime",start);
         searchParams.put("LT_startDateTime",end);
         if(StringUtils.isNotEmpty(type)){
@@ -432,7 +450,29 @@ public class JwCenterArrangingCoursesActivity {
                 searchParams.put("EQ_xbClassId",classid);
             }
         }
-        List<Map<String,Object>> listentity = xbAttendClassService.findXbAttendRiChengListAll(searchParams);
+        //查询校区
+        if(null==organId){
+            organId = "0";
+        }else if(!organId.equals("0")){
+            searchParams.put("EQ_organId",organId);
+        }
+        //查询校区
+        if(null==courseTypeId){
+            courseTypeId = "0";
+        }else if(!courseTypeId.equals("0")){
+            searchParams.put("EQ_courseTypeId",courseTypeId);
+        }
+
+        List<XbAttendClassRicheng> listentity = xbAttendClassService.findXbAttendRiChengListAll(searchParams);
+        /*for(XbAttendClassRicheng xbattendclass : listentity){
+            int num = xbAttendClassService.getYdstudentnum(xbattendclass.xbClassId,xbattendclass.startDateTime);
+            if(num>0){
+                xbattendclass.isgotoclass = "1";
+            }else{
+                xbattendclass.isgotoclass = "0";
+            }
+
+        }*/
         JSONObject jsonObject = new JSONObject();
         if(listentity.size()>0){
             jsonObject.put("msg", "查询排课成功");
@@ -444,6 +484,10 @@ public class JwCenterArrangingCoursesActivity {
             jsonObject.put("msg", "查询排课失败");
         }
         HttpServletUtil.reponseWriter(jsonObject,resp);
+        model.addAttribute("organId",organId);
+        model.addAttribute("courseTypeId",courseTypeId);
+        model.addAttribute("sear_type",seartype);
+        model.addAttribute("sear_chcontent",searchcontent);
         //return "courseArray";
     }
     @RequestMapping("/remove_xbAttend_class")

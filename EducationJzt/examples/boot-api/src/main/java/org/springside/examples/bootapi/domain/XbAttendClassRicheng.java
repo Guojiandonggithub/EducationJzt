@@ -31,6 +31,8 @@ public class XbAttendClassRicheng {
     public String organId;
     @Column(name="organ_name")
     public String organName;
+    @Column(name="course_type_id")
+    public String courseTypeId;
     @Column(name="course_type_name")
     public String courseTypeName;
     @Column(name="class_name")
@@ -43,7 +45,8 @@ public class XbAttendClassRicheng {
     public String xbClassId;
     @Column(name="class_theme")
     public String classTheme;
-
+    @Column(name="is_go_to_class")
+    public String isGoToClass;
 
 
 

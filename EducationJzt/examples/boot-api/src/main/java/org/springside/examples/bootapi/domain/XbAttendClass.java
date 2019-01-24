@@ -45,6 +45,7 @@ public class XbAttendClass {
     public String createDate;
     public String createTime;
     public String timeInterval;
+    public String isGoToClass;
     public String deleteStatus;
     @Transient
     public String weekType;
