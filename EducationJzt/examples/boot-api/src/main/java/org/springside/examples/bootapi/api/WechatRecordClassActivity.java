@@ -29,10 +29,10 @@ import java.util.Map;
  * 记上课
  */
 @Controller
-@RequestMapping(value = "/recordClass")
-public class RecordClassActivity {
+@RequestMapping(value = "/recordClassWechat")
+public class WechatRecordClassActivity {
 
-	private static Logger logger = LoggerFactory.getLogger(RecordClassActivity.class);
+	private static Logger logger = LoggerFactory.getLogger(WechatRecordClassActivity.class);
 
 	@Autowired
 	private XbStudentService studentService;
@@ -69,7 +69,7 @@ public class RecordClassActivity {
 	}
 
 	/*
-	 * 跳转到记上课列表
+	 * 跳转到记上课列表getRecordClassList
 	 * @return
 	 */
 	@RequestMapping("/getRecordClassList")
@@ -120,7 +120,7 @@ public class RecordClassActivity {
 		model.addAttribute("organsList",organsList);
 		model.addAttribute("coursetypelist",coursetypelist);
 		model.addAttribute("conrseType",conrseType);
-		return "attendClass";
+		return "wechat_timetableMore";
 	}
 
 	/*
@@ -137,7 +137,7 @@ public class RecordClassActivity {
 		Page<XbStudentRelation> classPage = studentService.getXbStudentRelationList(pageable,searhMap);
 		model.addAttribute("classPage",classPage);
 		model.addAttribute("classes",classes);
-		return "classEdit";
+		return "wechat_attendClass";
 	}
 
 	@PostMapping("/save/recordClass")
@@ -191,7 +191,6 @@ public class RecordClassActivity {
 			resp.getWriter().println(jsonObject.toJSONString());
 			resp.getWriter().close();
 		} catch (Exception e) {
-			e.printStackTrace();
 			logger.info(e.toString());
 		}
 	}

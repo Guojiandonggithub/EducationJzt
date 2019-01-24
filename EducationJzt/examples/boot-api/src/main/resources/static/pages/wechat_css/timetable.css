@@ -1,0 +1,377 @@
+@charset "utf-8";
+/* CSS Document */
+
+body{
+    background:#f0f0f1;
+}
+ul,li,ol{
+    list-style: none;
+    padding:0;
+    margin:0;
+}
+.time{
+    font-size:16px;
+    display: flex;
+    justify-content: space-between;
+    padding:0 15px;
+    background:#fff;
+}
+.time p{
+    color:#67adf7;
+    display: inline-block;
+    margin:0;
+    line-height:50px;
+}
+.week{
+    background:#fff;
+    border-top:1px solid #d0d0d0;
+    border-bottom:1px solid #d0d0d0;
+    font-size:15px;
+    display: flex;
+    justify-content: space-around;
+}
+.week p{
+    display: inline-block;
+    text-align: center;
+    width: 14.28%;
+    padding: 15px 0;
+    margin:0;
+}
+.week p.current{
+    background:#67adf7;
+    color:#fff;
+}
+.week p ~ p{
+    border-left:1px solid #d0d0d0;
+}
+.con-box{
+    background:#fff;
+    padding:0 15px;
+    margin-top:30px;
+}
+.con-box .con-list ~ .con-list{
+    border-top:1px solid #d0d0d0;
+}
+.con-list{
+    padding:10px 0;
+}
+.con-list p{
+    display: inline-block;
+    margin:0;
+}
+.con-list .time-lag{
+    width:28%;
+    float:left;
+    margin-top:10px;
+}
+.con-list .class-list{
+    width:48%;
+}
+.con-list .class-list span{
+    display: block;
+    overflow:hidden; 
+    text-overflow:ellipsis; 
+    white-space: nowrap;
+}
+.con-list a{
+    float:right;
+    margin-top:10px;
+    color:#67adf7;
+}
+
+
+.timeLag{
+    background:#fff;
+    text-align: center;
+    line-height:50px;
+    border-bottom:1px solid #d0d0d0;
+}
+.timeLag p{
+    margin:0;
+}
+.all{
+    text-align: center;
+    color: #929292;
+    margin:0;
+    line-height: 34px;
+}
+.con-list .more-list{
+    width:80%;
+}
+
+/* 记上课 */
+.add{
+    background:#fff;
+    text-align: center;
+    line-height:48px;
+    border-bottom:1px solid #d0d0d0;
+}
+.add a{
+    color:#67adf7;
+    font-size:16px;
+}
+.search{
+    margin-top:15px;
+    background:#fff;
+    padding:15px;
+    position: relative;
+}
+.search input{
+    width:80%;
+    background:#f0f0f1;
+    line-height:34px;
+    padding-left:26px;
+    border-radius: 2px;
+    border:0;
+}
+.search span{
+    position: absolute;
+    top:26px;
+    left:22px;
+    color:#939393;
+
+}
+.search button{
+    width: 17%;
+    float: right;
+    background:#67adf7;
+    color:#fff;
+}
+.class-content{
+    background:#fff;
+    margin-top:8px;
+}
+.class-content h2{
+    margin:0;
+    font-size:16px;
+    color:#a5a5a5;
+    line-height:44px;
+    border-bottom:1px solid #e9edf3;
+    padding-left:15px;
+}
+.class-content h2 img{
+    margin-right:8px;
+}
+.class-info{
+    padding:0 15px;
+}
+.class-info ul li{
+    overflow:hidden;
+    padding:12px 0;
+    font-size:16px;
+}
+.class-info ul li ~ li{
+    border-top:1px solid #d0d0d0;
+}
+.class-info ul li span{
+    color:#a5a5a5; 
+}
+.class-info ul li p{
+    float:right;
+    margin:0;
+}
+.class-info ul li p input,.class-info ul li p select {
+    border:0;
+    text-align: right;
+
+}
+.class-info ul li p select{
+    -webkit-appearance: none;
+    color:#67adf7;
+}
+
+.personnel{
+    /*padding:15px;
+    margin-bottom:40px;*/
+}
+.per-list{
+    width:100%;
+    background:#fff;
+    border-top:2px solid #4a90e2;
+    margin-top: 9px;
+}
+.per-top{
+    border-bottom:1px solid #e2e2e2;
+    padding:12px 20px;
+    display: flex;
+    justify-content: space-between;
+}
+.per-top .name{
+    font-size:16px;
+    color:#333;
+    margin:0;
+}
+.per-top img{
+    width:20px;
+    margin-right:6px;
+}
+.per-top i{
+    font-style: normal;
+    color:#a5a5a5;
+}
+.per-top span{
+    font-size:16px;
+}
+.per-bot{
+    padding:12px 20px;
+    overflow: hidden;
+}
+.per-bot ul li span{
+    color:#a5a5a5;
+    font-size:16px;
+}
+.per-bot ul li{
+    width:50%;
+    float:left;
+    
+}
+.per-bot ul li p{
+    float:right;
+    color:#333;
+    margin:0;
+    font-size:16px;
+}
+.per-bot ul li p select{
+    border:0;
+    text-align: right;
+    -webkit-appearance: none;
+}
+.foot-btn{
+    width:100%;
+    height:40px;
+    background:#67adf7;
+    color:#fff;
+    position: fixed;
+    bottom:0;
+}
+.foot-btn button{
+    background:none;
+    width:49%;
+    text-align: center;
+    padding: 0;
+    line-height: 40px;
+}
+
+.choose{
+    text-align: center;
+    margin-top:80%;
+}
+.choose a{
+    background:#5295e7;
+    color:#fff;
+    padding:10px;
+    border-radius: 30px;
+}
+
+/* 上课记录 */
+.record{
+    margin-bottom:40px;
+}
+.record ul li{
+    background:#fff;
+    padding:0 15px;
+    display: flex;
+    justify-content: space-between;
+    height:50px;
+    line-height:50px;
+}
+.record ul li ~ li{
+    border-top:1px solid #e2e2e2;
+}
+.record ul li p i{
+    width:24px;
+    height:24px;
+    line-height:24px;
+    text-align: center;
+    border-radius: 50%;
+    background:#67adf7;
+    font-size:14px;
+    color:#fff;
+    display: inline-block;
+    font-style: normal;
+    margin-right:4px;
+}
+.record ul li p{
+    display: inline-block;
+    margin:0;
+}
+.record ul li p.date{
+    font-size:16px;
+}
+.record ul li a{
+    font-size:16px;
+    margin-top:18px;
+    color:#b4b4b4;
+}
+.back{
+    position: fixed;
+    bottom:10%;
+
+} 
+.back a{
+    padding:6px 12px;
+    border-radius: 30px;
+    background:#82baf6;
+    color:#fff;
+    font-size:12px;
+}
+.back a span{
+    margin-right:6px;
+}
+
+/* 人员列表 */
+.per-content{
+    padding:15px;
+}
+.people-list{
+    background:#fff;
+    box-shadow: 0 0 5px #ccc;
+    padding:10px;
+    margin-bottom:15px;
+}
+.people-list .people-name{
+    border-bottom:1px solid #e2e2e2;
+}
+.people-list .people-name h3{
+    margin:0;
+    font-size:16px;
+}
+.people-list .people-name p{
+    font-size:14px;
+    display: flex;
+    justify-content: space-between;
+    margin:8px 0;
+}
+.people-list .people-btn{
+    text-align: center;
+    font-size:16px;
+    color:#67adf7;
+    padding-top:10px;
+}
+.people-list .record{
+    margin:0;
+}
+.people-list .record ul li{
+    padding:0;
+    border-bottom:1px solid #e2e2e2;
+}
+.people-list .people-more a{
+    width:49%;
+    display: inline-block;
+}
+.people-list .people-more a ~ a{
+    border-left:1px solid #e2e2e2;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

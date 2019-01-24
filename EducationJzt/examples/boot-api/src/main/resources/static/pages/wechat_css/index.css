@@ -1,0 +1,91 @@
+@charset "utf-8";
+/* CSS Document */
+
+body{
+    background:#f0f0f1;
+}
+.head{
+    line-height:60px;
+    color:#929292;
+    margin:0;
+    text-align: center;
+    font-size:18px;
+}
+.content{
+    background:#fff;
+    height: -webkit-fill-available;
+    padding:26px;
+    display: flex;
+    justify-content: space-evenly;
+}
+.content a{
+    display: inline-block;
+    text-align: center;
+}
+.content a span{
+    display: inline-block;
+    height:46px;
+    line-height:46px;
+}
+.content a img{
+    width:40px;
+}
+.content a p{
+    font-size:16px;
+    color:#555;
+}
+
+/*底部*/
+.foot{
+    width:100%; 
+    border-top:1px solid #b2b2b2; 
+    padding:8px 0; 
+    position:fixed; 
+    bottom:0; 
+    background:#fff;
+}
+.foot .nav-pills>li>a{
+    color:#adadac; 
+    font-size:15px; padding:0;
+}
+.foot .nav-pills>li.active>a{
+    background:none; 
+    color:#64abfa;
+}
+.foot ul li{
+    width:50%; 
+    text-align:center;
+}
+.foot .nav-pills>li+li{
+    margin:0;
+}
+.foot ul li span{
+    height:34px; 
+    display:block; 
+    font-size:20px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

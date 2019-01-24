@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>记上课</title>
+    <link rel="stylesheet"href="../static/pages/wechat_css/bootstrap.min.css">
+    <link rel="stylesheet"href="../static/pages/wechat_css/timetable.css" >
+    <link rel="stylesheet" href="../static/pages/wechat_css/jHsDate.css" />
+    <link rel="stylesheet" href="../static/pages/css/kd.ui.plugin.css" />
+
+    <script src="../static/pages/wechat_js/jquery.js"></script>
+    <script src="../static/pages/wechat_js/bootstrap.min.js"></script>
+      <script src="../static/pages/laydate/laydate.js"></script>
+      <script src="../static/pages/js/kd.ui.plugin.js"></script>
+  </head>
+<body>
+<div class="add">
+    <p>记上课</p>
+</div>
+<div class="search">
+    <input type="text" placeholder="搜索学员">
+    <span class="glyphicon glyphicon-search"></span>
+    <button class="btn">搜索</button>
+</div>
+<div>
+    <div class="class-content">
+        <h2 th:text="${classes.sysOrgans.organName}+' '+${classes.className}+' '+${classes.xbCourse.courseName}"><img src="img/ban.png">校区+班级+课程</h2>
+        <div class="class-info">
+            <input type="hidden" id="organId" name="organId" th:value="${classes.sysOrgans.id}" />
+            <input type="hidden" id="classId" name="classId" th:value="${classes.id}" />
+            <input type="hidden" id="courseId" name="courseId" th:value="${classes.xbCourse.id}" />
+            <input type="hidden" id="attendId" name="attendId" th:value="${classes.id}" />
+            <ul>
+                <li>
+                    <span>上课日期</span>
+                    <p>
+                        <input type="text" id="demo" th:value="${#dates.format(new java.util.Date().getTime(), 'yyyy-MM-dd HH:mm:ss')}"/>
+                    </p>
+                </li>
+                <li>
+                    <span>上课教师</span>
+                    <p th:text="${classes.teacher.employeeName}"></p>
+                </li>
+                <li>
+                    <span>教师课时</span>
+                    <p th:text="${classes.teacherNum}"></p>
+                </li>
+
+                <!--<li>
+                    <span>上课状态(批量)</span>
+                    <p>
+                        <select style="color:#555;">
+                            <option value="0">上课</option>
+                            <option value="1">请假</option>
+                            <option value="2">旷课</option>
+                            <option value="3">补课</option>
+                        </select>
+                    </p>
+                </li>-->
+            </ul>
+        </div>
+    </div>
+<form id="classForm">
+    <div class="personnel" th:each="stu,stuindex:${classPage.getContent()}">
+        <input type="hidden" name="studentId" th:value="${stu.xbStudent.id}" />
+        <div class="per-list">
+            <div class="per-top">
+                <p class="name" th:text="${stu.xbStudent.studentName}"><img src="../static/pages/wechat_img/per.png">姓名</p>
+                <i th:text="'剩余'+${stu.periodNum}+'课时'"></i>
+            </div>
+            <div class="per-bot">
+                <ul>
+                    <li style="border-right:1px solid #e9edf3; padding-right:10px;">
+                        <span>扣除课时</span>
+                        <p><input type="text" value="1" name="deductPeriod"
+                                  style="width: 37px;padding:1px;text-align: center;">
+                        </p>
+                    </li>
+                    <li style="padding-left:10px;">
+                        <span>上课状态</span>
+                        <p>
+                            <select id="state" name="state" style="color:#555;">
+                                <option value="0">上课</option>
+                                <option value="1">请假</option>
+                                <option value="2">旷课</option>
+                                <option value="3">补课</option>
+                            </select>
+                        </p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</form>
+</div>
+<div class="foot-btn">
+    <button class="btn" style="width: 100%;cursor: pointer;" onclick="saveRecordClass()">保存</button>
+</div>
+<script type="text/javascript" src="../static/pages/wechat_js/jHsDate.js"></script>
+
+<script type="text/javascript" th:inline="javascript">
+    var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/ ;
+
+    function saveRecordClass() {
+       /* var load = new Loading();
+        load.init({
+            target: "#donghua"
+        });*/
+        var classId = $("#classId").val();
+        var courseId = $("#courseId").val();
+        var organId = $("#organId").val();
+        var attendId = $("#attendId").val();
+        var data = serializeObject("#classForm");
+        if (data) {
+            console.log(data);
+            var list = [];
+            var aa = {
+                studentId: "",
+                state: "",
+                deductPeriod: "",
+                teacherLeave: "",
+                recordTimeTemp: "",
+                classId: "",
+                courseId: "",
+                organId:"",
+                attendId:""
+            };
+            if (data.studentId.length == 32) {
+                aa.studentId = data.studentId;
+                aa.state = $('#state option:selected').val();
+                aa.deductPeriod = data.deductPeriod;
+                aa.teacherLeave = "";
+                aa.recordTimeTemp = $("#demo").val();
+                aa.classId = classId;
+                aa.courseId = courseId;
+                aa.organId = organId;
+                aa.attendId = attendId;
+                list.push(aa);
+            } else {
+                for (var i = 0; i < data.studentId.length; i++) {
+                    aa = {};
+                    aa.studentId = data.studentId[i];
+                    var val = $('#state option:selected').val();
+                    aa.state = val;
+                    aa.deductPeriod = data.deductPeriod[i];
+                    aa.teacherLeave = "";
+                    aa.recordTimeTemp = $("#demo").val();
+                    aa.classId = classId;
+                    aa.courseId = courseId;
+                    aa.organId = organId;
+                    aa.attendId = attendId;
+                    list.push(aa);
+                }
+            }
+            console.log(list);
+            //load.start();
+            $.ajax({
+                type: 'post',
+                dataType: 'json',
+                url: basePath + '/recordClass/save/recordClass',
+                data: JSON.stringify(list),
+                contentType: "application/json;charset=UTF-8",
+                cache: false,
+                async: true,
+                success: function (data) {
+                    //load.stop();
+                    var status = data.status;
+                    var msg = data.msg;
+                    $.kd.kdAlert("记上课成功");
+                    /*$.kd.kdAlert("记上课成功！",function () {
+                        window.location.href = basePath + '/recordClass/getRecordClassList';
+                    });*/
+                }
+            });
+        }
+    }
+    function serializeObject(form) {
+        var o = {};
+        var a = $(form).serializeArray();
+        $.each(a, function () {
+            if (o[this.name]) {
+                if (!o[this.name].push) {
+                    o[this.name] = [o[this.name]];
+                }
+                o[this.name].push(this.value || '');
+            } else {
+                o[this.name] = this.value || '';
+            }
+        });
+        return o;
+    };
+</script>
+<script type="text/javascript">
+
+/*$('#datetimedef').jHsDate({
+    defDate: '2019-01-01',
+    defIsShow: true
+});*/
+
+$('.glyphicon-remove-circle').click(function(e) {
+		$(this).parent(".per-top").parent(".per-list").hide(500)
+    });
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

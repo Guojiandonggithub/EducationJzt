@@ -92,8 +92,11 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
         //设置不进行登录拦截的路径：登录注册和验证码
         notLoginPaths.add("/accounts/hello");
         notLoginPaths.add("/accounts/login");
-
         if(notLoginPaths.contains(path)) return false;
+        String wechatLogin="/wechatLogin/";
+        if(path.indexOf(wechatLogin)!=-1)return false;
+        String recordClassWechat="/recordClassWechat/";
+        if(path.indexOf(recordClassWechat)!=-1)return false;
         return true;
     }
 }

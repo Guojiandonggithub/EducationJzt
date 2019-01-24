@@ -1,0 +1,59 @@
+<!DOCTYPE html >
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>记上课</title>
+    <link href="../static/pages/wechat_css/bootstrap.min.css" rel="stylesheet">
+    <link href="../static/pages/wechat_css/timetable.css" rel="stylesheet">
+    <script src="../static/pages/wechat_js/jquery.js"></script>
+    <script src="../static/pages/wechat_js/bootstrap.min.js"></script>
+    <script src="../static/pages/wechat_js/index.js"></script>
+  </head>
+<body>
+<div class="timeLag">
+    <p>记上课</p>
+</div>
+<p class="all" th:text="'共'+${classPage.getTotalElements()+'个'}">共16个</p>
+<div class="con-box" style="margin-top:0;">
+    <div th:each="cls,clssta:${classPage}" class="con-list">
+        <p  class="class-list more-list">
+            <span th:text="${cls.sysOrgans.organName}+' '+${cls.xbClassroom.classroomName}+' '+${cls.className}">校区+教室+班级</span>
+            <span th:text="'课程：'+${cls.xbCourse.courseName}+' 教师：'+${cls.teacher.employeeName}">课程+老师</span>
+        </p>
+        <a th:href="@{'/recordClassWechat/classEdit?classesId='+${cls.id}}">记上课<Span class="glyphicon glyphicon-menu-right"></Span></a>
+    </div>
+</div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
