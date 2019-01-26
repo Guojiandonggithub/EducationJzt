@@ -392,35 +392,42 @@ public class FeeRelatedActivity {
 			String classId = xbSupplementFee.classId;
 			String toClassId = xbSupplementFee.toClassId;
 			String receivables = xbSupplementFee.receivable;
-			String balanceamount = xbSupplementFee.balanceamount;
 			String choosecourseId = xbSupplementFee.choosecourseId;
-			BigDecimal receivablebd = new BigDecimal(receivables);
-			BigDecimal balanceamountbd = new BigDecimal(balanceamount);
 			XbStudent xbStudent = studentService.getXbStudent(studentId);
-			BigDecimal ba = balanceamountbd.subtract(receivablebd);
-			int r = ba.compareTo(BigDecimal.ZERO); //和0，Zero比较
-			if(r==-1){//小于
-				xbStudent.paymentMoney = new BigDecimal(0.00).subtract(ba);
-				xbSupplementFee.paymentMoney = new BigDecimal(0.00);
-				xbSupplementFee.surplusMoney = new BigDecimal(0.00).subtract(ba);
-			}else{
-				xbStudent.surplusMoney = xbStudent.surplusMoney.add(ba);
-				xbStudent.paymentMoney = new BigDecimal("0.00");
-				xbSupplementFee.paymentMoney = ba;
-				xbSupplementFee.surplusMoney = ba;
-			}
-			Map<String,Object> searchMap = new HashMap<>();
-			XbStudentRelation xbStudentRelation = studentService.getXbStudentRelation(classId);
+			XbStudentRelation xbStudentRelations = studentService.getXbStudentRelation(classId);
+			xbStudentRelations.studentStart = 2;
+			//studentService.saveXbStudentRelation(xbStudentRelations);
+			//XbStudentRelation zrxbStudentRelation = new XbStudentRelation();
 			XbCoursePreset xbCoursePreset = xbCoursePresetService.getXbCoursePreset(choosecourseId);
-			xbStudentRelation.classId = toClassId;
+			xbStudentRelations.classId = toClassId;
 			XbClass xbClass = studentService.getXbClass(toClassId);
-			xbStudentRelation.courseId = xbClass.courseId;
-			xbSupplementFee.remarks = xbStudentRelation.xbClass.className+"转到"+xbClass.className;
-			xbStudentRelation.totalReceivable = xbCoursePreset.money;
-			xbStudentRelation.receivable = xbCoursePreset.money;
-			xbStudentRelation.totalPeriodNum = new BigDecimal(xbCoursePreset.periodNum);
-			xbStudentRelation.periodNum = new BigDecimal(xbCoursePreset.periodNum);
-			studentService.saveXbStudentRelation(xbStudentRelation);
+			xbStudentRelations.organId = xbClass.organId;
+			xbStudentRelations.courseId = xbClass.courseId;
+			xbStudentRelations.studentId = studentId;
+			xbSupplementFee.remarks = xbStudentRelations.xbClass.className+"转到"+xbClass.className;
+			String chargingMode = xbCoursePreset.xbCourse.chargingMode;
+			BigDecimal zrmoney = new BigDecimal("0.00");
+			if("0".equals(chargingMode)){
+				zrmoney =  xbStudentRelations.periodNum.multiply(xbCoursePreset.money);
+				xbStudentRelations.totalReceivable = new BigDecimal(xbCoursePreset.periodNum).multiply(xbCoursePreset.money);
+			}else if("2".equals(chargingMode)){
+				zrmoney =  xbCoursePreset.money.divide(new BigDecimal(xbCoursePreset.periodNum)).multiply(xbStudentRelations.periodNum);
+				xbStudentRelations.totalReceivable = xbCoursePreset.money;
+			}
+			if(zrmoney.compareTo(xbStudentRelations.receivable)>0){
+				xbStudent.paymentMoney = xbStudent.paymentMoney.add(zrmoney.subtract(xbStudentRelations.receivable));//欠费金额
+			}else{
+				xbStudent.surplusMoney = xbStudent.surplusMoney.add(xbStudentRelations.receivable).subtract(zrmoney);//欠费金额
+			}
+			xbSupplementFee.surplusMoney = zrmoney;//应收金额
+			xbSupplementFee.paymentMoney = xbStudentRelations.receivable;//实收金额
+			xbStudentRelations.receivable =zrmoney;
+			//xbStudent.totalPeriodNum = xbStudentRelations.periodNum;
+			studentService.saveXbStudent(xbStudent);
+			//zrxbStudentRelation.totalPeriodNum = new BigDecimal(xbCoursePreset.periodNum);
+			//zrxbStudentRelation.periodNum = new BigDecimal(xbCoursePreset.periodNum);
+			//zrxbStudentRelation.studentStart=0;
+			studentService.saveXbStudentRelation(xbStudentRelations);
 			HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
 			SysEmployee sysEmployee = (SysEmployee)request.getSession().getAttribute("sysEmployee");
 			xbSupplementFee.handlePerson = sysEmployee.employeeName;
@@ -459,8 +466,8 @@ public class FeeRelatedActivity {
 				xbStudent.surplusMoney = xbStudent.surplusMoney.subtract(subsidyMoneyBd);
 			}else{
 				BigDecimal paymentMoney = new BigDecimal("0.00");
-				BigDecimal min = xbStudent.surplusMoney.subtract(subsidyMoneyBd);
-				xbStudent.surplusMoney = min.add(bd);
+				xbStudent.paymentMoney = paymentMoney;
+				xbStudent.surplusMoney = xbStudent.surplusMoney.add(bd.subtract(xbSupplementFee.surplusMoney).subtract(subsidyMoneyBd));
 			}
 			studentService.saveXbStudent(xbStudent);
 			HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
@@ -491,6 +498,7 @@ public class FeeRelatedActivity {
 		Map<String,Object> studentMap = new HashMap<>();
 		studentMap.put("EQ_studentId",studentId);
 		studentMap.put("EQ_xbCourse.deleteStatus","1");
+		studentMap.put("NEQ_studentStart",1);
 		XbStudentRelation xbStudentRelation = new XbStudentRelation();
 		List<XbStudentRelation> xbStudentPage = studentService.getXbRelationList(studentMap);
 		String balanceamount = "0.00";

@@ -329,8 +329,17 @@
         };
 
         function getCourseLists() {
+
             var classId = $("#classId").val();
             var studentId = $("#studentId").val();
+            if(!studentId){
+                $.kd.kdAlert("请先选择学员！");
+                return false;
+            }
+            if(!classId){
+                $.kd.kdAlert("请先选择班级！");
+                return false;
+            }
             var load = new Loading();
             load.init({
                 target: "#modal-table1"

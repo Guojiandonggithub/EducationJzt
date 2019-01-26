@@ -102,9 +102,9 @@ public class RecordClassActivity {
 		}else if(!chargingMode.equals("3")){
 			searhMap.put("EQ_xbCourse.chargingMode",chargingMode);
 		}
-		if(null==conrseType){
+		if(null==conrseType||conrseType.equals("0")){
 			conrseType = "";
-		}else if(!conrseType.equals("")){
+		}else if(!conrseType.equals("")&&!conrseType.equals("0")){
 			searhMap.put("EQ_xbCourse.xbcoursetype.id",conrseType);
 		}
 		Iterable<SysOrgans> organsList = organsService.getOrgansList();

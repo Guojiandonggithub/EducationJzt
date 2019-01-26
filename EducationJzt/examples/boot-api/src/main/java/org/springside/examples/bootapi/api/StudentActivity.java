@@ -190,6 +190,7 @@ public class StudentActivity {
 	public void savexbclass(@RequestBody XbClass xbclass, HttpServletResponse resp) {
 		Map<String, Object> map  =  new HashMap<>();
 		try {
+			xbclass.isEnd = "1";
 			XbClass class1 = studentService.saveXbClass(xbclass);
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put("status","1");
@@ -247,6 +248,49 @@ public class StudentActivity {
 	}
 
 	/**
+	 * 查询分班列表
+	 * @return
+	 */
+	@RequestMapping("/getDividelist")
+	public String getDividelist(@RequestParam(required = false) String data,ModelMap model, Pageable pageable){
+		Map<String,Object> resultMap = new HashMap<>();
+		Map<String,Object> searhMap = new HashMap<>();
+		if(null!=data){
+			resultMap = com.alibaba.fastjson.JSONObject.parseObject(data,searhMap.getClass());
+		}
+		String organId = (String)resultMap.get("organId");
+		String type = (String)resultMap.get("type");
+		String nameormobile = (String)resultMap.get("nameormobile");
+		if(null==organId){
+			organId = "0";
+		}else if(!organId.equals("0")){
+			searhMap.put("EQ_organId",organId);
+		}
+		if(null==type){
+			type = "AZ";
+		}
+		if(null!=nameormobile&&!nameormobile.equals("")){
+			if(type.equals("AZ")){
+				searhMap.put("LIKE_xbStudent.studentName",nameormobile);
+			}else{
+				searhMap.put("LIKE_xbStudent.contactPhone",nameormobile);
+			}
+		}
+		Iterable<SysOrgans> organsList = organsService.getOrgansList();
+		Page<XbStudentRelation> xbStudentPage = studentService.getXbStudentRelationList(pageable,searhMap);
+		Map<String,Object> studentMap = new HashMap<>();
+		Page<XbStudent> xbStudentsPage = studentService.getXbStudentList(pageable,studentMap);
+		model.addAttribute("xbStudentPage",xbStudentPage);
+		model.addAttribute("xbStudentsPage",xbStudentsPage);
+		model.addAttribute("organId",organId);
+		model.addAttribute("organsList",organsList);
+		model.addAttribute("studentcurrentzise",xbStudentPage.getSize());
+		model.addAttribute("nameormobile",nameormobile);
+		model.addAttribute("type",type);
+		return "student::divideStu";
+	}
+
+	/**
 	 * 跳转到一对一
 	 * @return
 	 */
@@ -260,7 +304,7 @@ public class StudentActivity {
 		searhMap.put("EQ_xbCourse.type","1");
 		Page<XbStudentRelation> xbStudentPage = studentService.getXbStudentRelationList(pageable,searhMap);
 		model.addAttribute("xbStudentPage",xbStudentPage);
-		model.addAttribute("roomcurrentzise",xbStudentPage.getSize());
+		model.addAttribute("currentzise",xbStudentPage.getSize());
 		return "oneToOne";
 	}
 
@@ -269,24 +313,33 @@ public class StudentActivity {
 	 * @return
 	 */
 	@RequestMapping("/getXbClassroomList")
-	public String getXbClassroomList(@RequestParam(required = false) String room,ModelMap model, Pageable pageable){
+	public String getXbClassroomList(@RequestParam(required = false) String room,@RequestParam(required = false) boolean isFinishClass,ModelMap model, Pageable pageable){
 		if(null==room){
 			room = "1";
 		}
 		model.addAttribute("room",room);
 		Map<String,Object> searhMap = new HashMap<>();
+		Map<String,Object> classSearhMap = new HashMap<>();
 		Pageable pageables = new PageRequest(0, 20);
 		Pageable pageable1;
 		Pageable pageable2;
 		if(room=="1"){
 			pageable1 = pageables;
 			pageable2 = pageable;
-		}else{
+		}else if(room=="0"){
 			pageable2 = pageables;
 			pageable1 = pageable;
+		}else{
+			pageable1 = pageables;
+			pageable2 = pageables;
+		}
+		if(isFinishClass){
+			String isFinishClassStr = "0";
+			classSearhMap.put("EQ_isEnd",isFinishClassStr);
+			model.addAttribute("finishClass",isFinishClassStr);
 		}
 		Page<XbClassroom> xbClassroomPage = studentService.getXbClassroomList(pageable1,searhMap);
-		Page<XbClass> xbClassPage = studentService.getXbClassList(pageable2,searhMap);
+		Page<XbClass> xbClassPage = studentService.getXbClassList(pageable2,classSearhMap);
 		List<XbClass> xbClassList = xbClassPage.getContent();
 		for (int i = 0; i < xbClassList.size(); i++) {
 			String sktime="";
@@ -532,12 +585,11 @@ public class StudentActivity {
 	 * @return
 	 */
 	@RequestMapping("/getManagementList")
-	public String getManagementList(@RequestParam(required = false) String room,ModelMap model, Pageable pageable){
-		if(null==room){
-			room = "1";
-		}
-		model.addAttribute("room",room);
+	public String getManagementList(@RequestParam(required = false) String userName,ModelMap model, Pageable pageable){
 		Map<String,Object> searhMap = new HashMap<>();
+		if(null!=userName){
+			searhMap.put("LIKE_xbStudent.studentName",userName);
+		}
 		Page<XbSupplementFee> XbSupplementFeePage = studentService.getXbSupplementFeeList(pageable,searhMap);
 		model.addAttribute("XbSupplementFeePage",XbSupplementFeePage);
 		model.addAttribute("feecurrentzise",XbSupplementFeePage.getSize());
@@ -849,14 +901,16 @@ public class StudentActivity {
 	public String studentDetail(@RequestParam(required = false) String studentId,ModelMap model,Pageable pageable){
 		XbStudent xbStudent = studentService.getXbStudent(studentId);
 		Map<String, Object> searchParams = new HashMap<>();
+		Map<String, Object> feeListSearchParams = new HashMap<>();
 		searchParams.put("EQ_studentId",studentId);
+		feeListSearchParams.put("EQ_studentId",studentId);
 		Page<XbStudentRelation> xbStudentRelationPage = studentService.getXbStudentRelationList(pageable,searchParams);
 		model.addAttribute("xbStudent",xbStudent);
 		model.addAttribute("xbStudentRelationPage",xbStudentRelationPage);//课程列表
-		Page<XbSupplementFee> XbSupplementFeePage = studentService.getXbSupplementFeeList(pageable,searchParams);
+		Page<XbSupplementFee> XbSupplementFeePage = studentService.getXbSupplementFeeList(pageable,feeListSearchParams);
 		model.addAttribute("XbSupplementFeePage",XbSupplementFeePage);//订单列表
 		model.addAttribute("feecurrentzise",XbSupplementFeePage.getSize());
-		Page<XbRecordClass> xbRecordClassPage = studentService.getRecordClassPage(pageable,searchParams);
+		Page<XbRecordClass> xbRecordClassPage = studentService.getRecordClassPage(pageable,feeListSearchParams);
 		model.addAttribute("xbRecordClassPage",xbRecordClassPage);//上课记录
 		model.addAttribute("accordingcurrentzise",xbRecordClassPage.getSize());
 		return "stuinfoDetail";

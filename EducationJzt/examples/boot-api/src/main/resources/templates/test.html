@@ -10,7 +10,6 @@
     <link rel="stylesheet" href="../static/pages/css/ace.min.css" id="main-ace-style" />
     <link rel="stylesheet" href="../static/pages/css/index.css">
     <link rel="stylesheet" href="../static/pages/css/student.css">
-    <link rel="stylesheet" href="../static/pages/css/newStudent.css"/>
     <link rel="stylesheet" href="../static/pages/css/management.css">
     <link rel="stylesheet" href="../static/pages/css/fullcalendar.css">
     <link rel="stylesheet" href="../static/pages/css/lessonTable.css">
@@ -48,61 +47,24 @@
                         <span>课程表</span>
                         <img src="../static/pages/img/line.png">
                     </div>
-                    <div class="screen" style="height:80px;" th:if="${session.roleName}!='教师'">
+                    <div class="screen" style="height:80px;">
                         <div class="screenTop">
-                            <select  id="seartype" class="selectName" name="type">
-                                <option value="TE_NAME" selected="selected" th:selected="${type eq 'TE_NAME'}">教师姓名</option>
-                                <option value="CLA_NAME" th:selected="${type eq 'CLA_NAME'}">教室名称</option>
-                                <option value="CLAss_NAME" th:selected="${type eq 'CLAss_NAME'}">班级名称</option>
+                            <select class="selectName">
+                                <option value="AZ">教师姓名</option>
+                                <option value="AL">111</option>
+                                <option value="AK">222</option>
                             </select>
                             <div class="nav-search" id="nav-search">
                                 <form class="form-search">
                                     <span class="input-icon">
-                                        <input id="searchcontent" type="text" placeholder="请输入姓名、支持拼音缩写" class="nav-search-input"
+                                        <input type="text" placeholder="请输入姓名、支持拼音缩写" class="nav-search-input" id="nav-search-input"
                                             autocomplete="off">
                                         <i class="ace-icon fa fa-search nav-search-icon"></i>
                                     </span>
                                 </form>
                             </div>
-                            <div class="form-group" style="display: inline;">
-                                <button type="button" th:onclick="'javascript:getOrgansListPage(\'\')'">搜索</button>
-                            </div>
-                        </div>
-
-                    </div>
-                    <div id="control-position" class="control-position">
-                        <div class="control-group">
-                            <label class="control-label">校区</label>
-                            <input  th:attr ="checked=${organId == '0'?true:false}"
-                                    name="organId" type="radio" th:value="0" class="ace"
-                                    th:onclick="'javascript:getOrgansListPage(\'\')'">
-                            <span class="lbl" th:text="全部"></span>
-                            <div class="checkbox" th:each="orgs:${organsList}">
-                                <label>
-                                    <input th:attr ="checked=${organId == orgs.id?true:false}"
-                                           name="organId" type="radio" th:value="${orgs.id}" class="ace"
-                                           th:onclick="'javascript:getOrgansListPage(\'\')'">
-                                    <span class="lbl" th:text="${orgs.organName}"></span>
-                                </label>
-                            </div>
-                        </div>
-                        <div class="control-group">
-                            <label class="control-label">课程类别</label>
-                            <input  th:attr ="checked=${typeId == '0'?true:false}"
-                                    name="typeId" type="radio" th:value="0" class="ace"
-                                    th:onclick="'javascript:getOrgansListPage(\'\')'">
-                            <span class="lbl" th:text="全部"></span>
-                            <div class="checkbox" th:each="types:${coursetypelist}">
-                                <label>
-                                    <input th:attr ="checked=${typeId == types.id?true:false}"
-                                           name="typeId" type="radio" th:value="${types.id}" class="ace"
-                                           th:onclick="'javascript:getOrgansListPage(\'\')'">
-                                    <span class="lbl" th:text="${types.courseTypeName}"></span>
-                                </label>
-                            </div>
                         </div>
                     </div>
-
                     <div class="orderCon">
                         <!--<div class="export">
                             <button type="button" class="btn btn-primary">导出课表</button>
@@ -111,9 +73,9 @@
                             <div id="calendar">
                                 <div class="classStyle">
                                     <p class="state1"><span></span>已记上课</p>
-                                    <!--<p class="state2"><span></span>我的日程</p>-->
+                                    <p class="state2"><span></span>我的日程</p>
                                     <p class="state3"><span></span>正常日程</p>
-                                    <!--<p class="state4"><span></span>冲突日程</p>-->
+                                    <p class="state4"><span></span>冲突日程</p>
                                 </div>
                             </div>
                         </div>
@@ -248,10 +210,6 @@
         </form>
 <script type="text/javascript" th:inline="javascript">
     var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/;
-    //条件查询
-    function getOrgansListPage(){
-        $('#calendar'). fullCalendar ( 'refetchEvents' );
-    }
     $(function () {
         var load = new Loading();
         load.init({
@@ -264,144 +222,14 @@
         var y = date.getFullYear();
         var url = basePath+"/jw_center_arranging_course/to_arranging_course_fullcalendar";
         $('#calendar').fullCalendar({
-            header: {
-                right: '',
-                center: 'prev,title,next,today',
-                left: 'agendaDay,agendaWeek,month'
-            },
-            //自定义图标
-            buttonIcons:{
-                prev:'left-single-arrow',
-                next: 'right-single-arrow',
-                prevYear: 'left-double-arrow',
-                nextYear: 'right-double-arrow'
-            },
-            currentTimezone: 'Asia/Beijing',
-            height:"700",aspectRatio:1.6,handleWindowResize:true,
-            eventLimit: true,
-                             views: {
-                                 agenda: {
-                                     eventLimit: 3//最大容纳数量
-                                 }
-                             },
-            defaultView:'agendaWeek',
-            editable:false,//是否可拖动
-            monthNames: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"],
-            monthNamesShort: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"],
-            dayNames: ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"],
-            dayNamesShort: ["周日", "周一", "周二", "周三", "周四", "周五", "周六"],
-            firstDay: 1,
-            editable: true,
-            timeFormat: 'H:mm',
-            axisFormat: 'H:mm',
-            events: function(start, end, callback) {
-                load.start();
-                var fstart = $.fullCalendar.formatDate(start, "yyyy-MM-dd");
-                var fend = $.fullCalendar.formatDate(end, "yyyy-MM-dd");
-                var organId  = $('input:radio[name="organId"]:checked').val();
-                var typeId  = $('input:radio[name="typeId"]:checked').val();
-                var seartype  = $("#seartype").val();
-                var searchcontent  = $("#searchcontent").val();
-                $.ajax({
-                    type: "post",
-                    url: url,//我是用ajax获取后台数据的，这里填写地址
-                    dataType: "json",
-                    data: {
-                        start: fstart,
-                        end: fend,
-                        organId:organId,
-                        courseTypeId:typeId,
-                        seartype:seartype,
-                        searchcontent:searchcontent,
-                        type:"kcb"
-                    },
-                    success: function(data) {
-                        if (data) {
-                            var event = [];
-                            var listentity = data.listentity;
-                            $.each(listentity, function(i) {
-                                var dd = listentity[i];
-                                var time = dd.timeInterval.split("-");
-                                var date = dd.startDateTime.split("-");
-                                var y = date[0];var m = date[1];var d = date[2];
-                                var starthh = time[0].split(":")[0].trim();
-                                var startmm = time[0].split(":")[1].trim();
-                                var endhh = time[1].split(":")[0].trim();
-                                var endtmm = time[1].split(":")[1].trim();
-                                var isGoToClass = dd.isGoToClass;
-                                event.push({
-                                    _id: dd.id,
-                                    title:dd.className,
-                                    start: new Date(y, m-1, d ,starthh,startmm),
-                                    end: new Date(y, m-1, d ,endhh,endtmm),
-                                    allDay: false,
-                                    roomname:dd.classroomName,
-                                    type:dd.organName+dd.courseTypeName+dd.className,
-                                    teachername:dd.employeeName,
-                                    xbClassId:dd.xbClassId,
-                                    startDateTime:dd.startDateTime,
-                                    timeInterval:dd.timeInterval,
-                                    subjectId:dd.subjectId,
-                                    backgroundColor:isGoToClass=='1'?"#3967a3":"#33a299",
-                                    isGoToClass:isGoToClass,
-                                    classTheme:dd.classTheme
-
-                                });
-                            });
-                            load.stop();
-                            callback(event);
-                        }
-                        load.stop();
-                    },
-                    error:function(){
-                        $.kd.kdAlert("错了")
-                    }
-                });
-            },
-            //点击事件
-            eventClick: function(event) {
-                $('#modal-table').modal('show');
-                $("#id").val(event._id);
-                $("#newdayattend").text("编辑日程");
-                $("#classId").val(event.xbClassId);
-                $(":radio[name='scheduleMode'][value='1']").prop("checked", "checked");
-                $("#scheduleModediv").hide();
-                $("#startDateTime").val(event.startDateTime);
-                $("#timeInterval").val(event.timeInterval);
-                $("#subjectId").val(event.subjectId);
-                $("#classTheme").val(event.classTheme);
-                $("#classId").attr("disabled","disabled");
-                $("#classId").css("color","#a29b9b");
-                classToFindAll('edit');
-            },
-            loading: function (bool) {
-                if (bool) $('#loading').show();
-                else $('#loading').hide();
-            },
-            //#region 鼠标放上去显示信息
-            eventMouseover: function (calEvent, jsEvent, view) {
-                var fstart = $.fullCalendar.formatDate(calEvent.start, "yyyy年MM月dd号 HH:mm");
-                var fend = $.fullCalendar.formatDate(calEvent.end, "yyyy年MM月dd号 HH:mm");
-                $(this).attr('title', "开始时间："+fstart+"" +
-                    "\r\n结束时间："+fend+"" +
-                    "\r\n教室："+calEvent.roomname+
-                    "\r\n班课/一对一："+calEvent.type+
-                    "\r\n教师："+calEvent.teachername);
-                if(calEvent.isGoToClass=="1"){
-                    $(this).css('background',"#8ba3c3");
-                }else{
-                    $(this).css('background',"#66b8b2");
-                }
-
-            },
-            eventMouseout: function (event, jsEvent, view) {
-                if(event.isGoToClass=="1"){
-                    $(this).css('background',"#3967a3");
-                }else{
-                    $(this).css('background',"#33a299");
-                }
-
-            },
+            eventAfterRender: function(data,element,e){
+                //data 这个日程对应的数据   element 日程对应的dom元素   e 事件
+                var $this = $(element);
+                //通过 操作 $this 可以从新定义dom
+                // 通过 wz_title wz_name 自定义css样式  例如：
+                $this.html("<div class="wz_title">"+data.title+"</div>");
+                $this.after("<div class="wz_name">"+data.name+"</div>");
+            }
         });
 
     });
@@ -551,8 +379,8 @@
     laydate.render({
         elem: '#timeInterval'
         ,type: 'time'
-        ,format: 'HH:mm'//保留时分
         ,range: true
+        ,format: 'HH:mm'//保留时分
         ,btns: ['clear', 'confirm']
         ,ready: formatminutes
 

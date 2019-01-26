@@ -716,3 +716,13 @@
     border: 0;
 }
 .error{color: #f50a28;font-weight: normal;}
+
+.studentName{
+    color:#55a7fb;
+}
+
+.studentName:hover{
+    background:#d2d6ee;
+    color:#fff;
+    cursor: pointer;
+}

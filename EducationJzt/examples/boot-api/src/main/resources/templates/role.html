@@ -242,7 +242,7 @@ function selectAll(){
                     load.stop();
                     $.kd.kdAlert("编辑成功！",function () {
                         window.location.href = basePath + '/accounts/getRoleList';
-                    });
+                    },"提示");
                 },
                 error:function(){
                     load.stop();

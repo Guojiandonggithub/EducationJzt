@@ -39,6 +39,10 @@ public class HttpServletUtil {
         if("管理员".equals(sysEmployee.sysRole.roleName)){
             searchParams.put("EQ_organId",sysEmployee.organId);
         }
+        if("教师".equals(sysEmployee.sysRole.roleName)){
+            searchParams.put("EQ_organId",sysEmployee.organId);
+            searchParams.put("EQ_teacherId",sysEmployee.id);
+        }
         return searchParams;
     }
 }

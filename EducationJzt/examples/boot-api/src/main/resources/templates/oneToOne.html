@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="../static/pages/css/bootstrap.min.css">
     <link rel="stylesheet" href="../static/pages/css/font-awesome.min.css" />
     <link rel="stylesheet" href="../static/pages/css/kd.ui.plugin.css" />
-
+    <link rel="stylesheet" href="../static/pages/css/loading.css" />
 
     <script src="../static/pages/js/jquery.min.js"></script>
     <script src="../static/pages/js/bootstrap.min.js"> </script>
@@ -23,7 +23,7 @@
     <script src="../static/pages/js/ace-elements.min.js"></script>
     <script src="../static/pages/laydate/laydate.js"></script>
     <script src="../static/pages/js/kd.ui.plugin.js"></script>
-    
+    <script src="../static/pages/js/loading.js"></script>
 
 </head>
 <body>
@@ -167,15 +167,10 @@
                                             <p data-toggle="dropdown" class="down">
                                                 <span class="glyphicon glyphicon-menu-down"></span>
                                             </p>
-                                            <!--<ul class="dropdown-menu dropdown-default">
-                                                <li>
-                                                    <a href="#" role="button"  data-toggle="modal">排课</a>
-                                                </li>
-            
-                                                <li>
-                                                    <a href="#" role="button"  data-toggle="modal">结课</a>
-                                                </li>
-                                                <li>
+                                            <ul class="dropdown-menu dropdown-default" th:if="${studentrelations.periodNum} eq 0>
+                                                <a href="#" role="button" th:onclick="'javascript:finishCourse(\''+${studentrelations.id}+'\')'"  data-toggle="modal">结课</a>
+                                            </li>
+                                                <!--<li>
                                                     <a href="#" target="_blank">记上课</a>
                                                 </li>
                                                 <li>
@@ -187,60 +182,85 @@
                                                 <li>
                                                     <a href="/forward/oneEdit">编辑</a>
                                                 </li>
-                                            </ul>-->
+                                                <li>
+                                                    <a href="#" role="button"  data-toggle="modal">排课</a>
+                                                </li>-->
+                                            </ul>
                                         </div>
-                                        
+
                                     </td>
                                 </tr>
                             </table>
-                            <!--<div class="orderPage">
+                            <div class="orderPage">
                                 <div class="page">
                                     单页显示：
-                                    <select>
-                                        <option>20条/页</option>
-                                        <option>50条/页</option>
-                                        <option>100条/页</option>
+                                    <select id="size" name="size" onchange="getStudentListPage('');">
+                                        <option th:selected="${currentzise eq 20}" value="20">20条/页</option>
+                                        <option th:selected="${currentzise eq 5}" value="5">5条/页</option>
+                                        <option th:selected="${currentzise eq 10}" value="10">10条/页</option>
+                                        <option th:selected="${currentzise eq 15}" value="15">15条/页</option>
                                     </select>
                                 </div>
-                                <ul class="pagination">
-                                    <li class="disabled">
-                                        <a href="#">首页</a>
-                                    </li>
-                                    <li class="disabled">
-                                        <a href="#">
-                                            <i class="ace-icon fa fa-angle-double-left"></i>
-                                        </a>
-                                    </li>  
-                                    <li class="active">
-                                    <a href="#">1</a>
-                                </li>
-
-                                    <li>
-                                        <a href="#">2</a>
-                                    </li>
-
-                                    <li>
-                                        <a href="#">3</a>
-                                    </li>
-
-                                    <li>
-                                        <a href="#">4</a>
-                                    </li>
-            
-                                    <li>
-                                        <a href="#">5</a>
-                                    </li>
-            
-                                    <li>
-                                        <a href="#">
-                                            <i class="ace-icon fa fa-angle-double-right"></i>
+                                <ul class="pagination" th:if="${xbStudentPage.getTotalPages()>0}">
+                                    <!-- 上一页 -->
+                                    <li th:if="${xbStudentPage.getNumber()+1 == 1}"><span>上一页</span></li>
+                                    <li th:if="${xbStudentPage.getNumber()+1 > 1}">
+                                        <a  th:onclick="'javascript:getStudentListPage(\''+${xbStudentPage.getNumber()-1}+'\')'">
+                                            <i class="ace-icon fa ">上一页</i>
                                         </a>
                                     </li>
-                                    <li class="">
-                                        <a href="#">尾页</a>
+                                    <!-- 首页 -->
+                                    <li th:if="${xbStudentPage.getNumber()+1 == 1}" class="active"><span>1</span></li>
+                                    <li th:if="${xbStudentPage.getNumber()+1 > 1}">
+                                        <a  th:onclick="'javascript:getStudentListPage(\''+${0}+'\')'">1</a>
+                                    </li>
+
+                                    <th:block th:if="${xbStudentPage.getTotalPages()>2 && xbStudentPage.getTotalPages()<=10}">
+                                        <th:block th:each="i:${#numbers.sequence(2,xbStudentPage.getTotalPages()-1)}">
+                                            <li th:if="${xbStudentPage.getNumber()+1 == i}"  class="active"><span th:text="${i}">页码</span></li>
+                                            <li th:if="${xbStudentPage.getNumber()+1 != i}"><a  th:onclick="'javascript:getStudentListPage(\''+${i-1}+'\')'" th:text="${i}"></a></li>
+                                        </th:block>
+                                    </th:block>
+                                    <th:block th:if="${xbStudentPage.getTotalPages() > 10}">
+                                        <th:block th:if="${(xbStudentPage.getNumber()+1-(5/2)) <= 2}" th:each="i:${#numbers.sequence(2,2+5-1)}">
+                                            <li th:if="${xbStudentPage.getNumber()+1 == i}"  class="active"><span th:text="${i}">页码</span></li>
+                                            <li th:if="${xbStudentPage.getNumber()+1 != i}"><a  th:onclick="'javascript:getStudentListPage(\''+${i-1}+'\')'" th:text="${i}"></a></li>
+                                        </th:block>
+                                        <!-- ... -->
+                                        <li th:if="${(xbStudentPage.getNumber()+1-(5/2))>2}"><span>...</span></li>
+
+                                        <th:block th:if="${((xbStudentPage.getNumber()+1-(5/2))>2) && ((xbStudentPage.getNumber()+1+(5/2)-(5%2==0?1:0)) < (xbStudentPage.getTotalPages()-1))}"
+                                                  th:each="i:${#numbers.sequence(xbStudentPage.getNumber()+1-(5/2),xbStudentPage.getNumber()+1+(5/2)-(5%2==0?1:0))}">
+                                            <li th:if="${xbStudentPage.getNumber()+1 == i}"  class="active"><span th:text="${i}">页码</span></li>
+                                            <li th:if="${xbStudentPage.getNumber()+1 != i}"><a  th:onclick="'javascript:getStudentListPage(\''+${i-1}+'\')'" th:text="${i}"></a></li>
+                                        </th:block>
+
+                                        <!-- ... -->
+                                        <li th:if="${(xbStudentPage.getNumber()+1+(5/2)-(5%2==0?1:0)) < (xbStudentPage.getTotalPages()-1)}"><span>...</span></li>
+                                        <th:block th:if="${(xbStudentPage.getNumber()+1+(5/2)-(5%2==0?1:0)) >= (xbStudentPage.getTotalPages()-1)}" th:each="i:${#numbers.sequence(xbStudentPage.getTotalPages()-5,xbStudentPage.getTotalPages()-1)}">
+                                            <li th:if="${xbStudentPage.getNumber()+1 == i}"  class="active"><span th:text="${i}">页码</span></li>
+                                            <li th:if="${xbStudentPage.getNumber()+1 != i}"><a  th:onclick="'javascript:getStudentListPage(\''+${i-1}+'\')'" th:text="${i}"></a></li>
+                                        </th:block>
+                                    </th:block>
+                                    <!-- 最后一页 -->
+                                    <li th:if="${xbStudentPage.getTotalPages()>1 && xbStudentPage.getNumber()+1 == xbStudentPage.getTotalPages()}" class="active"><span th:text="${xbStudentPage.getTotalPages()}">页码</span></li>
+                                    <li th:if="${xbStudentPage.getTotalPages()>1 && xbStudentPage.getNumber()+1 != xbStudentPage.getTotalPages()}">
+
+                                        <a href="#" th:onclick="'javascript:getStudentListPage(\''+${xbStudentPage.getTotalPages()-1}+'\')'"
+                                           th:text="${xbStudentPage.getTotalPages()}"></a>
+                                    </li>
+                                    <!-- 下一页 -->
+                                    <li th:if="${xbStudentPage.getNumber()+1 >= xbStudentPage.getTotalPages()}"><span>下一页</span></li>
+                                    <li th:if="${xbStudentPage.getNumber()+1 < xbStudentPage.getTotalPages()}">
+                                        <a th:onclick="'javascript:getStudentListPage(\''+${xbStudentPage.getNumber()+1}+'\')'">
+                                            <i class="ace-icon fa ">下一页</i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <span style="color: #020202;" th:text="'共'+${xbStudentPage.getTotalPages()}+'页/'+${xbStudentPage.getTotalElements()}+'条记录'"></span>
                                     </li>
                                 </ul>
-                            </div>-->
+                            </div>
                         </div>    
                     </div>
                 </div>
@@ -660,7 +680,54 @@ function chooseAll1(){
         this.checked = isCheck;       //循环赋值给每个复选框是否选中
     });  
 };
+</script>
 
+<script type="text/javascript" th:inline="javascript">
+var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/ ;
+function getStudentListPage(page) {
+    var load = new Loading();
+    load.init({
+        target: "#main-container"
+    });
+    load.start();
+    var size = $('#size option:selected').val(); //选中的值
+    /*if (page) {
+        page = page - 1;
+    }*/
+    window.location.href = basePath + '/student/getOneToOneList?page=' + page + '&size=' + size;
+}
+
+
+//结课
+function finishCourse(id) {
+    $.kd.kdConfirm("确定要进行结课操作吗？",function(){
+        var load = new Loading();
+        load.init({
+            target: "#donghua"
+        });
+        load.start();
+        $.ajax({
+            url: basePath + '/student/finish/course/' + id,
+            type: 'get',
+            dataType: 'json',
+            contentType: 'application/json',
+            async: true,
+            success: function (data) {
+                load.stop();
+                var status = data.status;
+                var msg = data.msg;
+                $.kd.kdAlert(msg,function () {
+                    window.location.href = basePath + '/student/getOneToOneList';
+                });
+            },
+            error: function () {
+                load.stop();
+                $.kd.kdMsg("结课失败");
+                console.log("回调失败")
+            }
+        });
+    })
+}
 </script> 
 </body>
 </html>

@@ -65,7 +65,10 @@ public class EmployeeService {
 		SysEmployee sysEmployee = employeeDao.findByUserName(username);
 
 		if (sysEmployee == null) {
-			return "用户不存在";
+			sysEmployee = employeeDao.findByMobilePhone(username);
+			if (sysEmployee == null) {
+				return "用户不存在";
+			}
 			//throw new ServiceException("用户不存在", ErrorCode.UNAUTHORIZED);
 		}
 

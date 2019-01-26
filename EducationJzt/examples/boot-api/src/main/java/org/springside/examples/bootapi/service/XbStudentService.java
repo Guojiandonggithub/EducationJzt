@@ -45,7 +45,7 @@ public class XbStudentService {
 	public Page<XbSupplementFee>  getXbSupplementFeeList(Pageable pageable, Map<String, Object> searchParams) {
 		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
 		SysEmployee sysEmployee = (SysEmployee)request.getSession().getAttribute("sysEmployee");
-		if("管理员".equals(sysEmployee.sysRole.roleName)){
+		if("管理员".equals(sysEmployee.sysRole.roleName)||"教师".equals(sysEmployee.sysRole.roleName)){
 			searchParams.put("EQ_xbStudent.organId",sysEmployee.organId);
 		}
 		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
@@ -58,6 +58,7 @@ public class XbStudentService {
 	public XbSupplementFee saveXbSupplementFee(XbSupplementFee xbSupplementFee) {
 		xbSupplementFee.paymentDate = new Date();
 		xbSupplementFee.orderNumber = UUID.randomUUID().toString();
+		xbSupplementFee.paymentType = "0";
 		return xbSupplementFeeDao.save(xbSupplementFee);
 	}
 
@@ -149,6 +150,10 @@ public class XbStudentService {
 		if("管理员".equals(sysEmployee.sysRole.roleName)){
 			searchParams.put("EQ_organId",sysEmployee.organId);
 		}
+		if("教师".equals(sysEmployee.sysRole.roleName)){
+			searchParams.put("EQ_organId",sysEmployee.organId);
+			searchParams.put("EQ_teacher.id",sysEmployee.id);
+		}
 		searchParams.put("EQ_deleteStatus","1");
 		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
 		Specification<XbClass> spec = DynamicSpecifications.bySearchFilter(
@@ -215,7 +220,7 @@ public class XbStudentService {
 	@Transactional
 	public void finishCourse(String id) {
 		XbStudentRelation xbStudentRelation = xbStudentRelationDao.findOne(id);
-		xbStudentRelation.studentStart=1;//1结课
+		xbStudentRelation.studentStart=4;//1结课
 		xbStudentRelationDao.save(xbStudentRelation);
 	}
 
@@ -252,7 +257,6 @@ public class XbStudentService {
 
 	@Transactional
 	public Page<XbRecordClass>  getRecordClassPage(Pageable pageable,Map<String, Object> searchParams) {
-		searchParams = HttpServletUtil.getRoleDate(searchParams);
 		//searchParams.put("EQ_deleteStatus","1");
 		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
 		Specification<XbRecordClass> spec = DynamicSpecifications.bySearchFilter(

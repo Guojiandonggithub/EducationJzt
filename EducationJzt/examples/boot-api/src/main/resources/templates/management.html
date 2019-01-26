@@ -72,19 +72,19 @@
             <div class="screenTop">
                 <select class="selectName">
                     <option value="AZ">学员姓名</option>
-                    <option value="AL">订单号</option>
+                    <!--<option value="AL">订单号</option>-->
                     <!--<option value="AK">学院名称</option>-->
                 </select>
                 <div class="nav-search" id="nav-search">
                     <form class="form-search">
                         <span class="input-icon">
-                            <input type="text" placeholder="请输入姓名、支持拼音缩写" class="nav-search-input" id="nav-search-input" autocomplete="off">
+                            <input type="text" placeholder="请输入姓名" class="nav-search-input" id="userName">
                             <i class="ace-icon fa fa-search nav-search-icon"></i>
                         </span>
                     </form>
                 </div>
                 <div class="form-group" style="display: inline;">
-                    <button type="button" th:onclick="'javascript:getOrgansListPage(\'\')'">搜索</button>
+                    <button type="button" th:onclick="'javascript:getFeeListPage(\'\')'">搜索</button>
                 </div>
             </div>
         </div>
@@ -120,6 +120,7 @@
                         <td th:if="${ment.type} eq '1'">转班</td>
                         <td th:if="${ment.type} eq '2'">补费</td>
                         <td th:if="${ment.type} eq '3'">停课</td>
+                        <td th:if="${ment.type} eq ''">报名</td>
                         <td th:text="${ment.remarks}" class="orderTxt"></td>
                         <td th:text="${ment.surplusMoney}"></td>
                         <td th:text="${ment.paymentMoney}"></td>
@@ -242,6 +243,7 @@ $(".tag .close").click(function(){
     var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/ ;
 
     function getFeeListPage(page) {
+        var userName = $("#userName").val();
         var load = new Loading();
         load.init({
             target: "#main-content"
@@ -251,7 +253,7 @@ $(".tag .close").click(function(){
         /*if (page) {
             page = page - 1;
         }*/
-        window.location.href = basePath + '/student/getManagementList?page=' + page + '&size=' + size;
+        window.location.href = basePath + '/student/getManagementList?page=' + page + '&size=' + size+ '&userName=' + userName;
     }
 </script>
 <style>

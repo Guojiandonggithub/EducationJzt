@@ -55,7 +55,7 @@
             <div class="user-infor-list">
                 <ul class="user-infor-ul clearfix">
                     <div class="block-box-title" style="position: relative;top: 8px;">基本信息</div>
-                    <input type="text" name="id" id="id" th:value="${xbStudent.id}"/>
+                    <input type="hidden" name="id" id="id" th:value="${xbStudent.id}"/>
                     <div style="padding-left:15px;">
                         <li>
                             <span class="text-tips">联系电话（<span th:text="${xbStudent.contactRelation}"></span>）：</span><th:block th:text="${xbStudent.contactPhone}"></th:block>
