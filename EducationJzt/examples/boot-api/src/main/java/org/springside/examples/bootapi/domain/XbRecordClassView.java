@@ -1,6 +1,7 @@
 package org.springside.examples.bootapi.domain;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -30,13 +31,13 @@ public class XbRecordClassView {
     @Column(name="periodnum")
     public long periodnum;
     @Column(name="sknum")
-    public long sknum;
+    public BigDecimal sknum;
     @Column(name="qjnum")
-    public long qjnum;
+    public BigDecimal qjnum;
     @Column(name="kknum")
-    public long kknum;
+    public BigDecimal kknum;
     @Column(name="bknum")
-    public long bknum;
+    public BigDecimal bknum;
     public Integer establishNum;
     public String classId;
     public long studentCount;
