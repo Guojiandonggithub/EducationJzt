@@ -49,9 +49,9 @@
                     <li>
                     <a data-toggle="tab" href="#divideList" onclick="getRecordClassListByClass('');">上课记录</a>
                     </li>
-                <li>
+                <!--<li>
                     <a data-toggle="tab" href="#expiryStu">补课管理</a>
-                </li>
+                </li>-->
                 </ul>
                 <div class="tab-content student attendClass">
                     <!-- 记上课 -->
@@ -326,6 +326,7 @@
                                                style="padding: 3px;border-radius: 5px !important;margin-top: 13px;width: 82px;color: #3c546c">
                                         <div class="form-group" style="display: inline;">
                                             <button type="button" th:onclick="'javascript:getRecordClassListByClass(\'\')'">搜索</button>
+                                            <button type="button" th:onclick="'javascript:expRecord()'" >导出当前结果</button>
                                         </div>
                                     </div>
                                         <div class="orderCon" style="margin-top:21px;">
@@ -360,10 +361,10 @@
                                                         <td th:text="${cla.organName}">校区</td>
                                                         <td th:text="${cla.employeeName}">教师</td>
                                                         <td th:text="${cla.courseTypeNname}">科目</td>
-                                                        <td th:text="${cla.sknum}">上课</td>
-                                                        <td th:text="${cla.qjnum}">请假</td>
-                                                        <td th:text="${cla.kknum}">旷课</td>
-                                                        <td th:text="${cla.bknum}">补课</td>
+                                                        <td th:text="${cla.sknum}?${cla.sknum}:'0.0'">上课</td>
+                                                        <td th:text="${cla.qjnum}?${cla.qjnum}:'0.0'">请假</td>
+                                                        <td th:text="${cla.kknum}?${cla.kknum}:'0.0'">旷课</td>
+                                                        <td th:text="${cla.bknum}?${cla.bknum}:'0.0'">补课</td>
                                                         <td th:text="${cla.periodnum}">学员课时</td>
                                                         <!--<td>
                                                             <div class="btn-group open">
@@ -962,6 +963,27 @@
             });
         }
 
+        function expRecord(){
+            var data= serializeObject("#accordingClassform");
+            window.location.href= basePath + '/excel/recordCourseExcel' +'?data='+JSON.stringify(data);
+            /*var load = new Loading();
+            load.init({
+                target: "#main-container"
+            });
+            load.start();
+            $.ajax({
+                type: 'get',
+                //dataType: 'json',
+                url: basePath + '/excel/recordCourseExcel',
+                data: {data:JSON.stringify(data)},
+                contentType:"application/json;charset=UTF-8",
+                cache: false,
+                async: true,
+                success: function (data) {
+                    load.stop();
+                }
+            });*/
+        }
 
         function serializeObject(form)
         {

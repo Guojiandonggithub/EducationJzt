@@ -234,7 +234,9 @@ public class RecordClassActivity {
 				xbStudentRelation.periodNum = bigDecimal;
 				xbStudentRelation.receivable = receivable;
 				studentService.saveXbStudentRelation(xbStudentRelation);
-				studentService.saveXbRecordClass(xbRecordClass);
+				if(!xbRecordClass.state.equals("4")){
+					studentService.saveXbRecordClass(xbRecordClass);
+				}
 			}
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put("status","1");

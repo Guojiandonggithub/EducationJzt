@@ -29,7 +29,7 @@ public class XbRecordClassView {
     @Column(name="record_time")
     public Date recordTime;
     @Column(name="periodnum")
-    public long periodnum;
+    public BigDecimal periodnum;
     @Column(name="sknum")
     public BigDecimal sknum;
     @Column(name="qjnum")

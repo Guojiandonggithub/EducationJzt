@@ -21,11 +21,8 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-
 import java.util.ArrayList;
 import java.util.List;
-
-
 @RestController
 @RequestMapping("excel")
 public class ExcelActivity {
@@ -63,12 +60,13 @@ public class ExcelActivity {
 			String classesId = xbRecordClassViewList.get(i).classId;
 			Map<String,Object> searhMap = new HashMap<>();
 			searhMap.put("EQ_classId",classesId);
+			searhMap.put("NEQ_periodNum",new BigDecimal("0"));
 			Pageable pageable = new PageRequest(0, 1, null);
 			Page<XbStudentRelation> classPage = studentService.getXbStudentRelationList(pageable,searhMap);
 			if(classPage.getContent().size()>0){
-				BigDecimal totalPeriodNum = classPage.getContent().get(0).totalPeriodNum;
-				BigDecimal totalReceivable = classPage.getContent().get(0).totalReceivable;
-				BigDecimal receivable = totalReceivable.divide(totalPeriodNum).multiply(new BigDecimal(xbRecordClassViewList.get(i).periodnum));
+				BigDecimal totalPeriodNum = classPage.getContent().get(0).periodNum;
+				BigDecimal totalReceivable = classPage.getContent().get(0).receivable;
+				BigDecimal receivable = totalReceivable.divide(totalPeriodNum).multiply(xbRecordClassViewList.get(i).periodnum);
 				xbRecordClassViewList1.add(receivable);
 			}else{
 				xbRecordClassViewList1.add("");
@@ -81,15 +79,14 @@ public class ExcelActivity {
         FileOutputStream out = new FileOutputStream(f);
         ExportExcelUtils.exportExcel(data, out);
         out.close();*/
-		ExportExcelUtils.exportExcel(response,new Date()+"记上课.xlsx",datas);
+		ExportExcelUtils.exportExcel(response,"记上课.xlsx",datas);
 	}
 
 	/*
 	 * 查询上课记录按班级
 	 * @return
 	 */
-	@RequestMapping("/getRecordClassListByClass")
-	public List<XbRecordClassView> getRecordClassListByClass(String data){
+	private List<XbRecordClassView> getRecordClassListByClass(String data){
 		Map<String,Object> resultMap = new HashMap<>();
 		Map<String,Object> searhMap = new HashMap<>();
 		if(null!=data){
