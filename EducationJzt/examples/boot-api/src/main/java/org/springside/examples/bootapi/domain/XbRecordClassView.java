@@ -37,5 +37,8 @@ public class XbRecordClassView {
     public long kknum;
     @Column(name="bknum")
     public long bknum;
+    public Integer establishNum;
+    public String classId;
+    public long studentCount;
 
 }

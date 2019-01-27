@@ -62,29 +62,29 @@ public class EmployeeService {
 
 	@Transactional(readOnly = true)
 	public String login(String username, String password,HttpServletRequest request) {
-		SysEmployee sysEmployee = employeeDao.findByUserName(username);
+		List<SysEmployee> sysEmployeeList = employeeDao.findByUserName(username);
 
-		if (sysEmployee == null) {
-			sysEmployee = employeeDao.findByMobilePhone(username);
-			if (sysEmployee == null) {
+		if (sysEmployeeList.size()==0) {
+			sysEmployeeList = employeeDao.findByMobilePhone(username);
+			if (sysEmployeeList.size()==0) {
 				return "用户不存在";
 			}
 			//throw new ServiceException("用户不存在", ErrorCode.UNAUTHORIZED);
 		}
-
-		if (!sysEmployee.password.equals(hashPassword(password))) {
+		SysEmployee employee  = sysEmployeeList.get(0);
+		if (!employee.password.equals(hashPassword(password))) {
 			System.out.println(hashPassword(password));
 			//throw new ServiceException("密码错误", ErrorCode.UNAUTHORIZED);
 			return "密码错误";
 		}
 
-		if (sysEmployee.isAllow!=1) {
+		if (employee.isAllow!=1) {
 			return "您不允许登录,请联系管理员";
 		}
 
 		//String token = IdGenerator.uuid2();
 		//counterService.increment("loginUser");
-		request.getSession().setAttribute("sysEmployee", sysEmployee);
+		request.getSession().setAttribute("sysEmployee", employee);
 		return "登录成功";
 	}
 
@@ -94,7 +94,11 @@ public class EmployeeService {
 	}
 
 	public SysEmployee checkUserName(String username) {
-		SysEmployee sysEmployee = employeeDao.findByUserName(username);
+		List<SysEmployee> sysEmployeeList = employeeDao.findByUserName(username);
+		SysEmployee sysEmployee = null;
+		if(sysEmployeeList.size()>0){
+			sysEmployee = sysEmployeeList.get(0);
+		}
 		return sysEmployee;
 	}
 

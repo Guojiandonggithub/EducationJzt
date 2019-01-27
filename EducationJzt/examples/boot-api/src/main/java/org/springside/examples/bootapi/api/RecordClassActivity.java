@@ -238,7 +238,7 @@ public class RecordClassActivity {
 			}
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put("status","1");
-			jsonObject.put("msg", "编辑成功");
+			jsonObject.put("msg", "记上课成功");
 			logger.info("编辑机构返回json参数="+jsonObject.toString());
 			resp.setContentType("text/html;charset=UTF-8");
 			resp.getWriter().println(jsonObject.toJSONString());

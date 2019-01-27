@@ -162,14 +162,15 @@
                                         <!--<span>每周日15:30-17:00</span>-->
                                     </td>
                                     <td th:text="${studentrelations.xbCourse.period}"></td>
-                                    <td>
-                                        <div class="btn-group">
-                                            <p data-toggle="dropdown" class="down">
-                                                <span class="glyphicon glyphicon-menu-down"></span>
+                                    <td class="classDel" >
+                                        <div class="btn-group open" th:if="${studentrelations.periodNum eq 0 && studentrelations.studentStart eq 0}">
+                                            <p data-toggle="dropdown" class="down" aria-expanded="true" th:onclick="'javascript:finishCourse(\''+${studentrelations.id}+'\')'">
+                                                结课
+                                                <span class="ace-icon fa fa-caret-down icon-on-right"></span>
                                             </p>
-                                            <ul class="dropdown-menu dropdown-default" th:if="${studentrelations.periodNum} eq 0>
+                                            <!--<ul class="dropdown-menu dropdown-default" th:if="${studentrelations.periodNum eq 0 && studentrelations.studentStart eq 0}" >
                                                 <a href="#" role="button" th:onclick="'javascript:finishCourse(\''+${studentrelations.id}+'\')'"  data-toggle="modal">结课</a>
-                                            </li>
+                                            </li>-->
                                                 <!--<li>
                                                     <a href="#" target="_blank">记上课</a>
                                                 </li>

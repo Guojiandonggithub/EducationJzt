@@ -76,7 +76,15 @@ public class XbStudentService {
 
 	@Transactional
 	public Page<XbStudentRelation>  getXbStudentRelationList(Pageable pageable, Map<String, Object> searchParams) {
-		searchParams = HttpServletUtil.getRoleDate(searchParams);
+        HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
+        SysEmployee sysEmployee = (SysEmployee)request.getSession().getAttribute("sysEmployee");
+        if("管理员".equals(sysEmployee.sysRole.roleName)){
+            searchParams.put("EQ_organId",sysEmployee.organId);
+        }
+        if("教师".equals(sysEmployee.sysRole.roleName)){
+            searchParams.put("EQ_organId",sysEmployee.organId);
+            searchParams.put("EQ_xbClass.teacherId",sysEmployee.id);
+        }
 		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
 		Specification<XbStudentRelation> spec = DynamicSpecifications.bySearchFilter(
 				filters.values(), XbStudentRelation.class);
@@ -276,6 +284,14 @@ public class XbStudentService {
 		Specification<XbRecordClassView> spec = DynamicSpecifications.bySearchFilter(
 				filters.values(), XbRecordClassView.class);
 		return xbRecordClassViewDao.findAll(spec,pageable);
+	}
+
+	@Transactional
+	public List<XbRecordClassView> getXbRecordClassdViewtoList(Map<String, Object> searchParams){
+		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
+		Specification<XbRecordClassView> spec = DynamicSpecifications.bySearchFilter(
+				filters.values(), XbRecordClassView.class);
+		return xbRecordClassViewDao.findAll(spec);
 	}
 
 	@Transactional
