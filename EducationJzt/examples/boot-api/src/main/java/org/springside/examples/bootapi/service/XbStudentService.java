@@ -37,6 +37,8 @@ public class XbStudentService {
 	@Autowired
 	private XbRecordClassDao xbRecordClassDao;
 	@Autowired
+	private XbRecordClassViewDao xbRecordClassViewDao;
+	@Autowired
 	private XbSupplementFeeDao xbSupplementFeeDao;
 	@Autowired
 	private XbClassViewDao xbClassViewDao;
@@ -267,6 +269,13 @@ public class XbStudentService {
 	@Transactional
 	public List getXbRecordClassdtoList(int page,int pagesize){
 		return xbRecordClassDao.findRecordLists(page,pagesize);
+	}
+	@Transactional
+	public Page<XbRecordClassView> getXbRecordClassdViewtoList(Pageable pageable,Map<String, Object> searchParams){
+		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
+		Specification<XbRecordClassView> spec = DynamicSpecifications.bySearchFilter(
+				filters.values(), XbRecordClassView.class);
+		return xbRecordClassViewDao.findAll(spec,pageable);
 	}
 
 	@Transactional

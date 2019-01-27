@@ -425,10 +425,6 @@ public class DateUtil {
         return toString(now.getTime(),DATE_FORMAT);
     }
 
-    public static void main(String[] args) {
-        System.out.println(DateUtil.getDateStr(new Date()));
-        System.out.println(DateUtil.getDateBefore(new Date(),2));
-    }
     /**
      * 判断日期为星期几
      */
@@ -516,5 +512,67 @@ public class DateUtil {
     }
     public static boolean useList(String[] arr,String targetValue){
         return Arrays.asList(arr).contains(targetValue);
+    }
+
+    /**
+     * 本周第一天日期String类型
+     * @return
+     */
+    public static String weekDateFirstDay(){
+        Calendar currentDate = new GregorianCalendar();
+        currentDate.setFirstDayOfWeek(Calendar.MONDAY);
+        currentDate.set(Calendar.HOUR_OF_DAY, 0);
+        currentDate.set(Calendar.MINUTE, 0);
+        currentDate.set(Calendar.SECOND, 0);
+        currentDate.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        return sdf.format((Date)currentDate.getTime().clone());
+    }
+    /**
+     * 本周最后一天日期String类型
+     * @return
+     */
+    public static String weekDateLastDay(){
+        Calendar currentDate = new GregorianCalendar();
+        currentDate.setFirstDayOfWeek(Calendar.MONDAY);
+        currentDate.set(Calendar.HOUR_OF_DAY, 23);
+        currentDate.set(Calendar.MINUTE, 59);
+        currentDate.set(Calendar.SECOND, 59);
+        currentDate.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        return sdf.format((Date)currentDate.getTime().clone());
+    }
+    /**
+     * 本周第一天日期 Date类型
+     * @return
+     */
+    public static Date weekDateTimeFirstDayDA(){
+        Calendar currentDate = new GregorianCalendar();
+        currentDate.setFirstDayOfWeek(Calendar.MONDAY);
+        currentDate.set(Calendar.HOUR_OF_DAY, 0);
+        currentDate.set(Calendar.MINUTE, 0);
+        currentDate.set(Calendar.SECOND, 0);
+        currentDate.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return (Date)currentDate.getTime().clone();
+    }
+
+    /**
+     * 本周最后一天日期 Date类型
+     * @return
+     */
+    public static Date weekDateTimeLastDayDA(){
+        Calendar currentDate = new GregorianCalendar();
+        currentDate.setFirstDayOfWeek(Calendar.MONDAY);
+        currentDate.set(Calendar.HOUR_OF_DAY, 23);
+        currentDate.set(Calendar.MINUTE, 59);
+        currentDate.set(Calendar.SECOND, 59);
+        currentDate.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return (Date)currentDate.getTime().clone();
+    }
+
+    public static void main(String[] args) {
+        System.out.println("first:"+DateUtil.weekDateFirstDay()+",lastday:"+DateUtil.weekDateLastDay());
     }
 }

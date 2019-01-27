@@ -203,15 +203,26 @@ public class JwCenterArrangingCoursesActivity {
      */
     private void findXbAttendClassPageListAll(ModelMap model,Pageable pageable,String data){
         Map<String,Object> resultMap = new HashMap<>();
-        Map<String,Object> searhMap = new HashMap<>();
         if(null!=data){
-            resultMap = com.alibaba.fastjson.JSONObject.parseObject(data,searhMap.getClass());
+            resultMap = com.alibaba.fastjson.JSONObject.parseObject(data,resultMap.getClass());
         }
-       String type = (String)resultMap.get("type");//下拉查询
+        Map<String,Object> searhMap = parameterAssemblyByfindXbAttendClassPageAll(model,resultMap);
+       Page<XbAttendClass> xbAttendList = xbAttendClassService.findXbAttendClassPageAll(pageable,searhMap);
+        for(XbAttendClass xbattendclass : xbAttendList){
+            xbattendclass.ydstudentnum = xbAttendClassService.getYdstudentnum(xbattendclass.classId,xbattendclass.startDateTime);
+            xbattendclass.sdstudentnum = xbAttendClassService.getSdstudentnum(xbattendclass.classId,xbattendclass.startDateTime);
+        }
+        model.addAttribute("xbAttendList",xbAttendList);
+        model.addAttribute("xbAttendListsize",xbAttendList.getSize());
+    }
+
+    private Map<String,Object> parameterAssemblyByfindXbAttendClassPageAll(ModelMap model,Map<String,Object> resultMap){
+        Map<String,Object> searhMap = new HashMap<>();
+        String type = (String)resultMap.get("type");//下拉查询
         if(StringUtils.isEmpty(type)){
             type = "class_search";
         }
-       String searhname = (String)resultMap.get("searhname");//下拉查询
+        String searhname = (String)resultMap.get("searhname");//下拉查询
         if(StringUtils.isNotEmpty(searhname)){
             if(type.equals("class_search")){
                 searhMap.put("LIKE_xbclass.className",searhname);
@@ -230,13 +241,6 @@ public class JwCenterArrangingCoursesActivity {
         }else if(!courtype.equals("-1")){
             searhMap.put("EQ_wayOfTeaching",courtype);
         }
-        /*//授课模式
-        String subjectId = (String)resultMap.get("subjectId");
-        if(null==subjectId){
-            subjectId = "0";
-        }else if(!subjectId.equals("0")){
-            searhMap.put("EQ_subjectId",subjectId);
-        }*/
         //授课模式
         String courseTypeId = (String)resultMap.get("courseTypeId");
         if(null==courseTypeId){
@@ -258,26 +262,49 @@ public class JwCenterArrangingCoursesActivity {
         }else if(!courseId_combobox.equals("0")){
             searhMap.put("EQ_teacherId",courseId_combobox);
         }
-       Page<XbAttendClass> xbAttendList = xbAttendClassService.findXbAttendClassPageAll(pageable,searhMap);
-        for(XbAttendClass xbattendclass : xbAttendList){
-            xbattendclass.ydstudentnum = xbAttendClassService.getYdstudentnum(xbattendclass.classId,xbattendclass.startDateTime);
-            xbattendclass.sdstudentnum = xbAttendClassService.getSdstudentnum(xbattendclass.classId,xbattendclass.startDateTime);
+        //开课开始日期
+        String startDateTimeBegin = (String)resultMap.get("startDateTimeBegin");
+        if(StringUtils.isEmpty(startDateTimeBegin)){
+            startDateTimeBegin = DateUtil.weekDateFirstDay();
+            searhMap.put("GTE_startDateTime",startDateTimeBegin);
+        }else{
+            searhMap.put("GTE_startDateTime",startDateTimeBegin);
         }
-        model.addAttribute("xbAttendList",xbAttendList);
-        model.addAttribute("xbAttendListsize",xbAttendList.getSize());
+
+        //开课结束日期
+        String startDateTimeEnd = (String)resultMap.get("startDateTimeEnd");
+        if(StringUtils.isEmpty(startDateTimeEnd)){
+            startDateTimeEnd = DateUtil.weekDateLastDay();
+            searhMap.put("LTE_startDateTime",startDateTimeEnd);
+        }else{
+            searhMap.put("LTE_startDateTime",startDateTimeEnd);
+        }
         model.addAttribute("searhname",searhname);
         model.addAttribute("type",type);
         model.addAttribute("courtype",courtype);
-       // model.addAttribute("subjectId",subjectId);
         model.addAttribute("courseTypeId",courseTypeId);
         model.addAttribute("classId_combobox",classId_combobox);
         model.addAttribute("courseId_combobox",courseId_combobox);
+        model.addAttribute("startDateTimeBegin",startDateTimeBegin);
+        model.addAttribute("startDateTimeEnd",startDateTimeEnd);
+        /*//授课模式
+        String subjectId = (String)resultMap.get("subjectId");
+        if(null==subjectId){
+            subjectId = "0";
+        }else if(!subjectId.equals("0")){
+            searhMap.put("EQ_subjectId",subjectId);
+        }*/
+        // model.addAttribute("subjectId",subjectId);
         String sysorgId_combobox = (String)resultMap.get("sysorgId_combobox");
         if(null==sysorgId_combobox) {
             sysorgId_combobox = "0";
         }
         model.addAttribute("sysorgId_combobox",sysorgId_combobox);
+                return searhMap;
     }
+
+
+
     private boolean checkCourseClassAndTimeInterval(String classId,String timeInterval,String startDateTime,String id){
         Map<String,Object> searmap = new HashMap<>();
         searmap.put("EQ_classId",classId);

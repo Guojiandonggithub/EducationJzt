@@ -114,21 +114,6 @@
                                         <span class="lbl" th:text="一对一"></span>
                                     </label></div>
                                 </div>
-                                <!--<div class="control-group">
-                                    <label class="control-label">科目</label>
-                                    <input  th:attr ="checked=${subjectId == '0'?true:false}"
-                                            name="subjectId" type="radio" th:value="0" class="ace"
-                                            th:onclick="'javascript:getOrgansListPage(\'\')'">
-                                    <span class="lbl" th:text="全部"></span>
-                                    <div class="checkbox" th:each="orgs:${xbSubjectList}">
-                                        <label>
-                                            <input th:attr ="checked=${subjectId == orgs.id?true:false}"
-                                                   name="subjectId" type="radio" th:value="${orgs.id}" class="ace"
-                                                   th:onclick="'javascript:getOrgansListPage(\'\')'">
-                                            <span class="lbl" th:text="${orgs.subjectName}"></span>
-                                        </label>
-                                    </div>
-                                </div>-->
                                 <div class="control-group">
                                     <label class="control-label">类别</label>
                                     <input  th:attr ="checked=${courseTypeId == '0'?true:false}"
@@ -152,12 +137,22 @@
                                     教师：<input id="courseId_combobox" name="courseId_combobox" type="text" th:value="${courseId_combobox}" class="ace"
                                               style="padding: 3px;border-radius: 5px !important;margin-top: 13px;width: 130px;color: #3c546c">
                                     班级：<input id="classId_combobox" name="classId_combobox" type="text" th:value="${classId_combobox}" class="ace"
-                                           style="padding: 3px;border-radius: 5px !important;margin-top: 13px;width: 170px;color: #3c546c">
+                                    style="padding: 3px;border-radius: 5px !important;margin-top: 13px;width: 170px;color: #3c546c">
                                     <div class="form-group" style="display: inline;">
                                         <button type="button" th:onclick="'javascript:getOrgansListPage(\'\')'">搜索</button>
                                     </div>
                                 </div>
-
+                                <div class="control-group">
+                                    <label class="control-label">上课日期</label>
+                                    <input id="startDateTimeBegin" name="startDateTimeBegin" type="text" th:value="${startDateTimeBegin}" class="ace"
+                                           style="padding: 3px;border-radius: 5px !important;margin-top: 13px;width: 82px;color: #3c546c">
+                                    <span>至</span>
+                                    <input id="startDateTimeEnd" name="startDateTimeEnd" type="text" th:value="${startDateTimeEnd}" class="ace"
+                                           style="padding: 3px;border-radius: 5px !important;margin-top: 13px;width: 82px;color: #3c546c">
+                                    <div class="form-group" style="display: inline;">
+                                        <button type="button" th:onclick="'javascript:getOrgansListPage(\'\')'">搜索</button>
+                                    </div>
+                                </div>
                                 <div class="orderCon">
                                     <!--<div class="export">
                                         <button type="button" class="btn btn-primary">批量删除</button>
@@ -668,6 +663,12 @@
     var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/;
 
     $(function(){
+        laydate.render({
+            elem: '#startDateTimeBegin'
+        });
+        laydate.render({
+            elem: '#startDateTimeEnd'
+        });
         var a = $("#xbAttendListsize").val();
         if(a!=5){
             $("#size").val(a);

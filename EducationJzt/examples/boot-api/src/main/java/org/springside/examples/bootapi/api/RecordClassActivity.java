@@ -1,17 +1,20 @@
 package org.springside.examples.bootapi.api;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springside.examples.bootapi.ToolUtils.DateUtil;
 import org.springside.examples.bootapi.domain.*;
 import org.springside.examples.bootapi.service.OrgansService;
 import org.springside.examples.bootapi.service.XbCoursePresetService;
@@ -20,7 +23,9 @@ import org.springside.examples.bootapi.service.XbStudentService;
 
 import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,19 +58,66 @@ public class RecordClassActivity {
 	@RequestMapping("/accordingStudent")
 	public String accordingStudent(@RequestParam(required = false) String data, ModelMap model, Pageable pageable){
 		Map<String,Object> resultMap = new HashMap<>();
-		Map<String,Object> searhMap = new HashMap<>();
+
 		if(null!=data){
 			resultMap = com.alibaba.fastjson.JSONObject.parseObject(data,Map.class);
 		}
+		Map<String,Object> searhMap = searchModelForAccordingStudent(model,resultMap);
+		Page<XbRecordClass> xbRecordClassPage = studentService.getRecordClassPage(pageable,searhMap);
+		model.addAttribute("xbRecordClassPage",xbRecordClassPage);
+		model.addAttribute("accordingcurrentzise",xbRecordClassPage.getSize());
+
+		return "attendClass::accordingStudent";
+	}
+	private Map<String,Object>  searchModelForAccordingStudent(ModelMap model,Map<String,Object> resultMap){
+		Map<String,Object> searhMap = new HashMap<>();
 		String classesName  = (String)resultMap.get("classesName");
 		if(null!=classesName&&!classesName.equals("")){
 			searhMap.put("LIKE_className",classesName);
 		}
-		Page<XbRecordClass> xbRecordClassPage = studentService.getRecordClassPage(pageable,searhMap);
-		model.addAttribute("xbRecordClassPage",xbRecordClassPage);
+		//校区
+		String organId = (String)resultMap.get("organId");
+		if(StringUtils.isEmpty(organId)|| organId.equals("0")){
+			organId = "0";
+		}else{
+			searhMap.put("EQ_xbClass.sysOrgans.id",organId);
+		}
+		//教师名称
+		String TeacherName = (String)resultMap.get("TeacherName");
+		if(StringUtils.isNotEmpty(TeacherName)){
+			searhMap.put("LIKE_xbClass.teacher.employeeName",TeacherName);
+		}
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String startDateTimeBegin = (String)resultMap.get("startDateTimeBegin");
+		//开课结束日期
+		String startDateTimeEnd = (String)resultMap.get("startDateTimeEnd");
+		try {
+			Date date = new Date();
+			if(StringUtils.isEmpty(startDateTimeBegin)){
+				startDateTimeBegin = DateUtil.weekDateFirstDay();
+				searhMap.put("GTE_recordTime",DateUtil.weekDateTimeFirstDayDA());
+			}else{
+				searhMap.put("GTE_recordTime",sdf.parse(startDateTimeBegin+" 00:00:00"));
+			}
+			if(StringUtils.isEmpty(startDateTimeEnd)){
+				startDateTimeEnd = DateUtil.weekDateLastDay();
+				searhMap.put("LTE_recordTime",DateUtil.weekDateTimeLastDayDA());
+			}else{
+				searhMap.put("LTE_recordTime",sdf.parse(startDateTimeEnd+" 23:59:59"));
+			}
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		//查询所有校区
+		Map<String,Object> sorgsearmap = new HashMap<>();
+		List<SysOrgans> sorganList = organsService.getOrgansListAll(sorgsearmap);
+		model.addAttribute("sorganList",sorganList);
 		model.addAttribute("classesName",classesName);
-		model.addAttribute("accordingcurrentzise",xbRecordClassPage.getSize());
-		return "attendClass::accordingStudent";
+		model.addAttribute("organId",organId);
+		model.addAttribute("startDateTimeBegin",startDateTimeBegin);
+		model.addAttribute("startDateTimeEnd",startDateTimeEnd);
+		model.addAttribute("TeacherName",TeacherName);
+			return searhMap;
 	}
 
 	/*
@@ -82,8 +134,9 @@ public class RecordClassActivity {
 		String classesName  = (String)resultMap.get("classesName");
 		String type = (String)resultMap.get("type");
 		String chargingMode = (String)resultMap.get("chargingMode");
-		String organId = (String)resultMap.get("organId");
+
 		String conrseType = (String)resultMap.get("conrseType");
+		String organId = (String)resultMap.get("organId");
 		if(null==organId){
 			organId = "0";
 		}else if(!organId.equals("0")){
@@ -200,7 +253,7 @@ public class RecordClassActivity {
 	 * 查询上课记录按班级
 	 * @return
 	 */
-	@RequestMapping("/getRecordClassListByClass")
+	/*@RequestMapping("/getRecordClassListByClass")
 	public String getRecordClassListByClass(@RequestParam(required = false) String data, ModelMap model, Pageable pageable){
 		Map<String,Object> resultMap = new HashMap<>();
 		Map<String,Object> searhMap = new HashMap<>();
@@ -223,6 +276,79 @@ public class RecordClassActivity {
 		model.addAttribute("number",number);
 		model.addAttribute("totalPages",totalPages);
 		model.addAttribute("totalElements",totalElements);
+		//查询所有校区
+		Map<String,Object> sorgsearmap = new HashMap<>();
+		List<SysOrgans> sorganList = organsService.getOrgansListAll(sorgsearmap);
+		model.addAttribute("sorganList",sorganList);
+		return "attendClass::accordingClass";
+	}*/
+	/*
+	 * 查询上课记录按班级
+	 * @return
+	 */
+	@RequestMapping("/getRecordClassListByClass")
+	public String getRecordClassListByClass(@RequestParam(required = false) String data, ModelMap model,
+											@PageableDefault(value = 10) Pageable pageable){
+		Map<String,Object> resultMap = new HashMap<>();
+		Map<String,Object> searhMap = new HashMap<>();
+		if(null!=data){
+			resultMap = com.alibaba.fastjson.JSONObject.parseObject(data,Map.class);
+		}
+		String classesName  = (String)resultMap.get("classesName");
+		String organclaId = (String)resultMap.get("organclaId");
+		if(null==organclaId){
+			organclaId = "0";
+		}else if(!organclaId.equals("0")){
+			searhMap.put("EQ_orgid",organclaId);
+		}
+		//教师名称
+		String TeacherNameCla = (String)resultMap.get("TeacherNameCla");
+		if(StringUtils.isNotEmpty(TeacherNameCla)){
+			searhMap.put("LIKE_employeeName",TeacherNameCla);
+		}
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String startDateTimeBegin = (String)resultMap.get("startclaDateTimeBegin");
+		//开课结束日期
+		String startDateTimeEnd = (String)resultMap.get("startclaDateTimeEnd");
+		try {
+			Date date = new Date();
+			if(StringUtils.isEmpty(startDateTimeBegin)){
+				startDateTimeBegin = DateUtil.weekDateFirstDay();
+				searhMap.put("GTE_recordTime",DateUtil.weekDateTimeFirstDayDA());
+			}else{
+				searhMap.put("GTE_recordTime",sdf.parse(startDateTimeBegin+" 00:00:00"));
+			}
+			if(StringUtils.isEmpty(startDateTimeEnd)){
+				startDateTimeEnd = DateUtil.weekDateLastDay();
+				searhMap.put("LTE_recordTime",DateUtil.weekDateTimeLastDayDA());
+			}else{
+				searhMap.put("LTE_recordTime",sdf.parse(startDateTimeEnd+" 23:59:59"));
+			}
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		Page<XbRecordClassView> recordLists = studentService.getXbRecordClassdViewtoList(pageable,searhMap);
+		int totalElements = studentService.findRecordTotalCount();
+		int size = pageable.getPageSize();
+		int number = pageable.getPageNumber();
+		int totalPages = totalElements/size;
+		if(totalPages==0){
+			number = 1;
+		}
+		totalPages = totalPages + 1;
+		model.addAttribute("recordLists",recordLists);
+		model.addAttribute("recordcurrentzise",size);
+		model.addAttribute("number",number);
+		model.addAttribute("totalPages",totalPages);
+		model.addAttribute("totalElements",totalElements);
+		//查询所有校区
+		Map<String,Object> sorgsearmap = new HashMap<>();
+		List<SysOrgans> sorganList = organsService.getOrgansListAll(sorgsearmap);
+		model.addAttribute("sorganList",sorganList);
+		model.addAttribute("organclaId",organclaId);
+		model.addAttribute("startclaDateTimeBegin",startDateTimeBegin);
+		model.addAttribute("startclaDateTimeEnd",startDateTimeEnd);
+		model.addAttribute("TeacherNameCla",TeacherNameCla);
 		return "attendClass::accordingClass";
 	}
 
