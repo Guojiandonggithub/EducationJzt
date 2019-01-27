@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="../static/pages/css/index.css">
     <link rel="stylesheet" href="../static/pages/css/management.css">
     <link rel="stylesheet" href="../static/pages/css/student.css">
+    <link rel="stylesheet" href="../static/pages/css/newstudent.css">
     <link rel="stylesheet" href="../static/pages/css/madal.css">
     <link rel="stylesheet" href="../static/pages/css/bootstrap.min.css">
     <link rel="stylesheet" href="../static/pages/css/font-awesome.min.css" />
@@ -418,6 +419,7 @@
                 <div id="expiryStu" class="tab-pane fade expiryStu">
                     <th:block th:if="${expiryStuPage}" th:fragment="expiryStu">
                         <form id="expiryStuearchform">
+                   <div class="control-position" id="control-position">
                     <div class="screen">
                         <!--<button class="batch">批量导入</button>-->
                         <div class="screenTop" style="    margin-top: 32px;float: left;">
@@ -436,12 +438,45 @@
                                 <button type="button"  th:onclick="'javascript:getexpiryStulist(\'\')'">搜索</button>
                             </div>
                         </div>
-                       <!-- <div class="screenBot tags">
-                            课程状况：
-                            <span class="tag">在读<button type="button" class="close">×</button></span>
-                            <span class="tag">在读<button type="button" class="close">×</button></span>
-                            <p>清空筛选</p>
-                        </div>-->
+                       <div class="screenTop" style="    margin-top: 32px;float: left;">
+                            <div class="form-group" style="">
+                                <label class="control-label">教师姓名</label>
+                                <input id="TeacherNameCla" name="TeacherNameCla" type="text" th:value="${TeacherNameCla}" class="ace"
+                                       style="padding: 3px;border-radius: 5px !important;margin-top: 13px;width: 82px;color: #3c546c">
+                                <button type="button" th:onclick="'javascript:getexpiryStulist(\'\')'">搜索</button>
+                                <button type="button" onclick="$('input[type=text],#TeacherNameCla').val('')">清空</button>
+                            </div>
+                        </div>
+                        <div class="control-group" style="">
+                        <label >校区</label>
+                        <input  th:attr ="checked=${organIdDQ == '0'?true:false}"
+                                name="organIdDQ" type="radio" th:value="0" class="ace"
+                                th:onclick="'javascript:getexpiryStulist(\'\')'">
+                        <span class="lbl" th:text="全部"></span>
+                        <div class="checkbox" th:each="orgs:${sorganList}">
+                            <label>
+                                <input th:attr ="checked=${organIdDQ == orgs.id?true:false}"
+                                       name="organIdDQ" type="radio" th:value="${orgs.id}" class="ace"
+                                       th:onclick="'javascript:getexpiryStulist(\'\')'">
+                                <span class="lbl" th:text="${orgs.organName}"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                        <div class="control-group" style="">
+                            <div class="form-group">
+                                <label>课程状态</label>
+                                <select class="selectName" name="studentStart" >
+                                    <option  th:value="10" th:text="请选择" th:selected="${studentStart eq '10'}"></option>
+                                    <option  th:value="0" th:text="在读" th:selected="${studentStart eq '0'}"></option>
+                                    <option  th:value="1" th:text="结课" th:selected="${studentStart eq '1'}"></option>
+                                    <option  th:value="2" th:text="转班" th:selected="${studentStart eq '2'}"></option>
+                                    <option  th:value="3" th:text="退费" th:selected="${studentStart eq '3'}"></option>
+                                    <option  th:value="4" th:text="结课" th:selected="${studentStart eq '4'}"></option>
+                                </select>
+                            </div>
+                            <button type="button" th:onclick="'javascript:getexpiryStulist(\'\')'">搜索</button>
+                        </div>
                     </div>
                     <div class="orderCon">
                         <div class="export">
@@ -479,6 +514,7 @@
                                     </th>
                                     <th>欠费</th>
                                     <th>报读课程</th>
+                                    <th>教师</th>
                                     <th>剩余课时/天数</th>
                                     <th>报名时间</th>
                                     <th>操作</th>
@@ -496,6 +532,7 @@
                                     <td th:text="${studentrelation.xbStudent.surplusMoney}"></td>
                                     <td th:text="${studentrelation.xbStudent.paymentMoney}"><a href="">补费</a></td>
                                     <td th:text="${studentrelation.xbCourse.courseName}"></td>
+                                    <td th:text="${studentrelation.xbClass.teacher.employeeName}"></td>
                                     <td th:text="${studentrelation.periodNum}">课时</td>
                                     <td th:if="${studentrelation.enrollDate!=null}" th:text="${#dates.format(studentrelation.enrollDate, 'yyyy-MM-dd')}"></td>
                                     <td th:if="${studentrelation.enrollDate==null}" th:text="${studentrelation.enrollDate}"></td>
@@ -574,6 +611,7 @@
                             </div>
                         </div>    
                     </div>
+                   </div>
                 </div>
                 <!-- 课程欠费学员 -->
                 <div id="arrearList" class="tab-pane fade arrearList" >

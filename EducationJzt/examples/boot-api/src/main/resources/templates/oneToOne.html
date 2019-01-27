@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="../static/pages/css/index.css">
     <link rel="stylesheet" href="../static/pages/css/management.css">
     <link rel="stylesheet" href="../static/pages/css/student.css">
+    <link rel="stylesheet" href="../static/pages/css/newstudent.css">
     <link rel="stylesheet" href="../static/pages/css/madal.css">
     <link rel="stylesheet" href="../static/pages/css/bootstrap.min.css">
     <link rel="stylesheet" href="../static/pages/css/font-awesome.min.css" />
@@ -48,86 +49,32 @@
             </ul>
             <div class="tab-content student">
                 <!-- 一对一学员 -->
-                <div id="studentList" class="tab-pane fade in active oneToOne"> 
-                    <!--<div class="screen">
-                        <div class="screenTop">  
-                            <select class="selectName">
-                                <option value="AZ">学员姓名</option>
-                                <option value="AL">手机号</option>
-                                &lt;!&ndash;<option value="AK">微信号</option>&ndash;&gt;
-                            </select>
-                            <div class="nav-search" id="nav-search">
-                                <form class="form-search">
-                                    <span class="input-icon">
-                                        <input type="text" placeholder="请输入姓名、支持拼音缩写" class="nav-search-input" id="nav-search-input" autocomplete="off">
-                                        <i class="ace-icon fa fa-search nav-search-icon"></i>
-                                    </span>
-                                </form>
+                <div id="studentList" class="tab-pane fade in active oneToOne">
+                    <form id="accordingClassform">
+                    <div class="control-position" id="control-position">
+                        <!--<div class="result">
+                            &lt;!&ndash;当前结果：共计<span>111</span>条记录，<span>111</span>名在读学员&ndash;&gt;
+                        </div>-->
+                        <div class="control-group">
+                            <label class="control-label">管辖校区</label>
+                            <input  th:attr ="checked=${organclaId == '0'?true:false}" name="organclaId" type="radio"
+                                    th:value="0" class="ace" th:onclick="'javascript:getStudentListPage(\'\')'">
+                            <span class="lbl" th:text="全部校区"></span>
+                            <div class="checkbox" style="display: inline-block" th:each="orgs:${sorganList}">
+                                <label>
+                                    <input th:attr ="checked=${organclaId == orgs.id?true:false}" name="organclaId" type="radio"
+                                           th:value="${orgs.id}" class="ace" th:onclick="'javascript:getStudentListPage(\'\')'">
+                                    <span class="lbl" th:text="${orgs.organName}"></span>
+                                </label>
                             </div>
-                            <div class="btn-group">
-                                <button class="btn btn-down">
-                                    筛选
-                                    <i>1</i>
-                                    <span class="ace-icon fa fa-caret-down icon-on-right"></span>
-                                </button>
-                                <div class="dropdown-menu">
-                                    <div class="screenData">
-                                        <select>
-                                            <option value="">报读校区</option>
-                                            <option value="y">青山校区</option>
-                                            <option value="n">科源校区</option>
-                                            <option value="n">坤元校区</option>
-                                        </select> 
-                                        <select>
-                                            <option value="">教师</option>
-                                            <option value="y">111</option>
-                                            <option value="n">1111</option>
-                                        </select>            
-                                    </div>
-                                    <div class="screenData">
-                                        <select>
-                                            <option value="">报读校区</option>
-                                            <option value="y">青山校区</option>
-                                            <option value="n">科源校区</option>
-                                            <option value="n">坤元校区</option>
-                                        </select> 
-                                        <select>
-                                            <option value="">课时状态</option>
-                                            <option value="y">在读</option>
-                                            <option value="n">转出</option>
-                                            <option value="y">退费</option>
-                                            <option value="n">停课</option>
-                                            <option value="n">结课</option>
-                                            <option value="n">转课</option>
-                                        </select>            
-                                    </div>     
-                                </div>
-                            </div>                                
                         </div>
-                    </div>
-                    <div class="orderCon">
-                        <div class="export">
-                            <div class="oneInput">
-                                <div class="form-group">
-                                    <input type="checkbox">
-                                    显示已用/剩余学费
-                                </div>
-                                <div class="form-group">
-                                    <input type="checkbox">
-                                    显示停、转、退、结学员
-                                </div>
-                                <div class="form-group">
-                                    <select name="" id="">
-                                        <option value="">自定义显示项</option>
-                                        <option value="">111</option>
-                                        <option value="">222</option>
-                                    </select>
-                                </div>
+                        <div class="control-group">
+                            <label class="control-label">教师姓名</label>
+                            <input id="TeacherNameCla" name="TeacherNameCla" type="text" th:value="${TeacherNameCla}" class="ace"
+                                   style="padding: 3px;border-radius: 5px !important;margin-top: 13px;width: 82px;color: #3c546c">
+                            <div class="form-group" style="display: inline;">
+                                <button type="button" th:onclick="'javascript:getStudentListPage(\'\')'">搜索</button>
                             </div>
-
-                        </div> -->
-                        <div class="result">
-                            <!--当前结果：共计<span>111</span>条记录，<span>111</span>名在读学员-->
                         </div>
                         <div class="orderTable">
                             <table class="table table-hover">
@@ -142,6 +89,7 @@
                                     <th>学员状态</th>
                                     <th>课程</th>
                                     <th>开课日期</th>
+                                    <th>校区</th>
                                     <th>上课时间</th>
                                     <th>已用课时</th>
                                     <th>操作</th>
@@ -157,6 +105,7 @@
                                     </td>
                                     <td th:text="${studentrelations.xbCourse.courseName}"></td>
                                     <td th:text="${#dates.format(studentrelations.xbClass.classBeginDate, 'yyyy-MM-dd')}"></td>
+                                    <td th:text="${studentrelations.sysOrgans.organName}"></td>
                                     <td>
                                         <span>每周日15:30-17:00</span>
                                         <!--<span>每周日15:30-17:00</span>-->
@@ -262,7 +211,9 @@
                                     </li>
                                 </ul>
                             </div>
-                        </div>    
+                        </div>
+                    </div>
+                    </form>
                     </div>
                 </div>
                 <!-- 待处理学员 -->
@@ -686,6 +637,7 @@ function chooseAll1(){
 <script type="text/javascript" th:inline="javascript">
 var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/ ;
 function getStudentListPage(page) {
+    var data= serializeObject("#accordingClassform");
     var load = new Loading();
     load.init({
         target: "#main-container"
@@ -695,7 +647,7 @@ function getStudentListPage(page) {
     /*if (page) {
         page = page - 1;
     }*/
-    window.location.href = basePath + '/student/getOneToOneList?page=' + page + '&size=' + size;
+    window.location.href = basePath + '/student/getOneToOneList?page=' + page + '&size=' + size+'&data='+JSON.stringify(data);
 }
 
 
@@ -729,6 +681,22 @@ function finishCourse(id) {
         });
     })
 }
+function serializeObject(form)
+{
+    var o = {};
+    var a = $(form).serializeArray();
+    $.each(a, function() {
+        if (o[this.name]) {
+            if (!o[this.name].push) {
+                o[this.name] = [o[this.name]];
+            }
+            o[this.name].push(this.value || '');
+        } else {
+            o[this.name] = this.value || '';
+        }
+    });
+    return o;
+};
 </script> 
 </body>
 </html>

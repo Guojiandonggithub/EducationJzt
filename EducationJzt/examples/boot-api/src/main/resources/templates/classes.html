@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="../static/pages/css/index.css">
     <link rel="stylesheet" href="../static/pages/css/management.css"/>
     <link rel="stylesheet" href="../static/pages/css/student.css"/>
+    <link rel="stylesheet" href="../static/pages/css/newstudent.css"/>
+
     <link rel="stylesheet" href="../static/pages/css/madal.css"/>
     <link rel="stylesheet" href="../static/pages/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="../static/pages/css/font-awesome.min.css" />
@@ -52,198 +54,204 @@
                 <div id="class" class="tab-content student classes">
                     <!-- 学员列表 -->
                     <div class="tab-pane fade in active" id="class_jz">
+                    <form id="xbcalssForm">
                         <div class="screen" style="height:76px;">
                             <a href="/student/getXbClass"><button class="stdEnroll">新建班级</button></a>
                         </div>
-                        <div class="orderCon" id="donghua">
-                            <div class="export">
-                                <button type="button" class="btn btn-primary">批量删除</button>
-                                <!--<button type="button" class="btn btn-primary">导出班级</button>-->
-                                <div class="form-group">
-                                    <input type="checkbox" th:attr ="checked=${finishClass == '0'?true:false}" name="finishClass" id="finishClass" onchange="getClassListPage('');">
-                                    显示已结班班级
+                        <div class="control-position" id="control-position">
+                            <div class="control-group">
+                                <label class="control-label">校区</label>
+                                <input  th:attr ="checked=${organId == '0'?true:false}"
+                                        name="organId" type="radio" th:value="0" class="ace"
+                                        th:onclick="'javascript:getClassListPage(\'\')'">
+                                <span class="lbl" th:text="全部"></span>
+                                <div class="checkbox" th:each="orgs:${organsList}">
+                                    <label>
+                                        <input th:attr ="checked=${organId == orgs.id?true:false}"
+                                               name="organId" type="radio" th:value="${orgs.id}" class="ace"
+                                               th:onclick="'javascript:getClassListPage(\'\')'">
+                                        <span class="lbl" th:text="${orgs.organName}"></span>
+                                    </label>
                                 </div>
                             </div>
-                            <div class="result">
-                                当前结果：共计<span th:text="${xbClassPage.getTotalPages()}"></span>个班级<!--，<span>111</span>名在读学员，报班<span>111</span>人次(不包括转出、停课、退费、结课的学员)-->
+                            <div class="control-group">
+                                <label class="control-label">教师姓名</label>
+                                <input id="TeacherNameCla" name="TeacherNameCla" type="text" th:value="${TeacherNameCla}" class="ace"
+                                       style="padding: 3px;border-radius: 5px !important;margin-top: 13px;width: 82px;color: #3c546c">
+                                <div class="form-group" style="display: inline;">
+                                    <button type="button" th:onclick="'javascript:getClassListPage(\'\')'">搜索</button>
+                                    <button type="button" onclick="$('input[type=text],#TeacherNameCla').val('')">清空</button>
+                                </div>
                             </div>
-                            <div class="orderTable">
-                                <table class="table table-hover">
-                                    <tr>
-                                        <th>
-                                            <input type="checkbox" id="sel_1" onchange="selectAll()">
-                                        </th>
-
-                                        <th>序号</th>
-                                        <th>班级名称</th>
-                                        <th>人数
-                                            <div class="sort">
-                                                <span class="glyphicon glyphicon-triangle-top"></span>
-                                                <span class="glyphicon glyphicon-triangle-bottom"></span>
-                                            </div>
-                                        </th>
-                                        <th>教师</th>
-                                        <th>所属课程</th>
-                                        <th>开班校区</th>
-                                        <th>开班日期
-                                            <div class="sort">
-                                                <span class="glyphicon glyphicon-triangle-top"></span>
-                                                <span class="glyphicon glyphicon-triangle-bottom"></span>
-                                            </div>
-                                        </th>
-                                        <th>结班日期
-                                        </th>
-                                        <th>上课时间
-                                        </th>
-                                        <th>招生状态</th>
-                                        <th>操作</th>
-                                        <th>
-                                            <span href="#modal-table" data-toggle="modal" class="glyphicon glyphicon-option-vertical"
-                                                aria-hidden="true"></span>
-                                        </th>
-                                    </tr>
-                                    <tr id="chooses" th:each="xbclass,xbclassta:${xbClassPage.content}">
-                                        <td><input type="checkbox"></td>
-                                        <td th:text="${xbclassta.count}+${xbClassPage.getNumber()*20}">序号</td>
-                                        <td th:text="${xbclass.sysOrgans.organName}+${xbclass.xbCourse.xbcoursetype.courseTypeName}+${xbclass.teacher.employeeName}+${xbclass.className}" class="className studentName" th:onclick="'javascript:classDetail(\''+${xbclass.id}+'\')'"><img src="../static/pages/img/ban.png"></td>
-                                        <td class="prog" th:text="${xbclass.establishNum}">
-                                            <div class="progress progress-small progress-striped active">
-                                                <!--<div class="progress-bar progress-bar-warning" style="width: 0%;"></div>
-                                                <span th:text="${xbclass.establishNum}"></span>-->
-                                            </div>
-                                        </td>
-                                        <td th:text="${xbclass.teacher.employeeName}"></td>
-                                        <td th:text="${xbclass.xbCourse.courseName}"></td>
-                                        <td th:text="${xbclass.sysOrgans.organName}"></td>
-                                        <td th:text="${#dates.format(xbclass.classBeginDate, 'yyyy-MM-dd')}"></td>
-                                        <td th:text="${#dates.format(xbclass.classEndDate, 'yyyy-MM-dd')}"></td>
-                                        <td th:utext="${xbclass.sktime}"></td>
-                                        <td th:if="${xbclass.recruitState=='0'}">
-                                            <!--<td class="classTime">
-                                           <Span>每周周日15:30-16:30</Span>
-                                           <Span>每周周日15:30-16:30</Span>
-                                       </td>-->
-                                            <Span class="recruit">开放招生</Span>
-                                        </td>
-                                        <td th:if="${xbclass.recruitState=='1'}">
-                                            <Span class="recruit">停止招生</Span>
-                                        </td>
-                                        <td class="classDel">
-                                        <div class="btn-group open">
-                                            <p data-toggle="dropdown" class="down" aria-expanded="true">
-                                                操作
-                                                <span class="ace-icon fa fa-caret-down icon-on-right"></span>
-                                            </p>
-                                            <ul class="dropdown-menu dropdown-default" style="display: none;">
-                                                <li>
-                                                    <a href="#" th:onclick="'javascript:finishClass(\''+${xbclass.id}+'\')'">结班</a>
-                                                </li>
-                                                <li>
-                                                    <a th:href="@{'/student/getXbClass?id='+${xbclass.id}}">编辑</a>
-                                                </li>
-                                                <li>
-                                                    <a href="#" th:onclick="'javascript:deleteClass(\''+${xbclass.id}+'\')'">删除班级</a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </td>
-                                        <td></td>
-                                    </tr>
-                                </table>
-                                <div class="orderPage">
-                                    <div class="page">
-                                        单页显示：
-                                        <select id="size" name="size" onchange="getClassListPage('');">
-                                            <option th:selected="${classcurrentzise eq 20}" value="20">20条/页</option>
-                                            <option th:selected="${classcurrentzise eq 5}" value="5">5条/页</option>
-                                            <option th:selected="${classcurrentzise eq 10}" value="10">10条/页</option>
-                                            <option th:selected="${classcurrentzise eq 15}" value="15">15条/页</option>
-                                        </select>
+                            <div class="orderCon" id="donghua">
+                                <div class="export">
+                                    <button type="button" class="btn btn-primary">批量删除</button>
+                                    <!--<button type="button" class="btn btn-primary">导出班级</button>-->
+                                    <div class="form-group">
+                                        <input type="checkbox" th:attr ="checked=${finishClass == '0'?true:false}" name="finishClass" id="finishClass" onchange="getClassListPage('');">
+                                        显示已结班班级
                                     </div>
-                                    <!--<ul class="pagination" th:if="${xbClassPage.getTotalPages() gt 0}">
-                                        <li class="disabled">
-                                            <a href="#" th:onclick="'javascript:getClassListPage(\''+0+'\')'">首页</a>
-                                        </li>
-                                        <li class="disabled" th:if="${xbClassPage.getNumber()-1} ge 0">
-                                            <a href="#" th:onclick="'javascript:getClassListPage(\''+${xbClassPage.getNumber()-1}+'\')'">
-                                                <i class="ace-icon fa fa-angle-double-left"></i>
-                                            </a>
-                                        </li>
-                                        <li th:class="${i} eq ${xbClassPage.getNumber()+1}?'active':''" th:each="i:${#numbers.sequence(1,xbClassPage.getTotalPages())}">
-                                            <a href="#" th:onclick="'javascript:getClassListPage(\''+${i}+'\')'"
-                                               th:text="${i}"></a>
-                                        </li>
-                                        <li th:if="${xbClassPage.getTotalPages()} ge ${xbClassPage.getNumber()+2} ">
-                                            <a href="#" th:onclick="'javascript:getClassListPage(\''+${xbClassPage.getNumber()+2}+'\')'">
-                                                <i class="ace-icon fa fa-angle-double-right"></i>
-                                            </a>
-                                        </li>
-                                        &lt;!&ndash; <li class="">
-                                         <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${currentnumber}+'\')'">尾页</a>
-                                     </li>&ndash;&gt;
-                                    </ul>-->
-                                    <ul class="pagination" th:if="${xbClassPage.getTotalPages()>0}">
-                                        <!-- 上一页 -->
-                                        <li th:if="${xbClassPage.getNumber()+1 == 1}"><span>上一页</span></li>
-                                        <li th:if="${xbClassPage.getNumber()+1 > 1}">
-                                            <a  th:onclick="'javascript:getClassListPage(\''+${xbClassPage.getNumber()-1}+'\')'">
-                                                <i class="ace-icon fa ">上一页</i>
-                                            </a>
-                                        </li>
-                                        <!-- 首页 -->
-                                        <li th:if="${xbClassPage.getNumber()+1 == 1}" class="active"><span>1</span></li>
-                                        <li th:if="${xbClassPage.getNumber()+1 > 1}">
-                                            <a  th:onclick="'javascript:getClassListPage(\''+${0}+'\')'">1</a>
-                                        </li>
+                                </div>
+                                <div class="result">
+                                    当前结果：共计<span th:text="${xbClassPage.getTotalPages()}"></span>个班级,学员<span th:text="${establishNumSum}"></span>人
+                                </div>
+                                <div class="orderTable">
+                                    <table class="table table-hover">
+                                        <tr>
+                                            <th>
+                                                <input type="checkbox" id="sel_1" onchange="selectAll()">
+                                            </th>
 
-                                        <th:block th:if="${xbClassPage.getTotalPages()>2 && xbClassPage.getTotalPages()<=10}">
-                                            <th:block th:each="i:${#numbers.sequence(2,xbClassPage.getTotalPages()-1)}">
-                                                <li th:if="${xbClassPage.getNumber()+1 == i}"  class="active"><span th:text="${i}">页码</span></li>
-                                                <li th:if="${xbClassPage.getNumber()+1 != i}"><a  th:onclick="'javascript:getClassListPage(\''+${i-1}+'\')'" th:text="${i}"></a></li>
-                                            </th:block>
-                                        </th:block>
-                                        <th:block th:if="${xbClassPage.getTotalPages() > 10}">
-                                            <th:block th:if="${(xbClassPage.getNumber()+1-(5/2)) <= 2}" th:each="i:${#numbers.sequence(2,2+5-1)}">
-                                                <li th:if="${xbClassPage.getNumber()+1 == i}"  class="active"><span th:text="${i}">页码</span></li>
-                                                <li th:if="${xbClassPage.getNumber()+1 != i}"><a  th:onclick="'javascript:getClassListPage(\''+${i-1}+'\')'" th:text="${i}"></a></li>
-                                            </th:block>
-                                            <!-- ... -->
-                                            <li th:if="${(xbClassPage.getNumber()+1-(5/2))>2}"><span>...</span></li>
+                                            <th>序号</th>
+                                            <th>班级名称</th>
+                                            <th>人数
+                                                <div class="sort">
+                                                    <span class="glyphicon glyphicon-triangle-top"></span>
+                                                    <span class="glyphicon glyphicon-triangle-bottom"></span>
+                                                </div>
+                                            </th>
+                                            <th>教师</th>
+                                            <th>所属课程</th>
+                                            <th>开班校区</th>
+                                            <th>开班日期
+                                                <div class="sort">
+                                                    <span class="glyphicon glyphicon-triangle-top"></span>
+                                                    <span class="glyphicon glyphicon-triangle-bottom"></span>
+                                                </div>
+                                            </th>
+                                            <th>结班日期
+                                            </th>
+                                            <th>上课时间
+                                            </th>
+                                            <th>招生状态</th>
+                                            <th>操作</th>
+                                            <th>
+                                                <span href="#modal-table" data-toggle="modal" class="glyphicon glyphicon-option-vertical"
+                                                    aria-hidden="true"></span>
+                                            </th>
+                                        </tr>
+                                        <tr id="chooses" th:each="xbclass,xbclassta:${xbClassPage.content}">
+                                            <td><input type="checkbox"></td>
+                                            <td th:text="${xbclassta.count}+${xbClassPage.getNumber()*20}">序号</td>
+                                            <td th:text="${xbclass.sysOrgans.organName}+${xbclass.xbCourse.xbcoursetype.courseTypeName}+${xbclass.teacher.employeeName}+${xbclass.className}" class="className studentName" th:onclick="'javascript:classDetail(\''+${xbclass.id}+'\')'"><img src="../static/pages/img/ban.png"></td>
+                                            <td class="prog" th:text="${xbclass.establishNum}">
+                                                <div class="progress progress-small progress-striped active">
+                                                    <!--<div class="progress-bar progress-bar-warning" style="width: 0%;"></div>
+                                                    <span th:text="${xbclass.establishNum}"></span>-->
+                                                </div>
+                                            </td>
+                                            <td th:text="${xbclass.teacher.employeeName}"></td>
+                                            <td th:text="${xbclass.xbCourse.courseName}"></td>
+                                            <td th:text="${xbclass.sysOrgans.organName}"></td>
+                                            <td th:text="${#dates.format(xbclass.classBeginDate, 'yyyy-MM-dd')}"></td>
+                                            <td th:text="${#dates.format(xbclass.classEndDate, 'yyyy-MM-dd')}"></td>
+                                            <td th:utext="${xbclass.sktime}"></td>
+                                            <td th:if="${xbclass.recruitState=='0'}">
+                                                <!--<td class="classTime">
+                                               <Span>每周周日15:30-16:30</Span>
+                                               <Span>每周周日15:30-16:30</Span>
+                                           </td>-->
+                                                <Span class="recruit">开放招生</Span>
+                                            </td>
+                                            <td th:if="${xbclass.recruitState=='1'}">
+                                                <Span class="recruit">停止招生</Span>
+                                            </td>
+                                            <td class="classDel">
+                                            <div class="btn-group open">
+                                                <p data-toggle="dropdown" class="down" aria-expanded="true">
+                                                    操作
+                                                    <span class="ace-icon fa fa-caret-down icon-on-right"></span>
+                                                </p>
+                                                <ul class="dropdown-menu dropdown-default" style="display: none;">
+                                                    <li>
+                                                        <a href="#" th:onclick="'javascript:finishClass(\''+${xbclass.id}+'\')'">结班</a>
+                                                    </li>
+                                                    <li>
+                                                        <a th:href="@{'/student/getXbClass?id='+${xbclass.id}}">编辑</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="#" th:onclick="'javascript:deleteClass(\''+${xbclass.id}+'\')'">删除班级</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                            <td></td>
+                                        </tr>
+                                    </table>
+                                    <div class="orderPage">
+                                        <div class="page">
+                                            单页显示：
+                                            <select id="size" name="size" onchange="getClassListPage('');">
+                                                <option th:selected="${classcurrentzise eq 20}" value="20">20条/页</option>
+                                                <option th:selected="${classcurrentzise eq 5}" value="5">5条/页</option>
+                                                <option th:selected="${classcurrentzise eq 10}" value="10">10条/页</option>
+                                                <option th:selected="${classcurrentzise eq 15}" value="15">15条/页</option>
+                                            </select>
+                                        </div>
+                                        <ul class="pagination" th:if="${xbClassPage.getTotalPages()>0}">
+                                            <!-- 上一页 -->
+                                            <li th:if="${xbClassPage.getNumber()+1 == 1}"><span>上一页</span></li>
+                                            <li th:if="${xbClassPage.getNumber()+1 > 1}">
+                                                <a  th:onclick="'javascript:getClassListPage(\''+${xbClassPage.getNumber()-1}+'\')'">
+                                                    <i class="ace-icon fa ">上一页</i>
+                                                </a>
+                                            </li>
+                                            <!-- 首页 -->
+                                            <li th:if="${xbClassPage.getNumber()+1 == 1}" class="active"><span>1</span></li>
+                                            <li th:if="${xbClassPage.getNumber()+1 > 1}">
+                                                <a  th:onclick="'javascript:getClassListPage(\''+${0}+'\')'">1</a>
+                                            </li>
 
-                                            <th:block th:if="${((xbClassPage.getNumber()+1-(5/2))>2) && ((xbClassPage.getNumber()+1+(5/2)-(5%2==0?1:0)) < (xbClassPage.getTotalPages()-1))}"
-                                                      th:each="i:${#numbers.sequence(xbClassPage.getNumber()+1-(5/2),xbClassPage.getNumber()+1+(5/2)-(5%2==0?1:0))}">
-                                                <li th:if="${xbClassPage.getNumber()+1 == i}"  class="active"><span th:text="${i}">页码</span></li>
-                                                <li th:if="${xbClassPage.getNumber()+1 != i}"><a  th:onclick="'javascript:getClassListPage(\''+${i-1}+'\')'" th:text="${i}"></a></li>
+                                            <th:block th:if="${xbClassPage.getTotalPages()>2 && xbClassPage.getTotalPages()<=10}">
+                                                <th:block th:each="i:${#numbers.sequence(2,xbClassPage.getTotalPages()-1)}">
+                                                    <li th:if="${xbClassPage.getNumber()+1 == i}"  class="active"><span th:text="${i}">页码</span></li>
+                                                    <li th:if="${xbClassPage.getNumber()+1 != i}"><a  th:onclick="'javascript:getClassListPage(\''+${i-1}+'\')'" th:text="${i}"></a></li>
+                                                </th:block>
                                             </th:block>
+                                            <th:block th:if="${xbClassPage.getTotalPages() > 10}">
+                                                <th:block th:if="${(xbClassPage.getNumber()+1-(5/2)) <= 2}" th:each="i:${#numbers.sequence(2,2+5-1)}">
+                                                    <li th:if="${xbClassPage.getNumber()+1 == i}"  class="active"><span th:text="${i}">页码</span></li>
+                                                    <li th:if="${xbClassPage.getNumber()+1 != i}"><a  th:onclick="'javascript:getClassListPage(\''+${i-1}+'\')'" th:text="${i}"></a></li>
+                                                </th:block>
+                                                <!-- ... -->
+                                                <li th:if="${(xbClassPage.getNumber()+1-(5/2))>2}"><span>...</span></li>
 
-                                            <!-- ... -->
-                                            <li th:if="${(xbClassPage.getNumber()+1+(5/2)-(5%2==0?1:0)) < (xbClassPage.getTotalPages()-1)}"><span>...</span></li>
-                                            <th:block th:if="${(xbClassPage.getNumber()+1+(5/2)-(5%2==0?1:0)) >= (xbClassPage.getTotalPages()-1)}" th:each="i:${#numbers.sequence(xbClassPage.getTotalPages()-5,xbClassPage.getTotalPages()-1)}">
-                                                <li th:if="${xbClassPage.getNumber()+1 == i}"  class="active"><span th:text="${i}">页码</span></li>
-                                                <li th:if="${xbClassPage.getNumber()+1 != i}"><a  th:onclick="'javascript:getClassListPage(\''+${i-1}+'\')'" th:text="${i}"></a></li>
+                                                <th:block th:if="${((xbClassPage.getNumber()+1-(5/2))>2) && ((xbClassPage.getNumber()+1+(5/2)-(5%2==0?1:0)) < (xbClassPage.getTotalPages()-1))}"
+                                                          th:each="i:${#numbers.sequence(xbClassPage.getNumber()+1-(5/2),xbClassPage.getNumber()+1+(5/2)-(5%2==0?1:0))}">
+                                                    <li th:if="${xbClassPage.getNumber()+1 == i}"  class="active"><span th:text="${i}">页码</span></li>
+                                                    <li th:if="${xbClassPage.getNumber()+1 != i}"><a  th:onclick="'javascript:getClassListPage(\''+${i-1}+'\')'" th:text="${i}"></a></li>
+                                                </th:block>
+
+                                                <!-- ... -->
+                                                <li th:if="${(xbClassPage.getNumber()+1+(5/2)-(5%2==0?1:0)) < (xbClassPage.getTotalPages()-1)}"><span>...</span></li>
+                                                <th:block th:if="${(xbClassPage.getNumber()+1+(5/2)-(5%2==0?1:0)) >= (xbClassPage.getTotalPages()-1)}" th:each="i:${#numbers.sequence(xbClassPage.getTotalPages()-5,xbClassPage.getTotalPages()-1)}">
+                                                    <li th:if="${xbClassPage.getNumber()+1 == i}"  class="active"><span th:text="${i}">页码</span></li>
+                                                    <li th:if="${xbClassPage.getNumber()+1 != i}"><a  th:onclick="'javascript:getClassListPage(\''+${i-1}+'\')'" th:text="${i}"></a></li>
+                                                </th:block>
                                             </th:block>
-                                        </th:block>
-                                        <!-- 最后一页 -->
-                                        <li th:if="${xbClassPage.getTotalPages()>1 && xbClassPage.getNumber()+1 == xbClassPage.getTotalPages()}" class="active"><span th:text="${xbClassPage.getTotalPages()}">页码</span></li>
-                                        <li th:if="${xbClassPage.getTotalPages()>1 && xbClassPage.getNumber()+1 != xbClassPage.getTotalPages()}">
+                                            <!-- 最后一页 -->
+                                            <li th:if="${xbClassPage.getTotalPages()>1 && xbClassPage.getNumber()+1 == xbClassPage.getTotalPages()}" class="active"><span th:text="${xbClassPage.getTotalPages()}">页码</span></li>
+                                            <li th:if="${xbClassPage.getTotalPages()>1 && xbClassPage.getNumber()+1 != xbClassPage.getTotalPages()}">
 
-                                            <a href="#" th:onclick="'javascript:getClassListPage(\''+${xbClassPage.getTotalPages()-1}+'\')'"
-                                               th:text="${xbClassPage.getTotalPages()}"></a>
-                                        </li>
-                                        <!-- 下一页 -->
-                                        <li th:if="${xbClassPage.getNumber()+1 >= xbClassPage.getTotalPages()}"><span>下一页</span></li>
-                                        <li th:if="${xbClassPage.getNumber()+1 < xbClassPage.getTotalPages()}">
-                                            <a th:onclick="'javascript:getClassListPage(\''+${xbClassPage.getNumber()+1}+'\')'">
-                                                <i class="ace-icon fa ">下一页</i>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <span style="color: #020202;" th:text="'共'+${xbClassPage.getTotalPages()}+'页/'+${xbClassPage.getTotalElements()}+'条记录'"></span>
-                                        </li>
-                                    </ul>
+                                                <a href="#" th:onclick="'javascript:getClassListPage(\''+${xbClassPage.getTotalPages()-1}+'\')'"
+                                                   th:text="${xbClassPage.getTotalPages()}"></a>
+                                            </li>
+                                            <!-- 下一页 -->
+                                            <li th:if="${xbClassPage.getNumber()+1 >= xbClassPage.getTotalPages()}"><span>下一页</span></li>
+                                            <li th:if="${xbClassPage.getNumber()+1 < xbClassPage.getTotalPages()}">
+                                                <a th:onclick="'javascript:getClassListPage(\''+${xbClassPage.getNumber()+1}+'\')'">
+                                                    <i class="ace-icon fa ">下一页</i>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <span style="color: #020202;" th:text="'共'+${xbClassPage.getTotalPages()}+'页/'+${xbClassPage.getTotalElements()}+'条记录'"></span>
+                                            </li>
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                    </form>
                     </div>
                 </div>
                 <!-- 教室列表 -->
@@ -500,11 +508,12 @@
                 target: "#main-container"
             });
             load.start();
+            var data= serializeObject("#xbcalssForm");
             var size = $('#size option:selected').val(); //选中的值
             /*if (page) {
                 page = page - 1;
             }*/
-            window.location.href = basePath + '/student/getXbClassroomList?page=' + page + '&size=' + size+ '&isFinishClass=' + isFinishClass;
+            window.location.href = basePath + '/student/getXbClassroomList?page=' + page + '&size=' + size+ '&isFinishClass=' + isFinishClass+'&data='+JSON.stringify(data);
         }
 
         //跳转到班级详情
@@ -604,6 +613,22 @@
                 });
             })
         }
+        function serializeObject(form)
+        {
+            var o = {};
+            var a = $(form).serializeArray();
+            $.each(a, function() {
+                if (o[this.name]) {
+                    if (!o[this.name].push) {
+                        o[this.name] = [o[this.name]];
+                    }
+                    o[this.name].push(this.value || '');
+                } else {
+                    o[this.name] = this.value || '';
+                }
+            });
+            return o;
+        };
     </script>
 <style>
 

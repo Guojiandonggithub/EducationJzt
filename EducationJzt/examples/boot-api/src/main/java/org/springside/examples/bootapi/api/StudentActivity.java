@@ -310,16 +310,39 @@ public class StudentActivity {
 	 * @return
 	 */
 	@RequestMapping("/getOneToOneList")
-	public String getOneToOneList(@RequestParam(required = false) String room,ModelMap model, Pageable pageable){
+	public String getOneToOneList(@RequestParam(required = false) String room,
+								  @RequestParam(required = false) String data,
+								  ModelMap model, Pageable pageable){
+		Map<String,Object> resultMap = new HashMap<>();
+		Map<String,Object> searhMap = new HashMap<>();
+		if(null!=data){
+			resultMap = com.alibaba.fastjson.JSONObject.parseObject(data,Map.class);
+		}
 		if(null==room){
 			room = "1";
 		}
 		model.addAttribute("room",room);
-		Map<String,Object> searhMap = new HashMap<>();
 		searhMap.put("EQ_xbCourse.type","1");
+		String organId = (String)resultMap.get("organclaId");
+		if(null==organId){
+			organId = "0";
+		}else if(!organId.equals("0")){
+			searhMap.put("EQ_organId",organId);
+		}
+		//教师名称
+		String TeacherNameCla = (String)resultMap.get("TeacherNameCla");
+		if(StringUtils.isNotEmpty(TeacherNameCla)){
+			searhMap.put("LIKE_xbClass.teacher.employeeName",TeacherNameCla);
+		}
 		Page<XbStudentRelation> xbStudentPage = studentService.getXbStudentRelationList(pageable,searhMap);
 		model.addAttribute("xbStudentPage",xbStudentPage);
 		model.addAttribute("currentzise",xbStudentPage.getSize());
+		//查询所有校区
+		Map<String,Object> sorgsearmap = new HashMap<>();
+		List<SysOrgans> sorganList = organsService.getOrgansListAll(sorgsearmap);
+		model.addAttribute("sorganList",sorganList);
+		model.addAttribute("organclaId",organId);
+		model.addAttribute("TeacherNameCla",TeacherNameCla);
 		return "oneToOne";
 	}
 
@@ -328,13 +351,35 @@ public class StudentActivity {
 	 * @return
 	 */
 	@RequestMapping("/getXbClassroomList")
-	public String getXbClassroomList(@RequestParam(required = false) String room,@RequestParam(required = false) boolean isFinishClass,ModelMap model, Pageable pageable){
+	public String getXbClassroomList(@RequestParam(required = false) String room,
+									 @RequestParam(required = false) String data,
+									 @RequestParam(required = false) boolean isFinishClass,
+									 ModelMap model, Pageable pageable){
+		Map<String,Object> resultMap = new HashMap<>();
+		Map<String,Object> searhMap = new HashMap<>();
+		Map<String,Object> classSearhMap = new HashMap<>();
+		if(null!=data){
+			resultMap = com.alibaba.fastjson.JSONObject.parseObject(data,Map.class);
+		}
+		String organId = (String)resultMap.get("organId");
+		if(null==organId){
+			organId = "0";
+		}else if(!organId.equals("0")){
+			classSearhMap.put("EQ_organId",organId);
+		}
+		//教师名称
+		String TeacherNameCla = (String)resultMap.get("TeacherNameCla");
+		if(StringUtils.isNotEmpty(TeacherNameCla)){
+			classSearhMap.put("LIKE_teacher.employeeName",TeacherNameCla);
+		}
+		Page<XbClass> xbClassPage = studentService.getXbClassList(pageable,classSearhMap);
+		model.addAttribute("organId",organId);
+		model.addAttribute("TeacherNameCla",TeacherNameCla);
 		if(null==room){
 			room = "1";
 		}
 		model.addAttribute("room",room);
-		Map<String,Object> searhMap = new HashMap<>();
-		Map<String,Object> classSearhMap = new HashMap<>();
+
 		Pageable pageables = new PageRequest(0, 20);
 		Pageable pageable1;
 		Pageable pageable2;
@@ -354,9 +399,11 @@ public class StudentActivity {
 			model.addAttribute("finishClass",isFinishClassStr);
 		}
 		Page<XbClassroom> xbClassroomPage = studentService.getXbClassroomList(pageable1,searhMap);
-		Page<XbClass> xbClassPage = studentService.getXbClassList(pageable2,classSearhMap);
 		List<XbClass> xbClassList = xbClassPage.getContent();
+		int establishNumSum = 0;
 		for (int i = 0; i < xbClassList.size(); i++) {
+			int establishNum = xbClassList.get(i).establishNum==null?0:xbClassList.get(i).establishNum;
+			establishNumSum += establishNum;
 			String sktime="";
 			List lists = xbAttendClassService.findListsByClassId(xbClassList.get(i).id);
 			if(lists.size()>0){
@@ -369,10 +416,13 @@ public class StudentActivity {
 			System.out.println(sktime);//拼接成字符串付给班级
 		}
 
+		model.addAttribute("establishNumSum",establishNumSum);//总人数
 		model.addAttribute("xbClassroomPage",xbClassroomPage);
 		model.addAttribute("xbClassPage",xbClassPage);
 		model.addAttribute("roomcurrentzise",xbClassroomPage.getSize());
 		model.addAttribute("classcurrentzise",xbClassPage.getSize());
+		Iterable<SysOrgans> organsList = organsService.getOrgansList();
+		model.addAttribute("organsList",organsList);
 		return "classes";
 	}
 
@@ -826,7 +876,7 @@ public class StudentActivity {
 		if(null!=data){
 			resultMap = com.alibaba.fastjson.JSONObject.parseObject(data,searhMap.getClass());
 		}
-		String organId = (String)resultMap.get("organId");
+		String organId = (String)resultMap.get("organIdDQ");
 		String type = (String)resultMap.get("type");
 		String nameormobile = (String)resultMap.get("nameormobile");
 		if(null==organId){
@@ -843,6 +893,18 @@ public class StudentActivity {
 			}else{
 				searhMap.put("LIKE_xbStudent.contactPhone",nameormobile);
 			}
+		}
+		//教师名称
+		String TeacherNameCla = (String)resultMap.get("TeacherNameCla");
+		if(StringUtils.isNotEmpty(TeacherNameCla)){
+			searhMap.put("LIKE_xbClass.teacher.employeeName",TeacherNameCla);
+		}
+		//教师名称
+		String studentStart = (String)resultMap.get("studentStart");
+		if(StringUtils.isEmpty(studentStart) || studentStart.equals("10")){
+			studentStart = "10";
+		}else {
+			searhMap.put("EQ_studentStart",Integer.parseInt(studentStart));
 		}
 		Iterable<SysOrgans> organsList = organsService.getOrgansList();
 		String totalPeriodNumStart = (String)resultMap.get("totalPeriodNumStart");
@@ -861,7 +923,9 @@ public class StudentActivity {
 		}
 		Page<XbStudentRelation> xbStudentPage = studentService.getXbStudentRelationList(pageable,searhMap);
 		model.addAttribute("expiryStuPage",xbStudentPage);
-		model.addAttribute("organId",organId);
+		model.addAttribute("organIdDQ",organId);
+		model.addAttribute("TeacherNameCla",TeacherNameCla);
+		model.addAttribute("studentStart",studentStart);
 		model.addAttribute("organsList",organsList);
 		model.addAttribute("expirycurrentzise",xbStudentPage.getSize());
 		model.addAttribute("nameormobile",nameormobile);
