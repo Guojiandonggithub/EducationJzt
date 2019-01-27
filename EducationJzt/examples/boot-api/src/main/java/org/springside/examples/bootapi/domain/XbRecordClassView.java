@@ -10,9 +10,8 @@ import java.util.Date;
 @Table(name="XB_RECORD_CLASS_VIEW")
 @NamedQuery(name="XbRecordClassView.findAll",query = "SELECT t FROM XbRecordClassView t")
 public class XbRecordClassView {
-
     @Id
-    @Column(name="id")
+    /*@Column(name="id")*/
     public String id;
     @Column(name="orgid")
     public String orgid;

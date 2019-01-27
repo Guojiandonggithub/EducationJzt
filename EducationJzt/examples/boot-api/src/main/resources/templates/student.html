@@ -22,7 +22,7 @@
     <script src="../static/pages/laydate/laydate.js"></script>
     <script src="../static/pages/js/kd.ui.plugin.js"></script>
     <script src="../static/pages/js/loading.js"></script>
-
+    <script src="../static/pages/js/laydate.js"></script>
     
 
 </head>
@@ -79,15 +79,28 @@
                         <div class="screenBot tags" id="donghua">
                             <div class="control-group">
                                 <label class="control-label">管辖校区</label>
-                                <input  th:attr ="checked=${organId == '0'?true:false}" name="organId" type="radio" th:value="0" class="ace" th:onclick="'javascript:getOrgansListPage(\'\')'">
+                                <input  th:attr ="checked=${organId == '0'?true:false}" name="organId"
+                                        type="radio" th:value="0" class="ace" th:onclick="'javascript:getOrgansListPage(\'\')'">
                                 <span class="lbl" th:text="全部校区"></span>
                                 <th:block class="checkbox" th:each="orgs:${organsList}">
                                     <label>
-                                        <input th:attr ="checked=${organId == orgs.id?true:false}" name="organId" type="radio" th:value="${orgs.id}" class="ace" th:onclick="'javascript:getOrgansListPage(\'\')'">
+                                        <input th:attr ="checked=${organId == orgs.id?true:false}"
+                                               name="organId" type="radio" th:value="${orgs.id}" class="ace" th:onclick="'javascript:getOrgansListPage(\'\')'">
                                         <span class="lbl" th:text="${orgs.organName}"></span>
                                     </label>
                                 </th:block>
                             </div>
+                            <div class="control-group">
+                                <label class="control-label">报名时间</label>
+                                <input id="enrollDateSearch" name="enrollDateSearch"
+                                       type="text" th:value="${enrollDateSearch}"
+                                       style="padding: 3px;border-radius: 5px !important;margin-top: 13px;width: 82px;color: #949ba2;border:solid 1px">
+                                <div class="form-group" style="display: inline;">
+                                    <button type="button" th:onclick="'javascript:getOrgansListPage(\'\')'">搜索</button>
+                                    <button type="button" onclick="$('input[type=text],#enrollDateSearch').val('')">清空</button>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                     </form>
@@ -307,7 +320,7 @@
                                             <!--<th>上课时间</th>-->
                                             <th>报名时间</th>
                                         </tr>
-                                        <tr id="chooses" th:each="studentrelations:${xbStudentPage.content}">
+                                        <tr id="chooses" th:each="studentrelations,stuSta:${xbStudentPage.content}">
                                             <td><input type="checkbox"></td>
                                             <td th:text="${studentrelations.xbStudent.studentName}"><img src="../static/pages/img/boy.png"></td>
                                             <td th:text="${studentrelations.xbStudent.contactPhone}"></td>
@@ -405,34 +418,31 @@
                 <div id="expiryStu" class="tab-pane fade expiryStu">
                     <th:block th:if="${expiryStuPage}" th:fragment="expiryStu">
                         <form id="expiryStuearchform">
-                    <!--<div class="screen">
-                        <button class="batch">批量导入</button>
-                        <div class="screenTop"> 
+                    <div class="screen">
+                        <!--<button class="batch">批量导入</button>-->
+                        <div class="screenTop" style="    margin-top: 32px;float: left;">
                             <div class="form-group">
                                 <label>学费到期查询：</label> 
-                                <select class="selectName">
-                                    <option value="AZ">全部</option>
-                                    <option value="AL">课时(按课时)</option>
-                                    <option value="AK">课时(按期)</option>
-                                    <option value="AK">按时间</option>
-                                    <option value="AK">按课时有效期</option>
+                                <select class="selectName" name="organId" >
+                                    <option  th:value="0" th:text="全部" th:selected="${organId eq 0}"></option>
+                                    <option th:each="org:${sorganList}" th:value="${org.id}" th:text="${org.organName}" th:selected="${organId eq org.id}"></option>
                                 </select>
                             </div>                            
                             <div class="form-group">
                                 <label>剩余</label>
-                                <input type="text" value="0">
+                                <input type="text" name="totalPeriodNumStart" value="0" th:value="${totalPeriodNumStart}">
                                 <label>至</label>
-                                <input type="text" value="0">
-                                <button type="button">搜索</button>
+                                <input type="text" name="totalPeriodNumEnd" value="0" th:value="${totalPeriodNumEnd}">
+                                <button type="button"  th:onclick="'javascript:getexpiryStulist(\'\')'">搜索</button>
                             </div>
                         </div>
-                        <div class="screenBot tags">
+                       <!-- <div class="screenBot tags">
                             课程状况：
                             <span class="tag">在读<button type="button" class="close">×</button></span>
                             <span class="tag">在读<button type="button" class="close">×</button></span>
                             <p>清空筛选</p>
-                        </div>
-                    </div>-->
+                        </div>-->
+                    </div>
                     <div class="orderCon">
                         <div class="export">
                             <!--<button type="button" class="btn btn-primary">批量删除学员</button>
@@ -450,6 +460,7 @@
                                     <th>
                                         <input type="checkbox" id="sel_4" onchange="chooseAll1()">
                                     </th>
+                                    <th>序号</th>
                                     <th>
                                         学员姓名
                                         <div class="sort">
@@ -458,6 +469,7 @@
                                         </div> 
                                     </th>
                                     <th>联系方式</th>
+                                    <th>所属校区</th>
                                     <th>所属关系</th>
                                     <th>余额
                                         <!--<div class="sort">
@@ -474,10 +486,12 @@
                                         <span href="#modal-table"  data-toggle="modal" class="glyphicon glyphicon-option-vertical" aria-hidden="true"></span>
                                     </th>                                
                                 </tr>
-                                <tr id="chooses" th:each="studentrelation:${expiryStuPage.content}">
+                                <tr id="chooses" th:each="studentrelation,stuSta:${expiryStuPage.content}">
                                     <td><input type="checkbox"></td>
+                                    <td th:text="${stuSta.count}+${expiryStuPage.getNumber()}*20"></td>
                                     <td th:text="${studentrelation.xbStudent.studentName}"><img src="../static/pages/img/boy.png"></td>
                                     <td th:text="${studentrelation.xbStudent.contactPhone}"></td>
+                                    <td th:text="${studentrelation.sysOrgans.organName}"></td>
                                     <td th:text="${studentrelation.xbStudent.contactRelation}"></td>
                                     <td th:text="${studentrelation.xbStudent.surplusMoney}"></td>
                                     <td th:text="${studentrelation.xbStudent.paymentMoney}"><a href="">补费</a></td>
@@ -498,28 +512,6 @@
                                         <option th:selected="${expirycurrentzise eq 15}" value="15">15条/页</option>
                                     </select>
                                 </div>
-                                <!--<ul class="pagination" th:if="${expiryStuPage.getTotalPages() gt 0}">
-                                    <li class="disabled">
-                                        <a href="#" th:onclick="'javascript:getexpiryStulist(\''+0+'\')'">首页</a>
-                                    </li>
-                                    <li class="disabled" th:if="${expiryStuPage.getNumber()-1} ge 0">
-                                        <a href="#" th:onclick="'javascript:getexpiryStulist(\''+${expiryStuPage.getNumber()-1}+'\')'">
-                                            <i class="ace-icon fa fa-angle-double-left"></i>
-                                        </a>
-                                    </li>
-                                    <li th:class="${i} eq ${expiryStuPage.getNumber()+1}?'active':''" th:each="i:${#numbers.sequence(1,expiryStuPage.getTotalPages())}">
-                                        <a href="#" th:onclick="'javascript:getexpiryStulist(\''+${i}+'\')'"
-                                           th:text="${i}"></a>
-                                    </li>
-                                    <li th:if="${expiryStuPage.getTotalPages()} ge ${expiryStuPage.getNumber()+2} ">
-                                        <a href="#" th:onclick="'javascript:getexpiryStulist(\''+${expiryStuPage.getNumber()+2}+'\')'">
-                                            <i class="ace-icon fa fa-angle-double-right"></i>
-                                        </a>
-                                    </li>
-                                    &lt;!&ndash; <li class="">
-                                     <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${currentnumber}+'\')'">尾页</a>
-                                 </li>&ndash;&gt;
-                                </ul>-->
                                 <ul class="pagination" th:if="${expiryStuPage.getTotalPages()>0}">
                                     <!-- 上一页 -->
                                     <li th:if="${expiryStuPage.getNumber()+1 == 1}"><span>上一页</span></li>
@@ -805,6 +797,7 @@
 <script>
 !function(){
 laydate.render({elem: '#demo'});//绑定元素
+    laydate.render({elem: '#enrollDateSearch'});//绑定元素
 }();
 
 $(".btn-down").click(function(){
@@ -922,8 +915,8 @@ function getexpiryStulist(page){
     $.ajax({
         type: 'get',
         //dataType: 'json',
-        url: basePath + '/student/getexpiryStulist',
-        data: {data:data},
+        url: basePath + '/student/getexpiryStulist?page='+page+'&size='+size+'&room=0'+'&data='+JSON.stringify(data),
+        //data: {data:JSON.stringify(data)},
         contentType:"application/json;charset=UTF-8",
         cache: false,
         async: true,

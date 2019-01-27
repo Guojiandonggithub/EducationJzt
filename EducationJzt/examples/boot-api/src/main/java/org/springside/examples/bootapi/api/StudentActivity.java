@@ -1,5 +1,6 @@
 package org.springside.examples.bootapi.api;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +13,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springside.examples.bootapi.ToolUtils.DateUtil;
 import org.springside.examples.bootapi.ToolUtils.HttpServletUtil;
 import org.springside.examples.bootapi.domain.*;
 import org.springside.examples.bootapi.dto.XbClassDto;
@@ -21,10 +23,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * 学员、班级、教室
@@ -233,6 +234,19 @@ public class StudentActivity {
 				searhMap.put("LIKE_xbStudent.contactPhone",nameormobile);
 			}
 		}
+		String enrollDateSearch = (String)resultMap.get("enrollDateSearch");
+		try {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			if(StringUtils.isNotEmpty(enrollDateSearch)){
+				searhMap.put("EQ_enrollDate",sdf.parse(enrollDateSearch));
+			}
+			if(null==enrollDateSearch){
+				enrollDateSearch = DateUtil.getDateStr(new Date());
+				searhMap.put("EQ_enrollDate",sdf.parse(DateUtil.getDateStr(new Date())));
+			}
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
 		Iterable<SysOrgans> organsList = organsService.getOrgansList();
 		Page<XbStudentRelation> xbStudentPage = studentService.getXbStudentRelationList(pageable,searhMap);
 		Map<String,Object> studentMap = new HashMap<>();
@@ -244,6 +258,7 @@ public class StudentActivity {
 		model.addAttribute("studentcurrentzise",xbStudentPage.getSize());
 		model.addAttribute("nameormobile",nameormobile);
 		model.addAttribute("type",type);
+		model.addAttribute("enrollDateSearch",enrollDateSearch);
 		return "student";
 	}
 
@@ -830,7 +845,20 @@ public class StudentActivity {
 			}
 		}
 		Iterable<SysOrgans> organsList = organsService.getOrgansList();
-		searhMap.put("EQ_periodNum","0");
+		String totalPeriodNumStart = (String)resultMap.get("totalPeriodNumStart");
+		String totalPeriodNumEnd = (String)resultMap.get("totalPeriodNumEnd");
+		if(StringUtils.isNotEmpty(totalPeriodNumStart)){
+			searhMap.put("GTE_periodNum",Integer.parseInt(totalPeriodNumStart));
+		}else{
+			searhMap.put("EQ_periodNum","0");
+			totalPeriodNumStart = "0";
+		}
+		if(StringUtils.isNotEmpty(totalPeriodNumEnd)){
+			searhMap.put("LTE_periodNum",Integer.parseInt(totalPeriodNumEnd));
+		}else{
+			searhMap.put("EQ_periodNum","0");
+			totalPeriodNumEnd = "0";
+		}
 		Page<XbStudentRelation> xbStudentPage = studentService.getXbStudentRelationList(pageable,searhMap);
 		model.addAttribute("expiryStuPage",xbStudentPage);
 		model.addAttribute("organId",organId);
@@ -838,6 +866,12 @@ public class StudentActivity {
 		model.addAttribute("expirycurrentzise",xbStudentPage.getSize());
 		model.addAttribute("nameormobile",nameormobile);
 		model.addAttribute("type",type);
+		model.addAttribute("totalPeriodNumStart",totalPeriodNumStart);
+		model.addAttribute("totalPeriodNumEnd",totalPeriodNumEnd);
+		//查询所有校区
+		Map<String,Object> sorgsearmap = new HashMap<>();
+		List<SysOrgans> sorganList = organsService.getOrgansListAll(sorgsearmap);
+		model.addAttribute("sorganList",sorganList);
 		return "student::expiryStu";
 	}
 
