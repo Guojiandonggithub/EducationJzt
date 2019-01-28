@@ -52,6 +52,7 @@ public class ForwardActivity {
 	public void getXbStudentList(@RequestParam(required = false) String data, ModelMap model, Pageable pageable){
 		Map<String,Object> resultMap = new HashMap<>();
 		Map<String,Object> searhMap = new HashMap<>();
+		Map<String,Object> searchParamsview = new HashMap<>();
 		if(null!=data){
 			resultMap = com.alibaba.fastjson.JSONObject.parseObject(data,searhMap.getClass());
 		}
@@ -62,6 +63,7 @@ public class ForwardActivity {
 			organId = "0";
 		}else if(!organId.equals("0")){
 			searhMap.put("EQ_organId",organId);
+			searchParamsview.put("EQ_organId",organId);
 		}
 		if(null==type){
 			type = "AZ";
@@ -81,21 +83,24 @@ public class ForwardActivity {
 			if(StringUtils.isNotEmpty(enrollDateSearch)){
 				date = sdf.parse(enrollDateSearch);
 				searhMap.put("EQ_enrollDate",date);
+				searchParamsview.put("EQ_enrollDate",date);
 			}
 			if(null==enrollDateSearch){
 				date = sdf.parse(DateUtil.getDateStr(new Date()));
 				enrollDateSearch = DateUtil.getDateStr(new Date());
 				searhMap.put("EQ_enrollDate",date);
+				searchParamsview.put("EQ_enrollDate",date);
 			}
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		List studentlist = new ArrayList<>();
+		/*List studentlist = new ArrayList<>();
 		if(StringUtils.isEmpty(enrollDateSearch)){
 			studentlist =	studentService.getAllStudentListNoDate();
 		}else{
 			studentlist =	studentService.getAllStudentList(date);
-		}
+		}*/
+		List<XbStudentRelationView> studentlist = studentService.getxbStudentRelationViewList(searchParamsview);
 		Iterable<SysOrgans> organsList = organsService.getOrgansList();
 		Page<XbStudentRelation> xbStudentPage = studentService.getXbStudentRelationList(pageable,searhMap);
 		Map<String,Object> studentMap = new HashMap<>();

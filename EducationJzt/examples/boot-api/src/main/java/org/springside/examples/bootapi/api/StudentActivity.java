@@ -213,6 +213,7 @@ public class StudentActivity {
 	public String getXbStudentList(@RequestParam(required = false) String data,ModelMap model, Pageable pageable){
 		Map<String,Object> resultMap = new HashMap<>();
 		Map<String,Object> searhMap = new HashMap<>();
+		Map<String,Object> searchParamsview = new HashMap<>();
 		if(null!=data){
 			resultMap = com.alibaba.fastjson.JSONObject.parseObject(data,searhMap.getClass());
 		}
@@ -223,6 +224,7 @@ public class StudentActivity {
 			organId = "0";
 		}else if(!organId.equals("0")){
 			searhMap.put("EQ_organId",organId);
+			searchParamsview.put("EQ_organId",organId);
 		}
 		if(null==type){
 			type = "AZ";
@@ -244,30 +246,35 @@ public class StudentActivity {
 			if(StringUtils.isNotEmpty(enrollDateSearch)){
 				startdate = sdf.parse(enrollDateSearch);
 				searhMap.put("GTE_enrollDate",startdate);
+				searchParamsview.put("GTE_enrollDate",startdate);
 			}
 			if(null==enrollDateSearch){
 				enrollDateSearch = DateUtil.weekDateFirstDay();
 				startdate = sdf.parse(DateUtil.weekDateFirstDay());
 				searhMap.put("GTE_enrollDate",startdate);
+				searchParamsview.put("GTE_enrollDate",startdate);
 			}
 			if(StringUtils.isNotEmpty(enrollDateSearchEnd)){
 				enddate = sdf.parse(enrollDateSearchEnd);
 				searhMap.put("LTE_enrollDate",enddate);
+				searchParamsview.put("LTE_enrollDate",enddate);
 			}
 			if(null==enrollDateSearchEnd){
 				enddate = sdf.parse(DateUtil.weekDateLastDay());
 				enrollDateSearchEnd = DateUtil.weekDateLastDay();
 				searhMap.put("LTE_enrollDate",enddate);
+				searchParamsview.put("LTE_enrollDate",enddate);
 			}
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		List studentlist = new ArrayList<>();
+		/*List studentlist = new ArrayList<>();
 		if(StringUtils.isEmpty(enrollDateSearch)){
 			studentlist =	studentService.getAllStudentListNoDate();
 		}else{
 			studentlist =	studentService.getAllStudentListStartAndEnd(startdate,enddate);
-		}
+		}*/
+		List<XbStudentRelationView> studentlist = studentService.getxbStudentRelationViewList(searchParamsview);
 		Iterable<SysOrgans> organsList = organsService.getOrgansList();
 		Page<XbStudentRelation> xbStudentPage = studentService.getXbStudentRelationList(pageable,searhMap);
 		Map<String,Object> studentMap = new HashMap<>();

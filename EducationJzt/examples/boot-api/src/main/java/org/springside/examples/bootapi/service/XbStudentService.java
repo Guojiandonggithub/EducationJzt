@@ -40,6 +40,8 @@ public class XbStudentService {
 	private XbSupplementFeeDao xbSupplementFeeDao;
 	@Autowired
 	private XbClassViewDao xbClassViewDao;
+	@Autowired
+	private XbStudentRelationViewDao xbStudentRelationViewDao;
 
 	@Transactional
 	public Page<XbSupplementFee>  getXbSupplementFeeList(Pageable pageable, Map<String, Object> searchParams) {
@@ -52,6 +54,12 @@ public class XbStudentService {
 		Specification<XbSupplementFee> spec = DynamicSpecifications.bySearchFilter(
 				filters.values(), XbSupplementFee.class);
 		return xbSupplementFeeDao.findAll(spec,pageable);
+	}
+	public List<XbStudentRelationView> getxbStudentRelationViewList(Map<String, Object> searchParams){
+		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
+		Specification<XbStudentRelationView> spec = DynamicSpecifications.bySearchFilter(
+				filters.values(), XbStudentRelationView.class);
+		return xbStudentRelationViewDao.findAll(spec);
 	}
 	public List getAllStudentList(Date enroll_date){
 		return xbStudentRelationDao.findAllStudentList(enroll_date);

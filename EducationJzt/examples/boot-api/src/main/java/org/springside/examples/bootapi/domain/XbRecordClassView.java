@@ -13,7 +13,7 @@ import java.util.Date;
 public class XbRecordClassView {
     @Id
     /*@Column(name="id")*/
-    public String id;
+    /*public String id;*/
     @Column(name="orgid")
     public String orgid;
     @Column(name="organ_name")
