@@ -424,66 +424,40 @@
                     <th:block th:if="${expiryStuPage}" th:fragment="expiryStu">
                         <form id="expiryStuearchform">
                             <div class="control-position" id="control-position" style="padding-top: 10px;">
-                        <!--<button class="batch">批量导入</button>-->
                                 <div class="control-group" sytle="float: left;display: inline-block;">
                                     <div class="form-group"
                                         <label class="control-label" style="width:100px;">学费到期查询：</label>
-                                        <select class="selectName" name="organId">
+                                        <select class="selectName" name="organId" style="border-radius: 5px !important;">
                                             <option th:value="0" th:text="全部" th:selected="${organId eq 0}"></option>
                                             <option th:each="org:${sorganList}" th:value="${org.id}"
                                                     th:text="${org.organName}"
                                                     th:selected="${organId eq org.id}"></option>
                                         </select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="control-label" style="width:100px;">剩余</label>
+                                        <label class="control-label" style="width: 25px;">剩余</label>
                                         <input type="text" name="totalPeriodNumStart" value="0"
-                                               th:value="${totalPeriodNumStart}">
+                                               th:value="${totalPeriodNumStart}" style="width: 59px;border-radius: 5px !important;">
                                         <label>至</label>
                                         <input type="text" name="totalPeriodNumEnd" value="0"
-                                               th:value="${totalPeriodNumEnd}">
+                                               th:value="${totalPeriodNumEnd}" style="width: 59px;border-radius: 5px !important;">
                                         <button type="button" th:onclick="'javascript:getexpiryStulist(\'\')'">搜索
                                         </button>
                                     </div>
                                 <div class="control-group">
-                                    <div class="form-group" style="">
-                                    <label class="control-label" style="width:100px;">教师姓名</label>
-                                <input id="TeacherNameCla" name="TeacherNameCla" type="text" th:value="${TeacherNameCla}" class="ace"
-                                       style="padding: 3px;border-radius: 5px !important;margin-top: 13px;width: 82px;color: #3c546c">
-                                <button type="button" th:onclick="'javascript:getexpiryStulist(\'\')'">搜索</button>
-                                <button type="button" onclick="$('input[type=text],#TeacherNameCla').val('')">清空</button>
-                            </div>
-                        </div>
-                                <div class="control-group" style="">
-                                    <label class="control-label" style="width:100px;">校区</label>
-                                    <input  th:attr ="checked=${organIdDQ == '0'?true:false}"
-                                            name="organIdDQ" type="radio" th:value="0" class="ace"
-                                            th:onclick="'javascript:getexpiryStulist(\'\')'">
-                                    <span class="lbl" th:text="全部"></span>
-                                    <div class="checkbox" th:each="orgs:${sorganList}">
-                                        <label>
-                                            <input th:attr ="checked=${organIdDQ == orgs.id?true:false}"
-                                                   name="organIdDQ" type="radio" th:value="${orgs.id}" class="ace"
-                                                   th:onclick="'javascript:getexpiryStulist(\'\')'">
-                                            <span class="lbl" th:text="${orgs.organName}"></span>
-                                        </label>
-                                    </div>
+                                        <label class="control-label" style="width:55px;">课程状态:</label>
+                                        <select class="selectName" name="studentStart" >
+                                            <option  th:value="10" th:text="请选择" th:selected="${studentStart eq '10'}"></option>
+                                            <option  th:value="0" th:text="在读" th:selected="${studentStart eq '0'}"></option>
+                                            <option  th:value="1" th:text="结课" th:selected="${studentStart eq '1'}"></option>
+                                            <option  th:value="2" th:text="转班" th:selected="${studentStart eq '2'}"></option>
+                                            <option  th:value="3" th:text="退费" th:selected="${studentStart eq '3'}"></option>
+                                            <option  th:value="4" th:text="结课" th:selected="${studentStart eq '4'}"></option>
+                                        </select>
+                                        <label class="control-label" style="width:60px;">教师姓名:</label>
+                                        <input id="TeacherNameCla" name="TeacherNameCla" type="text" th:value="${TeacherNameCla}" class="ace"
+                                               style="padding: 3px;border-radius: 5px !important;margin-top: 13px;width: 82px;color: #3c546c">
+                                        <button type="button" th:onclick="'javascript:getexpiryStulist(\'\')'">搜索</button>
+                                        <button type="button" onclick="$('input[type=text],#TeacherNameCla').val('')">清空</button>
                                 </div>
-
-                                <div class="control-group" style="">
-                            <div class="form-group">
-                                <label class="control-label" style="width:100px;">课程状态</label>
-                                <select class="selectName" name="studentStart" >
-                                    <option  th:value="10" th:text="请选择" th:selected="${studentStart eq '10'}"></option>
-                                    <option  th:value="0" th:text="在读" th:selected="${studentStart eq '0'}"></option>
-                                    <option  th:value="1" th:text="结课" th:selected="${studentStart eq '1'}"></option>
-                                    <option  th:value="2" th:text="转班" th:selected="${studentStart eq '2'}"></option>
-                                    <option  th:value="3" th:text="退费" th:selected="${studentStart eq '3'}"></option>
-                                    <option  th:value="4" th:text="结课" th:selected="${studentStart eq '4'}"></option>
-                                </select>
-                                <button type="button" th:onclick="'javascript:getexpiryStulist(\'\')'">搜索</button>
-                            </div>
-                        </div>
                     </div>
                     <div class="orderCon">
                         <div class="export">
