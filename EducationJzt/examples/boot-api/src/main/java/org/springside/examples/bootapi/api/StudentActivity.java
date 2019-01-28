@@ -235,14 +235,22 @@ public class StudentActivity {
 			}
 		}
 		String enrollDateSearch = (String)resultMap.get("enrollDateSearch");
+		String enrollDateSearchEnd = (String)resultMap.get("enrollDateSearchEnd");
 		try {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			if(StringUtils.isNotEmpty(enrollDateSearch)){
-				searhMap.put("EQ_enrollDate",sdf.parse(enrollDateSearch));
+				searhMap.put("GTE_enrollDate",sdf.parse(enrollDateSearch));
 			}
 			if(null==enrollDateSearch){
-				enrollDateSearch = DateUtil.getDateStr(new Date());
-				searhMap.put("EQ_enrollDate",sdf.parse(DateUtil.getDateStr(new Date())));
+				enrollDateSearch = DateUtil.weekDateFirstDay();
+				searhMap.put("GTE_enrollDate",sdf.parse(DateUtil.weekDateFirstDay()));
+			}
+			if(StringUtils.isNotEmpty(enrollDateSearchEnd)){
+				searhMap.put("LTE_enrollDate",sdf.parse(enrollDateSearchEnd));
+			}
+			if(null==enrollDateSearchEnd){
+				enrollDateSearchEnd = DateUtil.weekDateLastDay();
+				searhMap.put("LTE_enrollDate",sdf.parse(DateUtil.weekDateLastDay()));
 			}
 		} catch (ParseException e) {
 			e.printStackTrace();
@@ -259,6 +267,7 @@ public class StudentActivity {
 		model.addAttribute("nameormobile",nameormobile);
 		model.addAttribute("type",type);
 		model.addAttribute("enrollDateSearch",enrollDateSearch);
+		model.addAttribute("enrollDateSearchEnd",enrollDateSearchEnd);
 		return "student";
 	}
 
