@@ -560,9 +560,9 @@ public class StudentActivity {
 		Map<String, Object> map  =  new HashMap<>();
 		try {
             JSONObject jsonObject = new JSONObject();
-			studentService.finishClass(id);
+			String msg = studentService.finishClass(id);
 			jsonObject.put("status","1");
-			jsonObject.put("msg", "同步结束成功");
+			jsonObject.put("msg", msg);
 			resp.setContentType("text/html;charset=UTF-8");
 			resp.getWriter().println(jsonObject.toJSONString());
 			resp.getWriter().close();

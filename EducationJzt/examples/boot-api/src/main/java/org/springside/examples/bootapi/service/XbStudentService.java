@@ -17,10 +17,8 @@ import org.springside.examples.bootapi.domain.*;
 import org.springside.examples.bootapi.repository.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.math.BigDecimal;
+import java.util.*;
 
 @Service
 public class XbStudentService {
@@ -220,11 +218,33 @@ public class XbStudentService {
 	}
 
 	@Transactional
-	public void finishClass(String id) {
+	public String finishClass(String id) {
+		Map<String, Object> searchParams = new HashMap<>();
+		searchParams.put("EQ_classId",id);
+		searchParams.put("GT_receivable",new BigDecimal("0"));
+		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
+		Specification<XbStudentRelation> spec = DynamicSpecifications.bySearchFilter(
+				filters.values(), XbStudentRelation.class);
+		List<XbStudentRelation> lists =  xbStudentRelationDao.findAll(spec);
+		if(lists.size()>0){
+			return "还有未完成的学员不允许结课!";
+		}else{
+			Map<String, Object> searchParamss = new HashMap<>();
+			searchParams.put("EQ_classId",id);
+			Map<String, SearchFilter> filterss = SearchFilter.parse(searchParams);
+			Specification<XbStudentRelation> specs = DynamicSpecifications.bySearchFilter(
+					filters.values(), XbStudentRelation.class);
+			List<XbStudentRelation> listss =  xbStudentRelationDao.findAll(spec);
+			for (int i = 0; i < listss.size(); i++) {
+				listss.get(i).studentStart = 4;//结课
+				xbStudentRelationDao.save(listss.get(i));
+			}
+		}
 		XbClass xbClass = xbClassDao.findOne(id);
 		xbClass.isEnd="0";//0同步结束
 		xbClass.classEndDate = new Date();
 		xbClassDao.save(xbClass);
+		return "同步结束成功";
 	}
 
 	@Transactional
