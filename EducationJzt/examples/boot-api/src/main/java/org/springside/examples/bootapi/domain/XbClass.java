@@ -71,6 +71,8 @@ public class XbClass {
     public List<XbCoursePreset> xbCoursePresetList = new ArrayList<>();
     @Transient
     public String sktime;
+    @Transient
+    public Long enrollNum;
 
     public XbClass() {
 

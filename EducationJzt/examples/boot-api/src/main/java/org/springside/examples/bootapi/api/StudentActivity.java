@@ -235,14 +235,22 @@ public class StudentActivity {
 			}
 		}
 		String enrollDateSearch = (String)resultMap.get("enrollDateSearch");
+		String enrollDateSearchEnd = (String)resultMap.get("enrollDateSearchEnd");
 		try {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			if(StringUtils.isNotEmpty(enrollDateSearch)){
-				searhMap.put("EQ_enrollDate",sdf.parse(enrollDateSearch));
+				searhMap.put("GTE_enrollDate",sdf.parse(enrollDateSearch));
 			}
 			if(null==enrollDateSearch){
-				enrollDateSearch = DateUtil.getDateStr(new Date());
-				searhMap.put("EQ_enrollDate",sdf.parse(DateUtil.getDateStr(new Date())));
+				enrollDateSearch = DateUtil.weekDateFirstDay();
+				searhMap.put("GTE_enrollDate",sdf.parse(DateUtil.weekDateFirstDay()));
+			}
+			if(StringUtils.isNotEmpty(enrollDateSearchEnd)){
+				searhMap.put("LTE_enrollDate",sdf.parse(enrollDateSearchEnd));
+			}
+			if(null==enrollDateSearchEnd){
+				enrollDateSearchEnd = DateUtil.weekDateLastDay();
+				searhMap.put("LTE_enrollDate",sdf.parse(DateUtil.weekDateLastDay()));
 			}
 		} catch (ParseException e) {
 			e.printStackTrace();
@@ -259,6 +267,7 @@ public class StudentActivity {
 		model.addAttribute("nameormobile",nameormobile);
 		model.addAttribute("type",type);
 		model.addAttribute("enrollDateSearch",enrollDateSearch);
+		model.addAttribute("enrollDateSearchEnd",enrollDateSearchEnd);
 		return "student";
 	}
 
@@ -372,6 +381,11 @@ public class StudentActivity {
 		if(StringUtils.isNotEmpty(TeacherNameCla)){
 			classSearhMap.put("LIKE_teacher.employeeName",TeacherNameCla);
 		}
+		if(isFinishClass){
+			String isFinishClassStr = "0";
+			classSearhMap.put("EQ_isEnd",isFinishClassStr);
+			model.addAttribute("finishClass",isFinishClassStr);
+		}
 		Page<XbClass> xbClassPage = studentService.getXbClassList(pageable,classSearhMap);
 		model.addAttribute("organId",organId);
 		model.addAttribute("TeacherNameCla",TeacherNameCla);
@@ -393,16 +407,14 @@ public class StudentActivity {
 			pageable1 = pageables;
 			pageable2 = pageables;
 		}
-		if(isFinishClass){
-			String isFinishClassStr = "0";
-			classSearhMap.put("EQ_isEnd",isFinishClassStr);
-			model.addAttribute("finishClass",isFinishClassStr);
-		}
+
 		Page<XbClassroom> xbClassroomPage = studentService.getXbClassroomList(pageable1,searhMap);
 		List<XbClass> xbClassList = xbClassPage.getContent();
 		int establishNumSum = 0;
 		for (int i = 0; i < xbClassList.size(); i++) {
-			int establishNum = xbClassList.get(i).establishNum==null?0:xbClassList.get(i).establishNum;
+			String classId = xbClassList.get(i).id;
+			Long establishNum = studentService.findAllDataByClassCount(classId);
+			xbClassList.get(i).enrollNum = establishNum;
 			establishNumSum += establishNum;
 			String sktime="";
 			List lists = xbAttendClassService.findListsByClassId(xbClassList.get(i).id);
@@ -723,6 +735,7 @@ public class StudentActivity {
 			if(null!=courseName&&!courseName.equals("")){
 				xbCoursesearhMap.put("LIKE_xbCourse.courseName",courseName);
 			}
+			xbCoursesearhMap.put("EQ_deleteStatus","1");
 			Page<XbCoursePreset> xbCoursePage = xbCoursePresetService.getXbCoursePresetList(pageable,xbCoursesearhMap);
 			model.addAttribute("xbCoursePage",xbCoursePage);
 		}

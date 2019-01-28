@@ -41,5 +41,6 @@ public class XbRecordClassView {
     public Integer establishNum;
     public String classId;
     public long studentCount;
-
+    @Transient
+    public BigDecimal totalReceivable;
 }

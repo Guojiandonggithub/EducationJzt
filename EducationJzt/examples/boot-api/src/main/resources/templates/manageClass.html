@@ -156,7 +156,11 @@
                                         <!--<td th:text="${classes.periodNum}"></td>-->
                                         <td th:text="${classes.periodNum}"></td>
                                         <td th:text="${classes.receivable}"></td>
-                                        <td><i></i>在读</td>
+                                        <td style="color:#7fbb57" th:if="${classes.studentStart} eq 0">在读</td>
+                                        <td style="color:#e46054" th:if="${classes.studentStart} eq 1">停课</td>
+                                        <td style="color:#548ee4" th:if="${classes.studentStart} eq 2">转班</td>
+                                        <td style="color:#b0b0b0" th:if="${classes.studentStart} eq 4">结课</td>
+                                        <td style="color:#548ee4" th:if="${classes.studentStart} eq 3">退费</td>
                                         <!--<td>11111</td>
                                         <td>2018-05-20</td>-->
                                         <!--<td>

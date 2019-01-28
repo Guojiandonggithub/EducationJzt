@@ -170,7 +170,7 @@
                                                 <!--<td>2018-05-20</td>-->
                                                 <td th:text="${cls.sysOrgans.organName}">昆区分校</td>
                                                 <td th:text="${cls.xbClassroom.classroomName}">昆5号教室</td>
-                                                <td><a th:href="@{'/recordClass/classEdit?classesId='+${cls.id}}"><img src="../static/pages/img/jsk.jpg">记上课</a></td>
+                                                <td><a th:if="${cls.isEnd!=0}" th:href="@{'/recordClass/classEdit?classesId='+${cls.id}}"><img src="../static/pages/img/jsk.jpg">记上课</a></td>
                                             </tr>
                                         </table>
                                         <div class="orderPage">
@@ -330,6 +330,9 @@
                                         </div>
                                     </div>
                                         <div class="orderCon" style="margin-top:21px;">
+                                            <div class="result">
+                                                当前结果：共计<span th:text="${totalPeriodnum}"></span>课时<span th:text="${totalReceivables}"></span>金额
+                                            </div>
                                             <div class="orderTable">
                                                 <table class="table table-hover">
                                                     <tr>
@@ -349,6 +352,7 @@
                                                         <th>旷课</th>
                                                         <th>补课</th>
                                                         <th>学员课时</th>
+                                                        <th>课时金额</th>
                                                         <th>
                                                             <span href="#modal-table" data-toggle="modal" class="glyphicon glyphicon-option-vertical"
                                                                 aria-hidden="true"></span>
@@ -366,6 +370,7 @@
                                                         <td th:text="${cla.kknum}?${cla.kknum}:'0.0'">旷课</td>
                                                         <td th:text="${cla.bknum}?${cla.bknum}:'0.0'">补课</td>
                                                         <td th:text="${cla.periodnum}">学员课时</td>
+                                                        <td th:text="${cla.totalReceivable}">学员课时</td>
                                                         <!--<td>
                                                             <div class="btn-group open">
                                                                 <p data-toggle="dropdown" class="down" aria-expanded="true">

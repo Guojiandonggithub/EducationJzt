@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
@@ -25,10 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /***
  * 记上课
@@ -197,45 +195,45 @@ public class RecordClassActivity {
 	public void recordClass(@RequestBody List<XbRecordClass> xbRecordClassList, HttpServletResponse resp, Pageable pageable) {
 		try {
 			for (XbRecordClass xbRecordClass : xbRecordClassList) {
-				String studentId = xbRecordClass.studentId;
-				BigDecimal deductPeriod = xbRecordClass.deductPeriod;
-				String classId = xbRecordClass.classId;
-				String organId = xbRecordClass.organId;
-				String courseId = xbRecordClass.courseId;
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-				xbRecordClass.recordTime = sdf.parse(xbRecordClass.recordTimeTemp);
-				Map<String,Object> searhMap = new HashMap<>();
-				Map<String,Object> courseMap = new HashMap<>();
-				if(null!=classId){
-					searhMap.put("EQ_classId",classId);
-					searhMap.put("EQ_studentId",studentId);
-				}
-				courseMap.put("EQ_courseId",courseId);
-				courseMap.put("EQ_organIds",organId);
-				BigDecimal money = new BigDecimal(0);
-				List<XbCoursePreset> xbCoursePresetList = xbCoursePresetService.getXbCoursePresets(courseMap);
-				if(xbCoursePresetList.size()>0){
-					String chargingMode = xbCoursePresetList.get(0).xbCourse.chargingMode;
-					money = xbCoursePresetList.get(0).money;
-					if(chargingMode.equals("2")){
-						money = money.divide(new BigDecimal(xbCoursePresetList.get(0).periodNum),2,BigDecimal.ROUND_HALF_UP);
+				if(null!=xbRecordClass.state&&!xbRecordClass.state.equals("4")&&null!=xbRecordClass.deductPeriod){
+					String studentId = xbRecordClass.studentId;
+					BigDecimal deductPeriod = xbRecordClass.deductPeriod;
+					String classId = xbRecordClass.classId;
+					String organId = xbRecordClass.organId;
+					String courseId = xbRecordClass.courseId;
+					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+					xbRecordClass.recordTime = sdf.parse(xbRecordClass.recordTimeTemp);
+					Map<String,Object> searhMap = new HashMap<>();
+					Map<String,Object> courseMap = new HashMap<>();
+					if(null!=classId){
+						searhMap.put("EQ_classId",classId);
+						searhMap.put("EQ_studentId",studentId);
 					}
-				}
-				Page<XbStudentRelation> xbStudentRelations = studentService.getXbStudentRelationList(pageable,searhMap);
-				XbStudentRelation xbStudentRelation = xbStudentRelations.getContent().get(0);
-				//Integer periodNum = xbStudentRelation.periodNum;
-				BigDecimal bigDecimal = xbStudentRelation.periodNum;
-				BigDecimal receivable = xbStudentRelation.receivable;
-				//BigDecimal bigDecimal = new BigDecimal(periodNum.toString());
-				money = deductPeriod.multiply(money);
-				receivable = receivable.subtract(money);
-				bigDecimal = bigDecimal.subtract(deductPeriod);
-				//xbStudentRelation.periodNum = Integer.parseInt(bigDecimal.toString());
-				xbStudentRelation.periodNum = bigDecimal;
-				xbStudentRelation.receivable = receivable;
-				studentService.saveXbStudentRelation(xbStudentRelation);
-				if(!xbRecordClass.state.equals("4")){
+					courseMap.put("EQ_courseId",courseId);
+					courseMap.put("EQ_organIds",organId);
+					BigDecimal money = new BigDecimal(0);
+					List<XbCoursePreset> xbCoursePresetList = xbCoursePresetService.getXbCoursePresets(courseMap);
+					if(xbCoursePresetList.size()>0){
+						String chargingMode = xbCoursePresetList.get(0).xbCourse.chargingMode;
+						money = xbCoursePresetList.get(0).money;
+						if(chargingMode.equals("2")){
+							money = money.divide(new BigDecimal(xbCoursePresetList.get(0).periodNum),2,BigDecimal.ROUND_HALF_UP);
+						}
+					}
+					Page<XbStudentRelation> xbStudentRelations = studentService.getXbStudentRelationList(pageable,searhMap);
+					XbStudentRelation xbStudentRelation = xbStudentRelations.getContent().get(0);
+					//Integer periodNum = xbStudentRelation.periodNum;
+					BigDecimal bigDecimal = xbStudentRelation.periodNum;
+					BigDecimal receivable = xbStudentRelation.receivable;
+					//BigDecimal bigDecimal = new BigDecimal(periodNum.toString());
+					money = deductPeriod.multiply(money);
+					receivable = receivable.subtract(money);
+					bigDecimal = bigDecimal.subtract(deductPeriod);
+					//xbStudentRelation.periodNum = Integer.parseInt(bigDecimal.toString());
+					xbStudentRelation.periodNum = bigDecimal;
+					xbStudentRelation.receivable = receivable;
 					studentService.saveXbRecordClass(xbRecordClass);
+					studentService.saveXbStudentRelation(xbStudentRelation);
 				}
 			}
 			JSONObject jsonObject = new JSONObject();
@@ -330,6 +328,21 @@ public class RecordClassActivity {
 			e.printStackTrace();
 		}
 		Page<XbRecordClassView> recordLists = studentService.getXbRecordClassdViewtoList(pageable,searhMap);
+		for (int i = 0; i < recordLists.getContent().size(); i++) {
+			BigDecimal periodnum = recordLists.getContent().get(i).periodnum;
+			String classesId = recordLists.getContent().get(i).classId;
+			Map<String, Object> searhMaps = new HashMap<>();
+			searhMaps.put("EQ_classId", classesId);
+			searhMaps.put("NEQ_periodNum", new BigDecimal("0"));
+			Pageable pageables = new PageRequest(0, 1, null);
+			Page<XbStudentRelation> classPage = studentService.getXbStudentRelationList(pageables, searhMaps);
+			if (classPage.getContent().size() > 0) {
+				BigDecimal totalPeriodNum = classPage.getContent().get(0).periodNum;
+				BigDecimal totalReceivable = classPage.getContent().get(0).receivable;
+				BigDecimal receivable = totalReceivable.divide(totalPeriodNum).multiply(recordLists.getContent().get(i).periodnum);
+				recordLists.getContent().get(i).totalReceivable =receivable;
+			}
+		}
 		int totalElements = studentService.findRecordTotalCount();
 		int size = pageable.getPageSize();
 		int number = pageable.getPageNumber();
@@ -351,6 +364,29 @@ public class RecordClassActivity {
 		model.addAttribute("startclaDateTimeBegin",startDateTimeBegin);
 		model.addAttribute("startclaDateTimeEnd",startDateTimeEnd);
 		model.addAttribute("TeacherNameCla",TeacherNameCla);
+
+
+		List<XbRecordClassView> recordList = studentService.getXbRecordClassdViewtoList(searhMap);
+		BigDecimal totalPeriodnum = new BigDecimal("0");
+		BigDecimal totalReceivables = new BigDecimal("0");
+		for (int i = 0; i < recordList.size(); i++) {
+			BigDecimal periodnum = recordList.get(i).periodnum;
+			totalPeriodnum = totalPeriodnum.add(periodnum);
+			String classesId = recordList.get(i).classId;
+			Map<String, Object> searhMaps = new HashMap<>();
+			searhMaps.put("EQ_classId", classesId);
+			searhMaps.put("NEQ_periodNum", new BigDecimal("0"));
+			Pageable pageables = new PageRequest(0, 1, null);
+			Page<XbStudentRelation> classPage = studentService.getXbStudentRelationList(pageables, searhMaps);
+			if (classPage.getContent().size() > 0) {
+				BigDecimal totalPeriodNum = classPage.getContent().get(0).periodNum;
+				BigDecimal totalReceivable = classPage.getContent().get(0).receivable;
+				BigDecimal receivable = totalReceivable.divide(totalPeriodNum).multiply(recordList.get(i).periodnum);
+				totalReceivables = totalReceivables.add(receivable);
+			}
+		}
+		model.addAttribute("totalPeriodnum",totalPeriodnum);
+		model.addAttribute("totalReceivables",totalReceivables);
 		return "attendClass::accordingClass";
 	}
 

@@ -98,6 +98,11 @@ public class XbStudentService {
 	}
 
 	@Transactional
+	public Long findAllDataByClassCount(String classId) {
+		return xbStudentRelationDao.findAllDataByClassCount(classId);
+	}
+
+	@Transactional
 	public XbStudentRelation getXbStudentRelation(String id) {
 		return xbStudentRelationDao.findOne(id);
 	}

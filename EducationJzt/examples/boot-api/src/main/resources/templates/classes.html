@@ -56,7 +56,7 @@
                     <div class="tab-pane fade in active" id="class_jz">
                     <form id="xbcalssForm">
                         <div class="screen" style="height:76px;">
-                            <a href="/student/getXbClass"><button class="stdEnroll">新建班级</button></a>
+                            <a href="/student/getXbClass"><button type="button" class="stdEnroll">新建班级</button></a>
                         </div>
                         <div class="control-position" id="control-position">
                             <div class="control-group">
@@ -93,7 +93,7 @@
                                     </div>
                                 </div>
                                 <div class="result">
-                                    当前结果：共计<span th:text="${xbClassPage.getTotalPages()}"></span>个班级,学员<span th:text="${establishNumSum}"></span>人
+                                    当前结果：共计<span th:text="${xbClassPage.getTotalElements()}"></span>个班级,学员<span th:text="${establishNumSum}"></span>人
                                 </div>
                                 <div class="orderTable">
                                     <table class="table table-hover">
@@ -134,7 +134,7 @@
                                             <td><input type="checkbox"></td>
                                             <td th:text="${xbclassta.count}+${xbClassPage.getNumber()*20}">序号</td>
                                             <td th:text="${xbclass.sysOrgans.organName}+${xbclass.xbCourse.xbcoursetype.courseTypeName}+${xbclass.teacher.employeeName}+${xbclass.className}" class="className studentName" th:onclick="'javascript:classDetail(\''+${xbclass.id}+'\')'"><img src="../static/pages/img/ban.png"></td>
-                                            <td class="prog" th:text="${xbclass.establishNum}">
+                                            <td class="prog" th:text="${xbclass.enrollNum}">
                                                 <div class="progress progress-small progress-striped active">
                                                     <!--<div class="progress-bar progress-bar-warning" style="width: 0%;"></div>
                                                     <span th:text="${xbclass.establishNum}"></span>-->
