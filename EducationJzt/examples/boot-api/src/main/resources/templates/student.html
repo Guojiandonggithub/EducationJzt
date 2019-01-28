@@ -96,6 +96,10 @@
                                 <input id="enrollDateSearch" name="enrollDateSearch"
                                        type="text" th:value="${enrollDateSearch}"
                                        style="padding: 3px;border-radius: 5px !important;margin-top: 13px;width: 82px;color: #949ba2;border:solid 1px">
+                                <span>至</span>
+                                <input id="enrollDateSearchEnd" name="enrollDateSearchEnd"
+                                       type="text" th:value="${enrollDateSearchEnd}"
+                                       style="padding: 3px;border-radius: 5px !important;margin-top: 13px;width: 82px;color: #949ba2;border:solid 1px">
                                 <div class="form-group" style="display: inline;">
                                     <button type="button" th:onclick="'javascript:getOrgansListPage(\'\')'">搜索</button>
                                     <button type="button" onclick="$('input[type=text],#enrollDateSearch').val('')">清空</button>
@@ -110,7 +114,7 @@
                             <button type="button" class="btn btn-primary">批量删除学员</button>
                         </div> 
                         <div class="result">
-                            当前结果：学员共计<span th:text="${xbStudentsPage.getTotalElements()}"></span>名，报读课程数总计：<span th:text="${xbStudentPage.getTotalElements()}"></span>条
+                            当前结果：学员共计<span th:text="${studentlistsize}"></span>名，报读课程数总计：<span th:text="${xbStudentPage.getTotalElements()}"></span>条
                         </div>
                         <div class="orderTable">
                             <table class="table table-hover">
@@ -839,6 +843,7 @@
 !function(){
 laydate.render({elem: '#demo'});//绑定元素
     laydate.render({elem: '#enrollDateSearch'});//绑定元素
+    laydate.render({elem: '#enrollDateSearchEnd'});//绑定元素
 }();
 
 $(".btn-down").click(function(){

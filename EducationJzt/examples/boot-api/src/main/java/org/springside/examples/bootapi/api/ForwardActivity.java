@@ -1,24 +1,27 @@
 package org.springside.examples.bootapi.api;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springside.examples.bootapi.domain.SysEmployee;
-import org.springside.examples.bootapi.domain.SysEmployeeSub;
-import org.springside.examples.bootapi.domain.SysOrgans;
-import org.springside.examples.bootapi.domain.SysRole;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springside.examples.bootapi.ToolUtils.DateUtil;
+import org.springside.examples.bootapi.domain.*;
 import org.springside.examples.bootapi.service.EmployeeService;
 import org.springside.examples.bootapi.service.OrgansService;
 import org.springside.examples.bootapi.service.RoleService;
+import org.springside.examples.bootapi.service.XbStudentService;
 
 import javax.servlet.http.HttpSession;
-import java.util.HashMap;
-import java.util.Map;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 
 @Controller
@@ -32,18 +35,80 @@ public class ForwardActivity {
 	private OrgansService organsService;
 	@Autowired
 	private RoleService roleService;
+	@Autowired
+	private XbStudentService studentService;
 
 	@RequestMapping("/index")
-	public String index(HttpSession session,ModelMap map) {
+	public String index(HttpSession session,ModelMap map,@RequestParam(required = false) String data, ModelMap model,
+						@PageableDefault(value = 10)Pageable pageable) {
 		map.put("title", "你好");
-
+		getXbStudentList(data,model,pageable);
 		SysEmployee sysEmployee = (SysEmployee)session.getAttribute("sysEmployee");
 		session.setAttribute("userName",sysEmployee.employeeName);
 		session.setAttribute("organName",sysEmployee.sysOrgans.organName);
 		session.setAttribute("roleName",sysEmployee.sysRole.roleName);
 		return "indexs";
 	}
-
+	public void getXbStudentList(@RequestParam(required = false) String data, ModelMap model, Pageable pageable){
+		Map<String,Object> resultMap = new HashMap<>();
+		Map<String,Object> searhMap = new HashMap<>();
+		if(null!=data){
+			resultMap = com.alibaba.fastjson.JSONObject.parseObject(data,searhMap.getClass());
+		}
+		String organId = (String)resultMap.get("organId");
+		String type = (String)resultMap.get("type");
+		String nameormobile = (String)resultMap.get("nameormobile");
+		if(null==organId){
+			organId = "0";
+		}else if(!organId.equals("0")){
+			searhMap.put("EQ_organId",organId);
+		}
+		if(null==type){
+			type = "AZ";
+		}
+		if(null!=nameormobile&&!nameormobile.equals("")){
+			if(type.equals("AZ")){
+				searhMap.put("LIKE_xbStudent.studentName",nameormobile);
+			}else{
+				searhMap.put("LIKE_xbStudent.contactPhone",nameormobile);
+			}
+		}
+		String enrollDateSearch = (String)resultMap.get("enrollDateSearch");
+		String enrollDateSearchEnd = (String)resultMap.get("enrollDateSearchEnd");
+		Date date = new Date();
+		try {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			if(StringUtils.isNotEmpty(enrollDateSearch)){
+				date = sdf.parse(enrollDateSearch);
+				searhMap.put("EQ_enrollDate",date);
+			}
+			if(null==enrollDateSearch){
+				date = sdf.parse(DateUtil.getDateStr(new Date()));
+				enrollDateSearch = DateUtil.getDateStr(new Date());
+				searhMap.put("EQ_enrollDate",date);
+			}
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		List studentlist = new ArrayList<>();
+		if(StringUtils.isEmpty(enrollDateSearch)){
+			studentlist =	studentService.getAllStudentListNoDate();
+		}else{
+			studentlist =	studentService.getAllStudentList(date);
+		}
+		Iterable<SysOrgans> organsList = organsService.getOrgansList();
+		Page<XbStudentRelation> xbStudentPage = studentService.getXbStudentRelationList(pageable,searhMap);
+		Map<String,Object> studentMap = new HashMap<>();
+		model.addAttribute("xbStudentPage",xbStudentPage);
+		model.addAttribute("studentlistsize",studentlist.size());
+		model.addAttribute("organId",organId);
+		model.addAttribute("organsList",organsList);
+		model.addAttribute("studentcurrentzise",xbStudentPage.getSize());
+		model.addAttribute("nameormobile",nameormobile);
+		model.addAttribute("type",type);
+		model.addAttribute("enrollDateSearch",enrollDateSearch);
+		model.addAttribute("enrollDateSearchEnd",enrollDateSearchEnd);
+	}
 	@RequestMapping("/organization")
 	public String organization(ModelMap model,Pageable pageable) {
 		logger.info("跳转到课程");

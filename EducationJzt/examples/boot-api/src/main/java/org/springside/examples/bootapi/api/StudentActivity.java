@@ -236,31 +236,45 @@ public class StudentActivity {
 		}
 		String enrollDateSearch = (String)resultMap.get("enrollDateSearch");
 		String enrollDateSearchEnd = (String)resultMap.get("enrollDateSearchEnd");
+		Date startdate = new Date();
+		Date enddate = new Date();
+
 		try {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			if(StringUtils.isNotEmpty(enrollDateSearch)){
-				searhMap.put("GTE_enrollDate",sdf.parse(enrollDateSearch));
+				startdate = sdf.parse(enrollDateSearch);
+				searhMap.put("GTE_enrollDate",startdate);
 			}
 			if(null==enrollDateSearch){
 				enrollDateSearch = DateUtil.weekDateFirstDay();
-				searhMap.put("GTE_enrollDate",sdf.parse(DateUtil.weekDateFirstDay()));
+				startdate = sdf.parse(DateUtil.weekDateFirstDay());
+				searhMap.put("GTE_enrollDate",startdate);
 			}
 			if(StringUtils.isNotEmpty(enrollDateSearchEnd)){
-				searhMap.put("LTE_enrollDate",sdf.parse(enrollDateSearchEnd));
+				enddate = sdf.parse(enrollDateSearchEnd);
+				searhMap.put("LTE_enrollDate",enddate);
 			}
 			if(null==enrollDateSearchEnd){
+				enddate = sdf.parse(DateUtil.weekDateLastDay());
 				enrollDateSearchEnd = DateUtil.weekDateLastDay();
-				searhMap.put("LTE_enrollDate",sdf.parse(DateUtil.weekDateLastDay()));
+				searhMap.put("LTE_enrollDate",enddate);
 			}
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
+		List studentlist = new ArrayList<>();
+		if(StringUtils.isEmpty(enrollDateSearch)){
+			studentlist =	studentService.getAllStudentListNoDate();
+		}else{
+			studentlist =	studentService.getAllStudentListStartAndEnd(startdate,enddate);
+		}
 		Iterable<SysOrgans> organsList = organsService.getOrgansList();
 		Page<XbStudentRelation> xbStudentPage = studentService.getXbStudentRelationList(pageable,searhMap);
 		Map<String,Object> studentMap = new HashMap<>();
-		Page<XbStudent> xbStudentsPage = studentService.getXbStudentList(pageable,studentMap);
+		/*Page<XbStudent> xbStudentsPage = studentService.getXbStudentList(pageable,studentMap);*/
+		model.addAttribute("studentlistsize",studentlist.size());
 		model.addAttribute("xbStudentPage",xbStudentPage);
-		model.addAttribute("xbStudentsPage",xbStudentsPage);
+		/*model.addAttribute("xbStudentsPage",xbStudentsPage);*/
 		model.addAttribute("organId",organId);
 		model.addAttribute("organsList",organsList);
 		model.addAttribute("studentcurrentzise",xbStudentPage.getSize());

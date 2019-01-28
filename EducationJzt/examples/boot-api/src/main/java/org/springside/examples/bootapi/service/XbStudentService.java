@@ -53,7 +53,15 @@ public class XbStudentService {
 				filters.values(), XbSupplementFee.class);
 		return xbSupplementFeeDao.findAll(spec,pageable);
 	}
-
+	public List getAllStudentList(Date enroll_date){
+		return xbStudentRelationDao.findAllStudentList(enroll_date);
+	}
+	public List getAllStudentListStartAndEnd(Date enroll_date,Date enrollEnd){
+		return xbStudentRelationDao.findAllStudentListStartAndEnd(enroll_date,enrollEnd);
+	}
+	public List getAllStudentListNoDate(){
+		return xbStudentRelationDao.findAllStudentListNoDate();
+	}
 	@Transactional
 	public XbSupplementFee saveXbSupplementFee(XbSupplementFee xbSupplementFee) {
 		xbSupplementFee.paymentDate = new Date();

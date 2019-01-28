@@ -7,6 +7,7 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springside.examples.bootapi.domain.XbCourse;
 import org.springside.examples.bootapi.domain.XbStudentRelation;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -19,4 +20,10 @@ import java.util.List;
 public interface XbStudentRelationDao extends PagingAndSortingRepository<XbStudentRelation, String>,JpaSpecificationExecutor<XbStudentRelation> {
     @Query(value = " select count(*) from xb_student_relation r where r.class_id = ?1 ",nativeQuery = true)
     public Long findAllDataByClassCount(String classId);
+    @Query(value="SELECT * FROM xb_student_relation o WHERE o.enroll_date = ?1 GROUP BY o.student_id",nativeQuery = true)
+    List findAllStudentList(Date enroll_date);
+    @Query(value="SELECT * FROM xb_student_relation o WHERE o.enroll_date >= ?1 AND o.enroll_date <= ?2 GROUP BY o.student_id",nativeQuery = true)
+    List findAllStudentListStartAndEnd(Date enrollStart,Date enrollEnd);
+    @Query(value="SELECT * FROM xb_student_relation o  GROUP BY o.student_id",nativeQuery = true)
+    List findAllStudentListNoDate();
 }
