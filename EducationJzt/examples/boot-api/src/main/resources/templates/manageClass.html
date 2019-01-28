@@ -84,15 +84,16 @@
             <div class="tabbable">
                 <ul class="nav nav-tabs" id="myTab">
                     <li class="active">
-                        <a data-toggle="tab" href="#studentList">学员</a>
-                    </li>
-                    <li>
                         <a data-toggle="tab" href="#divideList">课表</a>
                     </li>
+                    <li >
+                        <a data-toggle="tab" href="#studentList">学员</a>
+                    </li>
+
                 </ul>
                 <div class="tab-content student manageClass">
                     <!-- 学员 -->
-                    <div id="studentList" class="tab-pane fade in active">
+                    <div id="studentList" class="tab-pane fade ">
                         <!--<div class="screen">
                             <button class="stdEnroll" href="#modal-table2" role="button" class="blue" data-toggle="modal">添加学员</button>
                             <div class="screenTop">
@@ -235,7 +236,7 @@
                     </div>
                     <!-- 课表 -->
                     <input id="classid" type="hidden" th:value="${xbClass.id}">
-                    <div id="divideList" class="tab-pane fade divideList">
+                    <div id="divideList" class="tab-pane fade divideList in active">
                         <div id="calendar">
                             <div class="classStyle">
                                 <p class="state1"><span></span>已记上课</p>
@@ -415,12 +416,12 @@
             },
             currentTimezone: 'Asia/Beijing',
             height:"700",aspectRatio:1.6,handleWindowResize:true,
-            eventLimit: true,
+            /*eventLimit: true,
             views: {
                 agenda: {
                     eventLimit: 3//最大容纳数量
                 }
-            },
+            },*/
             defaultView:'agendaWeek',
             editable:false,//是否可拖动
             monthNames: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"],
@@ -520,7 +521,7 @@
                 $(this).css('background',"");
             },
         });
-
+        $('#calendar'). fullCalendar ( 'refetchEvents' );
     });
 
 function selectAll() {
