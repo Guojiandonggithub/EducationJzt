@@ -43,6 +43,7 @@ public class XbRecordClass {
     public BigDecimal deductPeriod;
     public String teacherLeave;
     public String studentPhoto;
+    public String studentRelationId;
     public Date recordTime;
     @Transient
     public String recordTimeTemp;

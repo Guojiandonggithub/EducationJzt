@@ -24,9 +24,13 @@ import org.springside.examples.bootapi.service.XbStudentService;
 
 import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /***
  * 记上课
@@ -185,8 +189,9 @@ public class RecordClassActivity {
 			searhMap.put("LIKE_classId",classesId);
 		}
 		XbClass classes = studentService.getXbClass(classesId);
-		Page<XbStudentRelation> classPage = studentService.getXbStudentRelationList(pageable,searhMap);
+		List<XbStudentRelation> classPage = studentService.getXbRelationList(searhMap);
 		model.addAttribute("classPage",classPage);
+		model.addAttribute("classSize",classPage.size());
 		model.addAttribute("classes",classes);
 		return "classEdit";
 	}
@@ -201,9 +206,10 @@ public class RecordClassActivity {
 					String classId = xbRecordClass.classId;
 					String organId = xbRecordClass.organId;
 					String courseId = xbRecordClass.courseId;
+					String studentRelationId = xbRecordClass.studentRelationId;
 					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 					xbRecordClass.recordTime = sdf.parse(xbRecordClass.recordTimeTemp);
-					Map<String,Object> searhMap = new HashMap<>();
+					/*Map<String,Object> searhMap = new HashMap<>();
 					Map<String,Object> courseMap = new HashMap<>();
 					if(null!=classId){
 						searhMap.put("EQ_classId",classId);
@@ -221,19 +227,31 @@ public class RecordClassActivity {
 						}
 					}
 					Page<XbStudentRelation> xbStudentRelations = studentService.getXbStudentRelationList(pageable,searhMap);
-					XbStudentRelation xbStudentRelation = xbStudentRelations.getContent().get(0);
+					*/
+					//XbStudentRelation xbStudentRelation = xbStudentRelations.getContent().get(0);
+					XbStudentRelation xbStudentRelation = studentService.getXbStudentRelation(studentRelationId);
 					//Integer periodNum = xbStudentRelation.periodNum;
 					BigDecimal bigDecimal = xbStudentRelation.periodNum;
-					BigDecimal receivable = xbStudentRelation.receivable;
-					//BigDecimal bigDecimal = new BigDecimal(periodNum.toString());
-					money = deductPeriod.multiply(money);
-					receivable = receivable.subtract(money);
-					bigDecimal = bigDecimal.subtract(deductPeriod);
-					//xbStudentRelation.periodNum = Integer.parseInt(bigDecimal.toString());
-					xbStudentRelation.periodNum = bigDecimal;
-					xbStudentRelation.receivable = receivable;
-					studentService.saveXbRecordClass(xbRecordClass);
-					studentService.saveXbStudentRelation(xbStudentRelation);
+					BigDecimal totalPeriodNum = xbStudentRelation.totalPeriodNum;
+					BigDecimal totalReceivable = xbStudentRelation.totalReceivable;
+					if(bigDecimal.compareTo(new BigDecimal("0"))!=0){
+						BigDecimal receivable = xbStudentRelation.receivable;
+						BigDecimal money = totalReceivable.divide(totalPeriodNum,2,RoundingMode.HALF_UP).multiply(deductPeriod);
+						receivable = receivable.subtract(money);
+						bigDecimal = bigDecimal.subtract(deductPeriod);
+						//xbStudentRelation.periodNum = Integer.parseInt(bigDecimal.toString());
+						if(bigDecimal.compareTo(new BigDecimal("0"))<0){
+							bigDecimal = new BigDecimal("0");
+						}
+						if(receivable.compareTo(new BigDecimal("0"))<0){
+							receivable = new BigDecimal("0");
+						}
+						xbStudentRelation.periodNum = bigDecimal;
+						xbStudentRelation.receivable = receivable;
+						studentService.saveXbRecordClass(xbRecordClass);
+						studentService.saveXbStudentRelation(xbStudentRelation);
+					}
+
 				}
 			}
 			JSONObject jsonObject = new JSONObject();
@@ -333,13 +351,14 @@ public class RecordClassActivity {
 			String classesId = recordLists.getContent().get(i).classId;
 			Map<String, Object> searhMaps = new HashMap<>();
 			searhMaps.put("EQ_classId", classesId);
-			searhMaps.put("NEQ_periodNum", new BigDecimal("0"));
+			searhMaps.put("GTE_periodNum", new BigDecimal("0"));
 			Pageable pageables = new PageRequest(0, 1, null);
 			Page<XbStudentRelation> classPage = studentService.getXbStudentRelationList(pageables, searhMaps);
 			if (classPage.getContent().size() > 0) {
-				BigDecimal totalPeriodNum = classPage.getContent().get(0).periodNum;
-				BigDecimal totalReceivable = classPage.getContent().get(0).receivable;
-				BigDecimal receivable = totalReceivable.divide(totalPeriodNum).multiply(recordLists.getContent().get(i).periodnum);
+				BigDecimal totalPeriodNum = classPage.getContent().get(0).totalPeriodNum;
+				BigDecimal totalReceivable = classPage.getContent().get(0).totalReceivable;
+				BigDecimal periodnums = recordLists.getContent().get(i).periodnum;
+				BigDecimal receivable = totalReceivable.divide(totalPeriodNum,4,RoundingMode.HALF_UP).multiply(periodnums);
 				recordLists.getContent().get(i).totalReceivable =receivable;
 			}
 		}
@@ -375,13 +394,13 @@ public class RecordClassActivity {
 			String classesId = recordList.get(i).classId;
 			Map<String, Object> searhMaps = new HashMap<>();
 			searhMaps.put("EQ_classId", classesId);
-			searhMaps.put("NEQ_periodNum", new BigDecimal("0"));
+			searhMaps.put("GTE_periodNum", new BigDecimal("0"));
 			Pageable pageables = new PageRequest(0, 1, null);
 			Page<XbStudentRelation> classPage = studentService.getXbStudentRelationList(pageables, searhMaps);
 			if (classPage.getContent().size() > 0) {
-				BigDecimal totalPeriodNum = classPage.getContent().get(0).periodNum;
-				BigDecimal totalReceivable = classPage.getContent().get(0).receivable;
-				BigDecimal receivable = totalReceivable.divide(totalPeriodNum).multiply(recordList.get(i).periodnum);
+				BigDecimal totalPeriodNum = classPage.getContent().get(0).totalPeriodNum;
+				BigDecimal totalReceivable = classPage.getContent().get(0).totalReceivable;
+				BigDecimal receivable = totalReceivable.divide(totalPeriodNum,4,RoundingMode.HALF_UP).multiply(recordList.get(i).periodnum);
 				totalReceivables = totalReceivables.add(receivable);
 			}
 		}

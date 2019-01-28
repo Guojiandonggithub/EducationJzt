@@ -18,11 +18,10 @@ import org.springside.examples.bootapi.service.XbStudentService;
 
 import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.ArrayList;
-import java.util.List;
 @RestController
 @RequestMapping("excel")
 public class ExcelActivity {
@@ -54,19 +53,19 @@ public class ExcelActivity {
 			xbRecordClassViewList1.add(xbRecordClassViewList.get(i).employeeName);
 			xbRecordClassViewList1.add(xbRecordClassViewList.get(i).className);
 			xbRecordClassViewList1.add(xbRecordClassViewList.get(i).recordTime);
-			xbRecordClassViewList1.add(xbRecordClassViewList.get(i).establishNum);
-			xbRecordClassViewList1.add(xbRecordClassViewList.get(i).studentCount);
-			xbRecordClassViewList1.add(xbRecordClassViewList.get(i).periodnum);
 			String classesId = xbRecordClassViewList.get(i).classId;
 			Map<String,Object> searhMap = new HashMap<>();
 			searhMap.put("EQ_classId",classesId);
-			searhMap.put("NEQ_periodNum",new BigDecimal("0"));
+			//searhMap.put("GTE_periodNum",new BigDecimal("0"));
 			Pageable pageable = new PageRequest(0, 1, null);
 			Page<XbStudentRelation> classPage = studentService.getXbStudentRelationList(pageable,searhMap);
+			xbRecordClassViewList1.add(classPage.getTotalElements());
+			xbRecordClassViewList1.add(xbRecordClassViewList.get(i).studentCount);
+			xbRecordClassViewList1.add(xbRecordClassViewList.get(i).periodnum);
 			if(classPage.getContent().size()>0){
-				BigDecimal totalPeriodNum = classPage.getContent().get(0).periodNum;
-				BigDecimal totalReceivable = classPage.getContent().get(0).receivable;
-				BigDecimal receivable = totalReceivable.divide(totalPeriodNum).multiply(xbRecordClassViewList.get(i).periodnum);
+				BigDecimal totalPeriodNum = classPage.getContent().get(0).totalPeriodNum;
+				BigDecimal totalReceivable = classPage.getContent().get(0).totalReceivable;
+				BigDecimal receivable = totalReceivable.divide(totalPeriodNum,4,RoundingMode.HALF_UP).multiply(xbRecordClassViewList.get(i).periodnum);
 				xbRecordClassViewList1.add(receivable);
 			}else{
 				xbRecordClassViewList1.add("");

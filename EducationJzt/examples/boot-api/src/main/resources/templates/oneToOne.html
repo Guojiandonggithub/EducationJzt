@@ -90,8 +90,8 @@
                                     <th>课程</th>
                                     <th>开课日期</th>
                                     <th>校区</th>
-                                    <th>上课时间</th>
-                                    <th>已用课时</th>
+                                    <!--<th>上课时间</th>-->
+                                    <!--<th>已用课时</th>-->
                                     <th>操作</th>
                                 </tr>
                                 <tr id="choose" th:each="studentrelations:${xbStudentPage.content}">
@@ -99,18 +99,19 @@
                                     <td th:text="${studentrelations.xbStudent.studentName}"><img src="../static/pages/img/boy.png"></td>
                                     <td th:text="${studentrelations.xbStudent.contactPhone}"></td>
                                     <td th:text="${studentrelations.xbClass.teacher.employeeName}"></td>
-                                    <td>
-                                        <span class="circle"></span>
-                                        在读
-                                    </td>
+                                    <td style="color:#7fbb57" th:if="${studentrelations.studentStart} eq 0">在读</td>
+                                    <td style="color:#e46054" th:if="${studentrelations.studentStart} eq 1">停课</td>
+                                    <td style="color:#548ee4" th:if="${studentrelations.studentStart} eq 2">转班</td>
+                                    <td style="color:#b0b0b0" th:if="${studentrelations.studentStart} eq 4">结课</td>
+                                    <td style="color:#548ee4" th:if="${studentrelations.studentStart} eq 3">退费</td>
                                     <td th:text="${studentrelations.xbCourse.courseName}"></td>
                                     <td th:text="${#dates.format(studentrelations.xbClass.classBeginDate, 'yyyy-MM-dd')}"></td>
                                     <td th:text="${studentrelations.sysOrgans.organName}"></td>
-                                    <td>
+                                    <!--<td>
                                         <span>每周日15:30-17:00</span>
-                                        <!--<span>每周日15:30-17:00</span>-->
-                                    </td>
-                                    <td th:text="${studentrelations.xbCourse.period}"></td>
+                                        &lt;!&ndash;<span>每周日15:30-17:00</span>&ndash;&gt;
+                                    </td>-->
+                                    <!--<td th:text="${studentrelations.xbCourse.period}"></td>-->
                                     <td class="classDel" >
                                         <div class="btn-group open" th:if="${studentrelations.periodNum eq 0 && studentrelations.studentStart eq 0}">
                                             <p data-toggle="dropdown" class="down" aria-expanded="true" th:onclick="'javascript:finishCourse(\''+${studentrelations.id}+'\')'">

@@ -13,7 +13,8 @@ import java.util.Date;
 public class XbRecordClassView {
     @Id
     /*@Column(name="id")*/
-    /*public String id;*/
+    public Date recordTime;
+    //public String id;
     @Column(name="orgid")
     public String orgid;
     @Column(name="organ_name")
@@ -26,8 +27,6 @@ public class XbRecordClassView {
     public String employeeName;
     @Column(name="course_type_name")
     public String courseTypeNname;
-    @Column(name="record_time")
-    public Date recordTime;
     @Column(name="periodnum")
     public BigDecimal periodnum;
     @Column(name="sknum")

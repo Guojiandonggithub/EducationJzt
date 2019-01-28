@@ -69,7 +69,7 @@
                 </div>
             </div>
             <div class="classCon">
-                <p class="people">班级应到人数<span th:text="${classPage.getTotalElements()}"></span>人</p>
+                <p class="people">班级应到人数<span th:text="${classSize}"></span>人</p>
                 <!--<div class="operate">
                 <div class="form-group">
                     <label>批量操作</label>
@@ -84,8 +84,9 @@
                 </div>  
             </div>-->
                 <form id="classForm">
-                    <div class="infoList alert" th:each="stu,stuindex:${classPage.getContent()}">
+                    <div class="infoList alert" th:each="stu,stuindex:${classPage}">
                         <input type="hidden" name="studentId" th:value="${stu.xbStudent.id}" />
+                        <input type="hidden" name="studentRelationId" th:value="${stu.id}" />
                         <div class="headPic">
                             <img src="../static/pages/img/classgirl.png">
                             <!--<span>在读</span>-->
@@ -224,6 +225,7 @@
                 var list = [];
                 var aa = {
                     studentId: "",
+                    studentRelationId: "",
                     state: "",
                     deductPeriod: "",
                     teacherLeave: "",
@@ -235,6 +237,7 @@
                 };
                 if (data.studentId.length == 32) {
                     aa.studentId = data.studentId;
+                    aa.studentRelationId = data.studentRelationId;
                     aa.state = data.state0;
                     aa.deductPeriod = data.deductPeriod;
                     aa.teacherLeave = data.teacherLeave
@@ -248,6 +251,7 @@
                     for (var i = 0; i < data.studentId.length; i++) {
                         aa = {};
                         aa.studentId = data.studentId[i];
+                        aa.studentRelationId = data.studentRelationId[i];
                         var states = "state" + i;
                         var val = $('input:radio[name="' + states + '"]:checked').val();
                         aa.state = val;
