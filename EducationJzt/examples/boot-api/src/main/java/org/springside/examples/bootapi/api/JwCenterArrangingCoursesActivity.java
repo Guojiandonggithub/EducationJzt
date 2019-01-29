@@ -77,10 +77,16 @@ public class JwCenterArrangingCoursesActivity {
         model.addAttribute("sysorgId_combobox","0");
     }
     @RequestMapping("/findClassListByorgid")
-    public void findClassListByorgid(@RequestParam String orgid,
+    public void findClassListByorgid(@RequestParam(value="orgid",defaultValue = "") String orgid,
+                                     @RequestParam(value="teacherid",defaultValue = "") String teacherid,
             HttpServletResponse resp,ModelMap model){
         Map<String,Object> searmap = new HashMap<>();
-        searmap.put("EQ_organId",orgid);
+        if(StringUtils.isNotEmpty(orgid)){
+            searmap.put("EQ_organId",orgid);
+        }
+        if(StringUtils.isNotEmpty(teacherid)){
+            searmap.put("EQ_teacherId",teacherid);
+        }
         List<XbClassView> syslist = xbStudentService.getXBclassViewListAll(searmap);
         JSONArray jsonArray = new JSONArray();
         JSONObject jsonObjinti = new JSONObject();

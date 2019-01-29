@@ -14,6 +14,8 @@ public class XbClassView {
     public String id;
     @Column(name="organ_id")
     public String organId;
+    @Column(name="teacher_id")
+    public String teacherId;
     @Column(name="class_name")
     public String className;
     @Column(name="course_name")
