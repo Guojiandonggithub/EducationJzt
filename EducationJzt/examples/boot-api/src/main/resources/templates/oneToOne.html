@@ -69,6 +69,21 @@
                             </div>
                         </div>
                         <div class="control-group">
+                            <label class="control-label">课程类别</label>
+                            <input  th:attr ="checked=${typeId == '0'?true:false}"
+                                    name="typeId" type="radio" th:value="0" class="ace"
+                                    th:onclick="'javascript:getStudentListPage(\'\')'">
+                            <span class="lbl" th:text="全部"></span>
+                            <div class="checkbox" th:each="types:${coursetypelist}">
+                                <label>
+                                    <input th:attr ="checked=${typeId == types.id?true:false}"
+                                           name="typeId" type="radio" th:value="${types.id}" class="ace"
+                                           th:onclick="'javascript:getStudentListPage(\'\')'">
+                                    <span class="lbl" th:text="${types.courseTypeName}"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="control-group">
                             <label class="control-label">教师姓名</label>
                             <input id="TeacherNameCla" name="TeacherNameCla" type="text" th:value="${TeacherNameCla}" class="ace"
                                    style="padding: 3px;border-radius: 5px !important;margin-top: 13px;width: 82px;color: #3c546c">

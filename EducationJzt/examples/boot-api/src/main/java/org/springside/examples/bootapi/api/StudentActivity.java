@@ -366,6 +366,13 @@ public class StudentActivity {
 		if(StringUtils.isNotEmpty(TeacherNameCla)){
 			searhMap.put("LIKE_xbClass.teacher.employeeName",TeacherNameCla);
 		}
+		//课程类别
+		String typeId = (String)resultMap.get("typeId");
+		if(null==typeId){
+			typeId = "0";
+		}else if(!typeId.equals("0")){
+			searhMap.put("EQ_xbCourse.xbcoursetype.id",typeId);
+		}
 		Page<XbStudentRelation> xbStudentPage = studentService.getXbStudentRelationList(pageable,searhMap);
 		model.addAttribute("xbStudentPage",xbStudentPage);
 		model.addAttribute("currentzise",xbStudentPage.getSize());
@@ -374,7 +381,11 @@ public class StudentActivity {
 		List<SysOrgans> sorganList = organsService.getOrgansListAll(sorgsearmap);
 		model.addAttribute("sorganList",sorganList);
 		model.addAttribute("organclaId",organId);
+		model.addAttribute("typeId",typeId);
 		model.addAttribute("TeacherNameCla",TeacherNameCla);
+		Map<String,Object> searhtypeMap = new HashMap<>();
+		List<XbCourseType> coursetypelist = xbCourseTypeService.findXbCourseTypeList(searhtypeMap);
+		model.addAttribute("coursetypelist",coursetypelist);
 		return "oneToOne";
 	}
 
