@@ -71,8 +71,10 @@ public class ForwardActivity {
 		if(null!=nameormobile&&!nameormobile.equals("")){
 			if(type.equals("AZ")){
 				searhMap.put("LIKE_xbStudent.studentName",nameormobile);
+				searchParamsview.put("LIKE_studentName",nameormobile);
 			}else{
 				searhMap.put("LIKE_xbStudent.contactPhone",nameormobile);
+				searchParamsview.put("LIKE_contactPhone",nameormobile);
 			}
 		}
 		String enrollDateSearch = (String)resultMap.get("enrollDateSearch");

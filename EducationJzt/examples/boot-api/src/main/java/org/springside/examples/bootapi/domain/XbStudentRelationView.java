@@ -13,6 +13,10 @@ public class XbStudentRelationView {
     @Id
     @Column(name="id")
     public String id;
+    @Column(name="student_name")
+    public String studentName;
+    @Column(name="contact_phone")
+    public String contactPhone;
     @Column(name="student_id")
     public String studentId;
     @Column(name="organ_id")

@@ -433,7 +433,7 @@
                                                     th:text="${org.organName}"
                                                     th:selected="${organId eq org.id}"></option>
                                         </select>
-                                        <label class="control-label" style="width: 25px;">剩余</label>
+                                        <label class="control-label" style="width: 39px;">剩余:</label>
                                         <input type="text" name="totalPeriodNumStart" value="0"
                                                th:value="${totalPeriodNumStart}" style="width: 59px;border-radius: 5px !important;">
                                         <label>至</label>
@@ -443,7 +443,7 @@
                                         </button>
                                     </div>
                                 <div class="control-group">
-                                        <label class="control-label" style="width:55px;">课程状态:</label>
+                                        <label class="control-label" style="width:71px;">课程状态:</label>
                                         <select class="selectName" name="studentStart" >
                                             <option  th:value="10" th:text="请选择" th:selected="${studentStart eq '10'}"></option>
                                             <option  th:value="0" th:text="在读" th:selected="${studentStart eq '0'}"></option>
@@ -452,7 +452,7 @@
                                             <option  th:value="3" th:text="退费" th:selected="${studentStart eq '3'}"></option>
                                             <option  th:value="4" th:text="结课" th:selected="${studentStart eq '4'}"></option>
                                         </select>
-                                        <label class="control-label" style="width:60px;">教师姓名:</label>
+                                        <label class="control-label" style="width:71px;">教师姓名:</label>
                                         <input id="TeacherNameCla" name="TeacherNameCla" type="text" th:value="${TeacherNameCla}" class="ace"
                                                style="padding: 3px;border-radius: 5px !important;margin-top: 13px;width: 82px;color: #3c546c">
                                         <button type="button" th:onclick="'javascript:getexpiryStulist(\'\')'">搜索</button>

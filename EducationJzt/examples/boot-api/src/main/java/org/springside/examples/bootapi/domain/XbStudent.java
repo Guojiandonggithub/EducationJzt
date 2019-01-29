@@ -47,7 +47,7 @@ public class XbStudent {
     public String salesPerson;
     public String deleteStatus;
     public String advisoryChannel;
-
+    public BigDecimal registratioFee;
     public XbStudent() {
 
     }
