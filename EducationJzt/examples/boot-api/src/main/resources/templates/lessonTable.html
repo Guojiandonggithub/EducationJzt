@@ -332,6 +332,7 @@
                                 event.push({
                                     _id: dd.id,
                                     title:dd.className,
+                                   // title:endhh+":"+endtmm+"\r\n"+dd.organName+dd.courseTypeName+dd.employeeName+dd.className,
                                     start: new Date(y, m-1, d ,starthh,startmm),
                                     end: new Date(y, m-1, d ,endhh,endtmm),
                                     allDay: false,
@@ -382,11 +383,11 @@
             eventMouseover: function (calEvent, jsEvent, view) {
                 var fstart = $.fullCalendar.formatDate(calEvent.start, "yyyy年MM月dd号 HH:mm");
                 var fend = $.fullCalendar.formatDate(calEvent.end, "yyyy年MM月dd号 HH:mm");
-                $(this).attr('title', "开始时间："+fstart+"" +
-                    "\r\n结束时间："+fend+"" +
-                    "\r\n教室："+calEvent.roomname+
-                    "\r\n班课/一对一："+calEvent.type+
-                    "\r\n教师："+calEvent.teachername);
+                    $(this).attr('title', "开始时间："+fstart+"" +
+                        "\r\n结束时间："+fend+"" +
+                        "\r\n教室："+calEvent.roomname+
+                        "\r\n班课/一对一："+calEvent.type+
+                        "\r\n教师："+calEvent.teachername);
                 if(calEvent.isGoToClass=="1"){
                     $(this).css('background',"#8ba3c3");
                 }else{

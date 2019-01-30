@@ -164,7 +164,9 @@
                                                 <!--<td>
                                                     <span class="glyphicon glyphicon-star-empty"></span>
                                                 </td>-->
-                                                <td th:text="${cls.className}"><img src="../static/pages/img/ban.png">昆区分校作文张三1班</td>
+                                                <td th:text="${cls.sysOrgans.organName}+${cls.xbCourse.xbcoursetype.courseTypeName}+${cls.teacher.employeeName}+${cls.className}">
+                                                    <img src="../static/pages/img/ban.png">班级/一对一
+                                                </td>
                                                 <td th:text="${cls.teacher.employeeName}">李四</td>
                                                 <td th:text="${cls.xbCourse.courseName}">作文1</td>
                                                 <!--<td>2018-05-20</td>-->
@@ -360,7 +362,9 @@
                                                     </tr>
                                                     <tr th:each="cla:${recordLists.content}">
                                                         <td th:text="${cla.recordTime}">上课时间</td>
-                                                        <td th:text="${cla.className}"><img src="../static/pages/img/ban.png">班级/一对一</td>
+                                                        <td th:text="${cla.organName}+${cla.courseTypeNname}+${cla.employeeName}+${cla.className}">
+                                                            <img src="../static/pages/img/ban.png">班级/一对一
+                                                        </td>
                                                         <td th:text="${cla.courseName}">课程</td>
                                                         <td th:text="${cla.organName}">校区</td>
                                                         <td th:text="${cla.employeeName}">教师</td>

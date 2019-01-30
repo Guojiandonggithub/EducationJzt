@@ -188,8 +188,10 @@
                                                     <td th:text="${less.startDateTime}">上课日期</td>
                                                     <td th:text="${less.timeInterval}">16:30-18:00时间段</td>
                                                     <td th:switch="${less.wayOfTeaching}">
-                                                        <span th:case="1" th:text="${less.xbclass.className}+'(一对一)'"></span>
-                                                        <span th:case="0" th:text="${less.xbclass.className}+'(班课)'"></span>
+                                                        <span th:case="1"
+                                                              th:text="${less.xbclass.sysOrgans.organName}+${less.xbclass.xbCourse.xbcoursetype.courseTypeName}+${less.xbclass.teacher.employeeName}+${less.xbclass.className}+'(一对一)'"></span>
+                                                        <span th:case="0"
+                                                              th:text="${less.xbclass.sysOrgans.organName}+${less.xbclass.xbCourse.xbcoursetype.courseTypeName}+${less.xbclass.teacher.employeeName}+${less.xbclass.className}+'(班课)'"></span>
                                                        <!-- <span th:case="" th:text="未知"></span>-->
                                                     </td>
                                                     <td th:text="${less.xbclass.xbCourse.courseName}">课程</td>
@@ -322,8 +324,14 @@
                                                 <td th:text="${confSte.count}+${xbAttendConflicList.getNumber()*10}">序号</td>
                                                 <td th:text="${conf.startDateTime} +' '+${conf.timeInterval}">上课时间</td>
                                                 <td th:switch="${conf.wayOfTeaching}">
-                                                    <span th:case="1" th:text="${conf.xbclass.className}+'(一对一)'"></span>
-                                                    <span th:case="0" th:text="${conf.xbclass.className}+'(班课)'"></span>
+                                                    <span th:case="1" th:text="${conf.xbclass.sysOrgans.organName}+
+                                                                                ${conf.xbclass.xbCourse.xbcoursetype.courseTypeName}+
+                                                                                ${conf.xbclass.teacher.employeeName}+
+                                                                                ${conf.xbclass.className}+'(一对一)'"></span>
+                                                    <span th:case="0" th:text="${conf.xbclass.sysOrgans.organName}+
+                                                                                ${conf.xbclass.xbCourse.xbcoursetype.courseTypeName}+
+                                                                                ${conf.xbclass.teacher.employeeName}+
+                                                                                ${conf.xbclass.className}+'(班课)'"></span>
                                                 </td>
                                                 <td  th:text="${conf.xbclass.xbCourse.courseName}">课程</td>
                                                 <td  th:text="${conf.sysemployee.employeeName}">教师</td>

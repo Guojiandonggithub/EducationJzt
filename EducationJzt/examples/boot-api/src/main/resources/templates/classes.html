@@ -132,7 +132,10 @@
                                         <tr id="chooses" th:each="xbclass,xbclassta:${xbClassPage.content}">
                                             <td><input type="checkbox"></td>
                                             <td th:text="${xbclassta.count}+${xbClassPage.getNumber()*20}">序号</td>
-                                            <td th:text="${xbclass.sysOrgans.organName}+${xbclass.xbCourse.xbcoursetype.courseTypeName}+${xbclass.teacher.employeeName}+${xbclass.className}" class="className studentName" th:onclick="'javascript:classDetail(\''+${xbclass.id}+'\')'"><img src="../static/pages/img/ban.png"></td>
+                                            <td th:text="${xbclass.sysOrgans.organName}+${xbclass.xbCourse.xbcoursetype.courseTypeName}+${xbclass.teacher.employeeName}+${xbclass.className}"
+                                                style="text-align: center !important;"
+                                                class="className studentName" th:onclick="'javascript:classDetail(\''+${xbclass.id}+'\')'"><img src="../static/pages/img/ban.png">
+                                            </td>
                                             <td class="prog" th:text="${xbclass.enrollNum}">
                                                 <div class="progress progress-small progress-striped active">
                                                     <!--<div class="progress-bar progress-bar-warning" style="width: 0%;"></div>
