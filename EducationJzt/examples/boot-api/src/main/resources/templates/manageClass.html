@@ -49,6 +49,9 @@
             <div class="manage">
                <!-- th:text="${xbClass.sysOrgans.organName}+${xbclass.xbCourse.xbcoursetype.courseTypeName}+${xbclass.teacher.employeeName}+${xbclass.className}"-->
                 <div class="tabbable">
+                    <div class="enrollCon"  >
+                        <button class="save" type="button" onclick="javascript:history.go(-1)" >上一步</button>
+                    </div>
                     <ul class="nav nav-tabs" id="myTab">
                         <li class="active">
                             <a th:href="@{/feeRelated/enrollClasschoose(classId=${xbClass.id})}"  type="button" data-toggle="modal">选择学员</a>

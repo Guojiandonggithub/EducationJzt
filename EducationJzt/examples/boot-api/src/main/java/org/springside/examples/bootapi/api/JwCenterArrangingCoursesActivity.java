@@ -453,21 +453,10 @@ public class JwCenterArrangingCoursesActivity {
        // List<Map<String,Object>> listentity = xbAttendClassService.findXbAttendListRiChengBySQL(start,end);
         Map<String, Object> searchParams = new HashMap<>();
 
-        if(StringUtils.isEmpty(seartype)){
-            seartype = "TE_NAME";
-        }
-        if(StringUtils.isNotEmpty(searchcontent)){
-            if(seartype.equals("TE_NAME")){
-                searchParams.put("LIKE_employeeName",searchcontent);
-            }else if(seartype.equals("CLA_NAME")){
-                searchParams.put("LIKE_classroomName",searchcontent);
-            }else if(seartype.equals("CLAss_NAME")){
-                searchParams.put("LIKE_className",searchcontent);
-            }
-        }
         searchParams.put("GTE_startDateTime",start);
         searchParams.put("LT_startDateTime",end);
         if(StringUtils.isNotEmpty(type)){
+            //学员详情课表
             if(type.equals("xy")){
                 Map<String,Object> studentmap = new HashMap<>();
                 studentmap.put("EQ_studentId",studentid);
@@ -479,22 +468,38 @@ public class JwCenterArrangingCoursesActivity {
                     }
                     searchParams.put("IN_xbClassId",idlist);
                 }
+            //班级详情课表
             }else if(type.equals("bj")){
                 searchParams.put("EQ_xbClassId",classid);
+            //课程表
+            }else{
+                if(StringUtils.isEmpty(seartype)){
+                    seartype = "TE_NAME";
+                }
+                if(StringUtils.isNotEmpty(searchcontent)){
+                    if(seartype.equals("TE_NAME")){
+                        searchParams.put("LIKE_employeeName",searchcontent);
+                    }else if(seartype.equals("CLA_NAME")){
+                        searchParams.put("LIKE_classroomName",searchcontent);
+                    }else if(seartype.equals("CLAss_NAME")){
+                        searchParams.put("LIKE_className",searchcontent);
+                    }
+                }
+                //查询校区
+                if(StringUtils.isEmpty(organId)){
+                    organId = "0";
+                }else if(!organId.equals("0")){
+                    searchParams.put("EQ_organId",organId);
+                }
+                //查询课程类别
+                if(StringUtils.isEmpty(courseTypeId)){
+                    courseTypeId = "0";
+                }else if(!courseTypeId.equals("0")){
+                    searchParams.put("EQ_courseTypeId",courseTypeId);
+                }
             }
         }
-        //查询校区
-        if(null==organId){
-            organId = "0";
-        }else if(!organId.equals("0")){
-            searchParams.put("EQ_organId",organId);
-        }
-        //查询校区
-        if(null==courseTypeId){
-            courseTypeId = "0";
-        }else if(!courseTypeId.equals("0")){
-            searchParams.put("EQ_courseTypeId",courseTypeId);
-        }
+
 
         List<XbAttendClassRicheng> listentity = xbAttendClassService.findXbAttendRiChengListAll(searchParams);
         /*for(XbAttendClassRicheng xbattendclass : listentity){
