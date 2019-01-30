@@ -330,12 +330,12 @@
                                             <td><input type="checkbox"></td>
                                             <td th:text="${studentrelations.xbStudent.studentName}"><img src="../static/pages/img/boy.png"></td>
                                             <td th:text="${studentrelations.xbStudent.contactPhone}"></td>
-                                            <td th:text="${studentrelations.xbClass.className}" style="width:200px;"></td>
+                                            <td th:text="${studentrelations.className}" style="width:200px;"></td>
                                             <td>在读</td>
                                             <td th:text="${studentrelations.xbCourse.courseName}"></td>
                                             <td th:text="${studentrelations.receivable}"></td>
                                             <td th:text="${studentrelations.sysOrgans.organName}"></td>
-                                            <td th:text="${studentrelations.xbClass.teacher.employeeName}"></td>
+                                            <td th:text="${studentrelations.employeeName}"></td>
                                             <!--<td>
                                                 <span>每周周日 14:00-15:00</span>
                                                 <span>每周周日 14:00-15:00</span>
@@ -514,7 +514,7 @@
                                     <td th:text="${studentrelation.xbStudent.surplusMoney}"></td>
                                     <td th:text="${studentrelation.xbStudent.paymentMoney}"><a href="">补费</a></td>
                                     <td th:text="${studentrelation.xbCourse.courseName}"></td>
-                                    <td th:text="${studentrelation.xbClass.teacher.employeeName}"></td>
+                                    <td th:text="${studentrelation.employeeName}"></td>
                                     <td th:text="${studentrelation.periodNum}">课时</td>
                                     <td th:if="${studentrelation.enrollDate!=null}" th:text="${#dates.format(studentrelation.enrollDate, 'yyyy-MM-dd')}"></td>
                                     <td th:if="${studentrelation.enrollDate==null}" th:text="${studentrelation.enrollDate}"></td>

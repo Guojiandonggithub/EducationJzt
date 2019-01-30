@@ -325,7 +325,7 @@ public class StudentActivity {
 		}
 		searhMap.put("NEQ_classId","");
 		Iterable<SysOrgans> organsList = organsService.getOrgansList();
-		Page<XbStudentRelation> xbStudentPage = studentService.getXbStudentRelationList(pageable,searhMap);
+		Page<XbStudentRelationViewNew> xbStudentPage = studentService.getXbStudentRelationViewNewList(pageable,searhMap);
 		Map<String,Object> studentMap = new HashMap<>();
 		Page<XbStudent> xbStudentsPage = studentService.getXbStudentList(pageable,studentMap);
 		model.addAttribute("xbStudentPage",xbStudentPage);
@@ -374,7 +374,7 @@ public class StudentActivity {
 		}else if(!typeId.equals("0")){
 			searhMap.put("EQ_xbCourse.xbcoursetype.id",typeId);
 		}
-		Page<XbStudentRelation> xbStudentPage = studentService.getXbStudentRelationList(pageable,searhMap);
+		Page<XbStudentRelationViewNew> xbStudentPage = studentService.getXbStudentRelationViewNewList(pageable,searhMap);
 		model.addAttribute("xbStudentPage",xbStudentPage);
 		model.addAttribute("currentzise",xbStudentPage.getSize());
 		//查询所有校区
@@ -903,7 +903,7 @@ public class StudentActivity {
 		}
 		Iterable<SysOrgans> organsList = organsService.getOrgansList();
 		searhMap.put("NEQ_xbStudent.paymentMoney","0");
-		Page<XbStudentRelation> xbStudentPage = studentService.getXbStudentRelationList(pageable,searhMap);
+		Page<XbStudentRelationViewNew> xbStudentPage = studentService.getXbStudentRelationViewNewList(pageable,searhMap);
 		Map<String,Object> studentMap = new HashMap<>();
 		studentMap.put( "GT_paymentMoney","0");
 		Page<XbStudent> xbStudentsPage = studentService.getXbStudentList(pageable,studentMap);
@@ -973,7 +973,7 @@ public class StudentActivity {
 			searhMap.put("EQ_periodNum","0");
 			totalPeriodNumEnd = "0";
 		}
-		Page<XbStudentRelation> xbStudentPage = studentService.getXbStudentRelationList(pageable,searhMap);
+		Page<XbStudentRelationViewNew> xbStudentPage = studentService.getXbStudentRelationViewNewList(pageable,searhMap);
 		model.addAttribute("expiryStuPage",xbStudentPage);
 		model.addAttribute("organIdDQ",organId);
 		model.addAttribute("TeacherNameCla",TeacherNameCla);
