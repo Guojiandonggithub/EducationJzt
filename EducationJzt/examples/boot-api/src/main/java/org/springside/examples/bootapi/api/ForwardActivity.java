@@ -19,6 +19,7 @@ import org.springside.examples.bootapi.service.RoleService;
 import org.springside.examples.bootapi.service.XbStudentService;
 
 import javax.servlet.http.HttpSession;
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -102,10 +103,25 @@ public class ForwardActivity {
 		}else{
 			studentlist =	studentService.getAllStudentList(date);
 		}*/
+		//学员状态
+		String studentStart = (String)resultMap.get("studentStart");
+		if(StringUtils.isEmpty(studentStart)){
+			studentStart = "100";
+		}else if(!studentStart.equals("100")){
+			searhMap.put("EQ_studentStart",Integer.parseInt(studentStart));
+			searchParamsview.put("EQ_studentStart",Integer.parseInt(studentStart));
+		}
 		List<XbStudentRelationView> studentlist = studentService.getxbStudentRelationViewList(searchParamsview);
 		Iterable<SysOrgans> organsList = organsService.getOrgansList();
 		Page<XbStudentRelationViewNew> xbStudentPage = studentService.getXbStudentRelationViewNewList(pageable,searhMap);
 		Map<String,Object> studentMap = new HashMap<>();
+		BigDecimal totalMoney = new BigDecimal(0.00);
+		BigDecimal zeroMoney = new BigDecimal(0.00);
+		for(XbStudentRelationView xsrvn:studentlist){
+			totalMoney = totalMoney.add(xsrvn.receivable==null?zeroMoney:xsrvn.receivable);
+		}
+		model.addAttribute("studentStart",studentStart);
+		model.addAttribute("totalMoney",totalMoney.toString());
 		model.addAttribute("xbStudentPage",xbStudentPage);
 		model.addAttribute("studentlistsize",studentlist.size());
 		model.addAttribute("organId",organId);

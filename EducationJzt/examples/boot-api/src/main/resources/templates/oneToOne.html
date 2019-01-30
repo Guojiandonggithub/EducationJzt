@@ -84,12 +84,44 @@
                             </div>
                         </div>
                         <div class="control-group">
+                            <label class="control-label">学员状态</label>
+                            <input  th:attr ="checked=${studentStart == '100'?true:false}"
+                                    name="studentStart" type="radio" th:value="100" class="ace"
+                                    th:onclick="'javascript:getStudentListPage(\'\')'">
+                            <span class="lbl" th:text="全部"></span>
+                            <input  th:attr ="checked=${studentStart == '0'?true:false}"
+                                    name="studentStart" type="radio" th:value="0" class="ace"
+                                    th:onclick="'javascript:getStudentListPage(\'\')'">
+                            <span class="lbl" th:text="在读"></span>
+                            <input  th:attr ="checked=${studentStart == '1'?true:false}"
+                                    name="studentStart" type="radio" th:value="1" class="ace"
+                                    th:onclick="'javascript:getStudentListPage(\'\')'">
+                            <span class="lbl" th:text="停课"></span>
+                            <input  th:attr ="checked=${studentStart == '2'?true:false}"
+                                    name="studentStart" type="radio" th:value="2" class="ace"
+                                    th:onclick="'javascript:getStudentListPage(\'\')'">
+                            <span class="lbl" th:text="转班"></span>
+                            <input  th:attr ="checked=${studentStart == '4'?true:false}"
+                                    name="studentStart" type="radio" th:value="4" class="ace"
+                                    th:onclick="'javascript:getStudentListPage(\'\')'">
+                            <span class="lbl" th:text="结课"></span>
+                            <input  th:attr ="checked=${studentStart == '3'?true:false}"
+                                    name="studentStart" type="radio" th:value="3" class="ace"
+                                    th:onclick="'javascript:getStudentListPage(\'\')'">
+                            <span class="lbl" th:text="退费"></span>
+
+                        </div>
+                        <div class="control-group">
                             <label class="control-label">教师姓名</label>
                             <input id="TeacherNameCla" name="TeacherNameCla" type="text" th:value="${TeacherNameCla}" class="ace"
                                    style="padding: 3px;border-radius: 5px !important;margin-top: 13px;width: 82px;color: #3c546c">
                             <div class="form-group" style="display: inline;">
                                 <button type="button" th:onclick="'javascript:getStudentListPage(\'\')'">搜索</button>
+                                <button type="button" onclick="$('input[type=text],#TeacherNameCla').val('')">清空</button>
                             </div>
+                        </div>
+                        <div class="result">
+                            当前结果：学员共计<span th:text当前结果：学员共计<span th:text="${studentlistsize}"></span>名，报读课程数总计：<span th:text="${xbStudentPage.getTotalElements()}"></span>条
                         </div>
                         <div class="orderTable">
                             <table class="table table-hover">

@@ -31,6 +31,21 @@ function comboboxSysorg(){
                 editable:false,
                 required:true,
                 textField:'employeeName',
+                onLoadSuccess:function(){
+                    var teacherid = $('#courseId_combobox').combobox('getValue');
+                    $('#classId_combobox').combobox({
+                        url:basePath + "/jw_center_arranging_course/findClassListByorgid?teacherid="+teacherid,
+                        valueField:'id',
+                        addable:false,
+                        editable:false,
+                        required:true,
+                        textField:'className'
+
+                    });
+                    if(teacherid=="0"){
+                        $("input[name='classId_combobox']").val("0");
+                    }
+                },
                 onChange:function(){
                     var teacherid = $('#courseId_combobox').combobox('getValue');
                     $('#classId_combobox').combobox({

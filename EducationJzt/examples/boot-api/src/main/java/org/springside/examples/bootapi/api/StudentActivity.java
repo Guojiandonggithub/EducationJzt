@@ -365,7 +365,7 @@ public class StudentActivity {
 		//教师名称
 		String TeacherNameCla = (String)resultMap.get("TeacherNameCla");
 		if(StringUtils.isNotEmpty(TeacherNameCla)){
-			searhMap.put("LIKE_xbClass.teacher.employeeName",TeacherNameCla);
+			searhMap.put("LIKE_employeeName",TeacherNameCla);
 		}
 		//课程类别
 		String typeId = (String)resultMap.get("typeId");
@@ -374,7 +374,16 @@ public class StudentActivity {
 		}else if(!typeId.equals("0")){
 			searhMap.put("EQ_xbCourse.xbcoursetype.id",typeId);
 		}
+		//学员状态
+		String studentStart = (String)resultMap.get("studentStart");
+		if(StringUtils.isEmpty(studentStart)){
+			studentStart = "100";
+		}else if(!studentStart.equals("100")){
+			searhMap.put("EQ_studentStart",Integer.parseInt(studentStart));
+		}
 		Page<XbStudentRelationViewNew> xbStudentPage = studentService.getXbStudentRelationViewNewList(pageable,searhMap);
+		List<XbStudentRelationView> studentlist = studentService.getxbStudentRelationViewList(searhMap);
+		model.addAttribute("studentlistsize",studentlist.size());
 		model.addAttribute("xbStudentPage",xbStudentPage);
 		model.addAttribute("currentzise",xbStudentPage.getSize());
 		//查询所有校区
@@ -382,6 +391,7 @@ public class StudentActivity {
 		List<SysOrgans> sorganList = organsService.getOrgansListAll(sorgsearmap);
 		model.addAttribute("sorganList",sorganList);
 		model.addAttribute("organclaId",organId);
+		model.addAttribute("studentStart",studentStart);
 		model.addAttribute("typeId",typeId);
 		model.addAttribute("TeacherNameCla",TeacherNameCla);
 		Map<String,Object> searhtypeMap = new HashMap<>();
