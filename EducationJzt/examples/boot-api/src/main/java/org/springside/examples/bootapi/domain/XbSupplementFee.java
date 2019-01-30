@@ -49,6 +49,9 @@ public class XbSupplementFee {
     @Transient
     public String shengyu;
 
+    @Transient
+    public String studentRelationId;
+
     public XbSupplementFee() {
 
     }

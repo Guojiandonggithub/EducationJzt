@@ -34,7 +34,7 @@ public class XbStudent {
     public String paymentType;
     public BigDecimal paymentMoney;
     public BigDecimal surplusMoney;
-    public Integer totalPeriodNum;//总课时
+    public BigDecimal totalPeriodNum;//总课时
     @OneToOne()
     @JoinColumn(name="organId",referencedColumnName = "id",insertable = false,updatable = false)
     public SysOrgans sysOrgans;
@@ -48,6 +48,7 @@ public class XbStudent {
     public String deleteStatus;
     public String advisoryChannel;
     public BigDecimal registratioFee;
+
     public XbStudent() {
 
     }

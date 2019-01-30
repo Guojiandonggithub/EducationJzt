@@ -36,9 +36,9 @@ public class XbStudentRelation {
     public XbCourse xbCourse;
     @NotNull(message="课程不能为空")
     public String courseId;
-    @OneToOne()
-    @JoinColumn(name="classId",referencedColumnName = "id",insertable = false,updatable = false)
-    public XbClass xbClass;
+    //@OneToOne()
+    //@JoinColumn(name="classId",referencedColumnName = "id",insertable = false,updatable = false)
+    //public XbClass xbClass;
     @NotNull(message="班级不能为空")
     public String classId;
     public BigDecimal receivable;

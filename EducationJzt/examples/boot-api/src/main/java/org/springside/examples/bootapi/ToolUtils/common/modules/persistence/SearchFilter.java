@@ -5,12 +5,11 @@
  *******************************************************************************/
 package org.springside.examples.bootapi.ToolUtils.common.modules.persistence;
 
-import java.util.Map;
-import java.util.Map.Entry;
-
+import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
 
-import com.google.common.collect.Maps;
+import java.util.Map;
+import java.util.Map.Entry;
 
 public class SearchFilter {
 
@@ -38,11 +37,11 @@ public class SearchFilter {
 			// 过滤掉空值
 			String key = entry.getKey();
 			Object value = entry.getValue();
-			if(value instanceof String){
+			/*if(value instanceof String){
 				if (StringUtils.isBlank((String) value)) {
 					continue;
 				}
-			}
+			}*/
 			// 拆分operator与filedAttribute
 			String[] names = StringUtils.split(key, "_");
 			if (names.length != 2) {

@@ -43,7 +43,7 @@
                 <h2>基本信息</h2>
                 <div class="openMore">
                     <!--<button class="more" type="button">展开更多</button>-->
-                    <button class="choice" href="#modal-table2" type="button" class="blue" data-toggle="modal" onclick="getStudentList()">选择已有学员</button>
+                    <!--<button class="choice" href="#modal-table2" type="button" class="blue" data-toggle="modal" onclick="getStudentList()">选择已有学员</button>-->
                 </div>
                 <div class="headPic">
                     <span>头像</span>
@@ -54,6 +54,7 @@
                         <label class="col-sm-1" for="studentName">学员姓名</label>
                         <input type="text" name="studentName" id="studentName" placeholder="请输入学生姓名">
                         <input type="hidden" name="id" id="studentId">
+                        <input type="hidden" id="classId" th:value="${classId}">
                     </div>
                     <div class="form-group enrollNum">
                         <label class="col-sm-1">联系电话</label>
@@ -458,7 +459,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header no-padding">
-                <div class="table-header">选择已有学员</div>
+                <!--<div class="table-header">选择已有学员</div>-->
             </div>
             <div class="modalFrom">
                 <div class="form-group" style="margin-right:0 !important;">
@@ -672,6 +673,7 @@
     function saveEnroll(){
         if ($("#enrollform").valid()) {
             var data= serializeObject("#enrollform");
+            var classId = $("#classId").val();
             console.log(data);
             var list = [];
             var aa = {
@@ -684,8 +686,7 @@
                 periodNum:""
             };
             if(data.courseId.length==32){
-                //aa.classId = data.classIds;
-                aa.classId ="";
+                aa.classId = classId;
                 aa.courseId = data.courseId;
                 aa.organId = data.organIds;
                 aa.receivable = data.receivable
@@ -696,7 +697,7 @@
             }else{
                 for (var i = 0; i < data.courseId.length; i++) {
                     aa = {};
-                    aa.classId = "";
+                    aa.classId = classId;
                     //aa.classId = data.classIds[i];
                     aa.courseId = data.courseId[i];
                     aa.organId = data.organIds[i];
@@ -770,7 +771,7 @@
             type: 'get',
             //dataType: 'json',
             url: basePath + '/student/getCourseList',
-            data: {orginId:$("#kechengorgan").val(),courseName:$("#courseName").val()},
+            data: {orginId:$("#kechengorgan").val(),courseName:$("#courseName").val(),bjclassId:$("#classId").val()},
             contentType:"application/json;charset=UTF-8",
             cache: false,
             async: true,

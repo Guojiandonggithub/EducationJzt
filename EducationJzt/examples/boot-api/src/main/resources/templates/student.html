@@ -11,7 +11,6 @@
     <link rel="stylesheet" href="../static/pages/css/index.css">
     <link rel="stylesheet" href="../static/pages/css/management.css">
     <link rel="stylesheet" href="../static/pages/css/student.css">
-    <link rel="stylesheet" href="../static/pages/css/newstudent.css">
     <link rel="stylesheet" href="../static/pages/css/madal.css">
     <link rel="stylesheet" href="../static/pages/css/bootstrap.min.css">
     <link rel="stylesheet" href="../static/pages/css/font-awesome.min.css" />
@@ -132,6 +131,7 @@
                                     <th>所属关系</th>
                                     <th>账户余额</th>
                                     <th>欠费</th>
+                                    <th>报名费</th>
                                     <th>报读课程</th>
                                     <th>剩余课时/天数</th>
                                     <th>课时剩余总金额</th>
@@ -149,6 +149,7 @@
                                     <td th:text="${studentrelation.xbStudent.contactRelation}"></td>
                                     <td th:text="${studentrelation.xbStudent.surplusMoney}"></td>
                                     <td th:text="${studentrelation.xbStudent.paymentMoney}"><a href="#">补费</a></td>
+                                    <td th:text="${studentrelation.xbStudent.registratioFee}"><a href="#">补费</a></td>
                                     <td th:text="${studentrelation.xbCourse.courseName}"></td>
                                     <td th:text="${studentrelation.periodNum}"></td>
                                     <td th:text="${studentrelation.receivable}"></td>

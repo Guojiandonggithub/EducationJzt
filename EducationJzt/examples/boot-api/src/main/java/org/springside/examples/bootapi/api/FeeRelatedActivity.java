@@ -42,6 +42,12 @@ public class FeeRelatedActivity {
 	private OrgansService organsService;
 
 	@Autowired
+	private EmployeeService employeeService;
+
+	@Autowired
+	public XbCourseTypeService xbCourseTypeService;
+
+	@Autowired
 	private XbStudentService studentService;
 
 	@Autowired
@@ -355,6 +361,47 @@ public class FeeRelatedActivity {
 	}
 
 	/**
+	 * 班级报名选择学员
+	 * @return
+	 */
+	@RequestMapping("/enrollchooseStudentByClass")
+	public void enrollchooseStudentByClass(@RequestParam(required = false) String studentId, ModelMap model, Pageable pageable, HttpServletResponse resp){
+		Map<String,Object> resultMap = new HashMap<>();
+		resultMap.put("EQ_id",studentId);
+		XbStudentRelation xbStudentRelationold = studentService.getXbStudentRelation(studentId);
+		XbStudentRelation xbStudentRelationnew = new XbStudentRelation();
+		xbStudentRelationnew.periodNum = xbStudentRelationold.periodNum;
+		xbStudentRelationnew.receivable = xbStudentRelationold.receivable;
+		xbStudentRelationnew.id = xbStudentRelationold.id;
+		String courseName = xbStudentRelationold.xbCourse.courseName;
+		XbStudent xbStudentold = studentService.getXbStudent(xbStudentRelationold.studentId);
+		XbStudent xbStudentnew = new XbStudent();
+		xbStudentnew.id = xbStudentold.id;
+		xbStudentnew.sex = xbStudentold.sex;
+		xbStudentnew.studentName = xbStudentold.studentName;
+		xbStudentnew.contactPhone = xbStudentold.contactPhone;
+		xbStudentnew.advisoryChannel = xbStudentold.advisoryChannel;
+		xbStudentnew.contactRelation = xbStudentold.contactRelation;
+		xbStudentnew.paymentMoney = xbStudentold.paymentMoney;
+
+		try {
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("status","1");
+			jsonObject.put("msg", "查询成功");
+			jsonObject.put("courseName", courseName);
+			jsonObject.put("data", com.alibaba.fastjson.JSONObject.toJSON(xbStudentnew));
+			jsonObject.put("xbStudentRelation", com.alibaba.fastjson.JSONObject.toJSON(xbStudentRelationnew));
+			logger.info("查询返回json参数="+jsonObject.toString());
+			resp.setContentType("application/json;charset=UTF-8");
+			resp.getWriter().println(jsonObject.toJSONString());
+			resp.getWriter().close();
+		} catch (IOException e) {
+			logger.info(e.toString());
+		}
+		//return "changeClass::changeClassFragment";
+	}
+
+	/**
 	 * 获取相同课程类别班级
 	 * @return
 	 */
@@ -395,6 +442,7 @@ public class FeeRelatedActivity {
 			String choosecourseId = xbSupplementFee.choosecourseId;
 			XbStudent xbStudent = studentService.getXbStudent(studentId);
 			XbStudentRelation xbStudentRelations = studentService.getXbStudentRelation(classId);
+			String className = studentService.getXbClass(xbStudentRelations.classId).className;
 			xbStudentRelations.studentStart = 2;
 			//studentService.saveXbStudentRelation(xbStudentRelations);
 			//XbStudentRelation zrxbStudentRelation = new XbStudentRelation();
@@ -404,7 +452,8 @@ public class FeeRelatedActivity {
 			xbStudentRelations.organId = xbClass.organId;
 			xbStudentRelations.courseId = xbClass.courseId;
 			xbStudentRelations.studentId = studentId;
-			xbSupplementFee.remarks = xbStudentRelations.xbClass.className+"转到"+xbClass.className;
+
+			xbSupplementFee.remarks = className+"转到"+xbClass.className;
 			String chargingMode = xbCoursePreset.xbCourse.chargingMode;
 			BigDecimal zrmoney = new BigDecimal("0.00");
 			if("0".equals(chargingMode)){
@@ -574,6 +623,147 @@ public class FeeRelatedActivity {
 		Page<XbStudent> xbStudentsPage = studentService.getXbStudentList(pageable,resultMap);
 		model.addAttribute("xbStudentPage",xbStudentsPage);
 		return "stopClass::studentList";
+	}
+
+	/**
+	 * 查询报名未分班的学员
+	 * @return
+	 */
+	@RequestMapping("/getStudentListByCourseType")
+	public String getStudentListByCourseType(@RequestParam(required = false) String classId,@RequestParam(required = false) String studentName, ModelMap model, Pageable pageable){
+		Map<String,Object> resultMap = new HashMap<>();
+		if(null!=classId&&!classId.equals("")){
+			resultMap.put("EQ_xbCourse.courseTypeId",studentService.getXbClass(classId).xbCourse.courseTypeId);
+		}
+		if(null!=studentName&&!studentName.equals("")){
+			resultMap.put("EQ_xbStudent.studentName",studentName);
+		}
+		resultMap.put("EQ_classId","");
+		List<XbStudentRelation> xbStudentsList = studentService.getXbRelationList(resultMap);
+		model.addAttribute("xbStudentsList",xbStudentsList);
+		return "enrollClassChoose::studentList";
+	}
+
+	/**
+	 * 报名选择学员
+	 * @return
+	 */
+	@RequestMapping("/saveStudentRelationClassId")
+	public void saveStudentRelationClassId(@RequestParam(required = false) String classid,@RequestParam(required = false) String studentRelationId, ModelMap model, Pageable pageable, HttpServletResponse resp){
+
+		XbStudentRelation xbStudentRelation = studentService.getXbStudentRelation(studentRelationId);
+		xbStudentRelation.classId = classid;
+
+		try {
+			xbStudentRelation = studentService.saveXbStudentRelation(xbStudentRelation);
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("status","1");
+			jsonObject.put("msg", "选择成功");
+			logger.info("查询返回json参数="+jsonObject.toString());
+			resp.setContentType("application/json;charset=UTF-8");
+			resp.getWriter().println(jsonObject.toJSONString());
+			resp.getWriter().close();
+		} catch (IOException e) {
+			logger.info(e.toString());
+		}
+		//return "changeClass::changeClassFragment";
+	}
+
+	/*
+	 * 班级插班
+	 * @return
+	 */
+	@RequestMapping("/enrollClasschoose")
+	public String enrollClasschoose(@RequestParam(required = false) String classId, ModelMap model, Pageable pageable){
+		Map<String,Object> searhMap = new HashMap<>();
+		List<SysOrgans> organsList = organsService.getOrgansList();
+		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
+		SysEmployee sysEmployee = (SysEmployee)request.getSession().getAttribute("sysEmployee");
+		if(organsList.size()>0){
+			searhMap.put("EQ_organId",organsList.get(0).id);
+		}
+		searhMap.put("EQ_sysRole.roleName","销售员");
+		Page<SysEmployee> employeePage = employeeService.getAccountList(pageable,searhMap);
+		/*model.addAttribute("xbXbStudent",student);*/
+		model.addAttribute("organsList",organsList);
+		model.addAttribute("sysEmployee",sysEmployee);
+		model.addAttribute("classId",classId);
+		model.addAttribute("employeeList",employeePage.getContent());
+		return "enrollClassChoose";
+	}
+
+	/*
+	 * 班级学员选择
+	 * @return
+	 */
+	@RequestMapping("/enrollClass")
+	public String getStudent(@RequestParam(required = false) String classId, ModelMap model, Pageable pageable){
+		Map<String,Object> searhMap = new HashMap<>();
+		List<SysOrgans> organsList = organsService.getOrgansList();
+		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
+		SysEmployee sysEmployee = (SysEmployee)request.getSession().getAttribute("sysEmployee");
+		if(organsList.size()>0){
+			searhMap.put("EQ_organId",organsList.get(0).id);
+		}
+		searhMap.put("EQ_sysRole.roleName","销售员");
+		Page<SysEmployee> employeePage = employeeService.getAccountList(pageable,searhMap);
+		/*model.addAttribute("xbXbStudent",student);*/
+		model.addAttribute("organsList",organsList);
+		model.addAttribute("sysEmployee",sysEmployee);
+		model.addAttribute("classId",classId);
+		model.addAttribute("employeeList",employeePage.getContent());
+		return "enrollClass";
+	}
+
+
+	@RequestMapping("/save/enroll")
+	public void saveOrgans(@RequestParam String studentEntity,HttpServletResponse resp) {
+		Map<String, Object> map  =  new HashMap<>();
+		try {
+			XbStudent xbStudent = com.alibaba.fastjson.JSONObject.parseObject(studentEntity,XbStudent.class);
+			xbStudent = studentService.getXbStudent(xbStudent.id);
+			XbSupplementFee xbSupplementFee = com.alibaba.fastjson.JSONObject.parseObject(studentEntity,XbSupplementFee.class);
+			xbSupplementFee.surplusMoney = xbStudent.paymentMoney;
+			BigDecimal su = xbStudent.paymentMoney.subtract(xbStudent.surplusMoney.add(xbSupplementFee.paymentMoney));
+			BigDecimal pay = xbStudent.surplusMoney.add(xbSupplementFee.paymentMoney.subtract(xbStudent.paymentMoney));
+			int r=su.compareTo(BigDecimal.ZERO); //和0，Zero比较
+			int r2=pay.compareTo(BigDecimal.ZERO); //和0，Zero比较
+			if(r==-1){//小于
+				su = new BigDecimal(0);
+			}
+			if(r2==-1){//小于
+				pay = new BigDecimal(0);
+			}
+			xbStudent.surplusMoney = pay;
+			xbStudent.paymentMoney = su;
+			String id = xbStudent.id;
+			XbStudentRelation xbStudentRelation = studentService.getXbStudentRelation(xbSupplementFee.studentRelationId);
+			if(null!=id&&!"".equals(id)){
+				xbStudent.totalPeriodNum = xbStudentRelation.periodNum.add(xbStudent.totalPeriodNum);
+			}
+			xbStudent.deleteStatus = "1";
+			xbStudent = studentService.saveXbStudent(xbStudent);
+			xbStudentRelation.classId = xbSupplementFee.classId;
+			studentService.saveXbStudentRelation(xbStudentRelation);
+			xbSupplementFee.studentId = xbStudent.id;
+			String content = xbStudentRelation.xbCourse.courseName;
+			xbSupplementFee.remarks = content;
+			xbSupplementFee.type = "0";//报名
+
+			HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
+			SysEmployee sysEmployee = (SysEmployee)request.getSession().getAttribute("sysEmployee");
+			xbSupplementFee.handlePerson = sysEmployee.employeeName;
+			studentService.saveXbSupplementFee(xbSupplementFee);
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("status","1");
+			jsonObject.put("msg", "编辑成功");
+			logger.info("编辑机构返回json参数="+jsonObject.toString());
+			resp.setContentType("text/html;charset=UTF-8");
+			resp.getWriter().println(jsonObject.toJSONString());
+			resp.getWriter().close();
+		} catch (IOException e) {
+			logger.info(e.toString());
+		}
 	}
 
 }

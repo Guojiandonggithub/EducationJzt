@@ -323,6 +323,7 @@ public class StudentActivity {
 				searhMap.put("LIKE_xbStudent.contactPhone",nameormobile);
 			}
 		}
+		searhMap.put("NEQ_classId","");
 		Iterable<SysOrgans> organsList = organsService.getOrgansList();
 		Page<XbStudentRelation> xbStudentPage = studentService.getXbStudentRelationList(pageable,searhMap);
 		Map<String,Object> studentMap = new HashMap<>();
@@ -640,8 +641,8 @@ public class StudentActivity {
 			XbStudent xbStudent = com.alibaba.fastjson.JSONObject.parseObject(studentEntity,XbStudent.class);
 			XbSupplementFee xbSupplementFee = com.alibaba.fastjson.JSONObject.parseObject(studentEntity,XbSupplementFee.class);
 			List<XbStudentRelation> xbStudentRelationList = com.alibaba.fastjson.JSONArray.parseArray(xbStudentRelation,XbStudentRelation.class);
-			BigDecimal su = xbStudent.paymentMoney.subtract(xbStudent.surplusMoney);
-			BigDecimal pay = xbStudent.surplusMoney.subtract(xbStudent.paymentMoney);
+			BigDecimal su = (xbStudent.paymentMoney.add(xbStudent.registratioFee)).subtract(xbStudent.surplusMoney);
+			BigDecimal pay = xbStudent.surplusMoney.subtract(xbStudent.paymentMoney.add(xbStudent.registratioFee));
 			int r=su.compareTo(BigDecimal.ZERO); //和0，Zero比较
 			int r2=pay.compareTo(BigDecimal.ZERO); //和0，Zero比较
 			if(r==-1){//小于
@@ -655,9 +656,9 @@ public class StudentActivity {
 			String id = xbStudent.id;
 			if(null!=id&&!"".equals(id)){
 				XbStudent xbStudent1 = studentService.getXbStudent(id);
-				Integer periodNum = xbStudent1.totalPeriodNum;
-				xbStudent.totalPeriodNum = xbStudent.totalPeriodNum+periodNum;
+				xbStudent.totalPeriodNum = xbStudent.totalPeriodNum.add(xbStudent1.totalPeriodNum);
 			}
+            xbStudent.deleteStatus = "1";
 			xbStudent = studentService.saveXbStudent(xbStudent);
 			xbSupplementFee.studentId = xbStudent.id;
 			String content = "";
@@ -678,6 +679,7 @@ public class StudentActivity {
 			HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
 			SysEmployee sysEmployee = (SysEmployee)request.getSession().getAttribute("sysEmployee");
 			xbSupplementFee.handlePerson = sysEmployee.employeeName;
+			xbSupplementFee.paymentMoney = xbSupplementFee.paymentMoney.add(xbStudent.registratioFee);
 			studentService.saveXbSupplementFee(xbSupplementFee);
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put("status","1");
@@ -758,7 +760,7 @@ public class StudentActivity {
 	 * @return
 	 */
 	@RequestMapping("/getCourseList")
-	public String getCourseList(@RequestParam(required = false) String orginId,@RequestParam(required = false) String courseName,ModelMap model, Pageable pageable){
+	public String getCourseList(@RequestParam(required = false) String bjclassId,@RequestParam(required = false) String orginId,@RequestParam(required = false) String courseName,ModelMap model, Pageable pageable){
 		List<SysOrgans> organsList = organsService.getOrgansList();
 		if(organsList.size()>0){
 			Map<String,Object> xbCoursesearhMap = new HashMap<>();
@@ -768,6 +770,9 @@ public class StudentActivity {
 			xbCoursesearhMap.put("EQ_organIds",orginId);
 			if(null!=courseName&&!courseName.equals("")){
 				xbCoursesearhMap.put("LIKE_xbCourse.courseName",courseName);
+			}
+			if(null!=bjclassId&&!bjclassId.equals("")){
+				xbCoursesearhMap.put("EQ_xbCourse.courseTypeId",studentService.getXbClass(bjclassId).xbCourse.courseTypeId);
 			}
 			xbCoursesearhMap.put("EQ_deleteStatus","1");
 			Page<XbCoursePreset> xbCoursePage = xbCoursePresetService.getXbCoursePresetList(pageable,xbCoursesearhMap);
