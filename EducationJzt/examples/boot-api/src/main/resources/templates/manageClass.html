@@ -49,15 +49,15 @@
             <div class="manage">
                <!-- th:text="${xbClass.sysOrgans.organName}+${xbclass.xbCourse.xbcoursetype.courseTypeName}+${xbclass.teacher.employeeName}+${xbclass.className}"-->
                 <div class="tabbable">
-                    <div class="enrollCon"  >
-                        <button class="save" type="button" onclick="javascript:history.go(-1)" >上一步</button>
-                    </div>
                     <ul class="nav nav-tabs" id="myTab">
                         <li class="active">
-                            <a th:href="@{/feeRelated/enrollClasschoose(classId=${xbClass.id})}"  type="button" data-toggle="modal">选择学员</a>
+                            <a th:href="@{/feeRelated/enrollClasschoose(classId=${xbClass.id})}"  type="button" data-toggle="modal">添加学员</a>
                         </li>
-                        <li class="active">
+                        <!--<li class="active">
                             <a th:href="@{/feeRelated/enrollClass(classId=${xbClass.id})}"  type="button" data-toggle="modal">插班</a>
+                        </li>-->
+                        <li class="active">
+                            <a href="#"  type="button" data-toggle="modal" onclick="javascript:history.go(-1)">返回</a>
                         </li>
                     </ul>
                 </div>
@@ -73,7 +73,7 @@
                         <th:block th:if="${xbClass.classBeginDate!=null}" th:value="${#dates.format(xbClass.classBeginDate, 'yyyy-MM-dd')}"></th:block>
                     </p>
                     <p><span>结班日期：</span><th:block th:text="${xbClass.classEndDate}"></th:block></p>
-                    <p><span>班级人数：</span><th:block th:text="${xbClass.studentNum}"></th:block></p>
+                    <p><span>班级人数：</span><th:block th:text="${xbStudentRelationPage.getTotalElements()}"></th:block></p>
                     <p><span>成班人数：</span><th:block th:text="${xbClass.establishNum}"></th:block></p>
                     <p><span>任课教师：</span><th:block th:text="${xbClass.teacher.employeeName}"></th:block></p>
                     <!--<p><span>助教：</span>10</p>-->

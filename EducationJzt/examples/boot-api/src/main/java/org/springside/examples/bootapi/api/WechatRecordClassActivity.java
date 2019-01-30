@@ -134,7 +134,7 @@ public class WechatRecordClassActivity {
 			searhMap.put("LIKE_classId",classesId);
 		}
 		XbClass classes = studentService.getXbClass(classesId);
-		Page<XbStudentRelation> classPage = studentService.getXbStudentRelationList(pageable,searhMap);
+		Page<XbStudentRelationViewNew> classPage = studentService.getXbStudentRelationViewNewList(pageable,searhMap);
 		model.addAttribute("classPage",classPage);
 		model.addAttribute("classes",classes);
 		return "wechat_attendClass";
@@ -168,9 +168,10 @@ public class WechatRecordClassActivity {
 						money = money.divide(new BigDecimal(xbCoursePresetList.get(0).periodNum),2,BigDecimal.ROUND_HALF_UP);
 					}
 				}
-				Page<XbStudentRelation> xbStudentRelations = studentService.getXbStudentRelationList(pageable,searhMap);
-				XbStudentRelation xbStudentRelation = xbStudentRelations.getContent().get(0);
-				//Integer periodNum = xbStudentRelation.periodNum;
+				Page<XbStudentRelationViewNew> xbStudentRelations = studentService.getXbStudentRelationViewNewList(pageable,searhMap);
+				String id = xbStudentRelations.getContent().get(0).id;
+				XbStudentRelation xbStudentRelation = studentService.getXbStudentRelation(id);
+						//Integer periodNum = xbStudentRelation.periodNum;
 				BigDecimal bigDecimal = xbStudentRelation.periodNum;
 				BigDecimal receivable = xbStudentRelation.receivable;
 				//BigDecimal bigDecimal = new BigDecimal(periodNum.toString());

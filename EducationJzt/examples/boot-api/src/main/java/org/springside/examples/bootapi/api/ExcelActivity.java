@@ -13,7 +13,7 @@ import org.springside.examples.bootapi.ToolUtils.DateUtil;
 import org.springside.examples.bootapi.ToolUtils.ExcelData;
 import org.springside.examples.bootapi.ToolUtils.ExportExcelUtils;
 import org.springside.examples.bootapi.domain.XbRecordClassView;
-import org.springside.examples.bootapi.domain.XbStudentRelation;
+import org.springside.examples.bootapi.domain.XbStudentRelationViewNew;
 import org.springside.examples.bootapi.service.XbStudentService;
 
 import javax.servlet.http.HttpServletResponse;
@@ -58,7 +58,7 @@ public class ExcelActivity {
 			searhMap.put("EQ_classId",classesId);
 			//searhMap.put("GTE_periodNum",new BigDecimal("0"));
 			Pageable pageable = new PageRequest(0, 1, null);
-			Page<XbStudentRelation> classPage = studentService.getXbStudentRelationList(pageable,searhMap);
+			Page<XbStudentRelationViewNew> classPage = studentService.getXbStudentRelationViewNewList(pageable,searhMap);
 			xbRecordClassViewList1.add(classPage.getTotalElements());
 			xbRecordClassViewList1.add(xbRecordClassViewList.get(i).studentCount);
 			xbRecordClassViewList1.add(xbRecordClassViewList.get(i).periodnum);

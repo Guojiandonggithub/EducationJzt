@@ -42,8 +42,11 @@
             <div class="enrollCon">
                 <h2>基本信息</h2>
                 <div class="openMore">
-                    <!--<button class="more" type="button">展开更多</button>-->
-                    <!--<button class="choice" href="#modal-table2" type="button" class="blue" data-toggle="modal" onclick="getStudentList()">选择已有学员</button>-->
+                    <ul class="nav nav-tabs" id="myTab">
+                        <li class="active">
+                            <a th:href="@{/student/classDetail?(classId=${classId})}"  type="button" data-toggle="modal">返回</a>
+                        </li>
+                    </ul>
                 </div>
                 <div class="headPic">
                     <span>头像</span>
@@ -121,6 +124,7 @@
                         <!--<select name="classIds">
                             <option th:each="classes:${course.xbClassList}"  th:value="${classes.id}" th:text="${classes.teacher.employeeName}+${classes.className}"></option>
                         </select>-->
+                        <span th:text="${xbClass.sysOrgans.organName}+${xbClass.xbCourse.xbcoursetype.courseTypeName}+${xbClass.teacher.employeeName}+${xbClass.className}"></span>
                         <input type="hidden" id="courseId" name="courseId" >
                         <input type="hidden" id="receivable" name="receivable" >
                         <input type="hidden" name="organIds" >
@@ -162,7 +166,7 @@
     </div>
     </div>
 
-<div class="enrollCon payInfo">
+<div class="enrollCon payInfo" style="display: none">
     <h2>支付信息</h2>
     <div class="alert-info">
         当前的经办校区为<strong id="organName" th:text="${organName}"></strong>，请先确认经办校区后再填写支付信息！
@@ -180,12 +184,15 @@
             <option value="0">现金</option>
         </select>
         <div>
-            <input type="text" name="paymentMoney"  id="paymentMoney">
+            <!--<input type="text" name="paymentMoney"  id="paymentMoney">
             <input type="hidden" name="surplusMoney"  id="surplusMoney" th:value="${money}">
             <input type="hidden" name="totalPeriodNum" id="periodNum" th:value="${periodNum}"/>
-            <span>元</span>
+            <span>元</span>-->
         </div>
     </div>
+    <input type="hidden" name="paymentMoney"  id="paymentMoney" value="0">
+    <input type="hidden" name="surplusMoney"  id="surplusMoney" th:value="${money}">
+    <input type="hidden" name="totalPeriodNum" id="periodNum" th:value="${periodNum}"/>
     <!--<div class="cash" style="margin-top: 20px;">
         <p class="incomeAll"><img src="../static/pages/img/money.png">报名费</p>
         <div>
@@ -466,7 +473,7 @@
                     var status = data.status;
                     var msg = data.msg;
                     $.kd.kdAlert("编辑成功！",function () {
-                        window.location.href = basePath + '/student/getXbStudentList';
+                        window.location.href = basePath + '/student/classDetail?classId='+$("#classId").val();
                     },"提示");
                 },
                 error(){

@@ -11,12 +11,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.web.HateoasPageableHandlerMethodArgumentResolver;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springside.examples.bootapi.ToolUtils.BaseAction;
 import org.springside.examples.bootapi.ToolUtils.DateUtil;
 import org.springside.examples.bootapi.ToolUtils.HttpServletUtil;
@@ -460,10 +462,10 @@ public class JwCenterArrangingCoursesActivity {
             if(type.equals("xy")){
                 Map<String,Object> studentmap = new HashMap<>();
                 studentmap.put("EQ_studentId",studentid);
-                List<XbStudentRelation> xbslist =  xbStudentService.getXbRelationList(studentmap);
+                List<XbStudentRelationViewNew> xbslist =  xbStudentService.getXbRelationList(studentmap);
                 if(xbslist.size()>0){
                     List<String> idlist = new ArrayList<String>();
-                    for(XbStudentRelation xbstu:xbslist){
+                    for(XbStudentRelationViewNew xbstu:xbslist){
                         idlist.add(xbstu.classId);
                     }
                     searchParams.put("IN_xbClassId",idlist);

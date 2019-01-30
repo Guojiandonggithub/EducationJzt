@@ -90,7 +90,7 @@ public class XbStudentService {
 	}
 
 
-	@Transactional
+	/*@Transactional
 	public Page<XbStudentRelation>  getXbStudentRelationList(Pageable pageable, Map<String, Object> searchParams) {
         HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
         SysEmployee sysEmployee = (SysEmployee)request.getSession().getAttribute("sysEmployee");
@@ -105,7 +105,8 @@ public class XbStudentService {
 		Specification<XbStudentRelation> spec = DynamicSpecifications.bySearchFilter(
 				filters.values(), XbStudentRelation.class);
 		return xbStudentRelationDao.findAll(spec,pageable);
-	}
+	}*/
+
 	@Transactional
 	public Page<XbStudentRelationViewNew>  getXbStudentRelationViewNewList(Pageable pageable, Map<String, Object> searchParams) {
 		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
@@ -124,16 +125,30 @@ public class XbStudentService {
 	}
 
 	@Transactional
-	public List<XbStudentRelation>  getXbRelationList(Map<String, Object> searchParams) {
+	public List<XbStudentRelationViewNew>  getXbRelationList(Map<String, Object> searchParams) {
+		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
+		SysEmployee sysEmployee = (SysEmployee)request.getSession().getAttribute("sysEmployee");
+		if("管理员".equals(sysEmployee.sysRole.roleName)){
+			searchParams.put("EQ_organId",sysEmployee.organId);
+		}
+		if("教师".equals(sysEmployee.sysRole.roleName)){
+			searchParams.put("EQ_organId",sysEmployee.organId);
+			searchParams.put("EQ_teacherId",sysEmployee.id);
+		}
 		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
-		Specification<XbStudentRelation> spec = DynamicSpecifications.bySearchFilter(
-				filters.values(), XbStudentRelation.class);
-		return xbStudentRelationDao.findAll(spec);
+		Specification<XbStudentRelationViewNew> spec = DynamicSpecifications.bySearchFilter(
+				filters.values(), XbStudentRelationViewNew.class);
+		return xbStudentRelationViewNewDaoDao.findAll(spec);
 	}
 
 	@Transactional
 	public Long findAllDataByClassCount(String classId) {
 		return xbStudentRelationDao.findAllDataByClassCount(classId);
+	}
+
+	@Transactional
+	public XbStudentRelationViewNew getXbStudentRelationView(String id) {
+		return xbStudentRelationViewNewDaoDao.findOne(id);
 	}
 
 	@Transactional

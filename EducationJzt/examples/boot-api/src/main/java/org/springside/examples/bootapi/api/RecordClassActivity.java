@@ -189,7 +189,7 @@ public class RecordClassActivity {
 			searhMap.put("LIKE_classId",classesId);
 		}
 		XbClass classes = studentService.getXbClass(classesId);
-		List<XbStudentRelation> classPage = studentService.getXbRelationList(searhMap);
+		List<XbStudentRelationViewNew> classPage = studentService.getXbRelationList(searhMap);
 		model.addAttribute("classPage",classPage);
 		model.addAttribute("classSize",classPage.size());
 		model.addAttribute("classes",classes);
@@ -353,7 +353,7 @@ public class RecordClassActivity {
 			searhMaps.put("EQ_classId", classesId);
 			searhMaps.put("GTE_periodNum", new BigDecimal("0"));
 			Pageable pageables = new PageRequest(0, 1, null);
-			Page<XbStudentRelation> classPage = studentService.getXbStudentRelationList(pageables, searhMaps);
+			Page<XbStudentRelationViewNew> classPage = studentService.getXbStudentRelationViewNewList(pageables, searhMaps);
 			if (classPage.getContent().size() > 0) {
 				BigDecimal totalPeriodNum = classPage.getContent().get(0).totalPeriodNum;
 				BigDecimal totalReceivable = classPage.getContent().get(0).totalReceivable;
@@ -396,7 +396,7 @@ public class RecordClassActivity {
 			searhMaps.put("EQ_classId", classesId);
 			searhMaps.put("GTE_periodNum", new BigDecimal("0"));
 			Pageable pageables = new PageRequest(0, 1, null);
-			Page<XbStudentRelation> classPage = studentService.getXbStudentRelationList(pageables, searhMaps);
+			Page<XbStudentRelationViewNew> classPage = studentService.getXbStudentRelationViewNewList(pageables, searhMaps);
 			if (classPage.getContent().size() > 0) {
 				BigDecimal totalPeriodNum = classPage.getContent().get(0).totalPeriodNum;
 				BigDecimal totalReceivable = classPage.getContent().get(0).totalReceivable;

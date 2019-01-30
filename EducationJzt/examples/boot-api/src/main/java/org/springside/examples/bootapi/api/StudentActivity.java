@@ -278,7 +278,7 @@ public class StudentActivity {
 		}*/
 		List<XbStudentRelationView> studentlist = studentService.getxbStudentRelationViewList(searchParamsview);
 		Iterable<SysOrgans> organsList = organsService.getOrgansList();
-		Page<XbStudentRelation> xbStudentPage = studentService.getXbStudentRelationList(pageable,searhMap);
+		Page<XbStudentRelationViewNew> xbStudentPage = studentService.getXbStudentRelationViewNewList(pageable,searhMap);
 		Map<String,Object> studentMap = new HashMap<>();
 		/*Page<XbStudent> xbStudentsPage = studentService.getXbStudentList(pageable,studentMap);*/
 		model.addAttribute("studentlistsize",studentlist.size());
@@ -583,7 +583,7 @@ public class StudentActivity {
             Map<String,Object> xbClassearhMap = new HashMap<>();
             xbClassearhMap.put("EQ_classId",id);
             JSONObject jsonObject = new JSONObject();
-            Page<XbStudentRelation> xbStudentRelationPage = studentService.getXbStudentRelationList(pageable,xbClassearhMap);
+            Page<XbStudentRelationViewNew> xbStudentRelationPage = studentService.getXbStudentRelationViewNewList(pageable,xbClassearhMap);
             if(xbStudentRelationPage.getContent().size()>0){
                 jsonObject.put("status","0");
                 jsonObject.put("msg", "有学员报名不能删除该班级！");
@@ -656,6 +656,8 @@ public class StudentActivity {
 			String id = xbStudent.id;
 			if(null!=id&&!"".equals(id)){
 				XbStudent xbStudent1 = studentService.getXbStudent(id);
+				xbStudent.surplusMoney = xbStudent1.surplusMoney.add(su);
+				xbStudent.paymentMoney = xbStudent1.paymentMoney.add(pay);
 				xbStudent.totalPeriodNum = xbStudent.totalPeriodNum.add(xbStudent1.totalPeriodNum);
 			}
             xbStudent.deleteStatus = "1";
@@ -736,7 +738,7 @@ public class StudentActivity {
             for (int i = 0; i < xbClassList.size(); i++) {
                 Map<String,Object> xbClassearhMap = new HashMap<>();
                 xbClassearhMap.put("EQ_classId",xbClassList.get(i).id);
-                Page<XbStudentRelation> xbStudentRelationPage = studentService.getXbStudentRelationList(pageable,xbClassearhMap);
+                Page<XbStudentRelationViewNew> xbStudentRelationPage = studentService.getXbStudentRelationViewNewList(pageable,xbClassearhMap);
                 if(xbStudentRelationPage.getTotalElements()<xbClassList.get(i).studentNum){
                     xbClassPages.add(xbClassList.get(i));
 					String courseId = xbClassList.get(i).courseId;
@@ -786,7 +788,7 @@ public class StudentActivity {
 	 * @return
 	 */
 	@RequestMapping("/chooseCourse")
-	public String chooseCourse(@RequestParam(required = false) String courseIds,ModelMap model, Pageable pageable){
+	public String chooseCourse(@RequestParam(required = false) String classId,@RequestParam(required = false) String courseIds,ModelMap model, Pageable pageable){
 		List<XbCoursePreset> xbCourseList = new ArrayList<>();
 		BigDecimal moneys = new BigDecimal(0);
 		Integer num = 0;
@@ -802,16 +804,21 @@ public class StudentActivity {
 					BigDecimal totalmoney = xbCoursePreset.money;//每个课程总金额
 					if(xbCoursePreset.xbCourse.chargingMode.equals("0")){
 						totalmoney = xbCoursePreset.money.multiply(new BigDecimal(xbCoursePreset.periodNum));
-						xbCoursePreset.lsmoney = totalmoney;
 					}
+					xbCoursePreset.lsmoney = totalmoney;
 					moneys= moneys.add(totalmoney);
 					num = num + xbCoursePreset.periodNum;
 					xbCourseList.add(xbCoursePreset);
 				}
 			}
+			XbClass xbClass = new XbClass();
+			if(null!=classId&&!classId.equals("")){
+				 xbClass = studentService.getXbClass(classId);
+			}
 			model.addAttribute("xbCourseLists",xbCourseList);
 			model.addAttribute("money",moneys);//总金额
 			model.addAttribute("periodNum",num);//总课时
+			model.addAttribute("xbClass",xbClass);
 			model.addAttribute("organName",xbCourseList.get(0).sysorgans.organName);
 		return "enroll::baoming";
 	}
@@ -1016,7 +1023,7 @@ public class StudentActivity {
 		Map<String, Object> searhMap = new HashMap<>();
 		try {
 			searhMap.put("EQ_studentId", studentId);
-			Page<XbStudentRelation> xbCoursePage = studentService.getXbStudentRelationList(pageable, searhMap);
+			Page<XbStudentRelationViewNew> xbCoursePage = studentService.getXbStudentRelationViewNewList(pageable, searhMap);
 			jsonObject.put("msg", "新建科目成功");
 			jsonObject.put("status", "0");
 			jsonObject.put("xbCoursePage", com.alibaba.fastjson.JSONObject.toJSON(xbCoursePage.getContent()));
@@ -1037,7 +1044,7 @@ public class StudentActivity {
 		XbClass xbClass = studentService.getXbClass(classId);
 		Map<String, Object> searchParams = new HashMap<>();
 		searchParams.put("EQ_classId",classId);
-		Page<XbStudentRelation> xbStudentRelationPage = studentService.getXbStudentRelationList(pageable,searchParams);
+		Page<XbStudentRelationViewNew> xbStudentRelationPage = studentService.getXbStudentRelationViewNewList(pageable,searchParams);
 		model.addAttribute("xbClass",xbClass);
 		model.addAttribute("xbStudentRelationPage",xbStudentRelationPage);
 		return "manageClass";
@@ -1054,7 +1061,7 @@ public class StudentActivity {
 		Map<String, Object> feeListSearchParams = new HashMap<>();
 		searchParams.put("EQ_studentId",studentId);
 		feeListSearchParams.put("EQ_studentId",studentId);
-		Page<XbStudentRelation> xbStudentRelationPage = studentService.getXbStudentRelationList(pageable,searchParams);
+		Page<XbStudentRelationViewNew> xbStudentRelationPage = studentService.getXbStudentRelationViewNewList(pageable,searchParams);
 		model.addAttribute("xbStudent",xbStudent);
 		model.addAttribute("xbStudentRelationPage",xbStudentRelationPage);//课程列表
 		Page<XbSupplementFee> XbSupplementFeePage = studentService.getXbSupplementFeeList(pageable,feeListSearchParams);

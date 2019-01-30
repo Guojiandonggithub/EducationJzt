@@ -104,7 +104,7 @@ public class ForwardActivity {
 		}*/
 		List<XbStudentRelationView> studentlist = studentService.getxbStudentRelationViewList(searchParamsview);
 		Iterable<SysOrgans> organsList = organsService.getOrgansList();
-		Page<XbStudentRelation> xbStudentPage = studentService.getXbStudentRelationList(pageable,searhMap);
+		Page<XbStudentRelationViewNew> xbStudentPage = studentService.getXbStudentRelationViewNewList(pageable,searhMap);
 		Map<String,Object> studentMap = new HashMap<>();
 		model.addAttribute("xbStudentPage",xbStudentPage);
 		model.addAttribute("studentlistsize",studentlist.size());

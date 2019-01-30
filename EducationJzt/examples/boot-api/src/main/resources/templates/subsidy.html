@@ -50,31 +50,30 @@
                     </p>
                     <button href="#modal-table" data-toggle="modal" type="button" oninput="getStudentList()">重新选择</button>
                 </div>
-
-
-                <!--<div class="enrollCon payInfo">
-                    <h2>支付信息</h2>
-                    <div class="income">
-                        <p class="incomeAll"><img src="../static/pages/img/money.png">应收总计</p>
-                        <input type="hidden" id="surplusMoney" name="surplusMoney" th:value="${xbStudent.paymentMoney}" th:text="${xbStudent.paymentMoney}"/>元
-                    </div>
-                    <div class="income">
-                        <p class="incomeAll"><img src="../static/pages/img/money.png">实收</p>
-                        <input type="text" name="paymentMoney" id="paymentMoney" th:value="0.00"/>元
-                    </div>
-                    <div class="cash">
-                        <select name="paymentType">
-                            <option value="0">现金</option>
-                        </select>
-                        <div class="form-group">
-                            <label>使用账户余额:</label>
-                            <input type="text" name="subsidyMoney" id="subsidyMoney" th:value="0.00"/>元 （当前可用<label th:text="${xbStudent.surplusMoney}"></label>元）
-                        </div>
-                    </div>
-                </div>-->
-
-
-
+                <div class="orderTable">
+                    <table class="table table-hover">
+                        <tr>
+                            <th>
+                                <input type="checkbox" id="sel_3" onchange="chooseAll()">
+                            </th>
+                            <th>课程</th>
+                            <th>课程剩余金额</th>
+                            <th>课程剩余课时</th>
+                            <th>校区</th>
+                            <!--<th>上课时间</th>-->
+                            <th>报名时间</th>
+                        </tr>
+                        <tr id="chooses" th:each="studentrelations,stuSta:${xbStudentPage}">
+                            <td><input type="checkbox"></td>
+                            <td th:text="${studentrelations.xbCourse.courseName}"></td>
+                            <td th:text="${studentrelations.receivable}"></td>
+                            <td th:text="${studentrelations.periodNum}"></td>
+                            <td th:text="${studentrelations.sysOrgans.organName}"></td>
+                            <td th:if="${studentrelations.enrollDate!=null}" th:text="${#dates.format(studentrelations.enrollDate, 'yyyy-MM-dd')}"></td>
+                            <td th:if="${studentrelations.enrollDate==null}" th:text="${studentrelations.enrollDate}"></td>
+                        </tr>
+                    </table>
+                </div>
 
                 <div class="enrollCon payInfo">
                     <h2>支付信息</h2>

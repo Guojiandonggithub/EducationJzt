@@ -237,8 +237,8 @@ public class FeeRelatedActivity {
 		if(null!=classId&&!classId.equals("")){
 			studentMap.put("EQ_id",classId);
 		}
-		XbStudentRelation xbStudentRelation = new XbStudentRelation();
-		List<XbStudentRelation> xbStudentPage = studentService.getXbRelationList(studentMap);
+		XbStudentRelationViewNew xbStudentRelation = new XbStudentRelationViewNew();
+		List<XbStudentRelationViewNew> xbStudentPage = studentService.getXbRelationList(studentMap);
 		String balanceamount = "0.00";
 		if(xbStudentPage.size()>0){
 			xbStudentRelation = xbStudentPage.get(0);
@@ -268,29 +268,13 @@ public class FeeRelatedActivity {
 		XbStudent xbStudent = studentService.getXbStudent(studentId);
 		Map<String,Object> studentMap = new HashMap<>();
 		studentMap.put("EQ_studentId",studentId);
-		studentMap.put("EQ_xbClass.deleteStatus","1");
+		/*studentMap.put("EQ_xbClass.deleteStatus","1");*/
 		if(null!=classId&&!classId.equals("")){
 			studentMap.put("EQ_id",classId);
 		}
-		XbStudentRelation xbStudentRelation = new XbStudentRelation();
-		List<XbStudentRelation> xbStudentPage = studentService.getXbRelationList(studentMap);
-		String balanceamount = "0.00";
-		if(xbStudentPage.size()>0){
-			xbStudentRelation = xbStudentPage.get(0);
-			BigDecimal receivable = xbStudentRelation.receivable;
-			BigDecimal paymentMoney = xbStudent.paymentMoney;
-			BigDecimal su = receivable.subtract(paymentMoney);
-			balanceamount = su.toString();
-		}
-		List<XbStudentRelation> xbClassPage = new ArrayList<>();
+		List<XbStudentRelationViewNew> xbStudentPage = studentService.getXbRelationList(studentMap);
+		model.addAttribute("xbStudentPage",xbStudentPage);
 		model.addAttribute("xbStudent",xbStudent);
-		model.addAttribute("xbClassList",xbStudentPage);
-		model.addAttribute("xbQbClassList",xbClassPage);
-		model.addAttribute("classId","");
-		model.addAttribute("xbStudentRelationId",xbStudentRelation.id);
-		model.addAttribute("totalReceivable",xbStudentRelation.totalReceivable);
-		model.addAttribute("receivable",xbStudentRelation.receivable);
-		model.addAttribute("balanceamount",balanceamount);
 		return "subsidy::changeClassFragment";
 	}
 
@@ -304,10 +288,10 @@ public class FeeRelatedActivity {
 		Map<String,Object> studentMap = new HashMap<>();
 		studentMap.put("EQ_studentId",studentId);
 		studentMap.put("EQ_xbClass.deleteStatus","1");
-		Page<XbStudentRelation> xbStudentPage = studentService.getXbStudentRelationList(pageable,studentMap);
+		Page<XbStudentRelationViewNew> xbStudentPage = studentService.getXbStudentRelationViewNewList(pageable,studentMap);
 		studentMap.put("EQ_id",classId);
-		List<XbStudentRelation> xbRelationList = studentService.getXbRelationList(studentMap);
-		XbStudentRelation xbStudentRelation = new XbStudentRelation();
+		List<XbStudentRelationViewNew> xbRelationList = studentService.getXbRelationList(studentMap);
+		XbStudentRelationViewNew xbStudentRelation = new XbStudentRelationViewNew();
 		String balanceamount = "0.00";
 		if(xbRelationList.size()>0){
 			xbStudentRelation = xbRelationList.get(0);
@@ -415,10 +399,10 @@ public class FeeRelatedActivity {
 		XbStudent xbStudent = studentService.getXbStudent(studentId);
 		Map<String,Object> studentMap = new HashMap<>();
 		studentMap.put("EQ_studentId",studentId);
-		Page<XbStudentRelation> xbStudentPage = studentService.getXbStudentRelationList(pageable,studentMap);
+		Page<XbStudentRelationViewNew> xbStudentPage = studentService.getXbStudentRelationViewNewList(pageable,studentMap);
 		Map<String,Object> studentMaps = new HashMap<>();
 		studentMaps.put("EQ_xbCourse.xbcoursetype.id",studentId);
-		Page<XbStudentRelation> xbClassPage = studentService.getXbStudentRelationList(pageable,studentMaps);
+		Page<XbStudentRelationViewNew> xbClassPage = studentService.getXbStudentRelationViewNewList(pageable,studentMaps);
 		model.addAttribute("xbStudent",xbStudent);
 		model.addAttribute("xbClassList",xbStudentPage.getContent());
 		model.addAttribute("xbQbClassList",xbClassPage.getContent());
@@ -548,14 +532,14 @@ public class FeeRelatedActivity {
 		studentMap.put("EQ_studentId",studentId);
 		studentMap.put("EQ_xbCourse.deleteStatus","1");
 		studentMap.put("NEQ_studentStart",1);
-		XbStudentRelation xbStudentRelation = new XbStudentRelation();
-		List<XbStudentRelation> xbStudentPage = studentService.getXbRelationList(studentMap);
+		XbStudentRelationViewNew xbStudentRelation = new XbStudentRelationViewNew();
+		List<XbStudentRelationViewNew> xbStudentPage = studentService.getXbRelationList(studentMap);
 		String balanceamount = "0.00";
 		if(xbStudentPage.size()>0){
 			xbStudentRelation = xbStudentPage.get(0);
 		}
 		if(null!=classId&&!classId.equals("")){
-			xbStudentRelation = studentService.getXbStudentRelation(classId);
+			xbStudentRelation = studentService.getXbStudentRelationView(classId);
 		}
 		List<XbStudentRelation> xbClassPage = new ArrayList<>();
 		model.addAttribute("xbStudent",xbStudent);
@@ -639,7 +623,7 @@ public class FeeRelatedActivity {
 			resultMap.put("EQ_xbStudent.studentName",studentName);
 		}
 		resultMap.put("EQ_classId","");
-		List<XbStudentRelation> xbStudentsList = studentService.getXbRelationList(resultMap);
+		List<XbStudentRelationViewNew> xbStudentsList = studentService.getXbRelationList(resultMap);
 		model.addAttribute("xbStudentsList",xbStudentsList);
 		return "enrollClassChoose::studentList";
 	}
@@ -684,10 +668,12 @@ public class FeeRelatedActivity {
 		}
 		searhMap.put("EQ_sysRole.roleName","销售员");
 		Page<SysEmployee> employeePage = employeeService.getAccountList(pageable,searhMap);
+		XbClass xbClass = studentService.getXbClass(classId);
 		/*model.addAttribute("xbXbStudent",student);*/
 		model.addAttribute("organsList",organsList);
 		model.addAttribute("sysEmployee",sysEmployee);
 		model.addAttribute("classId",classId);
+		model.addAttribute("xbClass",xbClass);
 		model.addAttribute("employeeList",employeePage.getContent());
 		return "enrollClassChoose";
 	}
@@ -707,7 +693,9 @@ public class FeeRelatedActivity {
 		}
 		searhMap.put("EQ_sysRole.roleName","销售员");
 		Page<SysEmployee> employeePage = employeeService.getAccountList(pageable,searhMap);
+		XbClass xbClass = studentService.getXbClass(classId);
 		/*model.addAttribute("xbXbStudent",student);*/
+		model.addAttribute("xbClass",xbClass);
 		model.addAttribute("organsList",organsList);
 		model.addAttribute("sysEmployee",sysEmployee);
 		model.addAttribute("classId",classId);
@@ -764,6 +752,46 @@ public class FeeRelatedActivity {
 		} catch (IOException e) {
 			logger.info(e.toString());
 		}
+	}
+
+	/**
+	 * 选择课程
+	 * @return
+	 */
+	@RequestMapping("/chooseCoursees")
+	public String chooseCoursees(@RequestParam(required = false) String classId,@RequestParam(required = false) String courseIds,ModelMap model, Pageable pageable){
+		List<XbCoursePreset> xbCourseList = new ArrayList<>();
+		BigDecimal moneys = new BigDecimal(0);
+		Integer num = 0;
+		if(null!=courseIds&&!courseIds.equals("")){
+			String[] str = courseIds.split(",");
+			for (int i = 0; i < str.length; i++) {
+				XbCoursePreset xbCoursePreset = new XbCoursePreset();
+				xbCoursePreset = xbCoursePresetService.getXbCoursePreset(str[i]);
+				Map<String,Object> xbClasssearhMap = new HashMap<>();
+				xbClasssearhMap.put("EQ_courseId",xbCoursePreset.getCourseId());
+				Page<XbClass> classPage = studentService.getXbClassList(pageable,xbClasssearhMap);
+				xbCoursePreset.xbClassList = classPage.getContent();
+				BigDecimal totalmoney = xbCoursePreset.money;//每个课程总金额
+				if(xbCoursePreset.xbCourse.chargingMode.equals("0")){
+					totalmoney = xbCoursePreset.money.multiply(new BigDecimal(xbCoursePreset.periodNum));
+				}
+				xbCoursePreset.lsmoney = totalmoney;
+				moneys= moneys.add(totalmoney);
+				num = num + xbCoursePreset.periodNum;
+				xbCourseList.add(xbCoursePreset);
+			}
+		}
+		XbClass xbClass = new XbClass();
+		if(null!=classId&&!classId.equals("")){
+			xbClass = studentService.getXbClass(classId);
+		}
+		model.addAttribute("xbCourseLists",xbCourseList);
+		model.addAttribute("money",moneys);//总金额
+		model.addAttribute("periodNum",num);//总课时
+		model.addAttribute("xbClass",xbClass);
+		model.addAttribute("organName",xbCourseList.get(0).sysorgans.organName);
+		return "enrollClass::baoming";
 	}
 
 }
