@@ -73,7 +73,8 @@ public class XbClass {
     public String sktime;
     @Transient
     public Long enrollNum;
-
+    /*班级-0 一对一-1*/
+    public String wayOfTeaching;
     public XbClass() {
 
     }

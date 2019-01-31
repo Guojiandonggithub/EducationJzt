@@ -199,8 +199,8 @@
                                                     <td th:text="${less.xbclassroom.classroomName}">教室</td>
                                                     <!--<td th:text="${less.xbsubject.subjectName}">科目</td>-->
                                                     <td th:text="${less.xbclass.xbCourse.xbcoursetype.courseTypeName}">类型</td>
-                                                    <td th:if="${less.ydstudentnum} gt 0">/</td>
-                                                    <td th:if="${less.ydstudentnum} eq 0"></td>
+                                                    <td th:if="${less.sdstudentnum} gt 0">/</td>
+                                                    <td th:if="${less.sdstudentnum} eq 0"></td>
                                                     <td th:text="${less.sdstudentnum}+'人/'+${less.ydstudentnum}+'人'"></td>
                                                     <td>
                                                         <div class="btn-group">
@@ -1011,9 +1011,9 @@
         load.start();
         var data= serializeObject("#searchform");
         var size = $('#size option:selected').val();//选中的值
-         if(page==""){
+         /*if(page==""){
              page = 1;
-         }
+         }*/
         if(size){
             size = "10";
         }

@@ -54,6 +54,8 @@ public class JwCenterArrangingCoursesActivity {
     public XbCoursePresetService xbCoursePresetService;
     @Autowired
     public BaseAction baseAction;
+    @Autowired
+    private XbStudentService studentService;
     @RequestMapping("/findCourseByorgid")
     public void findCourseByorgid(@RequestParam String orgid,
                                      HttpServletResponse resp,ModelMap model){
@@ -217,8 +219,13 @@ public class JwCenterArrangingCoursesActivity {
         Map<String,Object> searhMap = parameterAssemblyByfindXbAttendClassPageAll(model,resultMap);
        Page<XbAttendClass> xbAttendList = xbAttendClassService.findXbAttendClassPageAll(pageable,searhMap);
         for(XbAttendClass xbattendclass : xbAttendList){
-            xbattendclass.ydstudentnum = xbAttendClassService.getYdstudentnum(xbattendclass.classId,xbattendclass.startDateTime);
+            Map<String,Object> searchParamsview = new HashMap<>();
+            searchParamsview.put("EQ_classId",xbattendclass.classId);
+            List<XbStudentRelationView> studentlist = studentService.getxbStudentRelationViewList(searchParamsview);
+            xbattendclass.ydstudentnum = studentlist.size();
             xbattendclass.sdstudentnum = xbAttendClassService.getSdstudentnum(xbattendclass.classId,xbattendclass.startDateTime);
+
+
         }
         model.addAttribute("xbAttendList",xbAttendList);
         model.addAttribute("xbAttendListsize",xbAttendList.getSize());

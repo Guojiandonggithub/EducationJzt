@@ -29,7 +29,7 @@ public interface XbAttendClassDao extends PagingAndSortingRepository<XbAttendCla
     List<String> findXbAttendConflictIdList();
     @Query(value="SELECT *   FROM xb_record_class t WHERE t.attend_id = ? AND DATE_FORMAT(t.record_time,'%Y-%m-%d') = ?",nativeQuery = true)
     List findYDStudentNum(String classId,String startDateTime);
-    @Query(value="SELECT *  FROM xb_record_class t WHERE t.attend_id = ? AND DATE_FORMAT(t.record_time,'%Y-%m-%d') = ? AND t.state = '0';",nativeQuery = true)
+    @Query(value="SELECT *  FROM xb_record_class t WHERE t.attend_id = ? AND DATE_FORMAT(t.record_time,'%Y-%m-%d') = ? AND t.state = '0' GROUP BY t.student_id",nativeQuery = true)
     List findSDStudentNum(String classId,String startDateTime);
 
     @Query(value=" select c.week_day,c.time_interval from xb_attend_class c where c.class_id = ?1 and c.delete_status='1' group by  c.week_day,c.time_interval;",nativeQuery = true)
