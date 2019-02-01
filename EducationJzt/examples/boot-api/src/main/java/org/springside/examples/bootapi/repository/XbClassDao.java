@@ -20,4 +20,6 @@ public interface XbClassDao extends PagingAndSortingRepository<XbClass, String>,
     XbClass findAllByClassNameAndOrganIdAndCourseIdAndDeleteStatusAndTeacherId(String name,String organId,String courseId,String deleteStatus,String teacherId);
 
     List<XbClass> getXbClassByDeleteStatus(String deleteStatus);
+
+    List<XbClass> findByXbStudentRalationId(String xbstudentralationid);
 }

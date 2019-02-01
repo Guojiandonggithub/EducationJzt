@@ -19,6 +19,7 @@ import org.springside.examples.bootapi.ToolUtils.common.modules.persistence.Sear
 import org.springside.examples.bootapi.domain.SysEmployee;
 import org.springside.examples.bootapi.domain.XbAttendClass;
 import org.springside.examples.bootapi.domain.XbAttendClassRicheng;
+import org.springside.examples.bootapi.domain.XbClass;
 import org.springside.examples.bootapi.repository.XbAttendClassDao;
 import org.springside.examples.bootapi.repository.XbAttendClassRichengDao;
 
@@ -90,9 +91,9 @@ public class XbAttendClassService {
 
 	public XbAttendClass saveXbAttendClass(XbAttendClass xbattendclass){
 		//xbattendclass.setCreateUserId(loginUsers.getIfPresent("qnjl-mylove-forevery").id);//添加创建人
-		xbattendclass.setCreateUserId("4028818367cc62780167cc695f490000");//添加创建人
-		xbattendclass.setCreateDate(DateUtil.getTodayDateStr());
-		xbattendclass.createTime = DateUtil.getTodayDateTimeStr();
+		xbattendclass.createUserId = "4028818367cc62780167cc695f490000";//添加创建人
+		xbattendclass.createDate = DateUtil.getTodayDateStr();
+		xbattendclass.createTime = DateUtil.getTodayTimeStr();
 		return xbAttendClassDao.save(xbattendclass);
 	}
 	public int getYdstudentnum(String classId,String startDateTime) {

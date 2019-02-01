@@ -40,7 +40,9 @@ public class XbStudentRelationViewNew {
     public Date classBeginDate;
     public Date classEndDate;
     public String className;
+    public String teacherId;
     public String employeeName;
+    public String xbStudentRalationId;
     @Transient
     public String relationId;
 

@@ -25,7 +25,7 @@
     <script src="../static/pages/laydate/laydate.js"></script>
     <script src="../static/pages/js/kd.ui.plugin.js"></script>
     <script src="../static/pages/js/loading.js"></script>
-
+    <script src="../static/pages/js/laydate.js"></script>
 </head>
 <body>
 <div th:replace="layout::top"></div>
@@ -160,30 +160,20 @@
                                     </td>-->
                                     <!--<td th:text="${studentrelations.xbCourse.period}"></td>-->
                                     <td class="classDel" >
-                                        <div class="btn-group open" th:if="${studentrelations.periodNum eq 0 && studentrelations.studentStart eq 0}">
-                                            <p data-toggle="dropdown" class="down" aria-expanded="true" th:onclick="'javascript:finishCourse(\''+${studentrelations.id}+'\')'">
+                                        <div class="btn-group open" >
+                                            <!--<a  class="down" href="#modal-table"  data-toggle="modal"-->
+                                            <a  class="down"
+                                               th:onclick="'javascript:classToFindAll(\''+${studentrelations.id}+'\')'"
+                                               style="border: solid 1px;border-radius: 10px;width: 77px;color: #f0f1f3;
+                                               background: #2f90f3;height: 26px;font-weight: 900;margin-bottom: 2px;">
+                                                新建排课
+                                            </a>
+                                            <a data-toggle="dropdown" class="down" aria-expanded="true" th:if="${studentrelations.periodNum eq 0 && studentrelations.studentStart eq 0}"
+                                               th:onclick="'javascript:finishCourse(\''+${studentrelations.id}+'\')'"
+                                               style="border: solid 1px;border-radius: 10px;width: 77px;color: #ffffff;
+                                               background: #f50f0f;height: 26px;font-weight: 900;margin-bottom: 0px;">
                                                 结课
-                                                <span class="ace-icon fa fa-caret-down icon-on-right"></span>
-                                            </p>
-                                            <!--<ul class="dropdown-menu dropdown-default" th:if="${studentrelations.periodNum eq 0 && studentrelations.studentStart eq 0}" >
-                                                <a href="#" role="button" th:onclick="'javascript:finishCourse(\''+${studentrelations.id}+'\')'"  data-toggle="modal">结课</a>
-                                            </li>-->
-                                                <!--<li>
-                                                    <a href="#" target="_blank">记上课</a>
-                                                </li>
-                                                <li>
-                                                    <a href="#" target="_blank">课程表</a>
-                                                </li>
-                                                <li>
-                                                    <a href="#" target="_blank">上课记录</a>
-                                                </li>
-                                                <li>
-                                                    <a href="/forward/oneEdit">编辑</a>
-                                                </li>
-                                                <li>
-                                                    <a href="#" role="button"  data-toggle="modal">排课</a>
-                                                </li>-->
-                                            </ul>
+                                            </a>
                                         </div>
 
                                     </td>
@@ -431,96 +421,146 @@
     </div>
 
     <!-- 排课弹窗 -->
-    <div id="modal-table" class="modal fade in pk" tabindex="-1" aria-hidden="false">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header no-padding">
-                    <div class="table-header">新建日程</div>
-                </div>
-                    <div class="modal-body no-padding">
-                        <h4>按班级</h4>
-                        <div class="grounInline">
-                            <div class="form-group">
-                                <label><i>*</i>班级/一对一</label>
-                                <select name="" id="">
-                                    <option value="">张三珠心算一对一</option>
-                                    <option value="">张三珠心算一对一</option>
-                                    <option value="">张三珠心算一对一</option>
-                                </select>
+<form id="iformAttendClass"  >
+    <div id="teacherfromgroupid">
+        <th:block th:if="${xsr}" th:fragment="teacherfra">
+            <div id="modal-table" class="modal fade in pk" tabindex="-1" aria-hidden="false" style="top: 0px !important;">
+                <div class="modal-dialog">
+                    <div class="modal-content" id="modal-content">
+                        <div class="modal-header no-padding">
+                            <div id="newdayattend" class="table-header">新建排课（一对一）</div>
+                        </div>
+                        <input id="id" name="id" type="hidden" th:value="${xsr.id}" />
+                        <div class="modal-body no-padding">
+                            <script >
+                                //时间范围
+                                laydate.render({
+                                    elem: '#startDateTime'
+                                });
+                                //时间范围
+                                laydate.render({
+                                    elem: '#endDateTime'
+                                });
+                                laydate.render({
+                                    elem: '#timeInterval'
+                                    ,type: 'time'
+                                    ,range: true
+                                    ,format: 'HH:mm'//保留时分
+                                    ,btns: ['clear', 'confirm']
+                                    ,ready: function(){
+                                        //var aa = $(".laydate-time-list li ol")[1];
+                                        //var showtime = $($(".laydate-time-list li ol")[1]).find("li");
+                                        $(".laydate-time-list").find("li").eq(2).remove();  //清空秒
+                                    }
+
+                                });
+
+                            </script>
+                            <div id="classl" class="tab-pane fade in active">
+                                <div class="grounInline">
+                                    <div class="form-group">
+                                        <label><i>*</i>上课方式：</label>
+                                        <input type="text" th:value="${xsr.xbStudent.studentName}+'-'+${xsr.xbCourse.courseName}" id="className" name="className" disabled="disabled"
+                                               class="remark" >
+                                    </div>
+                                    <div class="form-group">
+                                        <label>科目</label>
+                                        <select name="subjectId" id="subjectId">
+                                            <option th:each="sub,subSta:${xbSubjectList}" th:value="${sub.id}" th:text="${sub.subjectName}"></option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="grounInline">
+                                    <div class="form-group">
+                                        <label><i>*</i>上课时段</label>
+                                        <input id="timeInterval" name="timeInterval"  type="text"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="">上课主题</label>
+                                        <input id="classTheme" name="classTheme" type="text">
+                                    </div>
+                                </div>
+                                <div class="grounInline">
+                                    <div class="form-group">
+                                        <label for="">课程类别</label>
+                                        <input id="courseType" name="courseType"  disabled="disabled"
+                                               type="text" th:value="${xsr.xbCourse.xbcoursetype.courseTypeName}">
+                                    </div>
+                                </div>
+                                <div id="scheduleModediv" class="form-group">
+                                    <label><i>*</i>排课日程方式</label>
+                                    <input id="scheduleMode1"  name="scheduleMode" type="radio"
+                                             class="ace" value="1" th:onclick="|paikeFan()|"><span
+                                        class="lbl">单次</span>
+                                    <input id="scheduleMode2" checked="checked" name="scheduleMode" type="radio"
+                                            class="ace" value="2" th:onclick="|paikeFan()|">
+                                    <span class="lbl">重复</span>
+
+                                </div>
+                                <div id="singleStrarDate" class="form-group">
+                                    <label><i>*</i>上课日期</label>
+                                        <input  class="laydate-icon" id="startDateTime" name="startDateTime">
+                                    <span id="manyStrarDate" >
+                                        至
+                                        <input class="laydate-icon" id="endDateTime" name="endDateTime">
+                                    </span>
+                                </div>
+                                <div id="manyWeek" class="manyWeek" >
+                                    <label><i>*</i>重复设置</label>
+                                    <input type="checkbox" checked="checked" name="weekType" value="0"><span>全选</span>
+                                    <input type="checkbox" name="weekType" value="1"><span>周一</span>
+                                    <input type="checkbox" name="weekType" value="2"><span>周二</span>
+                                    <input type="checkbox" name="weekType" value="3"><span>周三</span>
+                                    <input type="checkbox" name="weekType" value="4"><span>周四</span>
+                                    <input type="checkbox" name="weekType" value="5"><span>周五</span>
+                                    <input type="checkbox" name="weekType" value="6"><span>周六</span>
+                                    <input type="checkbox" name="weekType" value="7"><span>周日</span>
+                                </div>
+                                <div class="grounInline">
+                                    <div class="form-group">
+                                        <label><i>*</i>教师</label>
+                                        <input name="teacherId" id="teacherId" type="hidden" th:value="${xsr.teacherId}">
+                                        <input name="teacherName" id="teacherName" type="text" disabled="disabled" th:value="${xsr.employeeName}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label><i>*</i>助教</label>
+                                        <input name="tutorId" id="tutorId" type="hidden" th:value="${xsr.teacherId}">
+                                        <input name="tutorName" id="tutorName" type="text" disabled="disabled" th:value="${xsr.employeeName}">
+                                    </div>
+                                </div>
+                                <div class="grounInline">
+                                    <div class="form-group">
+                                        <label><i>*</i>教室</label>
+                                        <select name="classroomId" id="classroomId" >
+                                            <option th:each="classroom:${xbClassroomList}"
+                                                    th:value="${classroom.id}" th:text="${classroom.classroomName}"></option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label><i>*</i>上课方式</label>
+                                        <input name="wayOfTeaching" id="wayOfTeaching" type="hidden" th:value="1">
+                                        <input  name="wayOfTeachingName"
+                                               id="wayOfTeachingName" type="text" disabled="disabled" th:value="一对一">
+                                    </div>
+                                </div>
+                                <div class="modal-footer no-margin-top">
+                                            <button class="btn pull-left"  data-dismiss="modal">
+                                           <!-- <button class="btn pull-left"  onclick="cecalAttendClass()">-->
+                                                取消
+                                            </button>
+                                            <button class="btn pull-right"  onclick="saveAttendClass()" type="button">
+                                                保存
+                                            </button>
+                                        </div>
                             </div>
-                            <div class="form-group">
-                                <label><i>*</i>排课日程方式</label>
-                                <input name="form-field-radio" type="radio" class="ace"><span class="lbl">单次</span>
-                                <input name="form-field-radio" type="radio" class="ace"><span class="lbl">重复</span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label><i>*</i>上课日期</label>
-                            <input class="laydate-icon" id="demo">
-                        </div>
-                        <div class="form-group">
-                            <label><i>*</i>上课时段</label>
-                            <select name="" id="">
-                                <option value="">选择时段</option>
-                                <option value="">111</option>
-                                <option value="">www</option>
-                            </select>
-                            <span>自定义时间</span>
-                        </div>
-                        <div class="grounInline">
-                            <div class="form-group">
-                                <label><i>*</i>教师</label>
-                                <select name="" id="">
-                                    <option value="">请选择教师</option>
-                                    <option value="">111</option>
-                                    <option value="">www</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label>助教</label>
-                                <select name="" id="">
-                                    <option value="">请选择助教</option>
-                                    <option value="">111</option>
-                                    <option value="">www</option>
-                                </select>
-                            </div>  
-                        </div>
-                        <div class="grounInline">
-                            <div class="form-group">
-                                <label><i>*</i>教室</label>
-                                <select name="" id="">
-                                    <option value="">请选择教室</option>
-                                    <option value="">111</option>
-                                    <option value="">www</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label>科目</label>
-                                <select name="" id="">
-                                    <option value="">请选择科目</option>
-                                    <option value="">111</option>
-                                    <option value="">www</option>
-                                </select>
-                            </div>  
-                        </div>
-                        <div class="form-group">
-                            <label for="">上课主题</label>
-                            <input type="text">
                         </div>
                     </div>
-                
-    
-                <div class="modal-footer no-margin-top">
-                    <button class="btn pull-left" data-dismiss="modal">
-                        取消
-                    </button>
-                    <button class="btn pull-right" data-dismiss="modal">
-                        保存
-                    </button>
                 </div>
             </div>
-        </div>
+        </th:block>
     </div>
+</form>
+
     <!-- 结课弹窗 -->
     <div id="modal-table1" class="modal fade in jk" tabindex="-1" aria-hidden="false">
         <div class="modal-dialog">
@@ -661,7 +701,7 @@
             </div>
         </div>
     </div>
-</div> 
+</div>
 <script>
 !function(){
 laydate.render({elem: '#demo'});//绑定元素
@@ -697,8 +737,6 @@ function getStudentListPage(page) {
     }*/
     window.location.href = basePath + '/student/getOneToOneList?page=' + page + '&size=' + size+'&data='+JSON.stringify(data);
 }
-
-
 //结课
 function finishCourse(id) {
     $.kd.kdConfirm("确定要进行结课操作吗？",function(){
@@ -729,8 +767,105 @@ function finishCourse(id) {
         });
     })
 }
-function serializeObject(form)
-{
+//排课方式
+function paikeFan() {
+    var scheduleMode = $('input:radio[name="scheduleMode"]:checked').val();
+    $("[name='weekType']").removeAttr("checked"); //取消全选
+    $("#startDateTime #endDateTime").val("");
+    if (scheduleMode == '1') {
+        $("#manyStrarDate").hide();
+        $("#manyWeek").hide();
+    } else {
+        $("#manyStrarDate").show();
+        $("#manyWeek").show();
+    }
+}
+
+
+
+//新建日程动态加载框
+function classToFindAll(id){
+    var load = new Loading();
+    load.init({
+        target: "#main-container"
+    });
+    load.start();
+    ;
+    $.ajax({
+        url: basePath + '/student/classToFindAll',
+        type: 'get',
+        contentType: 'application/json',
+        data: {id:id},
+        async: true,
+        success: function (data) {
+            console.log("查询班级级联信息成功");
+            load.stop();
+            $("#teacherfromgroupid").html("");
+            $("#teacherfromgroupid").append(data);
+            $("#modal-table").modal('show');
+
+        },
+        error: function () {
+            load.stop();
+            console.log("查询班级级联信息失败")
+        }
+
+    });
+}
+//取消新建日程框
+function cecalAttendClass() {
+    $("#modal-table").modal('hide');
+}
+//新建日程
+function saveAttendClass() {
+
+    var data = serializeObject("#iformAttendClass");
+
+    var strgetSelectValue = "";
+    var getSelectValueMenbers = $("input[name='weekType']:checked").each(function (j) {
+        if (j >= 0) {
+            strgetSelectValue += $(this).val() + ","
+        }
+    });
+    data.className = $("#className").val();
+    var load = new Loading();
+    load.init({
+        target: "#modal-content"
+    });
+    load.start();
+    data.weekType = strgetSelectValue;
+    $.ajax({
+        type: 'get',
+        dataType: 'json',
+        url: basePath + '/student/save_xbAttend_class',
+        data: {data:JSON.stringify(data)},
+        contentType: "application/json;charset=UTF-8",
+        cache: false,
+        async: true,
+        success: function (data) {
+            load.stop();
+            //console.log("新建排课表回调数据data="+data)
+            var status = data.status;
+            var msg = data.msg;
+            if (status == "00") {
+                $.kd.kdConfirm(msg+",是否跳转到排课列表",function(){
+                    load.start();
+                    window.location.href = basePath + '/jw_center_arranging_course/to_arranging_course?sort=createDate,DESC&sort=createTime,DESC';
+                },function(){
+                    cecalAttendClass();
+                })
+            }else {
+                $.kd.kdMsg(msg);
+            }
+        },
+        error: function () {
+            load.stop();
+            console.log("错误")
+        }
+    });
+
+}
+function serializeObject(form) {
     var o = {};
     var a = $(form).serializeArray();
     $.each(a, function() {

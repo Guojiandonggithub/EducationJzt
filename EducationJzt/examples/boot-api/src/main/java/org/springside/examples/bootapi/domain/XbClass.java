@@ -75,6 +75,7 @@ public class XbClass {
     public Long enrollNum;
     /*班级-0 一对一-1*/
     public String wayOfTeaching;
+    public String xbStudentRalationId;
     public XbClass() {
 
     }

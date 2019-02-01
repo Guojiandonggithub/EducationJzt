@@ -51,7 +51,6 @@ public class XbStudentRelation {
     public String relationId;
     public BigDecimal totalReceivable;
     public BigDecimal totalPeriodNum;
-
     public XbStudentRelation() {
 
     }

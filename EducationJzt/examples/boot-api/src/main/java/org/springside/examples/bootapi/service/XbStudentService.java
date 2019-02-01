@@ -123,7 +123,10 @@ public class XbStudentService {
 				filters.values(), XbStudentRelationViewNew.class);
 		return xbStudentRelationViewNewDaoDao.findAll(spec,pageable);
 	}
-
+	@Transactional
+	public XbStudentRelationViewNew  getXbStudentRelationViewNewByid(String id) {
+		return xbStudentRelationViewNewDaoDao.findById(id);
+	}
 	@Transactional
 	public List<XbStudentRelationViewNew>  getXbRelationList(Map<String, Object> searchParams) {
 		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
@@ -372,6 +375,8 @@ public class XbStudentService {
 	public int findRecordTotalCount(){
 		return xbRecordClassDao.findRecordTotalCount();
 	}
-
+	public List<XbClass> findByXbStudentRalationId(String id){
+		return xbClassDao.findByXbStudentRalationId(id);
+	}
 
 }

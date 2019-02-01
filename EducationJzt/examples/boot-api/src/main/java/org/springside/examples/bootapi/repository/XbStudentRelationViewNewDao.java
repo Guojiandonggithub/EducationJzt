@@ -13,4 +13,5 @@ import org.springside.examples.bootapi.domain.XbStudentRelationViewNew;
  * Spring Data JPA 还会解释新增方法名生成新方法的实现.
  */
 public interface XbStudentRelationViewNewDao extends PagingAndSortingRepository<XbStudentRelationViewNew, String>,JpaSpecificationExecutor<XbStudentRelationViewNew> {
+    XbStudentRelationViewNew findById(String id);
 }

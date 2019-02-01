@@ -1,6 +1,9 @@
 package org.springside.examples.bootapi.api;
 
+import com.websuites.core.response.IResult;
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.codehaus.groovy.util.HashCodeHelper;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,17 +11,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springside.examples.bootapi.ToolUtils.DateUtil;
 import org.springside.examples.bootapi.ToolUtils.HttpServletUtil;
+import org.springside.examples.bootapi.ToolUtils.common.util.UtilTools;
 import org.springside.examples.bootapi.domain.*;
 import org.springside.examples.bootapi.dto.XbClassDto;
 import org.springside.examples.bootapi.service.*;
 
+import javax.rmi.CORBA.Util;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -56,7 +63,8 @@ public class StudentActivity {
 
 	@Autowired
 	public XbAttendClassService xbAttendClassService;
-
+	@Autowired
+	public XbSubjectService xbSubjectService;
 	/*
 	 * 跳转到学员
 	 * @return
@@ -399,7 +407,257 @@ public class StudentActivity {
 		model.addAttribute("coursetypelist",coursetypelist);
 		return "oneToOne";
 	}
+	/**
+	 * 新建排课编辑框弹出
+	 * @return
+	 */
+	@RequestMapping("/classToFindAll")
+	public String oneToOneToFindAll(@RequestParam String id,ModelMap model){
+		Pageable pageable = new PageRequest(0, 100);
+		//获取学员信息
+		XbStudentRelationViewNew xsr = studentService.getXbStudentRelationViewNewByid(id);
+		model.addAttribute("xsr",xsr);
+		//查询科目列表
+		model.addAttribute("xbSubjectList",xbSubjectService.findSubjectAll());
+		Map<String,Object> roomsearhMap = new HashMap<>();
+		roomsearhMap.put("EQ_organId",xsr.organId);
+		//获取教室下拉
+		List<XbClassroom> xbClassroomList = studentService.getXbClassroomList(pageable,roomsearhMap).getContent();
+		model.addAttribute("xbClassroomList",xbClassroomList);
+		return "oneToOne::teacherfra";
+	}
+	/**
+	 * 保存排课
+	 * @return,
+	 */
+	@RequestMapping("/save_xbAttend_class")
+	public void saveXbAttendClass(@RequestParam(required = false) String data,
+								  HttpServletResponse resp,Model model){
+		logger.info("保存排课");
+		Map<String,Object> resultMap = new HashMap<>();
+		Map<String,Object> searhMap = new HashMap<>();
+		try {
+			JSONObject jsonObject = new JSONObject();
+			if(null!=data){
+				resultMap = com.alibaba.fastjson.JSONObject.parseObject(data,Map.class);
+			}
+			IResult check = check(resultMap);
+			if(check.isSuccessful()){
+				IResult saveclassrs = saveOneToOneClass(resultMap);
+				if(!saveclassrs.isSuccessful()){
+					jsonObject.put("status",saveclassrs.isSuccessful()?"00":"11");
+					jsonObject.put("msg",saveclassrs.getErrorMessage());
+				}else{
+					IResult rs = saveXbAttendClass(resultMap,saveclassrs);
+					jsonObject.put("status",saveclassrs.isSuccessful()?"00":"11");
+					jsonObject.put("msg",saveclassrs.getErrorMessage());
+				}
+			}else{
+				jsonObject.put("status",check.isSuccessful()?"00":"11");
+				jsonObject.put("msg",check.getErrorMessage());
+			}
 
+		HttpServletUtil.reponseWriter(jsonObject,resp);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * 一对一排课保存班级
+	 * @return
+	 */
+	private  IResult saveOneToOneClass(Map<String,Object> resultMap){
+		String className = (String)resultMap.get("className");
+		String startDateTime = (String)resultMap.get("startDateTime");
+		String endDateTime = (String)resultMap.get("endDateTime");
+		String classroomId = (String)resultMap.get("classroomId");
+		String id = (String)resultMap.get("id");
+		List<XbClass> list= studentService.findByXbStudentRalationId(id);
+		XbClass newclass = new XbClass();
+		if(list.size()>0){
+			newclass = list.get(0);
+		}else{
+			//获取学员信息
+			XbStudentRelationViewNew xsr = studentService.getXbStudentRelationViewNewByid(id);
+			//保存班级（一对一）
+			XbClass xbclass = new XbClass();
+
+			xbclass.className = className;
+			xbclass.organId = xsr.organId;
+			xbclass.courseId = xsr.courseId;
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			try {
+				xbclass.classBeginDate = sdf.parse(startDateTime);
+				xbclass.classEndDate = StringUtils.isEmpty(endDateTime)?null:sdf.parse(endDateTime);
+				xbclass.preRecruitNum = 1;//预招人数
+				xbclass.establishNum = 1;//成班人数
+				xbclass.recruitState = "1";//招生状态 1-停止招生
+				xbclass.isEnd = "0";//结班
+				xbclass.studentNum = 1;
+				xbclass.teacherNum = 1;
+				xbclass.teacherId = xsr.teacherId;
+				xbclass.classroomId = classroomId;
+				xbclass.wayOfTeaching = "1";
+				xbclass.xbStudentRalationId = id;
+				xbclass.deleteStatus = "1";
+				newclass = studentService.saveXbClass(xbclass);
+				if(StringUtils.isEmpty(newclass.id)){
+					return UtilTools.makerErsResults("一对一排课新建班级失败");
+				}
+			} catch (ParseException e) {
+				e.printStackTrace();
+				return UtilTools.makerErsResults("一对一排课新建班级异常");
+			}
+		}
+		Map map = new HashMap();
+		map.put("id",newclass.id);
+		map.put("teacherId",newclass.teacherId);
+		map.put("wayOfTeaching",newclass.wayOfTeaching);
+		return UtilTools.makerSusResults("一对一排课新建班级成功",map);
+	}
+
+	/**
+	 * 校验教室+时间是否冲突
+	 * @param resultMap
+	 * @return
+	 */
+	private IResult check(Map<String,Object> resultMap){
+		String startDateTime = (String)resultMap.get("startDateTime");
+		String endDateTime = (String)resultMap.get("endDateTime");
+		String weekType = (String)resultMap.get("weekType");
+		String classroomId = (String)resultMap.get("classroomId");
+		String timeInterval = (String)resultMap.get("timeInterval");
+		String subjectId = (String)resultMap.get("subjectId");
+		String classTheme = (String)resultMap.get("classTheme");
+		String scheduleMode = (String)resultMap.get("scheduleMode");
+		String msg = "";String status = "";
+		SimpleDateFormat sdf = null;
+		sdf = new SimpleDateFormat("yyyy-MM-dd");
+		if(scheduleMode.equals("1")){
+			if(checkCourseClassAndTimeInterval(classroomId,timeInterval,startDateTime,"")){
+				XbClassroom xbc = studentService.getXbClassroomById(classroomId);
+				msg = startDateTime+"的教室【"+xbc.classroomName+"】时间段【"+timeInterval+"】已存在，不能重复";
+				return UtilTools.makerErsResults(msg);
+			}
+		}else{
+			Date dBegin = null;Date dEnd = null;
+			try {
+				dBegin = sdf.parse(startDateTime);
+				dEnd = sdf.parse(endDateTime);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+
+			List<Date> lDate = DateUtil.findDates(dBegin, dEnd);
+			if(weekType.indexOf("0")>-1){
+				weekType = "1,2,3,4,5,6,7";
+			}
+			for (Date date : lDate)
+			{
+				if(DateUtil.doesItIncludeAWeek(weekType,sdf.format(date))){
+					if(checkCourseClassAndTimeInterval(classroomId,timeInterval,sdf.format(date),"")){
+						XbClassroom xbc = studentService.getXbClassroomById(classroomId);
+						msg = sdf.format(date)+"的教室【"+xbc.classroomName+"】时间段【"+timeInterval+"】已存在，不能重复";
+						return UtilTools.makerErsResults(msg);
+					}
+				}
+			}
+		}
+
+		return UtilTools.makerSusResults("校验通过");
+	}
+	/**
+	 * 保存一对一排课信息
+	 * @return
+	 */
+	private IResult saveXbAttendClass(Map<String,Object> resultMap,IResult cla){
+		String startDateTime = (String)resultMap.get("startDateTime");
+		String endDateTime = (String)resultMap.get("endDateTime");
+		String weekType = (String)resultMap.get("weekType");
+		String classroomId = (String)resultMap.get("classroomId");
+		String timeInterval = (String)resultMap.get("timeInterval");
+		String subjectId = (String)resultMap.get("subjectId");
+		String classTheme = (String)resultMap.get("classTheme");
+		String scheduleMode = (String)resultMap.get("scheduleMode");
+		String msg = "";String status = "";
+		XbAttendClass rsxc = new XbAttendClass();
+		SimpleDateFormat sdf = null;
+		//单次
+		if(scheduleMode.equals("1")){
+			rsxc =  xbAttendClassService.saveXbAttendClass(OrganizationParamter(cla,startDateTime,endDateTime,classroomId,subjectId,classTheme,timeInterval));
+		//重复
+		}else{
+			try {
+				sdf = new SimpleDateFormat("yyyy-MM-dd");
+				Date dBegin = sdf.parse(startDateTime);
+				Date dEnd = sdf.parse(endDateTime);
+				List<Date> lDate = DateUtil.findDates(dBegin, dEnd);
+				if(weekType.indexOf("0")>-1){
+					weekType = "1,2,3,4,5,6,7";
+				}
+				boolean is = true;
+				/*for (Date date : lDate)
+				{
+					if(DateUtil.doesItIncludeAWeek(weekType,sdf.format(date))){
+						if(checkCourseClassAndTimeInterval("",timeInterval,sdf.format(date),"")){
+							XbClassroom xbc = studentService.getXbClassroomById("");
+							msg = sdf.format(date)+"的教室【"+xbc.classroomName+"】时间段【"+timeInterval+"】已存在，不能重复";
+							is = false;
+							break;
+						}
+					}
+				}*/
+				for (Date date : lDate){
+					if(DateUtil.doesItIncludeAWeek(weekType,sdf.format(date))){
+						System.out.println("重复排课日期："+sdf.format(date));
+						rsxc = xbAttendClassService.saveXbAttendClass(OrganizationParamter(cla,sdf.format(date),endDateTime,classroomId,subjectId,classTheme,timeInterval));
+					}
+				}
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		if(StringUtils.isEmpty(rsxc.getId())){
+			return UtilTools.makerErsResults("新建一对一排课失败");
+		}
+		return UtilTools.makerErsResults("新建一对一排课成功");
+	}
+
+	private XbAttendClass OrganizationParamter(IResult cla,String startDateTime,
+							String endDateTime,String classroomId,String subjectId,String classTheme,
+											   String timeInterval){
+		XbAttendClass xbAttendClassnew = new XbAttendClass();
+		xbAttendClassnew.classId = UtilTools.getResultMapValue(cla,"id");
+		xbAttendClassnew.wayOfTeaching = UtilTools.getResultMapValue(cla,"wayOfTeaching");
+		xbAttendClassnew.startDateTime = startDateTime;
+		xbAttendClassnew.endDateTime = endDateTime;
+		xbAttendClassnew.weekDay = DateUtil.dayForWeekChinses(startDateTime);
+		xbAttendClassnew.teacherId = UtilTools.getResultMapValue(cla,"teacherId");
+		xbAttendClassnew.tutorId = UtilTools.getResultMapValue(cla,"teacherId");
+		xbAttendClassnew.classRoomId = classroomId;
+		xbAttendClassnew.subjectId =subjectId;
+		xbAttendClassnew.classTheme = classTheme;
+		xbAttendClassnew.timeInterval = timeInterval;
+		xbAttendClassnew.deleteStatus = "1";
+		return xbAttendClassnew;
+	}
+	private boolean checkCourseClassAndTimeInterval(String classroomId,String timeInterval,String startDateTime,String id){
+		Map<String,Object> searmap = new HashMap<>();
+		searmap.put("EQ_xbclass.xbClassroom.id",classroomId);
+		searmap.put("EQ_timeInterval",timeInterval);
+		searmap.put("EQ_startDateTime",startDateTime);
+		searmap.put("EQ_deleteStatus","1");
+		if(StringUtils.isNotEmpty(id)){
+			searmap.put("NEQ_id",id);
+		}
+		List<XbAttendClass> xbalist = xbAttendClassService.findXbAttendClassAll(searmap);
+		if(xbalist!=null && xbalist.size()>0){
+			return true;
+		}
+		return false;
+	}
 	/**
 	 * 跳转到查询班级教室
 	 * @return
