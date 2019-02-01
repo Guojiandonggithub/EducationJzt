@@ -168,6 +168,12 @@
                                                background: #2f90f3;height: 26px;font-weight: 900;margin-bottom: 2px;">
                                                 新建排课
                                             </a>
+                                            <a  class="down"
+                                                th:onclick="'javascript:editTeacherToFind(\''+${studentrelations.id}+'\')'"
+                                                style="border: solid 1px;border-radius: 10px;width: 77px;color: #f0f1f3;
+                                               background: #8d05e0;height: 26px;font-weight: 900;margin-bottom: 2px;">
+                                                修改教师
+                                            </a>
                                             <a data-toggle="dropdown" class="down" aria-expanded="true" th:if="${studentrelations.periodNum eq 0 && studentrelations.studentStart eq 0}"
                                                th:onclick="'javascript:finishCourse(\''+${studentrelations.id}+'\')'"
                                                style="border: solid 1px;border-radius: 10px;width: 77px;color: #ffffff;
@@ -313,25 +319,6 @@
                         </div>
                     </div>
                     <div class="orderCon">
-                        <!--<div class="export">
-                            <div class="oneInput">
-                                <div class="form-group">
-                                    <input type="checkbox">
-                                    显示已用/剩余学费
-                                </div>
-                                <div class="form-group">
-                                    <input type="checkbox">
-                                    显示停、转、退、结学员
-                                </div>
-                                <div class="form-group">
-                                    <select name="" id="">
-                                        <option value="">自定义显示项</option>
-                                        <option value="">111</option>
-                                        <option value="">222</option>
-                                    </select>
-                                </div>
-                            </div>   
-                        </div> -->
                         <div class="result">
                             当前结果：学员共计<span>111</span>名，报读课程数总计：<span>111</span>条
                         </div>
@@ -560,7 +547,53 @@
         </th:block>
     </div>
 </form>
-
+<!--修改教师-->
+<form id="jiaoshiformEdit">
+    <div id="jiaoshifromgroupid">
+        <th:block th:if="${xsr}" th:fragment="jiaoshifragment">
+            <div id="modal-table-teacher" class="modal fade in pk" tabindex="-1" aria-hidden="false" style="top: 0px !important;">
+                <div class="modal-dialog">
+                    <div class="modal-content" id="modal-content" style="width: 255px;left: 294px;top: 103px;">
+                        <div class="modal-header no-padding">
+                            <div id="newdayattend" class="table-header">修改教师（一对一）</div>
+                        </div>
+                        <input id="xbStuRelationId" name="xbStuRelationId" type="hidden" th:value="${xsr.id}" />
+                        <input id="editclassId" name="xbStuRelationId" type="hidden" th:value="${xsr.classId}" />
+                        <div class="modal-body no-padding">
+                            <div id="classl" class="tab-pane fade in active">
+                                <div class="grounInline">
+                                    <div class="form-group">
+                                        <label style="text-align: left;margin-right: 0px;width: 50px;"><i>*</i>学员:</label>
+                                        <input name="studentName" id="studentName" type="text" disabled="disabled"
+                                               th:value="${xsr.xbStudent.studentName}" style="width:137px;">
+                                    </div>
+                                    <div class="form-group">
+                                        <label style="text-align: left;margin-right: 0px;width: 50px;"><i>*</i>教师:</label>
+                                        <select name="teacherIdEdit" id="teacherIdEdit" style="width: 137px;">
+                                            <option value="">请选择教师</option>
+                                            <option th:each="employ,employSta:${sysEmployeeList}"
+                                                    th:selected="${employ.id eq xsr.teacherId}"
+                                                    th:value="${employ.id}" th:text="${xsr.sysOrgans.organName}+${employ.employeeName}"></option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="modal-footer no-margin-top">
+                                    <button class="btn pull-left"  data-dismiss="modal">
+                                        <!-- <button class="btn pull-left"  onclick="cecalAttendClass()">-->
+                                        取消
+                                    </button>
+                                    <button class="btn pull-right"  onclick="editTeacherSave()" type="button">
+                                        保存
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </th:block>
+    </div>
+</form>
     <!-- 结课弹窗 -->
     <div id="modal-table1" class="modal fade in jk" tabindex="-1" aria-hidden="false">
         <div class="modal-dialog">
@@ -781,8 +814,6 @@ function paikeFan() {
     }
 }
 
-
-
 //新建日程动态加载框
 function classToFindAll(id){
     var load = new Loading();
@@ -790,7 +821,6 @@ function classToFindAll(id){
         target: "#main-container"
     });
     load.start();
-    ;
     $.ajax({
         url: basePath + '/student/classToFindAll',
         type: 'get',
@@ -812,15 +842,45 @@ function classToFindAll(id){
 
     });
 }
+//修改教师动态加载框
+function editTeacherToFind(id){
+    var load = new Loading();
+    load.init({
+        target: "#main-container"
+    });
+    load.start();
+    $.ajax({
+        url: basePath + '/student/editTeacherToFind',
+        type: 'get',
+        contentType: 'application/json',
+        data: {id:id},
+        async: true,
+        success: function (data) {
+            console.log("查询教师信息成功");
+            load.stop();
+            $("#jiaoshifromgroupid").html("");
+            $("#jiaoshifromgroupid").append(data);
+            $("#modal-table-teacher").modal('show');
+
+        },
+        error: function () {
+            load.stop();
+            console.log("查询班级级联信息失败")
+        }
+
+    });
+}
 //取消新建日程框
 function cecalAttendClass() {
     $("#modal-table").modal('hide');
 }
+//取消教师编辑框
+function cecalEditTeacher() {
+    $("#modal-table-teacher").modal('hide');
+}
 //新建日程
 function saveAttendClass() {
-
     var data = serializeObject("#iformAttendClass");
-
     var strgetSelectValue = "";
     var getSelectValueMenbers = $("input[name='weekType']:checked").each(function (j) {
         if (j >= 0) {
@@ -856,6 +916,44 @@ function saveAttendClass() {
                 })
             }else {
                 $.kd.kdMsg(msg);
+            }
+        },
+        error: function () {
+            load.stop();
+            console.log("错误")
+        }
+    });
+
+}
+//修改教师保存
+function editTeacherSave() {
+    var teacherIdEdit = $('#teacherIdEdit option:selected').val();
+    var xbStuRelationId = $('#xbStuRelationId').val();
+    var load = new Loading();
+    load.init({
+        target: "#modal-content"
+    });
+    load.start();
+    $.ajax({
+        type: 'get',
+        dataType: 'json',
+        url: basePath + '/student/edit_Teacher_class',
+        data: {xbStuRelationId:xbStuRelationId,teacherId:teacherIdEdit},
+        contentType: "application/json;charset=UTF-8",
+        cache: false,
+        async: true,
+        success: function (data) {
+            load.stop();
+            var status = data.status;
+            var msg = data.msg;
+            if (status == "00") {
+                $.kd.kdAlert(msg,function(){
+                    cecalEditTeacher();
+                });
+            }else {
+                $.kd.kdAlert(msg,function(){
+                    cecalEditTeacher();
+                });
             }
         },
         error: function () {

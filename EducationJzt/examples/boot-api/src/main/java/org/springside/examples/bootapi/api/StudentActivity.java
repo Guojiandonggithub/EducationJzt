@@ -23,6 +23,7 @@ import org.springside.examples.bootapi.ToolUtils.HttpServletUtil;
 import org.springside.examples.bootapi.ToolUtils.common.util.UtilTools;
 import org.springside.examples.bootapi.domain.*;
 import org.springside.examples.bootapi.dto.XbClassDto;
+import org.springside.examples.bootapi.repository.XbClassDao;
 import org.springside.examples.bootapi.service.*;
 
 import javax.rmi.CORBA.Util;
@@ -427,8 +428,62 @@ public class StudentActivity {
 		return "oneToOne::teacherfra";
 	}
 	/**
+	 * 新建排课编辑框弹出
+	 * @return
+	 */
+	@RequestMapping("/editTeacherToFind")
+	public String editTeacherToFind(@RequestParam String id,ModelMap model){
+		//获取学员信息
+		XbStudentRelationViewNew xsr = studentService.getXbStudentRelationViewNewByid(id);
+		model.addAttribute("xsr",xsr);
+		Map<String,Object> searmap = new HashMap<>();
+		model.addAttribute("sysEmployeeList",employeeService.getAccountAllList(searmap));
+		return "oneToOne::jiaoshifragment";
+	}
+	/**
+	 * 修改教师
+	 * @return,classToFindAll
+	 */
+	@RequestMapping("/edit_Teacher_class")
+	public void editTeacherClass(@RequestParam(required = false) String teacherId,
+								 @RequestParam(required = false) String xbStuRelationId,
+								 HttpServletResponse resp){
+		logger.info("修改教师");
+		try {
+			/*XbStudentRelation xsr = studentService.getXbStudentRelation(xbStuRelationId);
+			xsr.teacherId = teacherId;
+			studentService.saveXbStudentRelation(xsr);*/
+			JSONObject jsonObject = new JSONObject();
+			Map<String,Object> xvcmap = new HashMap<>();
+			xvcmap.put("EQ_xbStudentRalationId",xbStuRelationId);
+			List<XbClass> clist = studentService.findXbClassListAll(xvcmap);
+			if(clist.size()>0){
+				XbClass xbc = clist.get(0);
+				xbc.teacherId = teacherId;
+				studentService.saveXbClass(xbc);
+				Map<String,Object> map = new HashMap<>();
+				map.put("EQ_classId",xbc.id);
+				map.put("GT_startDateTime",DateUtil.getTodayDateStr());
+				List<XbAttendClass> list =  xbAttendClassService.findXbAttendClassAll(map);
+				for(XbAttendClass xba:list){
+					xba.teacherId = teacherId;
+					xbAttendClassService.saveXbAttendClass(xba);
+				}
+				jsonObject.put("status","00");
+				jsonObject.put("msg","修改教师成功");
+			}else{
+				jsonObject.put("status","11");
+				jsonObject.put("msg","未查需要修改的排课信息");
+			}
+
+			HttpServletUtil.reponseWriter(jsonObject,resp);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	/**
 	 * 保存排课
-	 * @return,
+	 * @return,classToFindAll
 	 */
 	@RequestMapping("/save_xbAttend_class")
 	public void saveXbAttendClass(@RequestParam(required = false) String data,
