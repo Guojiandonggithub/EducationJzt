@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
-    
+
     <link rel="stylesheet" href="../static/pages/css/ace.min.css" id="main-ace-style" />
     <link rel="stylesheet" href="../static/pages/css/index.css">
     <link rel="stylesheet" href="../static/pages/css/enroll.css">
@@ -13,6 +14,7 @@
     <link rel="stylesheet" href="../static/pages/css/bootstrap.min.css">
     <link rel="stylesheet" href="../static/pages/css/font-awesome.min.css" />
     <link rel="stylesheet" href="../static/pages/css/kd.ui.plugin.css" />
+    <link rel="stylesheet" href="../static/pages/css/loading.css" />
 
 
     <script src="../static/pages/js/jquery.min.js"></script>
@@ -21,171 +23,147 @@
     <script src="../static/pages/js/ace-elements.min.js"></script>
     <script src="../static/pages/laydate/laydate.js"></script>
     <script src="../static/pages/js/kd.ui.plugin.js"></script>
-
+    <script src="../static/pages/js/loading.js"></script>
 </head>
+
 <body>
-<div id="navbar" class="eduNav">
-    <div class="navbar-header pull-left">
-        <a href="index.html" class="navbar-brand">
-            <small>
-                <img src="../static/pages/img/logo.png" alt="">
-            </small>
-        </a>
-    </div>
-    <div class="pull-right eduName">
-        <!--<span>万某 [管理员]</span>
-        <span>机构中心</span>
-        <span>退出</span>  -->
-    </div>
-</div>  
-<div class="main-container" id="main-container">
-    <div id="sidebar" class="sidebar responsive">
-        <ul class="nav nav-list" style="top: 0px;">
-            <li class="">
-                <a href="/forward/index"><span class="menu-text"> 工作台 </span></a>
-                <b class="arrow"></b>
-            </li>
-            <li class="active">
-                <a href="/student/getManagementList"><span class="menu-text"> 办理中心 </span></a>
-                <b class="arrow"></b>
-            </li>
-            <li class="">
-                <a href="#" class="dropdown-toggle">
-                    <span class="menu-text">教务中心</span>
-                    <b class="arrow fa fa-angle-down"></b>
-                </a>
-                <b class="arrow"></b>
-                <ul class="submenu">
-                    <li class="">
-                        <a href="/student/getXbStudentList"><i class="menu-icon fa fa-caret-right"></i>学员</a>
-                        <b class="arrow"></b>
-                    </li>
-                    <li class="">
-                        <a href="/student/getXbClassroomList"><i class="menu-icon fa fa-caret-right"></i>班级</a>
-                        <b class="arrow"></b>
-                    </li>
-                    <li class="">
-                        <a href="/student/getOneToOneList">
-                            <i class="menu-icon fa fa-caret-right"></i>一对一</a>
-                        <b class="arrow"></b>
-                    </li>
-                    <li class="">
-                        <a href="/jw_center_arranging_course/to_arranging_course"><i class="menu-icon fa fa-caret-right"></i>排课</a>
-                        <b class="arrow"></b>
-                    </li>
-                    <li class="">
-                        <a href="/forward/lessonTable"><i class="menu-icon fa fa-caret-right"></i>课程表</a>
-                        <b class="arrow"></b>
-                    </li>
-                    <li class="">
-                        <a href="/forward/attendClass"><i class="menu-icon fa fa-caret-right"></i>记上课</a>
-                        <b class="arrow"></b>
-                    </li>
-                    <li class="">
-                        <a href="/jwcentercourse/tocourse"><i class="menu-icon fa fa-caret-right"></i>课程</a>
-                        <b class="arrow"></b>
-                    </li>
-                </ul>
-            </li>
-            <li class="">
-                <a href="#" class="dropdown-toggle">
-                    <span class="menu-text"> 内部管理 </span>
-                    <b class="arrow fa fa-angle-down"></b>
-                </a>
-                <b class="arrow"></b>
-                <ul class="submenu">
-                    <li class="">
-                        <a href="/accounts/getOrgansList"><i class="menu-icon fa fa-caret-right"></i>组织架构</a>
-                        <b class="arrow"></b>
-                    </li>
-                    <li class="">
-                        <a href="/accounts/getEmployeeList"><i class="menu-icon fa fa-caret-right"></i>员工信息</a>
-                        <b class="arrow"></b>
-                    </li>
-                </ul>
-            </li>
-        </ul>
-    </div>
-    <div class="main-content">
-        <div class="breadcrumbs" id="breadcrumbs">
-            <img src="../static/pages/img/line1.png">
-            <span>复课</span>
-            <img src="../static/pages/img/line.png">
-        </div>     
-        <div class="enrollCon">
-            <button class="choiceStu" href="#modal-table" data-toggle="modal">选择学员</button>
+<div th:replace="layout::top"></div>
+<form id="changeForm">
+    <div class="main-container" id="main-container">
+        <div th:replace="layout::left('12','')">
         </div>
-        <div class="enrollCon payInfo subInfo repeat">
-            <h3>支付信息</h3> 
-            <div class="pad">
-                <div class="alert-info"> 
-                    当前的经办校区为<strong>青山分校</strong>，请先确认经办校区后再填写支付信息！
-                </div>
-                <div class="income">
-                    <p class="incomeAll"><img src="../static/pages/img/money.png">应收总计</p>
-                    <p class="incomeNum"><b>0</b>元</p>    
-                </div>
-                <div class="income" style="border-bottom:0;">
-                    <p class="incomeAll"><img src="../static/pages/img/money.png">实收</p>
-                    <p class="incomeNum"><b>0</b>元</p>  
-                </div>
-                <div class="form-group">
-                    <select name="" id="">
-                        <option value="">现金</option>
-                        <option value="">刷卡</option>
-                        <option value="">转账</option>
-                        <option value="">支票</option>
-                        <option value="">网络</option>
-                        <option value="">支付宝</option>
-                        <option value="">微信</option>
-                    </select>
-                    <input type="text" value="0.00"><span>元</span>
-                </div>  
-                <div class="income">
-                    <p class="incomeAll"><img src="../static/pages/img/money.png">使用账户余额</p>
-                    <p class="incomeNum">0元</p>  
+        <div class="main-content">
+            <div class="breadcrumbs" id="breadcrumbs">
+                <img src="../static/pages/img/line1.png">
+                <span>转班</span>
+                <img src="../static/pages/img/line.png">
+            </div>
+            <div class="enrollCon" id="changeClassId">
+                <button class="choiceStu" type="button" href="#modal-table" data-toggle="modal" id="chooseid" onclick="getStudentList()"
+                        style="margin-bottom:22px;">选择学员</button>
+                <th:block th:if="${xbStudent}" th:fragment="changeClassFragment">
+                    <div class="chooseInfo">
+                        <p><span>学员姓名：</span>
+                            <th:block th:text="${xbStudent.studentName}"></th:block>
+                        </p>
+                        <p><span>联系方式：</span>
+                            <th:block th:text="${xbStudent.contactPhone}"></th:block>
+                            <input type="hidden" name="studentId" id="studentId" th:value="${xbStudent.id}"/>
+                        </p>
+                        <button href="#modal-table" data-toggle="modal" type="button" oninput="getStudentList()">重新选择</button>
+                    </div>
+                    <div class="stopClass" style="display:flex;justify-content:space-between">
+                        <div>
+                            <div class="form-group">
+                                <label>复课课程</label>
+                                <select name="studentRelationId" id="classId" th:onchange="|javascript:chooseClass('${xbStudent.id}')|">
+                                    <option th:each="cla:${xbClassList}" th:selected="${cla.id}eq ${classId}" th:value="${cla.id}" th:text="${cla.sysOrgans.organName}+${cla.xbCourse.courseName}"></option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>总学费:</label>
+                                <input type="hidden" id="xbStudentRelationId" th:value="${xbStudentRelationId}"/>
+                                <span th:text="${totalReceivable}"></span>
+                            </div>
+                            <div class="form-group">
+                                <label>剩余学费:</label>
+                                <span th:text="${receivable}"></span>
+                            </div>
+                            <div class="form-group">
+                                <label>欠费:</label>
+                                <span th:text="${xbStudent.paymentMoney}"></span>
+                            </div>
+                            <div class="form-group">
+                                <label>实际结余:</label>
+                                <span th:text="${balanceamount}"></span>
+                                <input type="hidden" name="balanceamount" th:value="${balanceamount}"/>
+                            </div>
+                        </div>
+                        <div>
+                            <!--<button class="choiceStu" type="button" href="#modal-table1" data-toggle="modal" id="chooseid" onclick="getCourseLists()"
+                                    style="margin-bottom:22px;">选择班级</button>
+                            <div class="form-group">
+                                <label>选择课程:</label>
+                                <span id="courseName"></span>
+                            </div>-->
+                            <div class="form-group" style="margin-bottom:0 !important">
+                                <label>复课班级</label>
+                                <select name="toClassId" id="toClassId">
+                                    <option th:each="cla:${xbClassList}" th:selected="${cla.id}eq ${classId}" th:value="${cla.id}" th:text="${cla.sysOrgans.organName}+${cla.xbCourse.courseName}+${cla.employeeName}+${cla.className}"></option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </th:block>
+            </div>
+            <div class="enrollCon payInfo subInfo repeat" style="display: none;">
+                <h3>支付信息</h3>
+                <div class="pad">
+                    <!--<div class="alert-info">
+                        当前的经办校区为<strong>青山分校</strong>，请先确认经办校区后再填写支付信息！
+                    </div>-->
+                    <div class="income">
+                        <p class="incomeAll"><img src="../static/pages/img/money.png">应收总计</p>
+                        <p class="incomeNum"><b>0</b>元</p>
+                    </div>
+                    <div class="income" style="border-bottom:0;">
+                        <p class="incomeAll"><img src="../static/pages/img/money.png">实收</p>
+                        <p class="incomeNum"><b>0</b>元</p>
+                    </div>
+                    <div class="form-group">
+                        <select name="" id="">
+                            <option value="">现金</option>
+                            <option value="">刷卡</option>
+                            <option value="">转账</option>
+                            <option value="">支票</option>
+                            <option value="">网络</option>
+                            <option value="">支付宝</option>
+                            <option value="">微信</option>
+                        </select>
+                        <input type="text" value="0.00"><span>元</span>
+                    </div>
+                    <div class="income">
+                        <p class="incomeAll"><img src="../static/pages/img/money.png">使用账户余额</p>
+                        <p class="incomeNum">0元</p>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="enrollCon handleInfo subInfo">
-            <h3>经办信息</h3> 
-            <div class="pad">
-                <div class="form-group">
-                    <label class="col-sm-1">学员姓名</label>
-                    <select name="" id="">
-                        <option value="">青山分校</option>
-                        <option value="">111</option>
-                        <option value="">222</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-1">销售来源</label>
-                    <input type="text" placeholder="请输入销售来源">
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-1">经办日期</label>
-                    <input class="laydate-icon" id="demo" >   
-                </div>
-                <div class="form-group">
-                    <label class="col-sm-1">经办人</label>
-                    <input type="text" placeholder="管理员">
-                </div>
-                <div class="form-group" style="margin-right:0 !important;">
-                    <label class="col-sm-1">销售员</label>
-                    <select name="" id="">
-                        <option value="">请输入销售员</option>
-                        <option value="">111</option>
-                        <option value="">222</option>
-                    </select>
+            <div class="enrollCon handleInfo subInfo">
+                <h3>经办信息</h3>
+                <div class="pad">
+                    <!--<div class="form-group">
+                        <label class="col-sm-1">经办校区</label>
+                        <select name="organId" id="jborganId" onchange="getEmployee();">
+                            <option th:each="orgs:${sysOrgansList}"  th:value="${orgs.id}" th:text="${orgs.organName}"></option>
+                        </select>
+                    </div>-->
+                    <div class="form-group">
+                        <label class="col-sm-1">销售来源</label>
+                        <input type="text" name="salesSource" placeholder="请输入销售来源">
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-1">经办日期</label>
+                        <input class="laydate-icon" name="handleDate" id="demo" th:value="${#dates.format(new java.util.Date().getTime(), 'yyyy-MM-dd')}">
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-1">经办人</label>
+                        <input type="text" th:value="${sysEmployee.employeeName}" name="handlePerson" disabled="disabled">
+                    </div>
+                    <div class="form-group" style="margin-right:0 !important;">
+                        <label class="col-sm-1">销售员</label>
+                        <select name="salesPerson" id="salesPerson">
+                            <option th:each="emp:${employeeList}"  th:value="${emp.employeeName}" th:text="${emp.employeeName}"></option>
+                        </select>
+                    </div>
                 </div>
             </div>
+            <div class="enrollCon">
+                <button class="save" type="button" onclick="rePeatClass();">保存</button>
+                <button class="save" type="button" onclick="javascript:history.go(-1)" style="margin-right:22px;">返回</button>
+            </div>
         </div>
-        <div class="enrollCon">
-            <button class="save">保存</button>
-        </div>
-    </div>
-    <!-- 选择已有学员 -->
-    <div id="modal-table" class="modal fade in subsidy" tabindex="-1" aria-hidden="false">
+        <!-- 选择已有学员 -->
+        <div id="modal-table" class="modal fade in subsidy" tabindex="-1" aria-hidden="false">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header no-padding">
@@ -195,87 +173,400 @@
                         <div class="form-group" style="margin-right:0 !important;">
                             <select name="" id="">
                                 <option value="">学员姓名</option>
-                                <option value="">张三</option>
-                                <option value="">李四</option>
+                                <!--<option value="">张三</option>
+                            <option value="">李四</option>-->
                             </select>
-                        </div> 
+                        </div>
                         <form class="form-search">
                             <span class="input-icon">
-                                <input type="text" placeholder="请输入班级名称或教师名称" class="nav-search-input" id="nav-search-input" autocomplete="off">
-                                <i class="ace-icon fa fa-search nav-search-icon"></i>
+                                <input type="text" oninput="getStudentList()" id="studentName" placeholder="请输入学员名称">
+                                <!--<i class="ace-icon fa fa-search nav-search-icon"></i>-->
                             </span>
-                        </form>  
-                        <div class="form-group">
-                            <label>校区</label>
-                            <select name="" id="">
-                                <option value="">全部校区</option>
-                                <option value="">111</option>
-                                <option value="">222</option>
-                            </select>
-                        </div>                        
+                        </form>
+                        <!--<div class="form-group">
+                        <label>校区</label>
+                        <select name="" id="">
+                            <option value="">全部校区</option>
+                            <option value="">111</option>
+                            <option value="">222</option>
+                        </select>
+                    </div>-->
                     </div>
-                    <div class="modal-body no-padding">
+                    <div class="modal-body no-padding" style="height: 200px;overflow-y: auto">
                         <table class="table table-striped  table-hover no-margin-bottom no-border-top">
                             <thead>
-                                <tr>
-                                    <th>姓名</th>
-                                    <th>联系方式</th>
-                                    <th>公立学校</th>
-                                    <th>在读课程</th>
-                                </tr>
+                            <tr>
+                                <th></th>
+                                <th>姓名</th>
+                                <th>联系方式</th>
+                                <th>在读课程</th>
+                            </tr>
                             </thead>
                             <tbody style="display: none;">
-                                <tr class="none">
-                                    <td>
-                                        <img src="../static/pages/img/none.png">
-                                        <span>很抱歉，这里什么都没有</span> 
-                                    </td>   
-                                </tr>
+                            <!--<tr class="none">
+                        <td>
+                            <img src="img/none.png">
+                            <span>很抱歉，这里什么都没有</span>
+                        </td>
+                    </tr>-->
                             </tbody>
-                            <tbody>
-                                <tr>
-                                    <td><img src="../static/pages/img/boy.png">张三</td>
-                                    <td>15874747474</td>
-                                    <td ></td>
-                                    <td><img src="../static/pages/img/ke.png">在读课程</td>
+                            <tbody th:id="userchoose">
+                            <th:block th:if="${xbStudentPage}" th:fragment="studentList">
+                                <tr th:each="stu : ${xbStudentPage.content}">
+                                    <td>
+                                        <input name="form-field-checkbox" name="studio" type="radio" th:value="${stu.id}">
+                                    </td>
+                                    <td th:text="${stu.studentName}"><img src="../static/pages/img/boy.png"></td>
+                                    <td th:text="${stu.contactPhone}"></td>
+                                    <td></td>
+                                    <!--<td><img src="../static/pages/img/ke.png">在读课程</td>-->
                                 </tr>
-                                <tr>
-                                    <td><img src="../static/pages/img/girl.png">张三</td>
-                                    <td>15874747474</td>
-                                    <td ></td>
-                                    <td><img src="../static/pages/img/ke.png">在读课程</td>
-                                </tr>
-                                <tr>
-                                    <td><img src="../static/pages/img/girl.png">张三</td>
-                                    <td>15874747474</td>
-                                    <td ></td>
-                                    <td><img src="../static/pages/img/ke.png">在读课程</td>
-                                </tr>
+                            </th:block>
                             </tbody>
                         </table>
                     </div>
-        
+
                     <div class="modal-footer no-margin-top">
                         <button class="btn pull-left" data-dismiss="modal">
                             取消
                         </button>
-                        <p>已选择班级<span>0</span>个</p>
-                        <button class="btn pull-right" data-dismiss="modal">
+                        <button class="btn pull-right" data-dismiss="modal"  type="button" onclick="chooseUser();">
                             确定
                         </button>
                     </div>
                 </div>
             </div>
-    </div>
+        </div>
 
-</div> 
+        <div id="modal-table1" class="modal fade in" tabindex="-1" aria-hidden="false">
+            <div class="modal-dialog">
+                <div class="modal-content" id="modal-content">
+                    <div class="modal-header no-padding">
+                        <div class="table-header">课程选择</div>
+                    </div>
+                    <div class="modalFrom">
+                        <!--<div class="form-group" style="margin-right:0 !important;">
+                            <select id="kechengorgan" onchange="getCourseLists('2');">
+                                <option th:each="orgs:${sysOrgansList}"  th:value="${orgs.id}" th:text="${orgs.organName}"></option>
+                            </select>
+                        </div>-->
+                        <form class="form-search">
+                            <span class="input-icon">
+                                <input type="text" oninput="getCourseLists('2')"  id="courseName" placeholder="请输入课程名称" >
+                                <i class="ace-icon fa fa-search nav-search-icon"></i>
+                            </span>
+                        </form>
+                    </div>
+                    <div class="modal-body no-padding" style="height: 200px;overflow-y: auto">
+                        <table class="table table-striped table-bordered table-hover no-margin-bottom no-border-top">
+                            <thead>
+                            <tr>
+                                <th></th>
+                                <th>课程名称</th>
+                                <th>课程类别</th>
+                                <th>收费模式 </th>
+                                <th>学费标准</th>
+                                <th>授课模式</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr style="display: none;" class="none">
+                                <td>
+                                    <img src="../static/pages/img/none.png">
+                                    <span>很抱歉，这里什么都没有</span>
+                                </td>
+                            </tr>
+                            </tbody>
+                            <tbody   th:id ="kechengchoose">
+                            <th:block th:if="${xbCoursePage}" th:fragment="courselist">
+                                <tr  th:each="couse : ${xbCoursePage.content}" >
+                                    <td>
+                                        <input name="form-field-checkbox" name="checkboxname" type="radio" th:value="${couse.id}">
+                                    </td>
+                                    <td th:text="${couse.xbCourse.courseName}"><img src="../static/pages/img/man.png"></td>
+                                    <td th:text="${couse.xbCourse.xbcoursetype.courseTypeName}"></td>
+                                    <td th:if="${couse.xbCourse.chargingMode}eq '0'" class="numberPer">按课时</td>
+                                    <td th:if="${couse.xbCourse.chargingMode}eq '2'" class="numberPer">按期</td>
+                                    <td th:if="${couse.xbCourse.chargingMode}eq '0'" th:text="${couse.money}+'元('+${couse.periodNum}+'课时)'"></td>
+                                    <td th:if="${couse.xbCourse.chargingMode}eq '2'" th:text="${couse.money}+'元/期('+${couse.periodNum}+'课时)'"></td>
+                                    <td th:if="${couse.xbCourse.type}eq '0'">班课</td>
+                                    <td th:if="${couse.xbCourse.type}eq '1'">一对一</td>
+                                </tr>
+                            </th:block>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="modal-footer no-margin-top">
+                        <button class="btn pull-left" data-dismiss="modal">
+                            取消
+                        </button>
+                        <!--<p>已选择课程<span id="kechengsum">0</span>个</p>-->
+                        <button class="btn pull-right" data-dismiss="modal" type="button" onclick="chooseCourse();">
+                            确定
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+</form>
+</div>
 
 <script>
-!function(){
-laydate.render({elem: '#demo'});//绑定元素
-}();
+    ! function () {
+        laydate.render({
+            elem: '#demo'
+        }); //绑定元素
+    }();
+</script>
+<script type="text/javascript" th:inline="javascript">
+    var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/ ;
+
+    function getStudentList() {
+        var load = new Loading();
+        load.init({
+            target: "#modal-table"
+        });
+        load.start();
+        $.ajax({
+            type: 'get',
+            //dataType: 'json',
+            url: basePath + '/feeRelated/getStudentListByRepeat',
+            data: {
+                studentName: $("#studentName").val()
+            },
+            contentType: "application/json;charset=UTF-8",
+            cache: false,
+            async: true,
+            success: function (data) {
+                load.stop();
+                console.log(data);
+                $("#userchoose").html("");
+                $('#userchoose').append(data);
+            }
+        });
+    };
+
+    function getCourseLists() {
+
+        var classId = $("#classId").val();
+        var studentId = $("#studentId").val();
+        if(!studentId){
+            $.kd.kdAlert("请先选择学员！");
+            return false;
+        }
+        if(!classId){
+            $.kd.kdAlert("请先选择班级！");
+            return false;
+        }
+        var load = new Loading();
+        load.init({
+            target: "#modal-table1"
+        });
+        load.start();
+        $.ajax({
+            type: 'get',
+            //dataType: 'json',
+            url: basePath + '/feeRelated/getCourseList',
+            //orginId:$("#kechengorgan").val(),
+            data: {courseName:$("#courseName").val(),classId:classId,studentId:studentId},
+            contentType:"application/json;charset=UTF-8",
+            cache: false,
+            async: true,
+            success: function (data) {
+                load.stop();
+                console.log(data);
+                $("#kechengchoose").html("");
+                $('#kechengchoose').append(data);
+            }
+        });
+    };
+
+    function chooseCourse(){
+        var courseIds = $('input:radio[name="checkboxname"]:checked').val();
+        var load = new Loading();
+        load.init({
+            target: "#modal-content"
+        });
+        load.start();
+        $.ajax({
+            type: 'get',
+            dataType: 'json',
+            url: basePath + '/feeRelated/chooseCourse',
+            data: {courseIds:courseIds},
+            contentType:"application/json;charset=UTF-8",
+            cache: false,
+            async: true,
+            success: function (data) {
+                console.log('成功');
+                load.stop();
+                console.log(data);
+                $('#toClassId').empty();
+                $("#receivable").val(data.data.totalReceivable);
+                $("#choosecourseId").val(data.data.choosecourseId);
+                $("#courseName").html(data.data.courseName);
+                $("#totalReceivable").html(data.data.totalReceivable+"元/"+data.data.totalPeriodNum+"课时");
+                for (var i = 0; i < data.data.xbClassList.length; i++) {
+                    //先创建好select里面的option元素
+                    var option = document.createElement("option");
+                    //转换DOM对象为JQ对象,好用JQ里面提供的方法 给option的value赋值
+                    $(option).val(data.data.xbClassList[i].id);
+                    //给option的text赋值,这就是你点开下拉框能够看到的东西
+                    $(option).text(data.data.xbClassList[i].teacherName+data.data.xbClassList[i].className);
+                    //获取select 下拉框对象,并将option添加进select
+                    $('#toClassId').append(option);
+                }
+            },
+            error(){
+                console.log('失败');
+                load.stop();
+            }
+        });
+    };
+
+    function chooseUser() {
+        var load = new Loading();
+        load.init({
+            target: "#modal-table"
+        });
+        var val = $('input:radio[name="studio"]:checked').val();
+        if (val == null) {
+            $.kd.kdAlert("什么也没选中!");
+            return false;
+        }
+        load.start();
+        $.ajax({
+            type: 'get',
+            dataType: 'text',
+            url: basePath + '/feeRelated/chooseRepeatStudent',
+            data: {
+                studentId: val
+            },
+            contentType: "application/json;charset=UTF-8",
+            cache: false,
+            async: true,
+            success: function (data) {
+                load.stop();
+                console.log(data);
+                $("#changeClassId").html(data);
+                /*$("#chooseUser").show();
+                $('#modal-table').modal('hide')
+                $("#chooseid").hide();
+                console.log(data.xbCourseList)
+                $('#courseName').empty();
+                $("#name").html(data.xbCoursePage[0].xbStudent.studentName);
+                $("#phone").html(data.xbCoursePage[0].xbStudent.contactPhone);
+                for (var i = 0; i < data.xbCoursePage.length; i++) {
+                    //先创建好select里面的option元素
+                    var option = document.createElement("option");
+                    //转换DOM对象为JQ对象,好用JQ里面提供的方法 给option的value赋值
+                    $(option).val(data.xbCoursePage[i].xbCourse.id);
+                    //给option的text赋值,这就是你点开下拉框能够看到的东西
+                    $(option).text(data.xbCoursePage[i].xbCourse.courseName);
+                    //获取select 下拉框对象,并将option添加进select
+                    $('#courseName').append(option);
+                }*/
+            }
+        });
+    };
+
+    function chooseClass(studentId) {
+        var load = new Loading();
+        var classId = $("#classId").val();
+        load.init({
+            target: "#modal-table"
+        });
+        load.start();
+        $.ajax({
+            type: 'get',
+            //dataType: 'json',
+            url: basePath + '/feeRelated/chooseClass',
+            data: {
+                studentId: studentId,
+                classId:classId
+            },
+            contentType: "application/json;charset=UTF-8",
+            cache: false,
+            async: true,
+            success: function (data) {
+                load.stop();
+                console.log(data);
+                $("#changeClassId").html(data);
+            }
+        });
+    };
 
 
-</script> 
+    function rePeatClass(){
+        var classId = $('#classId').val();
+        if (classId) {
+            var data= serializeObject("#changeForm");
+            console.log(data);
+            $.ajax({
+                type: 'get',
+                dataType: 'json',
+                url: basePath + '/feeRelated/rePeatClassSave',
+                data: {studentEntity:JSON.stringify(data)},
+                contentType:"application/json;charset=UTF-8",
+                cache: false,
+                async: true,
+                success: function (data) {
+                    var status = data.status;
+                    var msg = data.msg;
+                    $.kd.kdAlert("复课成功！",function () {
+                        window.location.href = basePath + '/student/getManagementList';
+                    });
+                }
+            });
+        }else{
+            $.kd.kdAlert("课程不能为空！");
+        }
+    }
+
+    function serializeObject(form)
+    {
+        var o = {};
+        var a = $(form).serializeArray();
+        $.each(a, function() {
+            if (o[this.name]) {
+                if (!o[this.name].push) {
+                    o[this.name] = [o[this.name]];
+                }
+                o[this.name].push(this.value || '');
+            } else {
+                o[this.name] = this.value || '';
+            }
+        });
+        return o;
+    };
+
+    function getEmployee(){
+        var orgid = $("#jborganId").val();
+        $.ajax({
+            type: 'get',
+            dataType: 'json',
+            url: basePath + '/accounts/getXiaoshouList',
+            data: {organId: orgid},
+            contentType:"application/json;charset=UTF-8",
+            cache: false,
+            async: true,
+            success: function (data) {
+                $('#salesPerson').empty();
+                for (var i = 0; i < data.sysEmployeePage.length; i++) {
+                    //先创建好select里面的option元素
+                    var option = document.createElement("option");
+                    //转换DOM对象为JQ对象,好用JQ里面提供的方法 给option的value赋值
+                    $(option).val(data.sysEmployeePage[i].employeeName);
+                    //给option的text赋值,这就是你点开下拉框能够看到的东西
+                    $(option).text(data.sysEmployeePage[i].employeeName);
+                    //获取select 下拉框对象,并将option添加进select
+                    $('#salesPerson').append(option);
+                }
+            }
+        });
+    }
+
+</script>
 </body>
+
 </html>

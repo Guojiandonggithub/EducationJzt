@@ -120,6 +120,48 @@ public class FeeRelatedActivity {
 		return "stopClass";
 	}
 
+	/**
+	 * 跳转到复课
+	 * @return
+	 */
+	@RequestMapping("/repeatClass")
+	public String repeatClass(ModelMap model,Pageable pageable){
+		List<SysOrgans> sysOrgansList = organsService.getOrgansList();
+		Map<String,Object> searhMap = new HashMap<>();
+		if(sysOrgansList.size()>0){
+			searhMap.put("EQ_organId",sysOrgansList.get(0).id);
+		}
+		searhMap.put("EQ_sysRole.roleName","销售员");
+		Page<SysEmployee> employeePage = accountService.getAccountList(pageable,searhMap);
+		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
+		SysEmployee sysEmployee = (SysEmployee)request.getSession().getAttribute("sysEmployee");
+		model.addAttribute("sysOrgansList",sysOrgansList);
+		model.addAttribute("employeeList",employeePage.getContent());
+		model.addAttribute("sysEmployee",sysEmployee);
+		return "repeat";
+	}
+
+	/**
+	 * 跳转到退费
+	 * @return
+	 */
+	@RequestMapping("/cancelClass")
+	public String cancelClass(ModelMap model,Pageable pageable){
+		List<SysOrgans> sysOrgansList = organsService.getOrgansList();
+		Map<String,Object> searhMap = new HashMap<>();
+		if(sysOrgansList.size()>0){
+			searhMap.put("EQ_organId",sysOrgansList.get(0).id);
+		}
+		searhMap.put("EQ_sysRole.roleName","销售员");
+		Page<SysEmployee> employeePage = accountService.getAccountList(pageable,searhMap);
+		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
+		SysEmployee sysEmployee = (SysEmployee)request.getSession().getAttribute("sysEmployee");
+		model.addAttribute("sysOrgansList",sysOrgansList);
+		model.addAttribute("employeeList",employeePage.getContent());
+		model.addAttribute("sysEmployee",sysEmployee);
+		return "cancelClass";
+	}
+
 
 	/**
 	 * 跳转到查询学员
@@ -233,7 +275,7 @@ public class FeeRelatedActivity {
 		XbStudent xbStudent = studentService.getXbStudent(studentId);
 		Map<String,Object> studentMap = new HashMap<>();
 		studentMap.put("EQ_studentId",studentId);
-		studentMap.put("EQ_xbClass.deleteStatus","1");
+		studentMap.put("EQ_deleteStatus","1");
 		if(null!=classId&&!classId.equals("")){
 			studentMap.put("EQ_id",classId);
 		}
@@ -260,7 +302,7 @@ public class FeeRelatedActivity {
 	}
 
 	/**
-	 * 选择学员
+	 * 补费选择学员
 	 * @return
 	 */
 	@RequestMapping("/chooseSubsidyStudent")
@@ -268,7 +310,7 @@ public class FeeRelatedActivity {
 		XbStudent xbStudent = studentService.getXbStudent(studentId);
 		Map<String,Object> studentMap = new HashMap<>();
 		studentMap.put("EQ_studentId",studentId);
-		/*studentMap.put("EQ_xbClass.deleteStatus","1");*/
+		studentMap.put("EQ_deleteStatus","1");
 		if(null!=classId&&!classId.equals("")){
 			studentMap.put("EQ_id",classId);
 		}
@@ -276,6 +318,37 @@ public class FeeRelatedActivity {
 		model.addAttribute("xbStudentPage",xbStudentPage);
 		model.addAttribute("xbStudent",xbStudent);
 		return "subsidy::changeClassFragment";
+	}
+
+	/**
+	 * 复课选择学员
+	 * @return
+	 */
+	@RequestMapping("/chooseRepeatStudent")
+	public String chooseRepeatStudent(@RequestParam(required = false) String classId,@RequestParam(required = false) String studentId, ModelMap model, Pageable pageable){
+		XbStudent xbStudent = studentService.getXbStudent(studentId);
+		Map<String,Object> studentMap = new HashMap<>();
+		studentMap.put("EQ_studentId",studentId);
+		studentMap.put("EQ_deleteStatus","1");
+		studentMap.put("EQ_studentStart","1");
+		XbStudentRelationViewNew xbStudentRelation = new XbStudentRelationViewNew();
+		List<XbStudentRelationViewNew> xbStudentPage = studentService.getXbRelationList(studentMap);
+		String balanceamount = "0.00";
+		if(xbStudentPage.size()>0){
+			xbStudentRelation = xbStudentPage.get(0);
+			BigDecimal receivable = xbStudentRelation.receivable;
+			BigDecimal paymentMoney = xbStudent.paymentMoney;
+			BigDecimal su = receivable.subtract(paymentMoney);
+			balanceamount = su.toString();
+		}
+		model.addAttribute("xbStudent",xbStudent);
+		model.addAttribute("xbClassList",xbStudentPage);
+		model.addAttribute("classId","");
+		model.addAttribute("xbStudentRelationId",xbStudentRelation.id);
+		model.addAttribute("totalReceivable",xbStudentRelation.totalReceivable);
+		model.addAttribute("receivable",xbStudentRelation.receivable);
+		model.addAttribute("balanceamount",balanceamount);
+		return "repeat::changeClassFragment";
 	}
 
 	/**
@@ -465,6 +538,40 @@ public class FeeRelatedActivity {
 			SysEmployee sysEmployee = (SysEmployee)request.getSession().getAttribute("sysEmployee");
 			xbSupplementFee.handlePerson = sysEmployee.employeeName;
 			studentService.saveXbSupplementFee(xbSupplementFee);
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("status","1");
+			jsonObject.put("msg", "编辑成功");
+			logger.info("编辑机构返回json参数="+jsonObject.toString());
+			resp.setContentType("text/html;charset=UTF-8");
+			resp.getWriter().println(jsonObject.toJSONString());
+			resp.getWriter().close();
+		} catch (IOException e) {
+			logger.info(e.toString());
+		}
+	}
+
+	/**
+	 * 复课
+	 * @param studentEntity
+	 * @param resp
+	 */
+	@RequestMapping("/rePeatClassSave")
+	public void rePeatClassSave(@RequestParam String studentEntity, HttpServletResponse resp) {
+		try {
+			XbSupplementFee xbSupplementFee = com.alibaba.fastjson.JSONObject.parseObject(studentEntity,XbSupplementFee.class);
+			xbSupplementFee.type = "4";//复课
+			String studentRelationId = xbSupplementFee.studentRelationId;
+			XbStudentRelationViewNew xbStudentRelations = studentService.getXbStudentRelationView(studentRelationId);
+			XbStudentRelation xbStudentRelation = studentService.getXbStudentRelation(studentRelationId);
+			xbStudentRelation.studentStart = 0;//在读
+			xbSupplementFee.remarks = "对"+xbStudentRelations.sysOrgans.organName+xbStudentRelations.xbCourse.xbcoursetype.courseTypeName+xbStudentRelations.xbCourse.courseName+xbStudentRelations.className+"进行复课";
+			HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
+			SysEmployee sysEmployee = (SysEmployee)request.getSession().getAttribute("sysEmployee");
+			xbSupplementFee.handlePerson = sysEmployee.employeeName;
+			xbSupplementFee.paymentMoney = new BigDecimal("0");
+			xbSupplementFee.surplusMoney = new BigDecimal("0");
+			studentService.saveXbSupplementFee(xbSupplementFee);
+			studentService.saveXbStudentRelation(xbStudentRelation);
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put("status","1");
 			jsonObject.put("msg", "编辑成功");
@@ -792,6 +899,98 @@ public class FeeRelatedActivity {
 		model.addAttribute("xbClass",xbClass);
 		model.addAttribute("organName",xbCourseList.get(0).sysorgans.organName);
 		return "enrollClass::baoming";
+	}
+
+	/**
+	 * 复课查询学员
+	 * @return
+	 */
+	@RequestMapping("/getStudentListByRepeat")
+	public String getStudentListByRepeat(@RequestParam(required = false) String studentName, ModelMap model, Pageable pageable){
+		Map<String,Object> resultMap = new HashMap<>();
+		if(null!=studentName&&!studentName.equals("")){
+			resultMap.put("LIKE_studentName",studentName);
+		}
+		Page<XbStudent> xbStudentsPage = studentService.getXbStudentList(pageable,resultMap);
+		model.addAttribute("xbStudentPage",xbStudentsPage);
+		return "repeat::studentList";
+	}
+
+	/**
+	 * 退费选择学员
+	 * @return
+	 */
+	@RequestMapping("/chooseCancelStudent")
+	public String chooseCancelStudent(@RequestParam(required = false) String classId,@RequestParam(required = false) String studentId, ModelMap model, Pageable pageable){
+		XbStudent xbStudent = studentService.getXbStudent(studentId);
+		Map<String,Object> studentMap = new HashMap<>();
+		studentMap.put("EQ_studentId",studentId);
+		studentMap.put("EQ_deleteStatus","1");
+		if(null!=classId&&!classId.equals("")){
+			studentMap.put("EQ_id",classId);
+		}
+		XbStudentRelationViewNew xbStudentRelation = new XbStudentRelationViewNew();
+		List<XbStudentRelationViewNew> xbStudentPage = studentService.getXbRelationList(studentMap);
+		String balanceamount = "0.00";
+		if(xbStudentPage.size()>0){
+			xbStudentRelation = xbStudentPage.get(0);
+			BigDecimal receivable = xbStudentRelation.receivable;
+			BigDecimal paymentMoney = xbStudent.paymentMoney;
+			BigDecimal su = receivable.subtract(paymentMoney);
+			balanceamount = su.toString();
+		}
+		List<XbStudentRelation> xbClassPage = new ArrayList<>();
+		model.addAttribute("xbStudent",xbStudent);
+		model.addAttribute("xbClassList",xbStudentPage);
+		model.addAttribute("xbQbClassList",xbClassPage);
+		model.addAttribute("classId","");
+		model.addAttribute("xbStudentRelationId",xbStudentRelation.id);
+		model.addAttribute("totalReceivable",xbStudentRelation.totalReceivable);
+		model.addAttribute("receivable",xbStudentRelation.receivable);
+		model.addAttribute("balanceamount",balanceamount);
+		return "cancelClass::changeClassFragment";
+	}
+
+
+	/**
+	 * 转班
+	 * @param studentEntity
+	 * @param resp
+	 */
+	@RequestMapping("/cancelClassSave")
+	public void cancelClassSave(@RequestParam String studentEntity, HttpServletResponse resp) {
+		try {
+			XbSupplementFee xbSupplementFee = com.alibaba.fastjson.JSONObject.parseObject(studentEntity,XbSupplementFee.class);
+			xbSupplementFee.type = "5";//退费
+			String studentId = xbSupplementFee.studentId;
+			String classId = xbSupplementFee.classId;
+			String balanceamount = xbSupplementFee.balanceamount;
+			XbStudent xbStudent = studentService.getXbStudent(studentId);
+			xbStudent.paymentMoney = new BigDecimal("0");
+			XbStudentRelation xbStudentRelations = studentService.getXbStudentRelation(classId);
+			xbStudentRelations.studentStart = 3;
+			xbStudentRelations.periodNum = new BigDecimal("0");
+			xbStudentRelations.receivable = new BigDecimal("0");
+			xbSupplementFee.remarks = "对"+xbStudentRelations.sysOrgans.organName+xbStudentRelations.xbCourse.courseName+"进行了退费";
+			BigDecimal money = new BigDecimal("0").subtract(new BigDecimal(balanceamount));
+			xbSupplementFee.surplusMoney = money;//应收金额
+			xbSupplementFee.paymentMoney = money;//实收金额
+			studentService.saveXbStudent(xbStudent);
+			studentService.saveXbStudentRelation(xbStudentRelations);
+			HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
+			SysEmployee sysEmployee = (SysEmployee)request.getSession().getAttribute("sysEmployee");
+			xbSupplementFee.handlePerson = sysEmployee.employeeName;
+			studentService.saveXbSupplementFee(xbSupplementFee);
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("status","1");
+			jsonObject.put("msg", "编辑成功");
+			logger.info("编辑机构返回json参数="+jsonObject.toString());
+			resp.setContentType("text/html;charset=UTF-8");
+			resp.getWriter().println(jsonObject.toJSONString());
+			resp.getWriter().close();
+		} catch (IOException e) {
+			logger.info(e.toString());
+		}
 	}
 
 }

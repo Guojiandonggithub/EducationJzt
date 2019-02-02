@@ -55,23 +55,14 @@
                         <div class="stopClass" style="display:flex;justify-content:space-between">
                             <div>
                                 <div class="form-group">
-                                    <label>选择班级</label>
+                                    <label>选择课程</label>
                                     <select name="classId" id="classId" th:onchange="|javascript:chooseClass('${xbStudent.id}')|">
-                                        <option th:each="cla:${xbClassList}" th:selected="${cla.id}eq ${classId}" th:value="${cla.id}" th:text="${cla.sysOrgans.organName}+${cla.xbCourse.courseName}+${cla.employeeName}+${cla.className}"></option>
+                                        <option th:each="cla:${xbClassList}" th:selected="${cla.id}eq ${classId}" th:value="${cla.id}" th:text="${cla.sysOrgans.organName}+${cla.xbCourse.courseName}"></option>
                                     </select>
-                                </div>
-                                <div class="form-group">
-                                    <label>总学费:</label>
-                                    <input type="hidden" id="xbStudentRelationId" th:value="${xbStudentRelationId}"/>
-                                    <span th:text="${totalReceivable}"></span>
                                 </div>
                                 <div class="form-group">
                                     <label>剩余学费:</label>
                                     <span th:text="${receivable}"></span>
-                                </div>
-                                <div class="form-group">
-                                    <label>欠费:</label>
-                                    <span th:text="${xbStudent.paymentMoney}"></span>
                                 </div>
                                 <div class="form-group">
                                     <label>实际结余:</label>
@@ -79,34 +70,37 @@
                                     <input type="hidden" name="balanceamount" th:value="${balanceamount}"/>
                                 </div>
                             </div>
-                            <div>
-                                <button class="choiceStu" type="button" href="#modal-table1" data-toggle="modal" id="chooseid" onclick="getCourseLists()"
-                                        style="margin-bottom:22px;">选择课程</button>
+                            <div class="">
                                 <div class="form-group">
-                                    <label>选择课程:</label>
-                                    <span id="courseName"></span>
-                                </div>
-                                <div class="form-group" style="margin-bottom:0 !important">
-                                    <label>转到班级</label>
-                                    <select name="toClassId" id="toClassId">
-                                        <!--<option th:each="cla:${xbQbClassList}" th:value="${cla.xbClass.id}" th:text="${cla.sysOrgans.organName}+${cla.xbCourse.courseName}+${cla.xbClass.teacher.employeeName}+${cla.xbClass.className}"></option>-->
-                                    </select>
+                                    <label>总学费:</label>
+                                    <input type="hidden" id="xbStudentRelationId" th:value="${xbStudentRelationId}"/>
+                                    <span th:text="${totalReceivable}"></span>
                                 </div>
                                 <div class="form-group">
-                                    <label>应收:</label>
-                                    <span id="totalReceivable"></span>
-                                    <input type="hidden" id="receivable" name="receivable"/>
-                                    <input type="hidden" id="choosecourseId" name="choosecourseId"/>
+                                    <label>欠费:</label>
+                                    <span th:text="${xbStudent.paymentMoney}"></span>
                                 </div>
-                                <!--<div class="form-group">
-                                    <label>开始时间:</label>
-                                    <span th:text="${receivable}"></span>
-                                </div>
-                                <div class="form-group">
-                                    <label>结束时间:</label>
-                                    <span th:text="${receivable}"></span>
-                                </div>-->
                             </div>
+                        </div>
+                        <div class="">
+                            <ul class="normal-ul">
+                                <li>
+                                    <label style="margin-bottom: -30px; float: left;">对内备注</label>
+                                    <div class="normal-input-inner" style="width: 100%; padding-left: 74px;">
+                                        <div class="input-wrapper">
+                                            <input  type="text" name="remarksIn" placeholder="该备注只有对内部操作人员可见" maxlength="500" class="ivu-input">
+                                        </div>
+                                    </div>
+                                </li>
+                                <li>
+                                    <label style="margin-bottom: -30px; float: left;">对外备注</label>
+                                    <div class="normal-input-inner" style="width: 100%; padding-left: 74px;">
+                                        <div class="input-wrapper ">
+                                            <input  type="text" name="remarksOut" placeholder="该备注将会被打印且会在校宝家中显示" maxlength="500" class="ivu-input">
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
                         </div>
                     </th:block>
                 </div>
@@ -140,7 +134,7 @@
                     </div>
                 </div>
                 <div class="enrollCon">
-                    <button class="save" type="button" onclick="changeClass();">保存</button>
+                    <button class="save" type="button" onclick="cancelClass();">保存</button>
                     <button class="save" type="button" onclick="javascript:history.go(-1)" style="margin-right:22px;">返回</button>
                 </div>
             </div>
@@ -420,7 +414,7 @@
             $.ajax({
                 type: 'get',
                 dataType: 'text',
-                url: basePath + '/feeRelated/chooseStudent',
+                url: basePath + '/feeRelated/chooseCancelStudent',
                 data: {
                     studentId: val
                 },
@@ -431,23 +425,6 @@
                     load.stop();
                     console.log(data);
                     $("#changeClassId").html(data);
-                    /*$("#chooseUser").show();
-                    $('#modal-table').modal('hide')
-                    $("#chooseid").hide();
-                    console.log(data.xbCourseList)
-                    $('#courseName').empty();
-                    $("#name").html(data.xbCoursePage[0].xbStudent.studentName);
-                    $("#phone").html(data.xbCoursePage[0].xbStudent.contactPhone);
-                    for (var i = 0; i < data.xbCoursePage.length; i++) {
-                        //先创建好select里面的option元素
-                        var option = document.createElement("option");
-                        //转换DOM对象为JQ对象,好用JQ里面提供的方法 给option的value赋值
-                        $(option).val(data.xbCoursePage[i].xbCourse.id);
-                        //给option的text赋值,这就是你点开下拉框能够看到的东西
-                        $(option).text(data.xbCoursePage[i].xbCourse.courseName);
-                        //获取select 下拉框对象,并将option添加进select
-                        $('#courseName').append(option);
-                    }*/
                 }
             });
         };
@@ -479,15 +456,15 @@
         };
 
 
-        function changeClass(){
-            var toClassId = $('#toClassId').val();
-            if (toClassId) {
+        function cancelClass(){
+            var classId = $('#classId').val();
+            if (classId) {
                 var data= serializeObject("#changeForm");
                 console.log(data);
                 $.ajax({
                     type: 'get',
                     dataType: 'json',
-                    url: basePath + '/feeRelated/changeClassSave',
+                    url: basePath + '/feeRelated/cancelClassSave',
                     data: {studentEntity:JSON.stringify(data)},
                     contentType:"application/json;charset=UTF-8",
                     cache: false,
@@ -501,7 +478,7 @@
                     }
                 });
             }else{
-                $.kd.kdAlert("转入班级不能为空！");
+                $.kd.kdAlert("课程不能为空！");
             }
         }
 

@@ -43,6 +43,7 @@ public class XbStudentRelationViewNew {
     public String teacherId;
     public String employeeName;
     public String xbStudentRalationId;
+    public String deleteStatus;
     @Transient
     public String relationId;
 

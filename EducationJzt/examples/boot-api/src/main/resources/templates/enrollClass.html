@@ -263,12 +263,12 @@
     <input type="hidden" name="surplusMoney"  id="surplusMoney" th:value="${money}">
     <input type="hidden" name="totalPeriodNum" id="periodNum" th:value="${periodNum}"/>
     <h2>经办信息</h2>
-    <div class="form-group">
+    <!--<div class="form-group">
         <label class="col-sm-1">经办校区</label>
         <select name="organId"　id="jborganId" onchange="getEmployee();">
             <option th:each="orgs:${organsList}"  th:value="${orgs.id}" th:text="${orgs.organName}"></option>
         </select>
-    </div>
+    </div>-->
     <div class="form-group">
         <label class="col-sm-1">销售来源</label>
         <input type="text" name="salesSource" placeholder="请输入销售来源">

@@ -60,12 +60,18 @@
                         <p>停课</p>
                     </a>
                 </li>
-                <!--<li>
-                    <a href="/forward/repeat">
-                        <span><img src="../static/pages/img/fk.png"></span>
+                <li>
+                    <a href="/feeRelated/repeatClass">
+                        <span><img src="../static/pages/img/bf.png"></span>
                         <p>复课</p>
                     </a>
-                </li>-->
+                </li>
+                <li>
+                    <a href="/feeRelated/cancelClass">
+                        <span><img src="../static/pages/img/fk.png"></span>
+                        <p>退费</p>
+                    </a>
+                </li>
             </ul>
         </div> 
         <div class="screen">
@@ -121,6 +127,8 @@
                         <td th:if="${ment.type} eq '2'">补费</td>
                         <td th:if="${ment.type} eq '3'">停课</td>
                         <td th:if="${ment.type} eq ''">报名</td>
+                        <td th:if="${ment.type} eq '4'">复课</td>
+                        <td th:if="${ment.type} eq '5'">退费</td>
                         <td th:text="${ment.remarks}" class="orderTxt"></td>
                         <td th:text="${ment.surplusMoney}"></td>
                         <td th:text="${ment.paymentMoney}"></td>

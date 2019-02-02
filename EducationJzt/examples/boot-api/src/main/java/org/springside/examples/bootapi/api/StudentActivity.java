@@ -975,8 +975,8 @@ public class StudentActivity {
 			XbStudent xbStudent = com.alibaba.fastjson.JSONObject.parseObject(studentEntity,XbStudent.class);
 			XbSupplementFee xbSupplementFee = com.alibaba.fastjson.JSONObject.parseObject(studentEntity,XbSupplementFee.class);
 			List<XbStudentRelation> xbStudentRelationList = com.alibaba.fastjson.JSONArray.parseArray(xbStudentRelation,XbStudentRelation.class);
-			BigDecimal su = (xbStudent.paymentMoney.add(xbStudent.registratioFee)).subtract(xbStudent.surplusMoney);
-			BigDecimal pay = xbStudent.surplusMoney.subtract(xbStudent.paymentMoney.add(xbStudent.registratioFee));
+			BigDecimal su = (xbStudent.paymentMoney).subtract(xbStudent.surplusMoney);
+			BigDecimal pay = xbStudent.surplusMoney.subtract(xbStudent.paymentMoney);
 			int r=su.compareTo(BigDecimal.ZERO); //和0，Zero比较
 			int r2=pay.compareTo(BigDecimal.ZERO); //和0，Zero比较
 			if(r==-1){//小于
@@ -992,6 +992,7 @@ public class StudentActivity {
 				XbStudent xbStudent1 = studentService.getXbStudent(id);
 				xbStudent.surplusMoney = xbStudent1.surplusMoney.add(su);
 				xbStudent.paymentMoney = xbStudent1.paymentMoney.add(pay);
+				xbStudent.registratioFee = xbStudent1.registratioFee.add(xbStudent.registratioFee);
 				xbStudent.totalPeriodNum = xbStudent.totalPeriodNum.add(xbStudent1.totalPeriodNum);
 			}
             xbStudent.deleteStatus = "1";

@@ -155,7 +155,8 @@
                                     <td th:text="${studentrelation.receivable}"></td>
                                     <td th:if="${studentrelation.enrollDate!=null}" th:text="${#dates.format(studentrelation.enrollDate, 'yyyy-MM-dd')}"></td>
                                     <td th:if="${studentrelation.enrollDate==null}" th:text="${studentrelation.enrollDate}"></td>
-                                    <td style="color:#7fbb57" th:if="${studentrelation.studentStart} eq 0">在读</td>
+                                    <td style="color:#7fbb57" th:if="${studentrelation.studentStart eq 0 && studentrelation.classId ==''} ">报名</td>
+                                    <td style="color:#7fbb57" th:if="${studentrelation.studentStart eq 0 && studentrelation.classId !=''} ">在读</td>
                                     <td style="color:#e46054" th:if="${studentrelation.studentStart} eq 1">停课</td>
                                     <td style="color:#548ee4" th:if="${studentrelation.studentStart} eq 2">转班</td>
                                     <td style="color:#b0b0b0" th:if="${studentrelation.studentStart} eq 4">结课</td>
@@ -518,7 +519,14 @@
                                     <td th:text="${studentrelation.periodNum}">课时</td>
                                     <td th:if="${studentrelation.enrollDate!=null}" th:text="${#dates.format(studentrelation.enrollDate, 'yyyy-MM-dd')}"></td>
                                     <td th:if="${studentrelation.enrollDate==null}" th:text="${studentrelation.enrollDate}"></td>
-                                    <td></td>
+                                    <td class="classDel" >
+                                        <div class="btn-group open" th:if="${studentrelation.periodNum eq 0 && studentrelation.studentStart eq 0} ">
+                                            <p data-toggle="dropdown" class="down" aria-expanded="true" th:onclick="'javascript:finishCourse(\''+${studentrelation.id}+'\')'">
+                                                结课
+                                                <span class="ace-icon fa fa-caret-down icon-on-right"></span>
+                                            </p>
+                                        </div>
+                                    </td>
                                 </tr>
                             </table>
                             <div class="orderPage">

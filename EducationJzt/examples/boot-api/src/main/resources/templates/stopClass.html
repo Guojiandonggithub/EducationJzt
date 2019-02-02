@@ -55,7 +55,7 @@
                 <div class="form-group">
                     <label>选择课程</label>
                     <select name="classId" id="classId" th:onchange="|javascript:chooseCourse('${xbStudent.id}')|">
-                        <option th:each="cla:${xbClassList}" th:selected="${cla.id}eq ${classId}" th:value="${cla.id}" th:text="${cla.sysOrgans.organName}+${cla.xbCourse.courseName}+${cla.xbClass.teacher.employeeName}+${cla.xbClass.className}"></option>
+                        <option th:each="cla:${xbClassList}" th:selected="${cla.id}eq ${classId}" th:value="${cla.id}" th:text="${cla.sysOrgans.organName}+${cla.xbCourse.courseName}+${cla.employeeName}+${cla.className}"></option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -82,12 +82,12 @@
         <div class="enrollCon handleInfo subInfo">
             <h3>经办信息</h3>
             <div class="pad">
-                <div class="form-group">
+                <!--<div class="form-group">
                     <label class="col-sm-1">经办校区</label>
                     <select name="organId" id="jborganId" onchange="getEmployee();">
                         <option th:each="orgs:${sysOrgansList}"  th:value="${orgs.id}" th:text="${orgs.organName}"></option>
                     </select>
-                </div>
+                </div>-->
                 <div class="form-group">
                     <label class="col-sm-1">销售来源</label>
                     <input type="text" name="salesSource" placeholder="请输入销售来源">

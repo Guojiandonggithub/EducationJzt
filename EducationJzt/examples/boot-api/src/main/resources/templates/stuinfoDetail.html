@@ -223,9 +223,9 @@
                         </tr>
                         <tr id="choose" th:each="course:${xbStudentRelationPage.content}">
                             <td></td>
-                            <td th:text="${course.xbClass.className}"></td>
-                            <td th:text="${course.xbClass.teacher.employeeName}"></td>
-                            <td th:text="${course.xbClass.classBeginDate}"></td>
+                            <td th:text="${course.className}"></td>
+                            <td th:text="${course.employeeName}"></td>
+                            <td th:text="${course.classBeginDate}"></td>
                             <td th:text="${course.periodNum}"></td>
                         </tr>
                     </table>
