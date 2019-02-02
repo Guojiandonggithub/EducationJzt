@@ -152,7 +152,8 @@
                                     <td style="color:#b0b0b0" th:if="${studentrelations.studentStart} eq 4">结课</td>
                                     <td style="color:#548ee4" th:if="${studentrelations.studentStart} eq 3">退费</td>
                                     <td th:text="${studentrelations.xbCourse.courseName}"></td>
-                                    <td th:text="${#dates.format(studentrelations.classBeginDate, 'yyyy-MM-dd')}"></td>
+                                    <td th:if="${studentrelations.classBeginDate} == null"></td>
+                                    <td th:if="${studentrelations.classBeginDate} != null " th:text="${#dates.format(studentrelations.classBeginDate, 'yyyy-MM-dd')}"></td>
                                     <td th:text="${studentrelations.sysOrgans.organName}"></td>
                                     <!--<td>
                                         <span>每周日15:30-17:00</span>
@@ -168,7 +169,7 @@
                                                background: #2f90f3;height: 26px;font-weight: 900;margin-bottom: 2px;">
                                                 新建排课
                                             </a>
-                                            <a  class="down"
+                                            <a  class="down" th:if="${studentrelations.teacherId}!=null"
                                                 th:onclick="'javascript:editTeacherToFind(\''+${studentrelations.id}+'\')'"
                                                 style="border: solid 1px;border-radius: 10px;width: 77px;color: #f0f1f3;
                                                background: #8d05e0;height: 26px;font-weight: 900;margin-bottom: 2px;">
@@ -504,15 +505,31 @@
                                     <input type="checkbox" name="weekType" value="7"><span>周日</span>
                                 </div>
                                 <div class="grounInline">
-                                    <div class="form-group">
+                                    <div class="form-group" th:if="${xsr.teacherId} ==null">
+                                        <label><i>*</i>教师</label>
+                                        <select name="teacherId" id="teacherId" >
+                                            <option th:each="tea:${emloylist}"
+                                                    th:value="${tea.id}" th:text="${tea.employeeName}"></option>
+                                        </select>
+                                    </div>
+                                    <!--<div class="form-group">
+                                        <label><i>*</i>助教</label>
+                                        <select name="tutorId" id="tutorId" >
+                                            <option th:each="tea:${emloylist}"
+                                                    th:value="${tea.id}" th:text="${tea.employeeName}"></option>
+                                        </select>
+                                    </div>-->
+                                    <div class="form-group" th:if="${xsr.teacherId}!=null">
                                         <label><i>*</i>教师</label>
                                         <input name="teacherId" id="teacherId" type="hidden" th:value="${xsr.teacherId}">
-                                        <input name="teacherName" id="teacherName" type="text" disabled="disabled" th:value="${xsr.employeeName}">
+                                        <input name="teacherName" id="teacherName" type="text" disabled="disabled"
+                                               th:value="${xsr.employeeName}">
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group" >
                                         <label><i>*</i>助教</label>
                                         <input name="tutorId" id="tutorId" type="hidden" th:value="${xsr.teacherId}">
-                                        <input name="tutorName" id="tutorName" type="text" disabled="disabled" th:value="${xsr.employeeName}">
+                                        <input name="tutorName" id="tutorName" type="text" disabled="disabled"
+                                               th:value="${xsr.employeeName}">
                                     </div>
                                 </div>
                                 <div class="grounInline">
@@ -912,7 +929,9 @@ function saveAttendClass() {
                     load.start();
                     window.location.href = basePath + '/jw_center_arranging_course/to_arranging_course?sort=createDate,DESC&sort=createTime,DESC';
                 },function(){
-                    cecalAttendClass();
+                    //cecalAttendClass();
+                    load.start();
+                    window.location.href = basePath + '/student/getOneToOneList';
                 })
             }else {
                 $.kd.kdMsg(msg);
@@ -948,11 +967,15 @@ function editTeacherSave() {
             var msg = data.msg;
             if (status == "00") {
                 $.kd.kdAlert(msg,function(){
-                    cecalEditTeacher();
+                    load.start();
+                    //cecalEditTeacher();
+                    window.location.href = basePath + '/student/getOneToOneList';
                 });
             }else {
                 $.kd.kdAlert(msg,function(){
-                    cecalEditTeacher();
+                    load.start();
+                    //cecalEditTeacher();
+                    window.location.href = basePath + '/student/getOneToOneList';
                 });
             }
         },

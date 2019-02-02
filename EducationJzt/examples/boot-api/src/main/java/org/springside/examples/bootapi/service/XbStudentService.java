@@ -123,6 +123,12 @@ public class XbStudentService {
 				filters.values(), XbStudentRelationViewNew.class);
 		return xbStudentRelationViewNewDaoDao.findAll(spec,pageable);
 	}
+	public List<XbStudentRelationViewNew> getxbStudentRelationViewNewList(Map<String, Object> searchParams){
+		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
+		Specification<XbStudentRelationViewNew> spec = DynamicSpecifications.bySearchFilter(
+				filters.values(), XbStudentRelationViewNew.class);
+		return xbStudentRelationViewNewDaoDao.findAll(spec);
+	}
 	@Transactional
 	public XbStudentRelationViewNew  getXbStudentRelationViewNewByid(String id) {
 		return xbStudentRelationViewNewDaoDao.findById(id);

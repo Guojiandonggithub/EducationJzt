@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -354,7 +355,8 @@ public class StudentActivity {
 	@RequestMapping("/getOneToOneList")
 	public String getOneToOneList(@RequestParam(required = false) String room,
 								  @RequestParam(required = false) String data,
-								  ModelMap model, Pageable pageable){
+								  ModelMap model,
+	@PageableDefault(sort = {"enrollDate"},direction = Sort.Direction.DESC) Pageable pageable){
 		Map<String,Object> resultMap = new HashMap<>();
 		Map<String,Object> searhMap = new HashMap<>();
 		if(null!=data){
@@ -425,6 +427,9 @@ public class StudentActivity {
 		//获取教室下拉
 		List<XbClassroom> xbClassroomList = studentService.getXbClassroomList(pageable,roomsearhMap).getContent();
 		model.addAttribute("xbClassroomList",xbClassroomList);
+		Map<String,Object> teachmap = new HashMap<>();
+		List<SysEmployee> emloylist = employeeService.getAccountAllList(teachmap);
+		model.addAttribute("emloylist",emloylist);
 		return "oneToOne::teacherfra";
 	}
 	/**
@@ -450,9 +455,6 @@ public class StudentActivity {
 								 HttpServletResponse resp){
 		logger.info("修改教师");
 		try {
-			/*XbStudentRelation xsr = studentService.getXbStudentRelation(xbStuRelationId);
-			xsr.teacherId = teacherId;
-			studentService.saveXbStudentRelation(xsr);*/
 			JSONObject jsonObject = new JSONObject();
 			Map<String,Object> xvcmap = new HashMap<>();
 			xvcmap.put("EQ_xbStudentRalationId",xbStuRelationId);
@@ -498,6 +500,8 @@ public class StudentActivity {
 			}
 			IResult check = check(resultMap);
 			if(check.isSuccessful()){
+
+
 				IResult saveclassrs = saveOneToOneClass(resultMap);
 				if(!saveclassrs.isSuccessful()){
 					jsonObject.put("status",saveclassrs.isSuccessful()?"00":"11");
@@ -527,6 +531,7 @@ public class StudentActivity {
 		String startDateTime = (String)resultMap.get("startDateTime");
 		String endDateTime = (String)resultMap.get("endDateTime");
 		String classroomId = (String)resultMap.get("classroomId");
+		String teacherId = (String)resultMap.get("teacherId");
 		String id = (String)resultMap.get("id");
 		List<XbClass> list= studentService.findByXbStudentRalationId(id);
 		XbClass newclass = new XbClass();
@@ -551,7 +556,7 @@ public class StudentActivity {
 				xbclass.isEnd = "0";//结班
 				xbclass.studentNum = 1;
 				xbclass.teacherNum = 1;
-				xbclass.teacherId = xsr.teacherId;
+				xbclass.teacherId = teacherId;
 				xbclass.classroomId = classroomId;
 				xbclass.wayOfTeaching = "1";
 				xbclass.xbStudentRalationId = id;
@@ -559,6 +564,12 @@ public class StudentActivity {
 				newclass = studentService.saveXbClass(xbclass);
 				if(StringUtils.isEmpty(newclass.id)){
 					return UtilTools.makerErsResults("一对一排课新建班级失败");
+				}
+				XbStudentRelation xbsr = studentService.getXbStudentRelation(id);
+				xbsr.classId = newclass.id;
+				XbStudentRelation rsxbsr = studentService.saveXbStudentRelation(xbsr);
+				if(StringUtils.isEmpty(rsxbsr.id)){
+					return UtilTools.makerErsResults("一对一排课新建排课,更新学员班表失败");
 				}
 			} catch (ParseException e) {
 				e.printStackTrace();

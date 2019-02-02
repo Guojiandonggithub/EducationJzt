@@ -247,7 +247,17 @@ public class JwCenterArrangingCoursesActivity {
                 searhMap.put("LIKE_sysemployee.employeeName",searhname);
             }else if(type.equals("class_room_search")){
                 searhMap.put("LIKE_xbclassroom.classroomName",searhname);
+            }else if(type.equals("student_inclass_search")){
+                Map<String,Object> xsrnmap = new HashMap<>();
+                xsrnmap.put("LIKE_xbStudent.studentName",searhname);
+                List<XbStudentRelationViewNew> nlist = xbStudentService.getxbStudentRelationViewNewList(xsrnmap);
+                if(nlist.size()>0){
+                    XbStudentRelationViewNew xsr =nlist.get(0);
+                    searhMap.put("EQ_classId",xsr.classId);
+                }
+
             }
+
         }
         //授课模式
         String courtype = (String)resultMap.get("courtype");
