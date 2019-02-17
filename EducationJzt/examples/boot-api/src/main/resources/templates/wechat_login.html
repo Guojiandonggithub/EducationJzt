@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+    <title></title>
+    <link rel="stylesheet" href="../static/pages/css/login.css" id="main-ace-style" />
+    <script src="../static/pages/js/jquery.min.js"></script>
+</head>
+<body>
+    <div class="login">
+        <img src="../static/pages/img/login.png" class="loginbg"/>
+        <div class="txt"><h2>东方金子塔儿童潜能培训学校</h2></div>
+        <div class="loginBox">
+            <input type="text" id="userName" th:name="userName" placeholder="用户名"/>
+            <input type="password" id="password" th:name="passowrd" placeholder="输入密码"/>
+            <button type="button" onclick="login();">立即登录</button>
+            <span id="idMsg"></span>
+            <a href="">忘记密码</a>
+        </div>
+    </div>
+
+    <script type="text/javascript" th:inline="javascript">
+        /*<![CDATA[*/
+
+        var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/;
+
+        function login(){
+            $.ajax({
+                type: 'get',
+                dataType: 'text',
+                url: basePath + '/accounts/login',
+                data: {userName:$("#userName").val(),password:$("#password").val()},
+                cache: false,
+                async: true,
+                success: function (data) {
+                    var data = eval('(' + data + ')');
+                    $('#idUser').text(data.data);
+                    $('#idMsg').text(data.msg);
+                    if(data.msg=="登录成功"){
+                        window.location.href= basePath + '/wechatLogin/toindex';
+                    }
+                }
+            });
+        }
+        /*]]>*/
+    </script>
+</body>
+</html>

@@ -71,8 +71,14 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
         response.getWriter().print("LoginTimeout");
         return false;
     } else {
-        log.info("尚未登录，跳转到登录界面");
-        response.sendRedirect(request.getContextPath()+"/accounts/hello");
+        if(path.indexOf("/recordClassWechat/")!=-1 || path.indexOf("/wechatLogin/")!=-1 ){
+            log.info("尚未登录，跳转到登录界面");
+            response.sendRedirect(request.getContextPath()+"/wechatLogin/wechathello");
+        }else{
+            log.info("尚未登录，跳转到登录界面");
+            response.sendRedirect(request.getContextPath()+"/accounts/hello");
+        }
+
     }
             return false;
 }
@@ -93,10 +99,10 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
         notLoginPaths.add("/accounts/hello");
         notLoginPaths.add("/accounts/login");
         if(notLoginPaths.contains(path)) return false;
-        String wechatLogin="/wechatLogin/";
+        String wechatLogin="/wechatLogin/wechathello";
         if(path.indexOf(wechatLogin)!=-1)return false;
-        String recordClassWechat="/recordClassWechat/";
-        if(path.indexOf(recordClassWechat)!=-1)return false;
+        //String recordClassWechat="/recordClassWechat/";
+        //if(path.indexOf(recordClassWechat)!=-1)return false;
         return true;
     }
 }

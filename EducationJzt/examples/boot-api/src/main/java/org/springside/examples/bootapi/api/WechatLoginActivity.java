@@ -17,6 +17,7 @@ import java.util.Map;
 @Controller
 @RequestMapping(value = "/wechatLogin")
 public class WechatLoginActivity {
+
 	/*
 	 * 查询按学员列表
 	 * @return
@@ -24,5 +25,9 @@ public class WechatLoginActivity {
 	@RequestMapping("/toindex")
 	public String toIndex(@RequestParam(required = false) String data, ModelMap model, Pageable pageable){
 		return "wechat_index";
+	}
+	@RequestMapping("/wechathello")
+	public String hello() {
+		return "wechat_login";
 	}
 }
