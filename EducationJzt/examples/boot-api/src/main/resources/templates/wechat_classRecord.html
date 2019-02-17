@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>上课记录</title>
+      <link rel="stylesheet"href="../static/pages/wechat_css/bootstrap.min.css">
+      <link rel="stylesheet"href="../static/pages/wechat_css/timetable.css" >
+      <link rel="stylesheet" href="../static/pages/wechat_css/jHsDate.css" />
+      <link rel="stylesheet" href="../static/pages/css/kd.ui.plugin.css" />
+      <link rel="stylesheet" href="../static/pages/css/loading.css" />
+      <script src="../static/pages/wechat_js/jquery.js"></script>
+      <script src="../static/pages/wechat_js/bootstrap.min.js"></script>
+      <script src="../static/pages/laydate/laydate.js"></script>
+      <script src="../static/pages/js/kd.ui.plugin.js"></script>
+      <script src="../static/pages/js/loading.js"></script>
+  </head>
+<body>
+<div class="record">
+    <ul>
+        <li th:each="cla:${recordLists.content}">
+            <p class="date" th:text="${#dates.format(cla.recordTime, 'yyyy-MM-dd')}">上课时间</p>
+            <p th:text="${cla.organName}+${cla.courseTypeNname}+${cla.employeeName}+${cla.className}">班级</p>
+            <p ><i>上</i><span th:text="${cla.sknum}?${cla.sknum}:'0.0'"></span></p>
+            <p ><i>假</i><span th:text="${cla.qjnum}?${cla.qjnum}:'0.0'"></span></p>
+            <!--<p><i>旷</i>0</p>
+            <p><i>补</i>0</p>-->
+            <a th:href="@{'/recordClassWechat/classEdit'}"><Span class="glyphicon glyphicon-menu-right"></Span></a>
+        </li>
+    </ul>
+</div>
+<div class="back">
+    <a th:href="@{'/wechatLogin/toindex'}"><span class="glyphicon glyphicon-arrow-left"></span>返回课程表</a>
+</div>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -9,21 +9,22 @@
     <link rel="stylesheet"href="../static/pages/wechat_css/timetable.css" >
     <link rel="stylesheet" href="../static/pages/wechat_css/jHsDate.css" />
     <link rel="stylesheet" href="../static/pages/css/kd.ui.plugin.css" />
-
+      <link rel="stylesheet" href="../static/pages/css/loading.css" />
     <script src="../static/pages/wechat_js/jquery.js"></script>
     <script src="../static/pages/wechat_js/bootstrap.min.js"></script>
       <script src="../static/pages/laydate/laydate.js"></script>
       <script src="../static/pages/js/kd.ui.plugin.js"></script>
+      <script src="../static/pages/js/loading.js"></script>
   </head>
 <body>
 <div class="add">
     <p>记上课</p>
 </div>
-<div class="search">
+<!--<div class="search">
     <input type="text" placeholder="搜索学员">
     <span class="glyphicon glyphicon-search"></span>
     <button class="btn">搜索</button>
-</div>
+</div>-->
 <div>
     <div class="class-content">
         <h2 th:text="${classes.sysOrgans.organName}+' '+${classes.className}+' '+${classes.xbCourse.courseName}"><img src="img/ban.png">校区+班级+课程</h2>
@@ -95,6 +96,9 @@
     </div>
 </form>
 </div>
+<div class="back">
+    <a onclick="javascript:history.go(-1)"><span class="glyphicon glyphicon-arrow-left"></span>返回上一级</a>
+</div>
 <div class="foot-btn">
     <button class="btn" style="width: 100%;cursor: pointer;" onclick="saveRecordClass()">保存</button>
 </div>
@@ -104,10 +108,10 @@
     var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/ ;
 
     function saveRecordClass() {
-       /* var load = new Loading();
+        var load = new Loading();
         load.init({
-            target: "#donghua"
-        });*/
+            target: "body"
+        });
         var classId = $("#classId").val();
         var courseId = $("#courseId").val();
         var organId = $("#organId").val();
@@ -155,23 +159,27 @@
                 }
             }
             console.log(list);
-            //load.start();
+            load.start();
             $.ajax({
                 type: 'post',
                 dataType: 'json',
-                url: basePath + '/recordClass/save/recordClass',
+                url: basePath + '/recordClassWechat/save/recordClass',
                 data: JSON.stringify(list),
                 contentType: "application/json;charset=UTF-8",
                 cache: false,
                 async: true,
                 success: function (data) {
-                    //load.stop();
+                    load.stop();
                     var status = data.status;
                     var msg = data.msg;
-                    $.kd.kdAlert("记上课成功");
-                    /*$.kd.kdAlert("记上课成功！",function () {
-                        window.location.href = basePath + '/recordClass/getRecordClassList';
-                    });*/
+                    if(status=='1'){
+                        $.kd.kdAlert("记上课成功",function(){
+                            load.start();
+                            window.location.href = basePath + '/recordClassWechat/getRecordClassRecordListByClass';
+                        });
+                    }else{
+                        $.kd.kdMsg("记上课失败");
+                    }
                 }
             });
         }
@@ -205,33 +213,3 @@ $('.glyphicon-remove-circle').click(function(e) {
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
