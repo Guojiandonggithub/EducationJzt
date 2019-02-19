@@ -26,7 +26,7 @@
             <p ><i>假</i><span th:text="${cla.qjnum}?${cla.qjnum}:'0.0'"></span></p>
             <!--<p><i>旷</i>0</p>
             <p><i>补</i>0</p>-->
-            <a th:href="@{'/recordClassWechat/classEdit'}"><Span class="glyphicon glyphicon-menu-right"></Span></a>
+            <a th:href="@{'/recordClassWechat/accordingStudentRecord?classId='+${cla.classId}+'&recordTime='+${cla.recordTime}}"><Span class="glyphicon glyphicon-menu-right"></Span></a>
         </li>
     </ul>
 </div>

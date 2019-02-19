@@ -255,6 +255,29 @@ public class WechatRecordClassActivity {
 		return "wechat_attendClass";
 	}
 
+	/**
+	 * 查询学员记录列表，根据班级id和上课时间查询
+	 * @param classId
+	 * @param model
+	 * @param pageable
+	 * @return
+	 */
+	@RequestMapping("/accordingStudentRecord")
+	public String accordingStudentRecord(@RequestParam(required = false) String classId,
+							@RequestParam(required = false) String recordTime, ModelMap model, Pageable pageable) throws ParseException {
+		Map<String,Object> searhMap = new HashMap<>();
+		/*if(null!=classId){
+			searhMap.put("LIKE_classId",classId);
+		}*/
+		XbClass classes = studentService.getXbClass(classId);
+		searhMap.put("EQ_attendId",classId);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		searhMap.put("EQ_recordTime",sdf.parse(recordTime));
+		Page<XbRecordClass> classPage = studentService.getRecordClassPage(pageable,searhMap);
+		model.addAttribute("classPage",classPage);
+		model.addAttribute("classes",classes);
+		return "wechat_accordingStudent_record";
+	}
 	@PostMapping("/save/recordClass")
 	public void recordClass(@RequestBody List<XbRecordClass> xbRecordClassList, HttpServletResponse resp, Pageable pageable) {
 		try {
@@ -287,10 +310,10 @@ public class WechatRecordClassActivity {
 				String id = xbStudentRelations.getContent().get(0).id;
 				XbStudentRelation xbStudentRelation = studentService.getXbStudentRelation(id);
 						//Integer periodNum = xbStudentRelation.periodNum;
-				BigDecimal bigDecimal = xbStudentRelation.periodNum;
-				BigDecimal receivable = xbStudentRelation.receivable;
+				BigDecimal bigDecimal = xbStudentRelation.periodNum;//剩余课时
+				BigDecimal receivable = xbStudentRelation.receivable;//剩余学费
 				//BigDecimal bigDecimal = new BigDecimal(periodNum.toString());
-				money = deductPeriod.multiply(money);
+				money = deductPeriod.multiply(money);//课时*单课时金额=总扣除金额
 				receivable = receivable.subtract(money);
 				bigDecimal = bigDecimal.subtract(deductPeriod);
 				//xbStudentRelation.periodNum = Integer.parseInt(bigDecimal.toString());

@@ -18,13 +18,8 @@
   </head>
 <body>
 <div class="add">
-    <p>记上课</p>
+    <p>学员上课记录</p>
 </div>
-<!--<div class="search">
-    <input type="text" placeholder="搜索学员">
-    <span class="glyphicon glyphicon-search"></span>
-    <button class="btn">搜索</button>
-</div>-->
 <div>
     <div class="class-content">
         <h2 th:text="${classes.sysOrgans.organName}+' '+${classes.className}+' '+${classes.xbCourse.courseName}"><img src="img/ban.png">校区+班级+课程</h2>
@@ -34,12 +29,12 @@
             <input type="hidden" id="courseId" name="courseId" th:value="${classes.xbCourse.id}" />
             <input type="hidden" id="attendId" name="attendId" th:value="${classes.id}" />
             <ul>
-                <li>
+                <!--<li>
                     <span>上课日期</span>
                     <p>
                         <input type="text" id="demo" th:value="${#dates.format(new java.util.Date().getTime(), 'yyyy-MM-dd HH:mm:ss')}"/>
                     </p>
-                </li>
+                </li>-->
                 <li>
                     <span>上课教师</span>
                     <p th:text="${classes.teacher.employeeName}"></p>
@@ -48,18 +43,6 @@
                     <span>教师课时</span>
                     <p th:text="${classes.teacherNum}"></p>
                 </li>
-
-                <!--<li>
-                    <span>上课状态(批量)</span>
-                    <p>
-                        <select style="color:#555;">
-                            <option value="0">上课</option>
-                            <option value="1">请假</option>
-                            <option value="2">旷课</option>
-                            <option value="3">补课</option>
-                        </select>
-                    </p>
-                </li>-->
             </ul>
         </div>
     </div>
@@ -69,24 +52,24 @@
         <div class="per-list">
             <div class="per-top">
                 <p class="name" th:text="${stu.xbStudent.studentName}"><img src="../static/pages/wechat_img/per.png">姓名</p>
-                <i th:text="'剩余'+${stu.periodNum}+'课时'"></i>
+                <i th:text="${stu.recordTime}"></i>
             </div>
             <div class="per-bot">
                 <ul>
                     <li style="border-right:1px solid #e9edf3; padding-right:10px;">
                         <span>扣除课时</span>
-                        <p><input type="text" value="1" name="deductPeriod"
-                                  style="width: 37px;padding:1px;text-align: center;">
+                        <p><input type="text" th:value="${stu.deductPeriod}" name="deductPeriod"
+                                  style="width: 37px;padding:1px;text-align: center;" readonly="readonly">
                         </p>
                     </li>
                     <li style="padding-left:10px;">
                         <span>上课状态</span>
                         <p>
-                            <select id="state" name="state" style="color:#555;">
-                                <option value="0">上课</option>
-                                <option value="1">请假</option>
-                                <option value="2">旷课</option>
-                                <option value="3">补课</option>
+                            <select id="state" name="state" style="color:#555;" readonly="readonly">
+                                <option th:if="${stu.state} eq '0'">上课</option>
+                                <option th:if="${stu.state} eq '1'">请假</option>
+                                <option th:if="${stu.state} eq '2'">旷课</option>
+                                <option th:if="${stu.state} eq '3'">补课</option>
                             </select>
                         </p>
                     </li>
@@ -99,9 +82,9 @@
 <div class="back">
     <a onclick="javascript:history.go(-1)"><span class="glyphicon glyphicon-arrow-left"></span>返回上一级</a>
 </div>
-<div class="foot-btn">
+<!--<div class="foot-btn">
     <button class="btn" style="width: 100%;cursor: pointer;" onclick="saveRecordClass()">保存</button>
-</div>
+</div>-->
 <script type="text/javascript" src="../static/pages/wechat_js/jHsDate.js"></script>
 
 <script type="text/javascript" th:inline="javascript">
