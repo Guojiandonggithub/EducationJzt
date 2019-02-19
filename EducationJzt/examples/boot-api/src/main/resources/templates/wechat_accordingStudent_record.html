@@ -49,6 +49,7 @@
 <form id="classForm">
     <div class="personnel" th:each="stu,stuindex:${classPage.getContent()}">
         <input type="hidden" name="studentId" th:value="${stu.xbStudent.id}" />
+        <input type="hidden" name="studentRelationId" th:value="${stu.studentRelationId}" />
         <div class="per-list">
             <div class="per-top">
                 <p class="name" th:text="${stu.xbStudent.studentName}"><img src="../static/pages/wechat_img/per.png">姓名</p>
@@ -59,17 +60,18 @@
                     <li style="border-right:1px solid #e9edf3; padding-right:10px;">
                         <span>扣除课时</span>
                         <p><input type="text" th:value="${stu.deductPeriod}" name="deductPeriod"
-                                  style="width: 37px;padding:1px;text-align: center;" readonly="readonly">
+                                  style="width: 37px;padding:1px;text-align: center;" >
+                            <input type="hidden" name="id" th:value="${stu.id}">
                         </p>
                     </li>
                     <li style="padding-left:10px;">
                         <span>上课状态</span>
                         <p>
-                            <select id="state" name="state" style="color:#555;" readonly="readonly">
-                                <option th:if="${stu.state} eq '0'">上课</option>
-                                <option th:if="${stu.state} eq '1'">请假</option>
-                                <option th:if="${stu.state} eq '2'">旷课</option>
-                                <option th:if="${stu.state} eq '3'">补课</option>
+                            <select id="state" name="state" style="color:#555;" >
+                                <option th:selected="${stu.state == '0'}" th:value="0">上课</option>
+                                <option th:selected="${stu.state == '1'}" th:value="1">请假</option>
+                                <option th:selected="${stu.state == '2'}" th:value="2">旷课</option>
+                                <option th:selected="${stu.state == '3'}" th:value="3">补课</option>
                             </select>
                         </p>
                     </li>
@@ -81,6 +83,9 @@
 </div>
 <div class="back">
     <a onclick="javascript:history.go(-1)"><span class="glyphicon glyphicon-arrow-left"></span>返回上一级</a>
+</div>
+<div class="foot-btn">
+    <button class="btn" style="width: 100%;cursor: pointer;" onclick="saveRecordClass()">保存修改</button>
 </div>
 <!--<div class="foot-btn">
     <button class="btn" style="width: 100%;cursor: pointer;" onclick="saveRecordClass()">保存</button>
@@ -105,8 +110,10 @@
             var list = [];
             var aa = {
                 studentId: "",
+                studentRelationId: "",
                 state: "",
                 deductPeriod: "",
+                id: "",
                 teacherLeave: "",
                 recordTimeTemp: "",
                 classId: "",
@@ -116,8 +123,10 @@
             };
             if (data.studentId.length == 32) {
                 aa.studentId = data.studentId;
+                aa.studentRelationId = data.studentRelationId;
                 aa.state = $('#state option:selected').val();
                 aa.deductPeriod = data.deductPeriod;
+                aa.id = data.id;
                 aa.teacherLeave = "";
                 aa.recordTimeTemp = $("#demo").val();
                 aa.classId = classId;
@@ -129,8 +138,10 @@
                 for (var i = 0; i < data.studentId.length; i++) {
                     aa = {};
                     aa.studentId = data.studentId[i];
+                    aa.studentRelationId = data.studentRelationId[i];
                     aa.state = data.state[i];
                     aa.deductPeriod = data.deductPeriod[i];
+                    aa.id = data.id[i];
                     aa.teacherLeave = "";
                     aa.recordTimeTemp = $("#demo").val();
                     aa.classId = classId;
@@ -145,7 +156,7 @@
             $.ajax({
                 type: 'post',
                 dataType: 'json',
-                url: basePath + '/recordClassWechat/save/recordClass',
+                url: basePath + '/recordClass/update/recordClass',
                 data: JSON.stringify(list),
                 contentType: "application/json;charset=UTF-8",
                 cache: false,
@@ -155,12 +166,12 @@
                     var status = data.status;
                     var msg = data.msg;
                     if(status=='1'){
-                        $.kd.kdAlert("记上课成功",function(){
+                        $.kd.kdAlert("修改上课记录成功",function(){
                             load.start();
                             window.location.href = basePath + '/recordClassWechat/getRecordClassRecordListByClass';
                         });
                     }else{
-                        $.kd.kdMsg("记上课失败");
+                        $.kd.kdMsg("修改上课记录失败");
                     }
                 }
             });

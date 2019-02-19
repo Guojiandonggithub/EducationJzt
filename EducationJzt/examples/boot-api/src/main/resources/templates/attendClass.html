@@ -172,7 +172,9 @@
                                                 <!--<td>2018-05-20</td>-->
                                                 <td th:text="${cls.sysOrgans.organName}">昆区分校</td>
                                                 <td th:text="${cls.xbClassroom.classroomName}">昆5号教室</td>
-                                                <td><a th:if="${cls.isEnd!=0}" th:href="@{'/recordClass/classEdit?classesId='+${cls.id}}"><img src="../static/pages/img/jsk.jpg">记上课</a></td>
+                                                <td><a th:if="${cls.isEnd!=0}" th:href="@{'/recordClass/classEdit?classesId='+${cls.id}}">
+                                                    <img src="../static/pages/img/jsk.jpg">记上课</a>
+                                                </td>
                                             </tr>
                                         </table>
                                         <div class="orderPage">

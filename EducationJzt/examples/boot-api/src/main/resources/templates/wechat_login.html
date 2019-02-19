@@ -5,13 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
     <title></title>
+    <link rel="stylesheet" href="../static/pages/wechat_css/bootstrap.min.css">
     <link rel="stylesheet" href="../static/pages/css/login.css" id="main-ace-style" />
+    <link rel="stylesheet" href="../static/pages/wechat_css/index.css">
     <script src="../static/pages/js/jquery.min.js"></script>
 </head>
 <body>
-    <div class="login">
+<div class="content" style="padding: 0px;">
+    <div class="">
         <img src="../static/pages/img/login.png" class="loginbg"/>
-        <div class="txt"><h2>东方金子塔儿童潜能培训学校</h2></div>
+        <div class="txt"><h2 style="top: 11%;position: absolute;color: #fff;text-align: center;letter-spacing: 1px;
+            right: 12%;font-size: 25px;">东方金子塔儿童潜能培训学校</h2></div>
         <div class="loginBox">
             <input type="text" id="userName" th:name="userName" placeholder="用户名"/>
             <input type="password" id="password" th:name="passowrd" placeholder="输入密码"/>
@@ -20,7 +24,7 @@
             <a href="">忘记密码</a>
         </div>
     </div>
-
+</div>
     <script type="text/javascript" th:inline="javascript">
         /*<![CDATA[*/
 
@@ -53,8 +57,8 @@
         border: 6px solid #d5dafc;
         background: #fff;
         position: absolute;
-        top: 90%;
-        right: 20%;
+        top: 40%;
+        right: 17%;
         padding: 20px;
     }
     .login .txt {

@@ -66,6 +66,7 @@
 <form id="classForm">
     <div class="personnel" th:each="stu,stuindex:${classPage.getContent()}">
         <input type="hidden" name="studentId" th:value="${stu.xbStudent.id}" />
+        <input type="hidden" name="studentRelationId" th:value="${stu.id}" />
         <div class="per-list">
             <div class="per-top">
                 <p class="name" th:text="${stu.xbStudent.studentName}"><img src="../static/pages/wechat_img/per.png">姓名</p>
@@ -122,6 +123,7 @@
             var list = [];
             var aa = {
                 studentId: "",
+                studentRelationId: "",
                 state: "",
                 deductPeriod: "",
                 teacherLeave: "",
@@ -133,6 +135,7 @@
             };
             if (data.studentId.length == 32) {
                 aa.studentId = data.studentId;
+                aa.studentRelationId = data.studentRelationId;
                 aa.state = $('#state option:selected').val();
                 aa.deductPeriod = data.deductPeriod;
                 aa.teacherLeave = "";
@@ -146,6 +149,7 @@
                 for (var i = 0; i < data.studentId.length; i++) {
                     aa = {};
                     aa.studentId = data.studentId[i];
+                    aa.studentRelationId = data.studentRelationId[i];
                     aa.state = data.state[i];
                     aa.deductPeriod = data.deductPeriod[i];
                     aa.teacherLeave = "";

@@ -23,6 +23,7 @@ import org.springside.examples.bootapi.service.XbStudentService;
 import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
@@ -330,7 +331,31 @@ public class WechatRecordClassActivity {
 			logger.info(e.toString());
 		}
 	}
-
+	/*
+	 * 跳转到修改记上课
+	 * @return
+	 */
+	@RequestMapping("/recordClassUpdate")
+	public String clasrecordClassUpdatesEdit(@RequestParam(required = false) String classesId,@RequestParam(required = false) String recordTime, ModelMap model, Pageable pageable){
+		try {
+			Map<String, Object> searchParams = new HashMap<>();
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			searchParams.put("EQ_attendId",classesId);
+			searchParams.put("EQ_recordTime",sdf.parse(recordTime));
+			Page<XbRecordClass> xbRecordClassPage = studentService.getRecordClassPage(pageable,searchParams);
+			List<XbRecordClass> xbRecordClassList = xbRecordClassPage.getContent();
+			XbClass classes = studentService.getXbClass(classesId);
+			//List<XbStudentRelationViewNew> classPage = studentService.getXbRelationList(searhMap);
+			model.addAttribute("classPage",xbRecordClassList);
+			model.addAttribute("classSize",xbRecordClassList.size());
+			model.addAttribute("classes",classes);
+			model.addAttribute("recordTime",recordTime);
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.info(e.toString());
+		}
+		return "recordClassEdit";
+	}
 	/*
 	 * 查询上课记录按班级
 	 * @return

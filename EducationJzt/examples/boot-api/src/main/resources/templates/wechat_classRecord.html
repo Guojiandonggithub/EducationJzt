@@ -23,17 +23,62 @@
             <p class="date" th:text="${#dates.format(cla.recordTime, 'yyyy-MM-dd')}">上课时间</p>
             <p th:text="${cla.organName}+${cla.courseTypeNname}+${cla.employeeName}+${cla.className}">班级</p>
             <p ><i>上</i><span th:text="${cla.sknum}?${cla.sknum}:'0.0'"></span></p>
-            <p ><i>假</i><span th:text="${cla.qjnum}?${cla.qjnum}:'0.0'"></span></p>
+            <!--<p ><i>假</i><span th:text="${cla.qjnum}?${cla.qjnum}:'0.0'"></span></p>-->
             <!--<p><i>旷</i>0</p>
             <p><i>补</i>0</p>-->
-            <a th:href="@{'/recordClassWechat/accordingStudentRecord?classId='+${cla.classId}+'&recordTime='+${cla.recordTime}}"><Span class="glyphicon glyphicon-menu-right"></Span></a>
+            <p ><a th:href="@{'/recordClassWechat/accordingStudentRecord?classId='+${cla.classId}+'&recordTime='+${cla.recordTime}}"
+            style="border: solid 1px;width: 77px;color: #fafbfd;background: #2f90f3;height: 26px;font-weight: 100;
+            margin-bottom: 2px;font-size: 15px;">修改</a></p>
+            <p ><a th:onclick="|deleteRecord('${cla.classId}','${#dates.format(cla.recordTime, 'yyyy-MM-dd HH:mm:ss')}')|"
+                   style="border: solid 1px;width: 77px;color: #fafbfd;background: #de0e0e;height: 26px;font-weight: 100;
+            margin-bottom: 2px;font-size: 15px;cursor: pointer;"
+            >删除</a></p>
         </li>
     </ul>
 </div>
 <div class="back">
     <a th:href="@{'/wechatLogin/toindex'}"><span class="glyphicon glyphicon-arrow-left"></span>返回课程表</a>
 </div>
+<script type="text/javascript" th:inline="javascript">
+    var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/ ;
 
+    function deleteRecord(classId,recordTime){
+        $.kd.kdConfirm("确定要删除该上课记录?",function(){
+            var load = new Loading();
+            load.init({
+                target: "body"
+            });
+            load.start();
+            $.ajax({
+                url: basePath + '/recordClass/delete/recrodClass',
+                type: 'get',
+                dataType: 'json',
+                contentType: 'application/json',
+                data: {classId:classId,recordTime:recordTime},
+                async: true,
+                success: function(data) {
+                    load.stop();
+                    var status = data.status;
+                    var msg = data.msg;
+                    if(status=='1'){
+                        $.kd.kdAlert("删除上课记录成功",function(){
+                            load.start();
+                            window.location.href = basePath + '/recordClassWechat/getRecordClassRecordListByClass';
+                        });
+                    }else{
+                        $.kd.kdMsg("删除上课记录失败");
+                    }
+                    /*$.kd.kdAlert("删除成功！",function () {
+                        getRecordClassListByClass("");
+                    });*/
+                },
+                error:function(){
+                    console.log("回调失败")
+                }
+            });
+        })
+    }
+</script>
 </body>
 </html>
 
