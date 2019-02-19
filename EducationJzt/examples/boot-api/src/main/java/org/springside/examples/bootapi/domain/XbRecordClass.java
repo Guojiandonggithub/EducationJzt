@@ -44,6 +44,12 @@ public class XbRecordClass {
     public String teacherLeave;
     public String studentPhoto;
     public String studentRelationId;
+
+    @OneToOne()
+    @JoinColumn(name="studentRelationId",referencedColumnName = "id",insertable = false,updatable = false)
+    public XbStudentRelation xbStudentRelation;
+
+    public String deleteStatus;
     public Date recordTime;
     @Transient
     public String recordTimeTemp;

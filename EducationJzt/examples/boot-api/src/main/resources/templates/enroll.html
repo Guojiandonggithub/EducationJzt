@@ -224,9 +224,12 @@
         当前的经办校区为<strong id="organName" th:text="${organName}"></strong>，请先确认经办校区后再填写支付信息！
     </div>
     <div class="income">
-        <p class="incomeAll"><img src="../static/pages/img/money.png">应收总计</p>
-        <p class="incomeNum"><b id="tuitionFee" th:text="${money}" th:value="${money}"></b>元</p>
-    </div>
+    <p class="incomeAll"><img src="../static/pages/img/money.png">应收总计</p>
+    <p class="incomeNum">
+        <input type="text" name="surplusMoney" id="surplusMoney"  th:value="${money}">
+        元
+    </p>
+</div>
     <div class="income actual">
         <p class="incomeAll"><img src="../static/pages/img/money.png">实收</p>
         <!-- <p class="incomeNum"><b></b>元</p>-->
@@ -237,7 +240,6 @@
         </select>
         <div>
             <input type="text" name="paymentMoney"  id="paymentMoney">
-            <input type="hidden" name="surplusMoney"  id="surplusMoney" th:value="${money}">
             <input type="hidden" name="totalPeriodNum" id="periodNum" th:value="${periodNum}"/>
             <span>元</span>
         </div>
@@ -273,10 +275,10 @@
         <input type="text" th:value="${sysEmployee.employeeName}" name="handlePerson" disabled="disabled">
     </div>
     <div class="form-group" style="margin-right:0 !important;">
-        <label class="col-sm-1">销售员</label>
+        <label class="col-sm-1">运营助理</label>
         <!--<input type="text" placeholder="" name="">-->
-        <select name="salesPerson" id="salesPerson">
-            <option th:each="emp:${employeeList}"  th:value="${emp.employeeName}" th:text="${emp.employeeName}"></option>
+        <select id="salesPerson" name="operationAssistant">
+            <option th:each="emp:${employeeList}" th:value="${emp.employeeName}" th:text="${emp.employeeName}"></option>
         </select>
     </div>
 </div>

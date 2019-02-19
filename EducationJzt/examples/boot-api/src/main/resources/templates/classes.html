@@ -145,8 +145,15 @@
                                             <td th:text="${xbclass.teacher.employeeName}"></td>
                                             <td th:text="${xbclass.xbCourse.courseName}"></td>
                                             <td th:text="${xbclass.sysOrgans.organName}"></td>
-                                            <td th:text="${#dates.format(xbclass.classBeginDate, 'yyyy-MM-dd')}"></td>
-                                            <td th:text="${#dates.format(xbclass.classEndDate, 'yyyy-MM-dd')}"></td>
+                                            <td th:text="${xbclass?.classBeginDate}">
+                                            <!--<th:block th:if="${xbClass?.classBeginDate==null}"  th:text="${xbClass?.classBeginDate}"></th:block>
+                                            <th:block th:if="${xbClass?.classBeginDate!=null}" th:value="${#dates.format(xbClass?.classBeginDate, 'yyyy-MM-dd')}"></th:block>-->
+                                            </td>
+                                            <td th:text="${xbclass?.classEndDate}">
+                                               <!-- <th:block th:if="${xbClass?.classEndDate==null}"  th:text="${xbClass?.classEndDate}"></th:block>
+                                                <th:block th:if="${xbClass?.classEndDate!=null}" th:value="${#dates.format(xbClass?.classEndDate, 'yyyy-MM-dd')}"></th:block>
+-->
+                                            </td>
                                             <td th:utext="${xbclass.sktime}"></td>
                                             <td th:if="${xbclass.recruitState=='0'}">
                                                 <!--<td class="classTime">

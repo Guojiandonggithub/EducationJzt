@@ -35,7 +35,7 @@
             <div class="main-content">
                 <div class="breadcrumbs" id="breadcrumbs">
                     <img src="../static/pages/img/line1.png">
-                    <span>转班</span>
+                    <span>退费</span>
                     <img src="../static/pages/img/line.png">
                 </div>
                 <div class="enrollCon" id="changeClassId">
@@ -67,7 +67,7 @@
                                 <div class="form-group">
                                     <label>实际结余:</label>
                                     <span th:text="${balanceamount}"></span>
-                                    <input type="hidden" name="balanceamount" th:value="${balanceamount}"/>
+                                    <input type="hidden" name="balanceamount" id="balanceamount" th:value="${balanceamount}"/>
                                 </div>
                             </div>
                             <div class="">
@@ -79,6 +79,10 @@
                                 <div class="form-group">
                                     <label>欠费:</label>
                                     <span th:text="${xbStudent.paymentMoney}"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label for="">退费金额</label>
+                                    <input type="text" name="shengyu" id="shengyu" value="0.00">
                                 </div>
                             </div>
                         </div>
@@ -126,9 +130,9 @@
                             <input type="text" th:value="${sysEmployee.employeeName}" name="handlePerson" disabled="disabled">
                         </div>
                         <div class="form-group" style="margin-right:0 !important;">
-                            <label class="col-sm-1">销售员</label>
-                            <select name="salesPerson" id="salesPerson">
-                                <option th:each="emp:${employeeList}"  th:value="${emp.employeeName}" th:text="${emp.employeeName}"></option>
+                            <label class="col-sm-1">运营助理</label>
+                            <select name="operationAssistant" id="salesPerson">
+                                <option th:each="emp:${employeeList}" th:value="${emp.employeeName}" th:text="${emp.employeeName}"></option>
                             </select>
                         </div>
                     </div>
@@ -458,25 +462,35 @@
 
         function cancelClass(){
             var classId = $('#classId').val();
+            var shengyu = $('#shengyu').val();
+            var balanceamount = $('#balanceamount').val();
             if (classId) {
-                var data= serializeObject("#changeForm");
-                console.log(data);
-                $.ajax({
-                    type: 'get',
-                    dataType: 'json',
-                    url: basePath + '/feeRelated/cancelClassSave',
-                    data: {studentEntity:JSON.stringify(data)},
-                    contentType:"application/json;charset=UTF-8",
-                    cache: false,
-                    async: true,
-                    success: function (data) {
-                        var status = data.status;
-                        var msg = data.msg;
-                        $.kd.kdAlert("转班成功！",function () {
-                            window.location.href = basePath + '/student/getManagementList';
+                if(Number(shengyu)<=balanceamount){
+                    if(Number(shengyu)<0){
+                        $.kd.kdAlert("退费金额必须大于0！");
+                    }else{
+                        var data= serializeObject("#changeForm");
+                        console.log(data);
+                        $.ajax({
+                            type: 'get',
+                            dataType: 'json',
+                            url: basePath + '/feeRelated/cancelClassSave',
+                            data: {studentEntity:JSON.stringify(data)},
+                            contentType:"application/json;charset=UTF-8",
+                            cache: false,
+                            async: true,
+                            success: function (data) {
+                                var status = data.status;
+                                var msg = data.msg;
+                                $.kd.kdAlert("退费成功！",function () {
+                                    window.location.href = basePath + '/student/getManagementList';
+                                });
+                            }
                         });
                     }
-                });
+                }else{
+                    $.kd.kdAlert("退费金额不能大于实际结余！");
+                }
             }else{
                 $.kd.kdAlert("课程不能为空！");
             }

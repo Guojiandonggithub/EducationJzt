@@ -65,7 +65,7 @@ public class ExcelActivity {
 			if(classPage.getContent().size()>0){
 				BigDecimal totalPeriodNum = classPage.getContent().get(0).totalPeriodNum;
 				BigDecimal totalReceivable = classPage.getContent().get(0).totalReceivable;
-				BigDecimal receivable = totalReceivable.divide(totalPeriodNum,4,RoundingMode.HALF_UP).multiply(xbRecordClassViewList.get(i).periodnum);
+				BigDecimal receivable = totalReceivable.divide(totalPeriodNum,2,RoundingMode.HALF_UP).multiply(xbRecordClassViewList.get(i).periodnum);
 				xbRecordClassViewList1.add(receivable);
 			}else{
 				xbRecordClassViewList1.add("");

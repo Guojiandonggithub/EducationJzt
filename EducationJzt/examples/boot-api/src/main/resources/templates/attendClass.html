@@ -356,12 +356,11 @@
                                                         <th>学员课时</th>
                                                         <th>课时金额</th>
                                                         <th>
-                                                            <span href="#modal-table" data-toggle="modal" class="glyphicon glyphicon-option-vertical"
-                                                                aria-hidden="true"></span>
+                                                            操作
                                                         </th>
                                                     </tr>
                                                     <tr th:each="cla:${recordLists.content}">
-                                                        <td th:text="${cla.recordTime}">上课时间</td>
+                                                        <td th:text="${#dates.format(cla.recordTime, 'yyyy-MM-dd HH:mm:ss')}">上课时间</td>
                                                         <td th:text="${cla.organName}+${cla.courseTypeNname}+${cla.employeeName}+${cla.className}">
                                                             <img src="../static/pages/img/ban.png">班级/一对一
                                                         </td>
@@ -374,24 +373,25 @@
                                                         <td th:text="${cla.kknum}?${cla.kknum}:'0.0'">旷课</td>
                                                         <td th:text="${cla.bknum}?${cla.bknum}:'0.0'">补课</td>
                                                         <td th:text="${cla.periodnum}">学员课时</td>
-                                                        <td th:text="${cla.totalReceivable}">学员课时</td>
-                                                        <!--<td>
-                                                            <div class="btn-group open">
-                                                                <p data-toggle="dropdown" class="down" aria-expanded="true">
-                                                                    操作
-                                                                    <span class="ace-icon fa fa-caret-down icon-on-right" style="float: right;margin: 3px 0 0 3px;"></span>
-                                                                </p>
-                                                                <ul class="dropdown-menu dropdown-default" style="display:none;">
-                                                                    <li>
-                                                                        <a href="classEdit.html">编辑</a>
-                                                                    </li>
-                                                                    <li>
-                                                                        <a href="#">删除班级</a>
-                                                                    </li>
-                                                                </ul>
+                                                        <td th:text="${cla.totalReceivable}">课时金额</td>
+                                                        <td class="classDel" >
+                                                            <div class="btn-group open" >
+                                                                <!--<a  class="down" href="#modal-table"  data-toggle="modal"-->
+                                                                <a  class="down"
+                                                                    th:href="@{/recordClass/recordClassUpdate(classesId=${cla.classId},recordTime=${#dates.format(cla.recordTime, 'yyyy-MM-dd HH:mm:ss')})}"
+                                                                    style="border: solid 1px;border-radius: 10px;width: 77px;color: #f0f1f3;
+                                               background: #2f90f3;height: 26px;font-weight: 900;margin-bottom: 2px;">
+                                                                    修改
+                                                                </a>
+                                                                <a  class="down"
+                                                                    th:onclick="|deleteRecord('${cla.classId}','${#dates.format(cla.recordTime, 'yyyy-MM-dd HH:mm:ss')}')|"
+                                                                    style="border: solid 1px;border-radius: 10px;width: 77px;color: #f0f1f3;
+                                               background: #8d05e0;height: 26px;font-weight: 900;margin-bottom: 2px;">
+                                                                    删除
+                                                                </a>
                                                             </div>
-                                                        </td>-->
-                                                        <td></td>
+
+                                                        </td>
                                                     </tr>
                                                 </table>
                                                 <div class="orderPage">
@@ -513,6 +513,9 @@
                                     <div class="control-group">
                                         <label class="control-label">教师姓名</label>
                                         <input id="TeacherName" name="TeacherName" type="text" th:value="${TeacherName}" class="ace"
+                                               style="padding: 3px;border-radius: 5px !important;margin-top: 13px;width: 82px;color: #3c546c">
+                                        <label class="control-label">学员姓名</label>
+                                        <input id="studentName" name="studentName" type="text" th:value="${studentName}" class="ace"
                                                style="padding: 3px;border-radius: 5px !important;margin-top: 13px;width: 82px;color: #3c546c">
                                         <div class="form-group" style="display: inline;">
                                             <button type="button" th:onclick="'javascript:getaccordingListPage(\'\')'">搜索</button>
@@ -1010,6 +1013,35 @@
             });
             return o;
         };
+
+        function deleteRecord(classId,recordTime){
+            $.kd.kdConfirm("确定要删除该上课记录?",function(){
+                var load = new Loading();
+                load.init({
+                    target: "#main-container"
+                });
+                load.start();
+                $.ajax({
+                    url: basePath + '/recordClass/delete/recrodClass',
+                    type: 'get',
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    data: {classId:classId,recordTime:recordTime},
+                    async: true,
+                    success: function(data) {
+                        load.stop();
+                        var status = data.status;
+                        var msg = data.msg;
+                        $.kd.kdAlert("删除成功！",function () {
+                            getRecordClassListByClass("");
+                        });
+                    },
+                    error:function(){
+                        console.log("回调失败")
+                    }
+                });
+            })
+        }
     </script>
 <style>
     a{cursor:pointer}

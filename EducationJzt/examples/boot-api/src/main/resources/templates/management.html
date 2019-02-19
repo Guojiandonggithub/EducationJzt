@@ -110,9 +110,10 @@
                         <th>交易内容</th>
                         <th>应收</th>
                         <th>实收</th>
+                        <th>报名费</th>
                         <th>学员账户</th>
                         <th>欠费</th>
-                        <th>销售员</th>
+                        <th>运营助理</th>
                         <th>经办人</th>
                         <th>经办校区</th>
                         <th>日期</th>
@@ -132,28 +133,22 @@
                         <td th:text="${ment.remarks}" class="orderTxt"></td>
                         <td th:text="${ment.surplusMoney}"></td>
                         <td th:text="${ment.paymentMoney}"></td>
+                        <td th:text="${ment.registratioFee}"></td>
                         <td th:text="${ment.xbStudent.surplusMoney}"></td>
                         <td th:text="${ment.xbStudent.paymentMoney}"></td>
-                        <td th:text="${ment.xbStudent.salesPerson}"></td>
+                        <td th:text="${ment.operationAssistant}"></td>
                         <td th:text="${ment.handlePerson}"></td>
                         <td th:text="${ment.xbStudent.sysOrgans.organName}"></td>
                         <td th:text="${#dates.format(ment.paymentDate, 'yyyy-MM-dd')}"></td>
                         <td><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></td>
                         <td>
-                            <div class="btn-group">
-                                <p data-toggle="dropdown" class="down">
-                                    操作
-                                    <span class="ace-icon fa fa-caret-down icon-on-right"></span>
-                                </p>
-                                <ul class="dropdown-menu dropdown-default">
-                                    <!--<li>
-                                        <a href="#">确认到款</a>
-                                    </li>
--->
-                                    <li>
-                                        <a href=#">编辑</a>
-                                    </li>
-                                </ul>
+                            <div class="btn-group open" >
+                                <a  class="down"
+                                    th:onclick="|editManage('${ment.registratioFee}','${ment.surplusMoney}','${ment.paymentMoney}')|"
+                                    style="border: solid 1px;border-radius: 10px;width: 77px;color: #f0f1f3;
+                                               background: #8d05e0;height: 26px;font-weight: 900;margin-bottom: 2px;">
+                                    编辑
+                                </a>
                             </div>
                         </td>
                       </tr>
@@ -251,6 +246,20 @@ $(".tag .close").click(function(){
     var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/ ;
 
     function getFeeListPage(page) {
+        var userName = $("#userName").val();
+        var load = new Loading();
+        load.init({
+            target: "#main-content"
+        });
+        load.start();
+        var size = $('#size option:selected').val(); //选中的值
+        /*if (page) {
+            page = page - 1;
+        }*/
+        window.location.href = basePath + '/student/getManagementList?page=' + page + '&size=' + size+ '&userName=' + userName;
+    }
+
+    function editManage(registratioFee,surplusMoney,paymentMoney){
         var userName = $("#userName").val();
         var load = new Loading();
         load.init({

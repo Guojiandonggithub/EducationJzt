@@ -33,6 +33,8 @@ public class XbSupplementFee {
     public String remarks;
     public String orderNumber;
     public String type;
+    public String operationAssistant;
+    public BigDecimal registratioFee;
 
     @Transient
     public String classId;
@@ -48,6 +50,8 @@ public class XbSupplementFee {
     public String subsidyMoney;
     @Transient
     public String shengyu;
+    @Transient
+    public String periodNum;
 
     @Transient
     public String studentRelationId;

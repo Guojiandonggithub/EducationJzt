@@ -69,11 +69,11 @@
                                 <label>剩余学费:</label>
                                 <span th:text="${receivable}"></span>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" style="display: none">
                                 <label>欠费:</label>
                                 <span th:text="${xbStudent.paymentMoney}"></span>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" style="display: none">
                                 <label>实际结余:</label>
                                 <span th:text="${balanceamount}"></span>
                                 <input type="hidden" name="balanceamount" th:value="${balanceamount}"/>
@@ -150,9 +150,9 @@
                         <input type="text" th:value="${sysEmployee.employeeName}" name="handlePerson" disabled="disabled">
                     </div>
                     <div class="form-group" style="margin-right:0 !important;">
-                        <label class="col-sm-1">销售员</label>
-                        <select name="salesPerson" id="salesPerson">
-                            <option th:each="emp:${employeeList}"  th:value="${emp.employeeName}" th:text="${emp.employeeName}"></option>
+                        <label class="col-sm-1">运营助理</label>
+                        <select name="operationAssistant" id="salesPerson" >
+                            <option th:each="emp:${employeeList}" th:value="${emp.employeeName}" th:text="${emp.employeeName}"></option>
                         </select>
                     </div>
                 </div>

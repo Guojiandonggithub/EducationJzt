@@ -332,9 +332,23 @@ public class XbStudentService {
 	}
 
 	@Transactional
+	public XbRecordClass getxbRecordClass(String id) {
+		return xbRecordClassDao.findOne(id);
+	}
+
+	@Transactional
 	public XbRecordClass saveXbRecordClass(XbRecordClass xbRecordClass){
+		xbRecordClass.deleteStatus = "1";
 		return xbRecordClassDao.save(xbRecordClass);
 	}
+
+	@Transactional
+	public XbRecordClass deleteXbRecordClass(String id){
+		XbRecordClass xbRecordClass = xbRecordClassDao.findOne(id);
+		xbRecordClass.deleteStatus = "0";
+		return xbRecordClassDao.save(xbRecordClass);
+	}
+
 	@Transactional
 	public XbClassroom checkClassroomName(String classroomName){
 		return xbClassroomDao.findAllByClassroomNameAndDeleteStatus(classroomName,"1");
@@ -350,7 +364,7 @@ public class XbStudentService {
 
 	@Transactional
 	public Page<XbRecordClass>  getRecordClassPage(Pageable pageable,Map<String, Object> searchParams) {
-		//searchParams.put("EQ_deleteStatus","1");
+		searchParams.put("EQ_deleteStatus","1");
 		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
 		Specification<XbRecordClass> spec = DynamicSpecifications.bySearchFilter(
 				filters.values(), XbRecordClass.class);

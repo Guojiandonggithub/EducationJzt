@@ -234,7 +234,7 @@
                     </div>  -->
                         <div class="">
                             <label><span>*</span>管辖校区</label>
-                            <!--<p><input type="checkbox" name="organId" value="all">全部校区</p>-->
+                            <p><input type="radio" th:attr="checked=${employee.organId == '1'?true:false}" name="organId" value="1">行政教研部</p>
                             <p th:each="orgs:${organsList}"><input type="radio" th:attr="checked=${employee.organId == orgs.id?true:false}"
                                     name="organId" th:value="${orgs.id}" th:text="${orgs.organName}" /></p>
                         </div>

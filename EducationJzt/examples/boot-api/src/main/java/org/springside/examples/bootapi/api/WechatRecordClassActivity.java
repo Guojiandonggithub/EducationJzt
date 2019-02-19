@@ -1,6 +1,5 @@
 package org.springside.examples.bootapi.api;
 
-import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springside.examples.bootapi.ToolUtils.DateUtil;
 import org.springside.examples.bootapi.domain.*;
 import org.springside.examples.bootapi.service.OrgansService;
 import org.springside.examples.bootapi.service.XbCoursePresetService;
@@ -25,9 +23,7 @@ import org.springside.examples.bootapi.service.XbStudentService;
 import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -350,8 +346,8 @@ public class WechatRecordClassActivity {
 
 		List recordLists = studentService.getXbRecordClassdtoList(pageable.getOffset(),pageable.getPageSize());
 		int totalElements = studentService.findRecordTotalCount();
-		int size = pageable.getPageSize();
 		int number = pageable.getPageNumber();
+		int size = pageable.getPageSize();
 		int totalPages = totalElements/size;
 		if(totalPages==0){
 			number = 1;

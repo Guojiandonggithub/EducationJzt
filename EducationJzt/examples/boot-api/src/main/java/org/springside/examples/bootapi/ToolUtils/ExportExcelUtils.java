@@ -103,7 +103,7 @@ public class ExportExcelUtils {
         //设置粗体
         //titleFont.getBold(Short.MAX_VALUE);
         //设置字号
-        titleFont.setFontHeightInPoints((short) 14);
+        titleFont.setFontHeightInPoints((short) 11);
         //设置颜色
         titleFont.setColor(IndexedColors.BLACK.index);
         XSSFCellStyle titleStyle = wb.createCellStyle();
@@ -143,7 +143,7 @@ public class ExportExcelUtils {
         int colIndex;
         Font dataFont = wb.createFont();
         dataFont.setFontName("simsun");
-        dataFont.setFontHeightInPoints((short) 14);
+        dataFont.setFontHeightInPoints((short) 11);
         dataFont.setColor(IndexedColors.BLACK.index);
 
         XSSFCellStyle dataStyle = wb.createCellStyle();

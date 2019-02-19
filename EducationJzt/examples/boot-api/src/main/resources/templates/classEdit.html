@@ -31,281 +31,281 @@
 
 <body>
 <div th:replace="layout::top"></div>
-    <div class="main-container" id="main-container">
-        <div th:replace="layout::left('13','36')">
-        </div>
-        <div class="main-content">
-            <div class="classInfo">
-                <div class="info1">
-                    <p th:text="${classes.className}"><img src="../static/pages/img/ban.png"></p>
-                    <span>校区：</span><p th:text="${classes.sysOrgans.organName}" ></p>
-                    <span>课程：</span><p th:text="${classes.xbCourse.courseName}"><</p>
-                    <input type="hidden" id="organId" name="organId" th:value="${classes.sysOrgans.id}" />
-                    <input type="hidden" id="classId" name="classId" th:value="${classes.id}" />
-                    <input type="hidden" id="courseId" name="courseId" th:value="${classes.xbCourse.id}" />
-                    <input type="hidden" id="attendId" name="attendId" th:value="${classes.id}" />
-                </div>
-                <div class="info2">
-                    <div class="form-group">
-                        <label>上课日期</label>
-                        <input class="laydate-icon" name="recordTime" id="demo" th:value="${#dates.format(new java.util.Date().getTime(), 'yyyy-MM-dd HH:mm:ss')}">
-                    </div>
-                    <div class="form-group">
-                        <label>教师课时</label>
-                        <input type="text" disabled="disabled" th:value="${classes.teacherNum}">
-                    </div>
-                    <div class="form-group" id="donghua">
-                        <label>教师</label>
-                        <input type="text" disabled="disabled" th:value="${classes.teacher.employeeName}">
-                    </div>
-                    <!--<div class="form-group">
-                    <label>科目</label>
-                    <select name="" id="">
-                        <option value="">请选择科目</option>
-                        <option value="">111</option>
-                        <option value="">222</option>
-                    </select>
-                </div>-->
-                </div>
+<div class="main-container" id="main-container">
+    <div th:replace="layout::left('13','36')">
+    </div>
+    <div class="main-content">
+        <div class="classInfo">
+            <div class="info1">
+                <p th:text="${classes.className}"><img src="../static/pages/img/ban.png"></p>
+                <span>校区：</span><p th:text="${classes.sysOrgans.organName}" ></p>
+                <span>课程：</span><p th:text="${classes.xbCourse.courseName}"><</p>
+                <input type="hidden" id="organId" name="organId" th:value="${classes.sysOrgans.id}" />
+                <input type="hidden" id="classId" name="classId" th:value="${classes.id}" />
+                <input type="hidden" id="courseId" name="courseId" th:value="${classes.xbCourse.id}" />
+                <input type="hidden" id="attendId" name="attendId" th:value="${classes.id}" />
             </div>
-            <div class="classCon">
-                <p class="people">班级应到人数<span th:text="${classSize}"></span>人</p>
-                <!--<div class="operate">
+            <div class="info2">
                 <div class="form-group">
-                    <label>批量操作</label>
-                    <input name="form-field-radio" type="radio" name="state" value="0" class="ace"><span class="lbl">上课</span>
-                    <input name="form-field-radio" type="radio" name="state" value="1" class="ace"><span class="lbl">请假</span>
-                    <input name="form-field-radio" type="radio" name="state" value="2" class="ace"><span class="lbl">旷课</span>
-                </div>  
+                    <label>上课日期</label>
+                    <input class="laydate-icon" name="recordTime" id="demo" th:value="${#dates.format(new java.util.Date().getTime(), 'yyyy-MM-dd HH:mm:ss')}">
+                </div>
                 <div class="form-group">
-                    <label>扣除课时</label>
-                    <input type="text">
-                    <span>可填小数，如0.5</span>
-                </div>  
+                    <label>教师课时</label>
+                    <input type="text" disabled="disabled" th:value="${classes.teacherNum}">
+                </div>
+                <div class="form-group" id="donghua">
+                    <label>教师</label>
+                    <input type="text" disabled="disabled" th:value="${classes.teacher.employeeName}">
+                </div>
+                <!--<div class="form-group">
+                <label>科目</label>
+                <select name="" id="">
+                    <option value="">请选择科目</option>
+                    <option value="">111</option>
+                    <option value="">222</option>
+                </select>
             </div>-->
-                <form id="classForm">
-                    <div class="infoList alert" th:each="stu,stuindex:${classPage}">
-                        <input type="hidden" name="studentId" th:value="${stu.xbStudent.id}" />
-                        <input type="hidden" name="studentRelationId" th:value="${stu.id}" />
-                        <div class="headPic">
-                            <img src="../static/pages/img/classgirl.png">
-                            <!--<span>在读</span>-->
-                            <p th:text="${stu.xbStudent.studentName}"></p>
-                        </div>
-                        <div class="infoMid">
-                            <div class="infoForm" style="margin-bottom:22px;" >
-                                <div class="form-group" th:if="${stu.studentStart==0}">
-                                    <input type="radio" checked th:name="'state'+${stuindex.index}" value="0" class="ace"><span
-                                        class="lbl">上课</span>
-                                    <input type="radio" th:name="'state'+${stuindex.index}" value="1" class="ace"><span
-                                        class="lbl">请假</span>
-                                    <input type="radio" th:name="'state'+${stuindex.index}" value="2" class="ace"><span
-                                        class="lbl">旷课</span>
-                                    <input type="radio" th:name="'state'+${stuindex.index}" value="3" class="ace"><span
-                                        class="lbl">补课</span>
-                                    <input type="radio" th:name="'state'+${stuindex.index}" value="4" class="ace"><span
-                                        class="lbl">不记课</span>
-                                </div>
-                                <div class="form-group" th:if="${stu.studentStart==0">
-                                    <label>扣除课时</label>
-                                    <input type="text" value="1" name="deductPeriod" >
-                                </div>
-                                <p>剩余<span th:text="${stu.periodNum}"></span>课时</p>
-                                <th:block style="color:#e46054" th:if="${stu.studentStart} eq 1">（已停课）</th:block>
-                                <th:block style="color:#e46054" th:if="${stu.studentStart} eq 4">（已结课）</th:block>
-                                <th:block style="color:#e46054" th:if="${stu.studentStart} eq 3">（已退费）</th:block>
-                                <th:block style="color:#e46054" th:if="${stu.studentStart} eq 2">（已转班）</th:block>
-                            </div>
-                            <!--<div class="star">
-                            <p>
-                                <label>纪律专注</label>
-                                <span class="glyphicon glyphicon-star"></span>
-                                <span class="glyphicon glyphicon-star"></span>
-                                <span class="glyphicon glyphicon-star"></span>
-                                <span class="glyphicon glyphicon-star"></span>
-                                <span class="glyphicon glyphicon-star"></span>
-                            </p>
-                            <p>
-                                <label>活跃参与</label>
-                                <span class="glyphicon glyphicon-star"></span>
-                                <span class="glyphicon glyphicon-star"></span>
-                                <span class="glyphicon glyphicon-star"></span>
-                                <span class="glyphicon glyphicon-star"></span>
-                                <span class="glyphicon glyphicon-star"></span>
-                            </p>
-                        </div>-->
-                            <div class="msg">
-                                <label>教师留言</label>
-                                <textarea name="teacherLeave"></textarea>
-                            </div>
-                        </div>
-                        <!--<div class="upload">
-                        <p>添加图片 上传的图片不可超过10m</p>
-                        <form action="api/dropzone" class="dropzone white dz-clickable">
-                            <div class="dz-message dz-clickable" ui-jp="dropzone" ui-options="{ url: 'api/dropzone' }">
-                                <h4 class="m-t-lg m-b-md">+</h4>
-                            </div>
-                        </form>
-                    </div>-->
-                        <!--<button type="button" class="close" data-dismiss="alert">
-                            <i class="ace-icon fa fa-times"></i>
-                        </button>-->
-                    </div>
-                </form>
             </div>
-            <!--< <div class="classInfo classContent">
-            div class="form-group">
-                <label style="margin-top:20px;">上课内容</label>
-                <textarea name="" id="" cols="80" rows="2"></textarea>
-            </div> 
-            <div class="form-group">
-                <label>备注</label>
-                <textarea name="" id="" cols="80" rows="1"></textarea>
-            </div>  -->
-            <!--<div class="form-group">
-                <label style="margin-top:20px;">添加图片</label>
-                <form action="api/dropzone" class="dropzone white dz-clickable">
-                    <div class="dz-message dz-clickable" ui-jp="dropzone" ui-options="{ url: 'api/dropzone' }">
-                        <h4 class="m-t-lg m-b-md">+</h4>
-                    </div>
-                </form>
-                <p>添加图片 上传的图片不可超过10m</p>
-            </div> -->
-            <!--<div class="found" >
-                <div class="form-group">
-                    <label>创建人</label>
-                    <input type="text">
-                </div> 
-                <div class="form-group">
-                    <label>创建时间</label>
-                    <input class="laydate-icon" id="demo1">
-                </div> 
-            </div> 
-</div>-->
-            <div class="classInfo">
-                <button class="save" type="button" onclick="saveRecordClass();">保存</button>
-                <button class="save" type="button" onclick="javascript:history.go(-1)" style="margin-right:22px;">返回</button>
-            </div>
-
-
         </div>
+        <div class="classCon">
+            <p class="people">班级应到人数<span th:text="${classSize}"></span>人</p>
+            <!--<div class="operate">
+            <div class="form-group">
+                <label>批量操作</label>
+                <input name="form-field-radio" type="radio" name="state" value="0" class="ace"><span class="lbl">上课</span>
+                <input name="form-field-radio" type="radio" name="state" value="1" class="ace"><span class="lbl">请假</span>
+                <input name="form-field-radio" type="radio" name="state" value="2" class="ace"><span class="lbl">旷课</span>
+            </div>
+            <div class="form-group">
+                <label>扣除课时</label>
+                <input type="text">
+                <span>可填小数，如0.5</span>
+            </div>
+        </div>-->
+            <form id="classForm">
+                <div class="infoList alert" th:each="stu,stuindex:${classPage}">
+                    <input type="hidden" name="studentId" th:value="${stu.xbStudent.id}" />
+                    <input type="hidden" name="studentRelationId" th:value="${stu.id}" />
+                    <div class="headPic">
+                        <img src="../static/pages/img/classgirl.png">
+                        <!--<span>在读</span>-->
+                        <p th:text="${stu.xbStudent.studentName}"></p>
+                    </div>
+                    <div class="infoMid">
+                        <div class="infoForm" style="margin-bottom:22px;" >
+                            <div class="form-group" th:if="${stu.studentStart==0}">
+                                <input type="radio" checked th:name="'state'+${stuindex.index}" value="0" class="ace"><span
+                                    class="lbl">上课</span>
+                                <input type="radio" th:name="'state'+${stuindex.index}" value="1" class="ace"><span
+                                    class="lbl">请假</span>
+                                <input type="radio" th:name="'state'+${stuindex.index}" value="2" class="ace"><span
+                                    class="lbl">旷课</span>
+                                <input type="radio" th:name="'state'+${stuindex.index}" value="3" class="ace"><span
+                                    class="lbl">补课</span>
+                                <input type="radio" th:name="'state'+${stuindex.index}" value="4" class="ace"><span
+                                    class="lbl">不记课</span>
+                            </div>
+                            <div class="form-group" th:if="${stu.studentStart==0}">
+                                <label>扣除课时</label>
+                                <input type="text" value="1" name="deductPeriod" >
+                            </div>
+                            <p>剩余<span th:text="${stu.periodNum}"></span>课时</p>
+                            <th:block style="color:#e46054" th:if="${stu.studentStart} eq 1">（已停课）</th:block>
+                            <th:block style="color:#e46054" th:if="${stu.studentStart} eq 4">（已结课）</th:block>
+                            <th:block style="color:#e46054" th:if="${stu.studentStart} eq 3">（已退费）</th:block>
+                            <th:block style="color:#e46054" th:if="${stu.studentStart} eq 2">（已转班）</th:block>
+                        </div>
+                        <!--<div class="star">
+                        <p>
+                            <label>纪律专注</label>
+                            <span class="glyphicon glyphicon-star"></span>
+                            <span class="glyphicon glyphicon-star"></span>
+                            <span class="glyphicon glyphicon-star"></span>
+                            <span class="glyphicon glyphicon-star"></span>
+                            <span class="glyphicon glyphicon-star"></span>
+                        </p>
+                        <p>
+                            <label>活跃参与</label>
+                            <span class="glyphicon glyphicon-star"></span>
+                            <span class="glyphicon glyphicon-star"></span>
+                            <span class="glyphicon glyphicon-star"></span>
+                            <span class="glyphicon glyphicon-star"></span>
+                            <span class="glyphicon glyphicon-star"></span>
+                        </p>
+                    </div>-->
+                        <div class="msg">
+                            <label>教师留言</label>
+                            <textarea name="teacherLeave"></textarea>
+                        </div>
+                    </div>
+                    <!--<div class="upload">
+                    <p>添加图片 上传的图片不可超过10m</p>
+                    <form action="api/dropzone" class="dropzone white dz-clickable">
+                        <div class="dz-message dz-clickable" ui-jp="dropzone" ui-options="{ url: 'api/dropzone' }">
+                            <h4 class="m-t-lg m-b-md">+</h4>
+                        </div>
+                    </form>
+                </div>-->
+                    <!--<button type="button" class="close" data-dismiss="alert">
+                        <i class="ace-icon fa fa-times"></i>
+                    </button>-->
+                </div>
+            </form>
+        </div>
+        <!--< <div class="classInfo classContent">
+        div class="form-group">
+            <label style="margin-top:20px;">上课内容</label>
+            <textarea name="" id="" cols="80" rows="2"></textarea>
+        </div>
+        <div class="form-group">
+            <label>备注</label>
+            <textarea name="" id="" cols="80" rows="1"></textarea>
+        </div>  -->
+        <!--<div class="form-group">
+            <label style="margin-top:20px;">添加图片</label>
+            <form action="api/dropzone" class="dropzone white dz-clickable">
+                <div class="dz-message dz-clickable" ui-jp="dropzone" ui-options="{ url: 'api/dropzone' }">
+                    <h4 class="m-t-lg m-b-md">+</h4>
+                </div>
+            </form>
+            <p>添加图片 上传的图片不可超过10m</p>
+        </div> -->
+        <!--<div class="found" >
+            <div class="form-group">
+                <label>创建人</label>
+                <input type="text">
+            </div>
+            <div class="form-group">
+                <label>创建时间</label>
+                <input class="laydate-icon" id="demo1">
+            </div>
+        </div>
+</div>-->
+        <div class="classInfo">
+            <button class="save" type="button" onclick="saveRecordClass();">保存</button>
+            <button class="save" type="button" onclick="javascript:history.go(-1)" style="margin-right:22px;">返回</button>
+        </div>
+
 
     </div>
-    <script>
-        ! function () {
-            laydate.render({
-                elem: '#demo'
-                ,type: 'datetime'
-            }); //绑定元素
-        }();
-        ! function () {
-            laydate.render({
-                elem: '#demo1'
-            }); //绑定元素
-        }();
-        $(".btn-down").click(function () {
-            $(this).siblings(".dropdown-menu").toggle();
-        });
-        /*$(".tag .close").click(function () {
-            $(this).parent(".tag").hide();
-        });*/
-    </script>
-    <script type="text/javascript" th:inline="javascript">
-        var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/ ;
 
-        function saveRecordClass() {
-            var load = new Loading();
-            load.init({
-                target: "#main-container"
-            });
-            var classId = $("#classId").val();
-            var courseId = $("#courseId").val();
-            var organId = $("#organId").val();
-            var attendId = $("#attendId").val();
-            var data = serializeObject("#classForm");
-            if (data) {
-                console.log(data);
-                var list = [];
-                var aa = {
-                    studentId: "",
-                    studentRelationId: "",
-                    state: "",
-                    deductPeriod: "",
-                    teacherLeave: "",
-                    recordTimeTemp: "",
-                    classId: "",
-                    courseId: "",
-                    organId:"",
-                    attendId:""
-                };
-                if (data.studentId.length == 32) {
-                    aa.studentId = data.studentId;
-                    aa.studentRelationId = data.studentRelationId;
-                    aa.state = data.state0;
-                    aa.deductPeriod = data.deductPeriod;
-                    aa.teacherLeave = data.teacherLeave
+</div>
+<script>
+    ! function () {
+        laydate.render({
+            elem: '#demo'
+            ,type: 'datetime'
+        }); //绑定元素
+    }();
+    ! function () {
+        laydate.render({
+            elem: '#demo1'
+        }); //绑定元素
+    }();
+    $(".btn-down").click(function () {
+        $(this).siblings(".dropdown-menu").toggle();
+    });
+    /*$(".tag .close").click(function () {
+        $(this).parent(".tag").hide();
+    });*/
+</script>
+<script type="text/javascript" th:inline="javascript">
+    var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/ ;
+
+    function saveRecordClass() {
+        var load = new Loading();
+        load.init({
+            target: "#main-container"
+        });
+        var classId = $("#classId").val();
+        var courseId = $("#courseId").val();
+        var organId = $("#organId").val();
+        var attendId = $("#attendId").val();
+        var data = serializeObject("#classForm");
+        if (data) {
+            console.log(data);
+            var list = [];
+            var aa = {
+                studentId: "",
+                studentRelationId: "",
+                state: "",
+                deductPeriod: "",
+                teacherLeave: "",
+                recordTimeTemp: "",
+                classId: "",
+                courseId: "",
+                organId:"",
+                attendId:""
+            };
+            if (data.studentId.length == 32) {
+                aa.studentId = data.studentId;
+                aa.studentRelationId = data.studentRelationId;
+                aa.state = data.state0;
+                aa.deductPeriod = data.deductPeriod;
+                aa.teacherLeave = data.teacherLeave
+                aa.recordTimeTemp = $("#demo").val();
+                aa.classId = classId;
+                aa.courseId = courseId;
+                aa.organId = organId;
+                aa.attendId = attendId;
+                list.push(aa);
+            } else {
+                for (var i = 0; i < data.studentId.length; i++) {
+                    aa = {};
+                    aa.studentId = data.studentId[i];
+                    aa.studentRelationId = data.studentRelationId[i];
+                    var states = "state" + i;
+                    var val = $('input:radio[name="' + states + '"]:checked').val();
+                    aa.state = val;
+                    aa.deductPeriod = data.deductPeriod[i];
+                    aa.teacherLeave = data.teacherLeave[i];
                     aa.recordTimeTemp = $("#demo").val();
                     aa.classId = classId;
                     aa.courseId = courseId;
                     aa.organId = organId;
                     aa.attendId = attendId;
                     list.push(aa);
-                } else {
-                    for (var i = 0; i < data.studentId.length; i++) {
-                        aa = {};
-                        aa.studentId = data.studentId[i];
-                        aa.studentRelationId = data.studentRelationId[i];
-                        var states = "state" + i;
-                        var val = $('input:radio[name="' + states + '"]:checked').val();
-                        aa.state = val;
-                        aa.deductPeriod = data.deductPeriod[i];
-                        aa.teacherLeave = data.teacherLeave[i];
-                        aa.recordTimeTemp = $("#demo").val();
-                        aa.classId = classId;
-                        aa.courseId = courseId;
-                        aa.organId = organId;
-                        aa.attendId = attendId;
-                        list.push(aa);
-                    }
                 }
-                console.log(list);
-                load.start();
-                $.ajax({
-                    type: 'post',
-                    dataType: 'json',
-                    url: basePath + '/recordClass/save/recordClass',
-                    data: JSON.stringify(list),
-                    contentType: "application/json;charset=UTF-8",
-                    cache: false,
-                    async: true,
-                    success: function (data) {
-                        load.stop();
-                        var status = data.status;
-                        var msg = data.msg;
-                        $.kd.kdAlert("编辑成功！",function () {
-                            window.location.href = basePath + '/recordClass/getRecordClassList';
-                        },"提示");
-                    }
-                });
             }
-        }
-
-        function serializeObject(form) {
-            var o = {};
-            var a = $(form).serializeArray();
-            $.each(a, function () {
-                if (o[this.name]) {
-                    if (!o[this.name].push) {
-                        o[this.name] = [o[this.name]];
-                    }
-                    o[this.name].push(this.value || '');
-                } else {
-                    o[this.name] = this.value || '';
+            console.log(list);
+            load.start();
+            $.ajax({
+                type: 'post',
+                dataType: 'json',
+                url: basePath + '/recordClass/save/recordClass',
+                data: JSON.stringify(list),
+                contentType: "application/json;charset=UTF-8",
+                cache: false,
+                async: true,
+                success: function (data) {
+                    load.stop();
+                    var status = data.status;
+                    var msg = data.msg;
+                    $.kd.kdAlert("编辑成功！",function () {
+                        window.location.href = basePath + '/recordClass/getRecordClassList';
+                    },"提示");
                 }
             });
-            return o;
-        };
-    </script>
+        }
+    }
+
+    function serializeObject(form) {
+        var o = {};
+        var a = $(form).serializeArray();
+        $.each(a, function () {
+            if (o[this.name]) {
+                if (!o[this.name].push) {
+                    o[this.name] = [o[this.name]];
+                }
+                o[this.name].push(this.value || '');
+            } else {
+                o[this.name] = this.value || '';
+            }
+        });
+        return o;
+    };
+</script>
 </body>
 
 </html>

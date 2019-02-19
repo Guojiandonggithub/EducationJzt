@@ -65,10 +65,10 @@ public class FeeRelatedActivity {
 	public String changeClass(ModelMap model,Pageable pageable){
 		List<SysOrgans> sysOrgansList = organsService.getOrgansList();
 		Map<String,Object> searhMap = new HashMap<>();
-		if(sysOrgansList.size()>0){
+		/*if(sysOrgansList.size()>0){
 			searhMap.put("EQ_organId",sysOrgansList.get(0).id);
-		}
-		searhMap.put("EQ_sysRole.roleName","销售员");
+		}*/
+		searhMap.put("EQ_sysRole.roleName","运营助理");
 		Page<SysEmployee> employeePage = accountService.getAccountList(pageable,searhMap);
 		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
 		SysEmployee sysEmployee = (SysEmployee)request.getSession().getAttribute("sysEmployee");
@@ -86,10 +86,10 @@ public class FeeRelatedActivity {
 	public String subsidy(ModelMap model,Pageable pageable){
 		List<SysOrgans> sysOrgansList = organsService.getOrgansList();
 		Map<String,Object> searhMap = new HashMap<>();
-		if(sysOrgansList.size()>0){
+		/*if(sysOrgansList.size()>0){
 			searhMap.put("EQ_organId",sysOrgansList.get(0).id);
-		}
-		searhMap.put("EQ_sysRole.roleName","销售员");
+		}*/
+		searhMap.put("EQ_sysRole.roleName","运营助理");
 		Page<SysEmployee> employeePage = accountService.getAccountList(pageable,searhMap);
 		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
 		SysEmployee sysEmployee = (SysEmployee)request.getSession().getAttribute("sysEmployee");
@@ -107,10 +107,10 @@ public class FeeRelatedActivity {
 	public String stopClass(ModelMap model,Pageable pageable){
 		List<SysOrgans> sysOrgansList = organsService.getOrgansList();
 		Map<String,Object> searhMap = new HashMap<>();
-		if(sysOrgansList.size()>0){
+		/*if(sysOrgansList.size()>0){
 			searhMap.put("EQ_organId",sysOrgansList.get(0).id);
-		}
-		searhMap.put("EQ_sysRole.roleName","销售员");
+		}*/
+		searhMap.put("EQ_sysRole.roleName","运营助理");
 		Page<SysEmployee> employeePage = accountService.getAccountList(pageable,searhMap);
 		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
 		SysEmployee sysEmployee = (SysEmployee)request.getSession().getAttribute("sysEmployee");
@@ -128,10 +128,10 @@ public class FeeRelatedActivity {
 	public String repeatClass(ModelMap model,Pageable pageable){
 		List<SysOrgans> sysOrgansList = organsService.getOrgansList();
 		Map<String,Object> searhMap = new HashMap<>();
-		if(sysOrgansList.size()>0){
+		/*if(sysOrgansList.size()>0){
 			searhMap.put("EQ_organId",sysOrgansList.get(0).id);
-		}
-		searhMap.put("EQ_sysRole.roleName","销售员");
+		}*/
+		searhMap.put("EQ_sysRole.roleName","运营助理");
 		Page<SysEmployee> employeePage = accountService.getAccountList(pageable,searhMap);
 		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
 		SysEmployee sysEmployee = (SysEmployee)request.getSession().getAttribute("sysEmployee");
@@ -149,10 +149,10 @@ public class FeeRelatedActivity {
 	public String cancelClass(ModelMap model,Pageable pageable){
 		List<SysOrgans> sysOrgansList = organsService.getOrgansList();
 		Map<String,Object> searhMap = new HashMap<>();
-		if(sysOrgansList.size()>0){
+		/*if(sysOrgansList.size()>0){
 			searhMap.put("EQ_organId",sysOrgansList.get(0).id);
-		}
-		searhMap.put("EQ_sysRole.roleName","销售员");
+		}*/
+		searhMap.put("EQ_sysRole.roleName","运营助理");
 		Page<SysEmployee> employeePage = accountService.getAccountList(pageable,searhMap);
 		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
 		SysEmployee sysEmployee = (SysEmployee)request.getSession().getAttribute("sysEmployee");
@@ -297,6 +297,7 @@ public class FeeRelatedActivity {
 		model.addAttribute("xbStudentRelationId",xbStudentRelation.id);
 		model.addAttribute("totalReceivable",xbStudentRelation.totalReceivable);
 		model.addAttribute("receivable",xbStudentRelation.receivable);
+		model.addAttribute("periodNum",xbStudentRelation.periodNum);
 		model.addAttribute("balanceamount",balanceamount);
 		return "changeClass::changeClassFragment";
 	}
@@ -360,7 +361,7 @@ public class FeeRelatedActivity {
 		XbStudent xbStudent = studentService.getXbStudent(studentId);
 		Map<String,Object> studentMap = new HashMap<>();
 		studentMap.put("EQ_studentId",studentId);
-		studentMap.put("EQ_xbClass.deleteStatus","1");
+		studentMap.put("EQ_.deleteStatus","1");
 		Page<XbStudentRelationViewNew> xbStudentPage = studentService.getXbStudentRelationViewNewList(pageable,studentMap);
 		studentMap.put("EQ_id",classId);
 		List<XbStudentRelationViewNew> xbRelationList = studentService.getXbRelationList(studentMap);
@@ -378,6 +379,7 @@ public class FeeRelatedActivity {
 		model.addAttribute("xbStudentRelationId",xbStudentRelation.id);
 		model.addAttribute("totalReceivable",xbStudentRelation.totalReceivable);
 		model.addAttribute("receivable",xbStudentRelation.receivable);
+		model.addAttribute("periodNum",xbStudentRelation.periodNum);
 		model.addAttribute("classId",classId);
 		model.addAttribute("balanceamount",balanceamount);
 		return "changeClass::changeClassFragment";
@@ -496,43 +498,21 @@ public class FeeRelatedActivity {
 			String classId = xbSupplementFee.classId;
 			String toClassId = xbSupplementFee.toClassId;
 			String receivables = xbSupplementFee.receivable;
+			String periodNum = xbSupplementFee.periodNum;
 			String choosecourseId = xbSupplementFee.choosecourseId;
-			XbStudent xbStudent = studentService.getXbStudent(studentId);
 			XbStudentRelation xbStudentRelations = studentService.getXbStudentRelation(classId);
+			xbStudentRelations.periodNum = new BigDecimal(periodNum);
 			String className = studentService.getXbClass(xbStudentRelations.classId).className;
 			xbStudentRelations.studentStart = 2;
-			//studentService.saveXbStudentRelation(xbStudentRelations);
-			//XbStudentRelation zrxbStudentRelation = new XbStudentRelation();
 			XbCoursePreset xbCoursePreset = xbCoursePresetService.getXbCoursePreset(choosecourseId);
 			xbStudentRelations.classId = toClassId;
 			XbClass xbClass = studentService.getXbClass(toClassId);
 			xbStudentRelations.organId = xbClass.organId;
 			xbStudentRelations.courseId = xbClass.courseId;
 			xbStudentRelations.studentId = studentId;
-
 			xbSupplementFee.remarks = className+"转到"+xbClass.className;
-			String chargingMode = xbCoursePreset.xbCourse.chargingMode;
-			BigDecimal zrmoney = new BigDecimal("0.00");
-			if("0".equals(chargingMode)){
-				zrmoney =  xbStudentRelations.periodNum.multiply(xbCoursePreset.money);
-				xbStudentRelations.totalReceivable = new BigDecimal(xbCoursePreset.periodNum).multiply(xbCoursePreset.money);
-			}else if("2".equals(chargingMode)){
-				zrmoney =  xbCoursePreset.money.divide(new BigDecimal(xbCoursePreset.periodNum)).multiply(xbStudentRelations.periodNum);
-				xbStudentRelations.totalReceivable = xbCoursePreset.money;
-			}
-			if(zrmoney.compareTo(xbStudentRelations.receivable)>0){
-				xbStudent.paymentMoney = xbStudent.paymentMoney.add(zrmoney.subtract(xbStudentRelations.receivable));//欠费金额
-			}else{
-				xbStudent.surplusMoney = xbStudent.surplusMoney.add(xbStudentRelations.receivable).subtract(zrmoney);//欠费金额
-			}
-			xbSupplementFee.surplusMoney = zrmoney;//应收金额
+			xbSupplementFee.surplusMoney = xbStudentRelations.receivable;//应收金额
 			xbSupplementFee.paymentMoney = xbStudentRelations.receivable;//实收金额
-			xbStudentRelations.receivable =zrmoney;
-			//xbStudent.totalPeriodNum = xbStudentRelations.periodNum;
-			studentService.saveXbStudent(xbStudent);
-			//zrxbStudentRelation.totalPeriodNum = new BigDecimal(xbCoursePreset.periodNum);
-			//zrxbStudentRelation.periodNum = new BigDecimal(xbCoursePreset.periodNum);
-			//zrxbStudentRelation.studentStart=0;
 			studentService.saveXbStudentRelation(xbStudentRelations);
 			HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
 			SysEmployee sysEmployee = (SysEmployee)request.getSession().getAttribute("sysEmployee");
@@ -770,10 +750,10 @@ public class FeeRelatedActivity {
 		List<SysOrgans> organsList = organsService.getOrgansList();
 		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
 		SysEmployee sysEmployee = (SysEmployee)request.getSession().getAttribute("sysEmployee");
-		if(organsList.size()>0){
+		/*if(organsList.size()>0){
 			searhMap.put("EQ_organId",organsList.get(0).id);
-		}
-		searhMap.put("EQ_sysRole.roleName","销售员");
+		}*/
+		searhMap.put("EQ_sysRole.roleName","运营助理");
 		Page<SysEmployee> employeePage = employeeService.getAccountList(pageable,searhMap);
 		XbClass xbClass = studentService.getXbClass(classId);
 		/*model.addAttribute("xbXbStudent",student);*/
@@ -795,10 +775,10 @@ public class FeeRelatedActivity {
 		List<SysOrgans> organsList = organsService.getOrgansList();
 		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
 		SysEmployee sysEmployee = (SysEmployee)request.getSession().getAttribute("sysEmployee");
-		if(organsList.size()>0){
+		/*if(organsList.size()>0){
 			searhMap.put("EQ_organId",organsList.get(0).id);
-		}
-		searhMap.put("EQ_sysRole.roleName","销售员");
+		}*/
+		searhMap.put("EQ_sysRole.roleName","运营助理");
 		Page<SysEmployee> employeePage = employeeService.getAccountList(pageable,searhMap);
 		XbClass xbClass = studentService.getXbClass(classId);
 		/*model.addAttribute("xbXbStudent",student);*/
@@ -953,7 +933,7 @@ public class FeeRelatedActivity {
 
 
 	/**
-	 * 转班
+	 * 退费
 	 * @param studentEntity
 	 * @param resp
 	 */
@@ -964,18 +944,21 @@ public class FeeRelatedActivity {
 			xbSupplementFee.type = "5";//退费
 			String studentId = xbSupplementFee.studentId;
 			String classId = xbSupplementFee.classId;
+			String shengyu = xbSupplementFee.shengyu;
 			String balanceamount = xbSupplementFee.balanceamount;
+			XbStudentRelation xbStudentRelations = studentService.getXbStudentRelation(classId);
+			xbStudentRelations.receivable = new BigDecimal("0");
+			xbStudentRelations.periodNum = new BigDecimal("0");
+			xbStudentRelations.studentStart = 3;
 			XbStudent xbStudent = studentService.getXbStudent(studentId);
 			xbStudent.paymentMoney = new BigDecimal("0");
-			XbStudentRelation xbStudentRelations = studentService.getXbStudentRelation(classId);
-			xbStudentRelations.studentStart = 3;
-			xbStudentRelations.periodNum = new BigDecimal("0");
-			xbStudentRelations.receivable = new BigDecimal("0");
-			xbSupplementFee.remarks = "对"+xbStudentRelations.sysOrgans.organName+xbStudentRelations.xbCourse.courseName+"进行了退费";
-			BigDecimal money = new BigDecimal("0").subtract(new BigDecimal(balanceamount));
-			xbSupplementFee.surplusMoney = money;//应收金额
-			xbSupplementFee.paymentMoney = money;//实收金额
+			xbStudent.poundage = new BigDecimal(balanceamount).subtract(new BigDecimal(shengyu));
 			studentService.saveXbStudent(xbStudent);
+			xbSupplementFee.remarks = "对"+xbStudentRelations.sysOrgans.organName+xbStudentRelations.xbCourse.courseName+"进行了退费";
+			BigDecimal balanceamountB = new BigDecimal("0").subtract(new BigDecimal(balanceamount));
+			BigDecimal money = new BigDecimal("0").subtract(new BigDecimal(shengyu));
+			xbSupplementFee.surplusMoney = balanceamountB;//应收金额
+			xbSupplementFee.paymentMoney = money;//实收金额
 			studentService.saveXbStudentRelation(xbStudentRelations);
 			HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
 			SysEmployee sysEmployee = (SysEmployee)request.getSession().getAttribute("sysEmployee");
@@ -992,5 +975,51 @@ public class FeeRelatedActivity {
 			logger.info(e.toString());
 		}
 	}
+
+	/**
+	 * 退费部分退款备份
+	 * @param studentEntity
+	 * @param resp
+	 */
+	/*@RequestMapping("/cancelClassSave")
+	public void cancelClassSave(@RequestParam String studentEntity, HttpServletResponse resp) {
+		try {
+			XbSupplementFee xbSupplementFee = com.alibaba.fastjson.JSONObject.parseObject(studentEntity,XbSupplementFee.class);
+			xbSupplementFee.type = "5";//退费
+			String studentId = xbSupplementFee.studentId;
+			String classId = xbSupplementFee.classId;
+			String shengyu = xbSupplementFee.shengyu;
+			String balanceamount = xbSupplementFee.balanceamount;
+			XbStudentRelation xbStudentRelations = studentService.getXbStudentRelation(classId);
+			BigDecimal receivable = xbStudentRelations.totalReceivable.divide(xbStudentRelations.totalPeriodNum,2,BigDecimal.ROUND_HALF_UP);
+			BigDecimal periodNum = new BigDecimal(shengyu).divide(receivable,2,BigDecimal.ROUND_HALF_UP);
+			xbStudentRelations.receivable = xbStudentRelations.receivable.subtract(new BigDecimal(shengyu));
+			xbStudentRelations.periodNum = xbStudentRelations.periodNum.subtract(periodNum);
+			if(new BigDecimal(shengyu).compareTo(new BigDecimal(balanceamount))==0){
+				xbStudentRelations.studentStart = 3;
+				//XbStudent xbStudent = studentService.getXbStudent(studentId);
+				//xbStudent.paymentMoney = new BigDecimal("0");
+				//studentService.saveXbStudent(xbStudent);
+			}
+			xbSupplementFee.remarks = "对"+xbStudentRelations.sysOrgans.organName+xbStudentRelations.xbCourse.courseName+"进行了退费";
+			BigDecimal money = new BigDecimal("0").subtract(new BigDecimal(shengyu));
+			xbSupplementFee.surplusMoney = money;//应收金额
+			xbSupplementFee.paymentMoney = money;//实收金额
+			studentService.saveXbStudentRelation(xbStudentRelations);
+			HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
+			SysEmployee sysEmployee = (SysEmployee)request.getSession().getAttribute("sysEmployee");
+			xbSupplementFee.handlePerson = sysEmployee.employeeName;
+			studentService.saveXbSupplementFee(xbSupplementFee);
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("status","1");
+			jsonObject.put("msg", "编辑成功");
+			logger.info("编辑机构返回json参数="+jsonObject.toString());
+			resp.setContentType("text/html;charset=UTF-8");
+			resp.getWriter().println(jsonObject.toJSONString());
+			resp.getWriter().close();
+		} catch (IOException e) {
+			logger.info(e.toString());
+		}
+	}*/
 
 }

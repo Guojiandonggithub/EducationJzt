@@ -124,7 +124,7 @@ public class AccountActivity {
 		try {
 			Map<String, Object> searchParams = new HashMap<>();
 			searchParams.put("EQ_organId",organId);
-			searchParams.put("EQ_sysRole.roleName","销售员");
+			searchParams.put("EQ_sysRole.roleName","运营助理");
 			Page<SysEmployee> sysEmployeePage = accountService.getAccountList(pageable,searchParams);
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put("status","1");

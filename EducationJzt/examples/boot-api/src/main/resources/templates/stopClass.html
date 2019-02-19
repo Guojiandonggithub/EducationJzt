@@ -63,11 +63,13 @@
                     <span>总学费：<th:block th:text="${xbStudentRelation.totalReceivable}?${xbStudentRelation.totalReceivable}:'0.00'"></th:block><th:block th:text=" '（'+${xbStudentRelation.totalPeriodNum}?${xbStudentRelation.totalPeriodNum}:'0'+'课时）'"></th:block></span>
                     <span>剩余：<th:block  th:text="${xbStudentRelation.receivable}?${xbStudentRelation.receivable}:'0.00'"></th:block><th:block th:text=" '（'+${xbStudentRelation.periodNum}?${xbStudentRelation.periodNum}:'0'+'课时）'"></th:block></span>
                 </div>
-                <div class="form-group">
+                <div class="form-group" style="display: none">
                     <label for="">实际剩余</label>
-                    <input type="text" name="shengyu" id="shengyu" value="0.00"><span>元</span><span>转到学员账户</span>
-                    <input type="hidden" id="receivable" th:value="${xbStudentRelation.receivable}"/>
+                    <!--<input type="text" name="shengyu" id="shengyu" value="0.00"><span>元</span><span>转到学员账户</span>
+                    <input type="hidden" id="receivable" th:value="${xbStudentRelation.receivable}"/>-->
                 </div>
+                <input type="hidden" name="shengyu" id="shengyu" value="0.00">
+                <input type="hidden" id="receivable" th:value="${xbStudentRelation.receivable}"/>
                 <div class="form-group">
                     <label for="">对内备注</label>
                     <input type="text" name="remarksIn" placeholder="该备注只有内部操作人员可见" class="remark">
@@ -101,9 +103,9 @@
                     <input type="text" th:value="${sysEmployee.employeeName}" name="handlePerson" disabled="disabled">
                 </div>
                 <div class="form-group" style="margin-right:0 !important;">
-                    <label class="col-sm-1">销售员</label>
-                    <select name="salesPerson" id="salesPerson">
-                        <option th:each="emp:${employeeList}"  th:value="${emp.employeeName}" th:text="${emp.employeeName}"></option>
+                    <label class="col-sm-1">运营助理</label>
+                    <select name="operationAssistant" id="salesPerson">
+                        <option th:each="emp:${employeeList}" name="operationAssistant" th:value="${emp.employeeName}" th:text="${emp.employeeName}"></option>
                     </select>
                 </div>
             </div>

@@ -32,7 +32,7 @@ public interface XbRecordClassDao extends PagingAndSortingRepository<XbRecordCla
             "left join xb_course s on s.id = c.course_id\n" +
             "left join sys_employee e on e.id = c.teacher_id\n" +
             "left join xb_course_type t on t.id = s.course_type_id\n" +
-            " group by x.attend_id,c.class_name,s.course_name,e.employee_name,t.course_type_name,x.record_time limit ?1,?2",nativeQuery = true)
+            " where x.delete_status = '1' group by x.attend_id,c.class_name,s.course_name,e.employee_name,t.course_type_name,x.record_time limit ?1,?2",nativeQuery = true)
     List findRecordLists(int page,int pagesize);
 
 

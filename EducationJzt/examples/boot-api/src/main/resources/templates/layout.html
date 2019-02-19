@@ -69,6 +69,10 @@
                                 <a href="/jwcentercourse/tocourse"><i class="menu-icon fa fa-caret-right"></i>课程</a>
                                 <b class="arrow"></b>
                             </li>
+                            <li th:class="${tab2=='38'}? 'active'" th:if="${session.roleName}!='教师'">
+                                <a href="/student/getCancelList"><i class="menu-icon fa fa-caret-right"></i>退费管理</a>
+                                <b class="arrow"></b>
+                            </li>
                         </ul>
                     </li>
                     <li th:class="${tab1=='14'}? 'active open'" th:if="${session.roleName} ne '教师'">

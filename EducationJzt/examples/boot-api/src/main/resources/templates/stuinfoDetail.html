@@ -47,8 +47,8 @@
             <th:block th:if="${xbStudent.sex} eq 0"><img src="../static/pages/img/boy.png"></th:block>
             <th:block th:if="${xbStudent.sex} eq 1"><img src="../static/pages/img/girl.png.png"></th:block>
         </p>
-        <a class="td_edit" href="#modal-table" role="button" data-toggle="modal"><img src="../static/pages/img/edit.png">编辑</a>
-        <a class="td_delete"><img src="../static/pages/img/del.png">删除</a>
+        <!--<a class="td_edit" href="#modal-table" role="button" data-toggle="modal"><img src="../static/pages/img/edit.png">编辑</a>
+        <a class="td_delete"><img src="../static/pages/img/del.png">删除</a>-->
     </div>
     <div class=" user-infor-r">
         <div class="user-inf or-r-con">
@@ -71,7 +71,6 @@
                     <div style="padding-left:15px;">
                         <li>
                             <span class="text-tips">欠费金额：</span><th:block th:text="${xbStudent.paymentMoney}"></th:block>
-                            <span class="btn-white" style="padding:0 5px;margin:0 4px;">补费</span>
                         </li>
                         <li>
                             <span class="text-tips">磁卡卡号：</span>

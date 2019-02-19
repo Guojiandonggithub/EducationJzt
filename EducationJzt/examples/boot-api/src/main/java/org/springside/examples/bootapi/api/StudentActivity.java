@@ -1,9 +1,7 @@
 package org.springside.examples.bootapi.api;
 
 import com.websuites.core.response.IResult;
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.codehaus.groovy.util.HashCodeHelper;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,10 +22,8 @@ import org.springside.examples.bootapi.ToolUtils.HttpServletUtil;
 import org.springside.examples.bootapi.ToolUtils.common.util.UtilTools;
 import org.springside.examples.bootapi.domain.*;
 import org.springside.examples.bootapi.dto.XbClassDto;
-import org.springside.examples.bootapi.repository.XbClassDao;
 import org.springside.examples.bootapi.service.*;
 
-import javax.rmi.CORBA.Util;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -84,10 +80,10 @@ public class StudentActivity {
 		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
 		SysEmployee sysEmployee = (SysEmployee)request.getSession().getAttribute("sysEmployee");
 		List<XbStudent> xbStudentList = studentService.getXbStudentList(pageable,searhMap).getContent();
-		if(organsList.size()>0){
+		/*if(organsList.size()>0){
 			searhMap.put("EQ_organId",organsList.get(0).id);
-		}
-		searhMap.put("EQ_sysRole.roleName","销售员");
+		}*/
+		searhMap.put("EQ_sysRole.roleName","运营助理");
 		Page<SysEmployee> employeePage = employeeService.getAccountList(pageable,searhMap);
 		/*model.addAttribute("xbXbStudent",student);*/
 		model.addAttribute("xbStudentList",xbStudentList);
@@ -992,8 +988,16 @@ public class StudentActivity {
 				XbStudent xbStudent1 = studentService.getXbStudent(id);
 				xbStudent.surplusMoney = xbStudent1.surplusMoney.add(su);
 				xbStudent.paymentMoney = xbStudent1.paymentMoney.add(pay);
-				xbStudent.registratioFee = xbStudent1.registratioFee.add(xbStudent.registratioFee);
-				xbStudent.totalPeriodNum = xbStudent.totalPeriodNum.add(xbStudent1.totalPeriodNum);
+				BigDecimal registratioFee = xbStudent.registratioFee;
+				BigDecimal totalPeriodNum = xbStudent.totalPeriodNum;
+				if(null==registratioFee){
+					registratioFee = new BigDecimal("0.00");
+				}
+				if(null==totalPeriodNum){
+					totalPeriodNum = new BigDecimal("0.00");
+				}
+				xbStudent.registratioFee = registratioFee.add(xbStudent.registratioFee);
+				xbStudent.totalPeriodNum = xbStudent.totalPeriodNum.add(totalPeriodNum);
 			}
             xbStudent.deleteStatus = "1";
 			xbStudent = studentService.saveXbStudent(xbStudent);
@@ -1406,6 +1410,95 @@ public class StudentActivity {
 		model.addAttribute("xbRecordClassPage",xbRecordClassPage);//上课记录
 		model.addAttribute("accordingcurrentzise",xbRecordClassPage.getSize());
 		return "stuinfoDetail";
+	}
+
+	/**
+	 * 跳转到查询退费记录
+	 * @return
+	 */
+	@RequestMapping("/getCancelList")
+	public String getCancelList(@RequestParam(required = false) String data,ModelMap model, Pageable pageable){
+		Map<String,Object> resultMap = new HashMap<>();
+		Map<String,Object> searhMap = new HashMap<>();
+		Map<String,Object> searchParamsview = new HashMap<>();
+		if(null!=data){
+			resultMap = com.alibaba.fastjson.JSONObject.parseObject(data,searhMap.getClass());
+		}
+		String organId = (String)resultMap.get("organId");
+		String type = (String)resultMap.get("type");
+		String nameormobile = (String)resultMap.get("nameormobile");
+		if(null==organId){
+			organId = "0";
+		}else if(!organId.equals("0")){
+			searhMap.put("EQ_organId",organId);
+			searchParamsview.put("EQ_organId",organId);
+		}
+		if(null==type){
+			type = "AZ";
+		}
+		if(null!=nameormobile&&!nameormobile.equals("")){
+			if(type.equals("AZ")){
+				searhMap.put("LIKE_xbStudent.studentName",nameormobile);
+				searchParamsview.put("LIKE_studentName",nameormobile);
+			}else{
+				searhMap.put("LIKE_xbStudent.contactPhone",nameormobile);
+				searchParamsview.put("LIKE_contactPhone",nameormobile);
+			}
+		}
+		String enrollDateSearch = (String)resultMap.get("enrollDateSearch");
+		String enrollDateSearchEnd = (String)resultMap.get("enrollDateSearchEnd");
+		Date startdate = new Date();
+		Date enddate = new Date();
+
+		try {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			if(StringUtils.isNotEmpty(enrollDateSearch)){
+				startdate = sdf.parse(enrollDateSearch);
+				searhMap.put("GTE_enrollDate",startdate);
+				searchParamsview.put("GTE_enrollDate",startdate);
+			}
+			if(null==enrollDateSearch){
+				enrollDateSearch = DateUtil.weekDateFirstDay();
+				startdate = sdf.parse(DateUtil.weekDateFirstDay());
+				searhMap.put("GTE_enrollDate",startdate);
+				searchParamsview.put("GTE_enrollDate",startdate);
+			}
+			if(StringUtils.isNotEmpty(enrollDateSearchEnd)){
+				enddate = sdf.parse(enrollDateSearchEnd);
+				searhMap.put("LTE_enrollDate",enddate);
+				searchParamsview.put("LTE_enrollDate",enddate);
+			}
+			if(null==enrollDateSearchEnd){
+				enddate = sdf.parse(DateUtil.weekDateLastDay());
+				enrollDateSearchEnd = DateUtil.weekDateLastDay();
+				searhMap.put("LTE_enrollDate",enddate);
+				searchParamsview.put("LTE_enrollDate",enddate);
+			}
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		/*List studentlist = new ArrayList<>();
+		if(StringUtils.isEmpty(enrollDateSearch)){
+			studentlist =	studentService.getAllStudentListNoDate();
+		}else{
+			studentlist =	studentService.getAllStudentListStartAndEnd(startdate,enddate);
+		}*/
+		List<XbStudentRelationView> studentlist = studentService.getxbStudentRelationViewList(searchParamsview);
+		Iterable<SysOrgans> organsList = organsService.getOrgansList();
+		Page<XbStudentRelationViewNew> xbStudentPage = studentService.getXbStudentRelationViewNewList(pageable,searhMap);
+		Map<String,Object> studentMap = new HashMap<>();
+		/*Page<XbStudent> xbStudentsPage = studentService.getXbStudentList(pageable,studentMap);*/
+		model.addAttribute("studentlistsize",studentlist.size());
+		model.addAttribute("xbStudentPage",xbStudentPage);
+		/*model.addAttribute("xbStudentsPage",xbStudentsPage);*/
+		model.addAttribute("organId",organId);
+		model.addAttribute("organsList",organsList);
+		model.addAttribute("studentcurrentzise",xbStudentPage.getSize());
+		model.addAttribute("nameormobile",nameormobile);
+		model.addAttribute("type",type);
+		model.addAttribute("enrollDateSearch",enrollDateSearch);
+		model.addAttribute("enrollDateSearchEnd",enrollDateSearchEnd);
+		return "cancel";
 	}
 
 }

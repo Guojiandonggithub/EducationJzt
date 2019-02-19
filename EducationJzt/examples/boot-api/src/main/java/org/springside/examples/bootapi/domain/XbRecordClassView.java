@@ -12,9 +12,8 @@ import java.util.Date;
 @NamedQuery(name="XbRecordClassView.findAll",query = "SELECT t FROM XbRecordClassView t")
 public class XbRecordClassView {
     @Id
-    /*@Column(name="id")*/
-    public Date recordTime;
-    //public String id;
+    @Column(name="id")
+    public String id;
     @Column(name="orgid")
     public String orgid;
     @Column(name="organ_name")
@@ -40,6 +39,7 @@ public class XbRecordClassView {
     public Integer establishNum;
     public String classId;
     public long studentCount;
+    public Date recordTime;
     @Transient
     public BigDecimal totalReceivable;
 }

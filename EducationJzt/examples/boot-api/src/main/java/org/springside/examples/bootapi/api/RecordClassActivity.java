@@ -89,6 +89,11 @@ public class RecordClassActivity {
 		if(StringUtils.isNotEmpty(TeacherName)){
 			searhMap.put("LIKE_xbClass.teacher.employeeName",TeacherName);
 		}
+		//学员名称
+		String studentName = (String)resultMap.get("studentName");
+		if(StringUtils.isNotEmpty(studentName)){
+			searhMap.put("LIKE_xbStudent.studentName",studentName);
+		}
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String startDateTimeBegin = (String)resultMap.get("startDateTimeBegin");
 		//开课结束日期
@@ -119,6 +124,7 @@ public class RecordClassActivity {
 		model.addAttribute("startDateTimeBegin",startDateTimeBegin);
 		model.addAttribute("startDateTimeEnd",startDateTimeEnd);
 		model.addAttribute("TeacherName",TeacherName);
+		model.addAttribute("studentName",studentName);
 			return searhMap;
 	}
 
@@ -201,36 +207,11 @@ public class RecordClassActivity {
 		try {
 			for (XbRecordClass xbRecordClass : xbRecordClassList) {
 				if(null!=xbRecordClass.state&&!xbRecordClass.state.equals("4")&&null!=xbRecordClass.deductPeriod){
-					String studentId = xbRecordClass.studentId;
 					BigDecimal deductPeriod = xbRecordClass.deductPeriod;
-					String classId = xbRecordClass.classId;
-					String organId = xbRecordClass.organId;
-					String courseId = xbRecordClass.courseId;
 					String studentRelationId = xbRecordClass.studentRelationId;
 					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 					xbRecordClass.recordTime = sdf.parse(xbRecordClass.recordTimeTemp);
-					/*Map<String,Object> searhMap = new HashMap<>();
-					Map<String,Object> courseMap = new HashMap<>();
-					if(null!=classId){
-						searhMap.put("EQ_classId",classId);
-						searhMap.put("EQ_studentId",studentId);
-					}
-					courseMap.put("EQ_courseId",courseId);
-					courseMap.put("EQ_organIds",organId);
-					BigDecimal money = new BigDecimal(0);
-					List<XbCoursePreset> xbCoursePresetList = xbCoursePresetService.getXbCoursePresets(courseMap);
-					if(xbCoursePresetList.size()>0){
-						String chargingMode = xbCoursePresetList.get(0).xbCourse.chargingMode;
-						money = xbCoursePresetList.get(0).money;
-						if(chargingMode.equals("2")){
-							money = money.divide(new BigDecimal(xbCoursePresetList.get(0).periodNum),2,BigDecimal.ROUND_HALF_UP);
-						}
-					}
-					Page<XbStudentRelation> xbStudentRelations = studentService.getXbStudentRelationList(pageable,searhMap);
-					*/
-					//XbStudentRelation xbStudentRelation = xbStudentRelations.getContent().get(0);
 					XbStudentRelation xbStudentRelation = studentService.getXbStudentRelation(studentRelationId);
-					//Integer periodNum = xbStudentRelation.periodNum;
 					BigDecimal bigDecimal = xbStudentRelation.periodNum;
 					BigDecimal totalPeriodNum = xbStudentRelation.totalPeriodNum;
 					BigDecimal totalReceivable = xbStudentRelation.totalReceivable;
@@ -358,8 +339,9 @@ public class RecordClassActivity {
 				BigDecimal totalPeriodNum = classPage.getContent().get(0).totalPeriodNum;
 				BigDecimal totalReceivable = classPage.getContent().get(0).totalReceivable;
 				BigDecimal periodnums = recordLists.getContent().get(i).periodnum;
-				BigDecimal receivable = totalReceivable.divide(totalPeriodNum,4,RoundingMode.HALF_UP).multiply(periodnums);
-				recordLists.getContent().get(i).totalReceivable =receivable;
+				BigDecimal receivable = totalReceivable.divide(totalPeriodNum,2,RoundingMode.HALF_UP).multiply(periodnums);
+				BigDecimal setScale = receivable.setScale(2,BigDecimal.ROUND_HALF_UP);
+				recordLists.getContent().get(i).totalReceivable =setScale;
 			}
 		}
 		int totalElements = studentService.findRecordTotalCount();
@@ -400,13 +382,129 @@ public class RecordClassActivity {
 			if (classPage.getContent().size() > 0) {
 				BigDecimal totalPeriodNum = classPage.getContent().get(0).totalPeriodNum;
 				BigDecimal totalReceivable = classPage.getContent().get(0).totalReceivable;
-				BigDecimal receivable = totalReceivable.divide(totalPeriodNum,4,RoundingMode.HALF_UP).multiply(recordList.get(i).periodnum);
+				BigDecimal receivable = totalReceivable.divide(totalPeriodNum,2,RoundingMode.HALF_UP).multiply(recordList.get(i).periodnum);
 				totalReceivables = totalReceivables.add(receivable);
 			}
 		}
 		model.addAttribute("totalPeriodnum",totalPeriodnum);
 		model.addAttribute("totalReceivables",totalReceivables);
 		return "attendClass::accordingClass";
+	}
+
+	@RequestMapping("/delete/recrodClass")
+	public void deleteRecordClass(@RequestParam(required = false) String classId,@RequestParam(required = false) String recordTime,HttpServletResponse resp,Pageable pageable) {
+		try {
+			Map<String, Object> searchParams = new HashMap<>();
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			searchParams.put("EQ_attendId",classId);
+			searchParams.put("EQ_recordTime",sdf.parse(recordTime));
+			Page<XbRecordClass> xbRecordClassPage = studentService.getRecordClassPage(pageable,searchParams);
+			List<XbRecordClass> xbRecordClassList = xbRecordClassPage.getContent();
+			for (int i = 0; i < xbRecordClassList.size(); i++) {
+				String id = xbRecordClassList.get(i).id;
+				String studentRelationId = xbRecordClassList.get(i).studentRelationId;
+				BigDecimal deductPeriod = xbRecordClassList.get(i).deductPeriod;
+				XbStudentRelation xbStudentRelation = studentService.getXbStudentRelation(studentRelationId);
+				xbStudentRelation.periodNum = xbStudentRelation.periodNum.add(deductPeriod);
+				BigDecimal money = xbStudentRelation.totalReceivable.divide(xbStudentRelation.totalPeriodNum,2,RoundingMode.HALF_UP).multiply(deductPeriod);
+				xbStudentRelation.receivable = xbStudentRelation.receivable.add(money);
+				studentService.saveXbStudentRelation(xbStudentRelation);
+				studentService.deleteXbRecordClass(id);
+			}
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("status","1");
+			jsonObject.put("msg", "删除成功");
+			logger.info("删除返回json参数="+jsonObject.toString());
+			resp.setContentType("text/html;charset=UTF-8");
+			resp.getWriter().println(jsonObject.toJSONString());
+			resp.getWriter().close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.info(e.toString());
+		}
+	}
+
+	/*
+	 * 跳转到修改记上课
+	 * @return
+	 */
+	@RequestMapping("/recordClassUpdate")
+	public String clasrecordClassUpdatesEdit(@RequestParam(required = false) String classesId,@RequestParam(required = false) String recordTime, ModelMap model, Pageable pageable){
+		try {
+			Map<String, Object> searchParams = new HashMap<>();
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			searchParams.put("EQ_attendId",classesId);
+			searchParams.put("EQ_recordTime",sdf.parse(recordTime));
+			Page<XbRecordClass> xbRecordClassPage = studentService.getRecordClassPage(pageable,searchParams);
+			List<XbRecordClass> xbRecordClassList = xbRecordClassPage.getContent();
+			XbClass classes = studentService.getXbClass(classesId);
+			//List<XbStudentRelationViewNew> classPage = studentService.getXbRelationList(searhMap);
+			model.addAttribute("classPage",xbRecordClassList);
+			model.addAttribute("classSize",xbRecordClassList.size());
+			model.addAttribute("classes",classes);
+			model.addAttribute("recordTime",recordTime);
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.info(e.toString());
+		}
+		return "recordClassEdit";
+	}
+
+	@PostMapping("/update/recordClass")
+						public void updateRecordClass(@RequestBody List<XbRecordClass> xbRecordClassList, HttpServletResponse resp, Pageable pageable) {
+							try {
+								for (XbRecordClass xbRecordClass : xbRecordClassList) {
+									if(null!=xbRecordClass.state&&!xbRecordClass.state.equals("4")&&null!=xbRecordClass.deductPeriod){
+										BigDecimal deductPeriod = xbRecordClass.deductPeriod;
+										XbRecordClass xbRecordClasses = studentService.getxbRecordClass(xbRecordClass.id);
+										xbRecordClasses.state = xbRecordClass.state;
+										String studentRelationId = xbRecordClass.studentRelationId;
+										XbStudentRelation xbStudentRelation = studentService.getXbStudentRelation(studentRelationId);
+										BigDecimal bigDecimal = xbStudentRelation.periodNum;
+										BigDecimal totalPeriodNum = xbStudentRelation.totalPeriodNum;
+										BigDecimal totalReceivable = xbStudentRelation.totalReceivable;
+										if(bigDecimal.compareTo(new BigDecimal("0"))!=0){
+						BigDecimal receivable = xbStudentRelation.receivable;
+						BigDecimal money = totalReceivable.divide(totalPeriodNum,2,RoundingMode.HALF_UP).multiply(xbRecordClasses.deductPeriod.subtract(deductPeriod));
+						receivable = receivable.add(money);
+						bigDecimal = bigDecimal.add(xbRecordClasses.deductPeriod.subtract(deductPeriod));
+						//xbStudentRelation.periodNum = Integer.parseInt(bigDecimal.toString());
+						if(bigDecimal.compareTo(new BigDecimal("0"))<0){
+							bigDecimal = new BigDecimal("0");
+						}
+						if(receivable.compareTo(new BigDecimal("0"))<0){
+							receivable = new BigDecimal("0");
+						}
+						xbStudentRelation.periodNum = bigDecimal;
+						xbStudentRelation.receivable = receivable;
+						studentService.saveXbStudentRelation(xbStudentRelation);
+						xbRecordClasses.deductPeriod = deductPeriod;
+						studentService.saveXbRecordClass(xbRecordClasses);
+					}
+				}
+				if(xbRecordClass.state.equals("4")){
+					XbRecordClass xbRecordClasses = studentService.getxbRecordClass(xbRecordClass.id);
+					BigDecimal deductPeriods = xbRecordClasses.deductPeriod;
+					String studentRelationId = xbRecordClass.studentRelationId;
+					XbStudentRelation xbStudentRelation = studentService.getXbStudentRelation(studentRelationId);
+					BigDecimal money = xbStudentRelation.totalReceivable.divide(xbStudentRelation.totalPeriodNum,2,RoundingMode.HALF_UP).multiply(deductPeriods);
+					xbStudentRelation.receivable = xbStudentRelation.receivable.add(money);
+					xbStudentRelation.periodNum = xbStudentRelation.periodNum.add(deductPeriods);
+					studentService.saveXbStudentRelation(xbStudentRelation);
+					studentService.deleteXbRecordClass(xbRecordClasses.id);
+				}
+			}
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("status","1");
+			jsonObject.put("msg", "记上课成功");
+			logger.info("编辑机构返回json参数="+jsonObject.toString());
+			resp.setContentType("text/html;charset=UTF-8");
+			resp.getWriter().println(jsonObject.toJSONString());
+			resp.getWriter().close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.info(e.toString());
+		}
 	}
 
 }

@@ -35,6 +35,7 @@ public class XbStudent {
     public BigDecimal paymentMoney;
     public BigDecimal surplusMoney;
     public BigDecimal totalPeriodNum;//总课时
+    public BigDecimal poundage;//手续费
     @OneToOne()
     @JoinColumn(name="organId",referencedColumnName = "id",insertable = false,updatable = false)
     public SysOrgans sysOrgans;
