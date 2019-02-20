@@ -126,6 +126,16 @@ public class WechatRecordClassActivity {
 		model.addAttribute("conrseType",conrseType);
 		return "wechat_timetableMore";
 	}
+
+	/**
+	 * 跳转到日程表
+	 * @return
+	 */
+	@RequestMapping("/toTimeTable")
+	public String toTimeTable(){
+		return "wechat_timetable";
+	}
+
 	/*
 	 * 跳转到记上课记录列表
 	 * @return

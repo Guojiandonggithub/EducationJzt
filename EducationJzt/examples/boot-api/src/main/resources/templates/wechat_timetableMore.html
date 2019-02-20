@@ -24,6 +24,7 @@
             <span th:text="${cls.sysOrgans.organName}+' '+${cls.xbClassroom.classroomName}+' '+${cls.className}">校区+教室+班级</span>
             <span th:text="'课程：'+${cls.xbCourse.courseName}+' 教师：'+${cls.teacher.employeeName}">课程+老师</span>
         </p>
+        <input type="hidden" name="classid" th:value="${cls.id}">
         <a th:if="${cls.isEnd!='0'}" th:href="@{'/recordClassWechat/classEdit?classesId='+${cls.id}}">记上课<Span class="glyphicon glyphicon-menu-right"></Span></a>
         <a th:if="${cls.isEnd=='0'}" style="color: #919a9e;">已结课</a>
     </div>

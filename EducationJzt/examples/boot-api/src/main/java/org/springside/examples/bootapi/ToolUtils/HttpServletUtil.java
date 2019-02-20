@@ -45,4 +45,20 @@ public class HttpServletUtil {
         }
         return searchParams;
     }
+    /**
+     * 获取管理员数据
+     * @param searchParams
+     */
+    public static Map<String,Object> getRoleDateForXbRecordClassdView(Map<String,Object> searchParams){
+        HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
+        SysEmployee sysEmployee = (SysEmployee)request.getSession().getAttribute("sysEmployee");
+        if("管理员".equals(sysEmployee.sysRole.roleName)){
+            searchParams.put("EQ_orgid",sysEmployee.organId);
+        }
+        if("教师".equals(sysEmployee.sysRole.roleName)){
+            searchParams.put("EQ_orgid",sysEmployee.organId);
+            searchParams.put("EQ_teacherId",sysEmployee.id);
+        }
+        return searchParams;
+    }
 }

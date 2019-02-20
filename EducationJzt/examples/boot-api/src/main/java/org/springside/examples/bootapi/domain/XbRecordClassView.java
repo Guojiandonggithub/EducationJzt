@@ -22,6 +22,8 @@ public class XbRecordClassView {
     public String className;
     @Column(name="course_name")
     public String courseName;
+    @Column(name="teacher_id")
+    public String teacherId;
     @Column(name="employee_name")
     public String employeeName;
     @Column(name="course_type_name")

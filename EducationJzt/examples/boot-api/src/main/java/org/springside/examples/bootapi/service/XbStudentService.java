@@ -377,6 +377,7 @@ public class XbStudentService {
 	}
 	@Transactional
 	public Page<XbRecordClassView> getXbRecordClassdViewtoList(Pageable pageable,Map<String, Object> searchParams){
+		searchParams = HttpServletUtil.getRoleDateForXbRecordClassdView(searchParams);
 		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
 		Specification<XbRecordClassView> spec = DynamicSpecifications.bySearchFilter(
 				filters.values(), XbRecordClassView.class);
