@@ -7,74 +7,58 @@
     <title></title>
     <link rel="stylesheet" href="../static/pages/wechat_css/bootstrap.min.css">
     <link rel="stylesheet" href="../static/pages/css/login.css" id="main-ace-style" />
-    <link rel="stylesheet" href="../static/pages/wechat_css/index.css">
+    <link rel="stylesheet" href="../static/pages/wechat_css/login.css">
+    <link rel="stylesheet" href="../static/pages/wechat_css/global.css">
+    <link rel="stylesheet" href="../static/pages/css/kd.ui.plugin.css" />
     <script src="../static/pages/js/jquery.min.js"></script>
+    <script src="../static/pages/js/kd.ui.plugin.js"></script>
 </head>
 <body>
-<div class="content" style="padding: 0px;">
-    <div class="">
-        <img src="../static/pages/img/login.png" class="loginbg"/>
-        <div class="txt"><h2 style="top: 11%;position: absolute;color: #fff;text-align: center;letter-spacing: 1px;
-            right: 12%;font-size: 25px;">东方金子塔儿童潜能培训学校</h2></div>
-        <div class="loginBox">
-            <input type="text" id="userName" th:name="userName" placeholder="用户名"/>
-            <input type="password" id="password" th:name="passowrd" placeholder="输入密码"/>
-            <button type="button" onclick="login();">立即登录</button>
-            <span id="idMsg"></span>
-            <a href="">忘记密码</a>
-        </div>
+<div class="login">
+    <div class="login-title"><p>东方金子塔儿童潜能培训学校</p>
+        <i></i>
     </div>
+    <form method="post" action="success.html">
+        <div class="login-bar">
+            <ul>
+                <li><img src="../static/pages/img/login_user.png"><input type="text" class="text" id="userName" th:name="userName" placeholder="用户名"/></li>
+                <li><img src="../static/pages/img/login_pwd.png"><input type="password" class="psd" id="password" th:name="passowrd" placeholder="输入密码"/></li>
+            </ul>
+        </div>
+        <div class="login-btn">
+            <button class="submit" type="button" onclick="login();">立即登录</button>
+            <span id="idMsg"></span>
+            <!--<a href="">忘记密码</a>-->
+        </div>
+    </form>
 </div>
-    <script type="text/javascript" th:inline="javascript">
-        /*<![CDATA[*/
+<script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
 
-        var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/;
+    var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/;
 
-        function login(){
-            $.ajax({
-                type: 'get',
-                dataType: 'text',
-                url: basePath + '/accounts/login',
-                data: {userName:$("#userName").val(),password:$("#password").val()},
-                cache: false,
-                async: true,
-                success: function (data) {
-                    var data = eval('(' + data + ')');
-                    $('#idUser').text(data.data);
-                    $('#idMsg').text(data.msg);
-                    if(data.msg=="登录成功"){
-                        window.location.href= basePath + '/wechatLogin/toindex';
-                    }
+    function login(){
+        $.ajax({
+            type: 'get',
+            dataType: 'text',
+            url: basePath + '/accounts/login',
+            data: {userName:$("#userName").val(),password:$("#password").val()},
+            cache: false,
+            async: true,
+            success: function (data) {
+                var data = eval('(' + data + ')');
+                $('#idUser').text(data.data);
+                //$('#idMsg').text(data.msg);
+                //var aI=document.getElementsByTagName('i')[1];
+                //aI.innerHTML=data.msg;
+                $.kd.kdMsg(data.msg);
+                if(data.msg=="登录成功"){
+                    window.location.href= basePath + '/wechatLogin/toindex';
                 }
-            });
-        }
-        /*]]>*/
-    </script>
-<style>
-    .loginBox {
-        width: 300px;
-        height: 268px;
-        border: 6px solid #d5dafc;
-        background: #fff;
-        position: absolute;
-        top: 40%;
-        right: 17%;
-        padding: 20px;
+            }
+        });
     }
-    .login .txt {
-        width: 1000px;
-        position: absolute;
-        left: 50%;
-        margin-left: -500px;
-        top: 20%;
-        text-align: center;
-        color: #fff;
-        letter-spacing: 8px;
-    }
-    .login {
-        position: absolute;
-        right: 0%;
-    }
-</style>
+    /*]]>*/
+</script>
 </body>
 </html>

@@ -1,6 +1,6 @@
 //开始按
 function gtouchstart(dda,me){
-    var istoday = '<span class="today_i" id="id_'+dda+'" style="width:67px">'+dda+'</span>';
+    var istoday = '<span class="today_i" id="id_'+dda+'" style="width:67px;height: 50px;">'+dda+'</span>';
     //alert(dda);
     $(me).append(istoday);
    // $(me).children().append(istoday);

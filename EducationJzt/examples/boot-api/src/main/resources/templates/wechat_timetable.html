@@ -9,33 +9,23 @@
       <link href="../static/pages/wechat_css/timetable.css" rel="stylesheet">
       <link href="../static/pages/wechat_css/iscroll.css" rel="stylesheet">
       <link href="../static/pages/wechat_css/style.css" rel="stylesheet">
-      <script src="../static/pages/wechat_js/jquery.js"></script>
+      <link rel="stylesheet" href="../static/pages/css/loading.css" />
+      <script src="../static/pages/wechat_js/jquery.min.js"></script>
       <script src="../static/pages/wechat_js/bootstrap.min.js"></script>
       <script src="../static/pages/wechat_js/iscroll.js"></script>
       <script src="../static/pages/wechat_js/script.js"></script>
-     <!-- <script src="../static/pages/wechat_js/index.js"></script>-->
+      <script src="../static/pages/js/loading.js"></script>
   </head>
 <body>
-<!--<div class="time">
-    <p><span class="glyphicon glyphicon-menu-left"></span>前一周</p>
-    <p>2018-09-20</p>
-    <p>后一周<span class="glyphicon glyphicon-menu-right"></span></p>
+<div class="add" style="background: #2778ca;color: white;margin-bottom: 0px;font-size: 21px;line-height: 38px;">
+    <p style="margin: 0 0 2px;">课程表</p>
 </div>
-<div class="week">
-    <p>13<br>周一</p>
-    <p class="current">14<br>周二</p>
-    <p>15<br>周三</p>
-    <p>16<br>周四</p>
-    <p>17<br>周五</p>
-    <p>18<br>周六</p>
-    <p>19<br>周日</p>
-</div>-->
 <div  style="max-width: 500px;margin:0 auto;border: solid 1px #ccc;">
     <div class="bd_w jcalendar_week" id="jcalendar_week"></div>
     <div class="pop_bd" id="pop">
         <div class="pop_con">
             <span class="pop_close" onClick="$('#pop').hide();">&times;</span>
-            <h5>选择年份：</h5>
+            <h5>选择年份1：</h5>
             <div class="flex_i control">
                 <button onClick="$(this).next().val(parseInt($(this).next().val())-1)"><</button>
                 <input class="flex_auto control_val" type="text" id="setyear" value="- -" />
@@ -54,73 +44,86 @@
         </div>
     </div>
 </div>
-<div class="con-box">
-    <div class="con-list">
-        <p class="time-lag">08:00~17:00</p>
-        <p class="class-list">
-            <span>昆曲分校潜能班20问问哇</span>
-            <span>昆曲分校昆1号教室第三方和你</span>
-        </p>
-        <a href="timetableMore.html">更多<Span class="glyphicon glyphicon-menu-right"></Span></a>
-    </div>
-    <div class="con-list">
-        <p class="time-lag">08:00~17:00</p>
-        <p class="class-list">
-            <span>昆曲分校潜能班20问问哇</span>
-            <span>昆曲分校昆1号教室第三方和你</span>
-        </p>
-        <a href="timetableMore.html">更多<Span class="glyphicon glyphicon-menu-right"></Span></a>
-    </div>
-    <div class="con-list">
-        <p class="time-lag">08:00~17:00</p>
-        <p class="class-list">
-            <span>昆曲分校潜能班20问问哇</span>
-            <span>昆曲分校昆1号教室第三方和你</span>
-        </p>
-        <a href="">记上课<Span class="glyphicon glyphicon-menu-right"></Span></a>
-    </div>
-    <div class="con-list">
-        <p class="time-lag">08:00~17:00</p>
-        <p class="class-list">
-            <span>昆曲分校潜能班20问问哇</span>
-            <span>昆曲分校昆1号教室第三方和你</span>
-        </p>
-        <a href="">记上课<Span class="glyphicon glyphicon-menu-right"></Span></a>
-    </div>
-</div>
+<span id="xbAttendList_tbodyid">
+    <th:block th:if="${xbAttendList.content}" th:fragment="xbAttendListFra">
+        <div class="con-box" id="xbattendlist_id" th:each="less,lessSta:${xbAttendList.content}" style="    margin-top: 10px;">
+            <div class="con-list">
+                <p class="class-list" style="width: 30%;" >
+                    <span  th:text="${less.startDateTime}" style="text-align: center;width:122px"></span>
+                    <span  th:text="${less.timeInterval}" style="text-align: center;width:122px"></span>
+                </p>
+                <p class="class-list" style="width: 37%;" th:switch="${less.wayOfTeaching}">
+                    <span  th:text="${less.xbclass.sysOrgans.organName}+${less.xbclass.xbCourse.xbcoursetype.courseTypeName}" style="text-align: center;"></span>
+                    <span th:case="1"
+                    th:text="${less.xbclass.teacher.employeeName}+${less.xbclass.className}+'(一对一)'" style="text-align: center;"></span>
+                    <span th:case="0"
+                          th:text="${less.xbclass.teacher.employeeName}+${less.xbclass.className}+'(班课)'" style="text-align: center;"></span>
+                </p>
+                <p class="class-list" style="width: 30%;" >
+                    <span  th:text="${less.xbclassroom.classroomName}" style="text-align: center;width:122px"></span>
+                </p>
+                <!--<a href="timetableMore.html">更多<Span class="glyphicon glyphicon-menu-right"></Span></a>-->
+            </div>
+        </div>
+        <div class="back">
+            <a onclick="javascript:history.go(-1)"><span class="glyphicon glyphicon-arrow-left"></span>返回工作台</a>
+        </div>
+    </th:block>
+</span>
+  <script type="text/javascript" th:inline="javascript">
+      var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/;
+      //调用周日历
+      var weekfn =  new jcalendar_week({
+          element: "#jcalendar_week",//填充日历的dom元素
+          dayaddclass:function(date){
+              //添加某天时给添加类名
+              return "";
+          },
+          //day点击事件
+          dayclick:function(date,obj){
+              $(obj).addClass("calendar_day_act").siblings().removeClass("calendar_day_act");
+              var load = new Loading();
+              load.init({
+                  target: "body"
+              });
+              load.start();
+              $.ajax({
+                  url: basePath+ '/recordClassWechat/findXbAttendClassPageListAll',
+                  type: 'get',
+                  contentType: 'application/json',
+                  data: {dda:date},
+                  async: true,
+                  success: function(data) {
+                      load.stop();
+                      console.log("查询排课回调成功")
+                      $("#xbAttendList_tbodyid").html("");
+                      $("#xbAttendList_tbodyid").append(data);
+                  },
+                  error:function(){
+                      load.stop();
+                      console.log("查询排课回调失败")
+                  }
+              });
+          }
+      });
+      //获取周第一天
+      /*console.log(weekfn.weekfirstdate(2018,36));
+      //获取传入日期为当年第几周（注:这里的月份从0开始）
+      console.log(weekfn.getweeknum(2018,0,16));*/
+      //跳转到指定周
+      function jumpweek(){
+          var getyear=parseInt($("#setyear").val());
+          var getweek=parseInt($("#setweek").val());
+          weekfn.confirmweek(getyear,getweek);
+          $('#pop').hide();
+      }
+      //跳转到本周
+      function tonowweek(){
+          weekfn.nowweek();
+          $('#pop').hide();
+      }
+  </script>
 </body>
-    <script>
-    //调用周日历
-    var weekfn =  new jcalendar_week({
-        element: "#jcalendar_week",//填充日历的dom元素
-        dayaddclass:function(date){
-            //添加某天时给添加类名
-            return "";
-        },
-        dayclick:function(date,obj){
-            alert(date)
-            //day点击事件
-            $(obj).addClass("calendar_day_act").siblings().removeClass("calendar_day_act");
-        }
-    });
-    //获取周第一天
-    console.log(weekfn.weekfirstdate(2018,36));
-    //获取传入日期为当年第几周（注:这里的月份从0开始）
-    console.log(weekfn.getweeknum(2018,0,16));
-    //跳转到指定周
-    function jumpweek(){
-        var getyear=parseInt($("#setyear").val());
-        var getweek=parseInt($("#setweek").val());
-        weekfn.confirmweek(getyear,getweek);
-        $('#pop').hide();
-    }
-    //跳转到本周
-    function tonowweek(){
-        weekfn.nowweek();
-        $('#pop').hide();
-    }
-
-</script>
 </html>
 
 
