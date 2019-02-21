@@ -71,6 +71,10 @@ public class XbAttendClassService {
 		SysEmployee sysEmployee = (SysEmployee)request.getSession().getAttribute("sysEmployee");
 		if("管理员".equals(sysEmployee.sysRole.roleName)||"教师".equals(sysEmployee.sysRole.roleName)){
 			searchParams.put("EQ_xbclass.organId",sysEmployee.organId);
+
+		}
+		if("教师".equals(sysEmployee.sysRole.roleName)){
+			searchParams.put("EQ_teacherId",sysEmployee.id);
 		}
 		searchParams.put("EQ_deleteStatus","1");
 		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
