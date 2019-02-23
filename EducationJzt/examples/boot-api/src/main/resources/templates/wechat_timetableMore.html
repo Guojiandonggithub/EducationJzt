@@ -9,34 +9,60 @@
     <link href="../static/pages/wechat_css/timetable.css" rel="stylesheet">
     <link href="../static/pages/wechat_css/iscroll.css" rel="stylesheet">
 
-    <script src="../static/pages/wechat_js/jquery.js"></script>
+      <script src="../static/pages/wechat_js/jquery.min.js"></script>
     <script src="../static/pages/wechat_js/bootstrap.min.js"></script>
     <script src="../static/pages/wechat_js/iscroll.js"></script>
   </head>
-<body>
 <div class="add" style="background: #2778ca;color: white;margin-bottom: 0px;font-size: 21px;line-height: 38px;">
     <p style="margin: 0 0 2px;">记上课</p>
 </div>
 <p class="all" th:text="'共'+${classPage.getTotalElements()+'个'}">共16个</p>
-<div  class="con-box" style="margin-top:0;">
-    <div th:each="cls,clssta:${classPage}" class="con-list">
-        <p  class="class-list more-list">
-            <span th:text="${cls.sysOrgans.organName}+' '+${cls.xbClassroom.classroomName}+' '+${cls.className}">校区+教室+班级</span>
-            <span th:text="'课程：'+${cls.xbCourse.courseName}+' 教师：'+${cls.teacher.employeeName}">课程+老师</span>
-        </p>
-        <input type="hidden" name="classid" th:value="${cls.id}">
-        <a th:if="${cls.isEnd!='0'}" th:href="@{'/recordClassWechat/classEdit?classesId='+${cls.id}}">记上课<Span class="glyphicon glyphicon-menu-right"></Span></a>
-        <a th:if="${cls.isEnd=='0'}" style="color: #919a9e;">已结课</a>
+  <!--<p class="all" th:text="'第'+${classPage.getNumber()+1}+'页'">第几页</p>-->
+  <input th:id="page" th:value="${classPage.getNumber()+1}" type="hidden">
+<body>
+<p id="show"></p>
+<div id="wrapper">
+    <div id="scroller">
+        <div id="pullDown">
+        <span class="pullDownIcon"></span><span class="pullDownLabel">Pull down to refresh...</span>
+    </div>
+        <div  class="con-box" style="margin-top:0;" id="wechat_recordclasslist_spanid">
+            <th:block th:if="${classPage}" th:fragment="WECHAT_RECORDCLASSLIST_SPANID_FRAGMENT" >
+                <div th:each="cls,clssta:${classPage}" class="con-list">
+                    <p  class="class-list more-list">
+                        <span th:text="${cls.sysOrgans.organName}+' '+${cls.xbClassroom.classroomName}+' '+${cls.className}">校区+教室+班级</span>
+                        <span th:text="'课程：'+${cls.xbCourse.courseName}+' 教师：'+${cls.teacher.employeeName}">课程+老师</span>
+                    </p>
+                    <input type="hidden" name="classid" th:value="${cls.id}">
+                    <a th:if="${cls.isEnd!='0'}" th:href="@{'/recordClassWechat/classEdit?classesId='+${cls.id}}">记上课<Span class="glyphicon glyphicon-menu-right"></Span></a>
+                    <a th:if="${cls.isEnd=='0'}" style="color: #919a9e;">已结课</a>
+                </div>
+            </th:block>
+        </div>
+        <div id="pullUp" style="font-size: 15px;">
+            <span class="pullUpIcon"></span><span class="pullUpLabel">下拉加载...</span>
+        </div>
+        <div class="back">
+            <a onclick="javascript:history.go(-1)"><span class="glyphicon glyphicon-arrow-left"></span>返回上一级</a>
+        </div>
     </div>
 </div>
-<div id="pullUp" >
-    <span class="pullUpIcon"></span><span class="pullUpLabel">Pull up to refresh...</span>
-</div>
-<div class="back">
-    <a onclick="javascript:history.go(-1)"><span class="glyphicon glyphicon-arrow-left"></span>返回上一级</a>
-</div>
+    <!-- 记上课列表模板  -->
+    <!--<th:block th:if="${1==1}" th:fragment="WECHAT_RECORDCLASSLIST_SPANID_FRAGMENT" >
+       <div th:each="cls,clssta:${classPage}" class="con-list">
+            <p  class="class-list more-list">
+                <span th:text="${cls.sysOrgans.organName}+' '+${cls.xbClassroom.classroomName}+' '+${cls.className}">校区+教室+班级</span>
+                <span th:text="'课程：'+${cls.xbCourse.courseName}+' 教师：'+${cls.teacher.employeeName}">课程+老师</span>
+            </p>
+            <input type="hidden" name="classid" th:value="${cls.id}">
+            <a th:if="${cls.isEnd!='0'}" th:href="@{'/recordClassWechat/classEdit?classesId='+${cls.id}}">记上课<Span class="glyphicon glyphicon-menu-right"></Span></a>
+            <a th:if="${cls.isEnd=='0'}" style="color: #919a9e;">已结课</a>
+        </div>
+    </th:block>-->
+
 </body>
-  <script type="text/javascript">
+  <script type="text/javascript" th:inline="javascript">
+      var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/;
 
       var myScroll,
           pullDownEl,
@@ -47,7 +73,7 @@
 
       function pullDownAction () {
           setTimeout(function () {	// <-- Simulate network congestion, remove setTimeout from production!
-              var el, li, i;
+              /*var el, li, i;
               el = document.getElementById('thelist');
 
               for (i=0; i<5; i++) {
@@ -55,22 +81,40 @@
                   li.innerText = 'Generated row ' + (++generatedCount);
                   el.insertBefore(li, el.childNodes[0]);
               }
-              document.getElementById("pullUp").style.display="";
+              document.getElementById("pullUp").style.display="";*/
               myScroll.refresh();
           }, 1000);
       }
 
       function pullUpAction () {
           setTimeout(function () {
-              var el, li, i;
+             /* var el, li, i;
               el = document.getElementById('thelist');
 
               for (i=0; i<1; i++) {
                   li = document.createElement('li');
                   li.innerText = 'Generated row ' + (++generatedCount);
                   el.appendChild(li, el.childNodes[0]);
-              }
-              myScroll.refresh();
+              }*/
+              var page = parseInt($("#page").val())+1;
+              $.ajax({
+                  url: basePath+ '/recordClassWechat/getRecordClassList_reloading?page='+page,
+                  type: 'get',
+                  contentType: 'application/json',
+                  async: true,
+                  success: function(data) {
+                      myScroll.refresh();
+                      console.log("查询排课回调成功");
+                      //$("#wechat_recordclasslist_spanid").html("");
+                      $("#page").val(page);
+                      $("#wechat_recordclasslist_spanid").append(data);
+                  },
+                  error:function(){
+                      myScroll.refresh();
+                      console.log("查询排课回调失败")
+                  }
+              });
+
           }, 1000);
       }
 
@@ -141,8 +185,11 @@
           //setTimeout(function () { document.getElementById('wrapper').style.left = '0'; }, 800);
       }
 
-      document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+      document.addEventListener('touchmove', function (e) {
+          e.preventDefault();
+          }, false
+      );
 
       document.addEventListener('DOMContentLoaded', function () { setTimeout(loaded, 200); }, false);
   </script>
-</html>
+      </html>

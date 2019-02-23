@@ -76,10 +76,11 @@ public class WechatRecordClassActivity {
 	 * @return
 	 */
 	@RequestMapping("/getRecordClassList")
-	public String getRecordClassList(@RequestParam(required = false) String data, ModelMap model, Pageable pageable){
+	public String getRecordClassList(@RequestParam(required = false) String data, ModelMap model,
+									 @PageableDefault(value = 10) Pageable pageable){
 		Map<String,Object> resultMap = new HashMap<>();
 		Map<String,Object> searhMap = new HashMap<>();
-		if(null!=data){
+		/*if(null!=data){
 			resultMap = com.alibaba.fastjson.JSONObject.parseObject(data,Map.class);
 		}
 		String classesName  = (String)resultMap.get("classesName");
@@ -109,23 +110,37 @@ public class WechatRecordClassActivity {
 			conrseType = "";
 		}else if(!conrseType.equals("")){
 			searhMap.put("EQ_xbCourse.xbcoursetype.id",conrseType);
-		}
-		Iterable<SysOrgans> organsList = organsService.getOrgansList();
+		}*/
+		//Iterable<SysOrgans> organsList = organsService.getOrgansList();
 		Page<XbClass> classPage = studentService.getXbClassList(pageable,searhMap);
 		Map<String,Object> searhtypeMap = new HashMap<>();
-		List<XbCourseType> coursetypelist = xbCourseTypeService.findXbCourseTypeList(searhtypeMap);
+		//List<XbCourseType> coursetypelist = xbCourseTypeService.findXbCourseTypeList(searhtypeMap);
 		model.addAttribute("classPage",classPage);
-		model.addAttribute("classesName",classesName);
-		model.addAttribute("currentzise",classPage.getSize());
-		model.addAttribute("organId",organId);
-		model.addAttribute("type",type);
-		model.addAttribute("chargingMode",chargingMode);
-		model.addAttribute("organsList",organsList);
-		model.addAttribute("coursetypelist",coursetypelist);
-		model.addAttribute("conrseType",conrseType);
+		//model.addAttribute("classesName",classesName);
+		//model.addAttribute("currentzise",classPage.getSize());
+		//model.addAttribute("organId",organId);
+		//model.addAttribute("type",type);
+		//model.addAttribute("chargingMode",chargingMode);
+		//model.addAttribute("organsList",organsList);
+		//model.addAttribute("coursetypelist",coursetypelist);
+		//model.addAttribute("conrseType",conrseType);
 		return "wechat_timetableMore";
 	}
-
+	/*
+	 * 跳转到记上课列表下拉加载.....
+	 * @return
+	 */
+	@RequestMapping("/getRecordClassList_reloading")
+	public String getRecordClassListReloading(@RequestParam(required = false) String data, ModelMap model,
+									 @PageableDefault(value = 10) Pageable pageable){
+		Map<String,Object> resultMap = new HashMap<>();
+		Map<String,Object> searhMap = new HashMap<>();
+		Page<XbClass> classPage = studentService.getXbClassList(pageable,searhMap);
+		Map<String,Object> searhtypeMap = new HashMap<>();
+		//List<XbCourseType> coursetypelist = xbCourseTypeService.findXbCourseTypeList(searhtypeMap);
+		model.addAttribute("classPage",classPage);
+		return "wechat_timetableMore::WECHAT_RECORDCLASSLIST_SPANID_FRAGMENT";
+	}
 	/**
 	 * 跳转到日程表
 	 * @return
