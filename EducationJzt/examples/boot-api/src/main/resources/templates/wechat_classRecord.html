@@ -10,50 +10,67 @@
       <link rel="stylesheet" href="../static/pages/wechat_css/jHsDate.css" />
       <link rel="stylesheet" href="../static/pages/css/kd.ui.plugin.css" />
       <link rel="stylesheet" href="../static/pages/css/loading.css" />
+      <link href="../static/pages/wechat_css/iscroll.css" rel="stylesheet">
       <script src="../static/pages/wechat_js/jquery.js"></script>
       <script src="../static/pages/wechat_js/bootstrap.min.js"></script>
       <script src="../static/pages/laydate/laydate.js"></script>
       <script src="../static/pages/js/kd.ui.plugin.js"></script>
       <script src="../static/pages/js/loading.js"></script>
+      <script src="../static/pages/wechat_js/iscroll.js"></script>
   </head>
 <body>
 <div class="add" style="background: #2778ca;color: white;margin-bottom: 0px;font-size: 21px;line-height: 38px;">
     <p style="margin: 0 0 2px;">上课记录</p>
 </div>
-<div class="record">
-    <ul th:each="cla:${recordLists.content}">
-        <li  style="border-bottom: solid 0 #fff;border-top: solid 0 #fff;height: 23px;padding: 0px 5px;  ">
-            <p class="date" th:text="${#dates.format(cla.recordTime, 'yyyy-MM-dd')}" style="width: 28%;text-align: right;">上课时间</p>
-            <p class="class-list" style="width: 35%;text-align: center;" th:text="${cla.organName}">
-            </p>
-            <p style="width: 29%;"><i>上</i><span th:text="${cla.sknum}?${cla.sknum}:'0.0'"></span></p>
-            <!--<p ><i>假</i><span th:text="${cla.qjnum}?${cla.qjnum}:'0.0'"></span></p>-->
-            <!--<p><i>旷</i>0</p>
-            <p><i>补</i>0</p>-->
-            <p style="width: 10%;"><a th:href="@{'/recordClassWechat/accordingStudentRecord?classId='+${cla.classId}+'&recordTime='+${cla.recordTime}}"
-            style="width: 77px;color: #2f90f3;height: 26px;font-weight: 600;
-            margin-bottom: 2px;font-size: 15px;">修改</a></p>
-            <p style="width: 10%;"><a th:onclick="|deleteRecord('${cla.classId}','${#dates.format(cla.recordTime, 'yyyy-MM-dd HH:mm:ss')}')|"
-                   style="width: 77px;color:#de0e0e;height: 26px;font-weight: 600;
-            margin-bottom: 2px;font-size: 15px;cursor: pointer;"
-            >删除</a></p>
-        </li>
-        <li  style="border-bottom: solid 1px #cfd6dc;border-top: solid 0 #fff;">
-            <p style="width: 22%;"></p>
-            <p class="class-list" style="width: 35%;text-align: center;" th:text="${cla.courseTypeNname}+${cla.employeeName}+${cla.className}"  ">
-            </p>
-            <p style="width: 20%;"></p>
-            <!--<p ><i>假</i><span th:text="${cla.qjnum}?${cla.qjnum}:'0.0'"></span></p>-->
-            <!--<p><i>旷</i>0</p>
-            <p><i>补</i>0</p>-->
-            <p style="width: 10%;"></p>
-            <p style="width: 10%;"></p>
-        </li>
-    </ul>
+<p id="show"></p>
+<div id="wrapper" style="height: 93%;">
+    <div id="scroller">
+        <input th:id="page" th:value="${recordLists.getNumber()}" type="hidden">
+        <div id="pullDown" >
+            <span class="pullDownIcon" style="width: 0px;float:initial"></span><span class="pullDownLabel"></span>
+        </div>
+        <div class="record" id="classRecord_tbodyid" style="margin-bottom: 0px;">
+            <th:block th:if="${recordLists.content}" th:fragment="classRecordFra">
+                <ul th:each="cla:${recordLists.content}">
+                    <li  style="border-bottom: solid 0 #fff;border-top: solid 0 #fff;height: 23px;padding: 0px 5px;  ">
+                        <p class="date" th:text="${#dates.format(cla.recordTime, 'yyyy-MM-dd')}" style="width: 28%;text-align: right;">上课时间</p>
+                        <p class="class-list" style="width: 35%;text-align: center;" th:text="${cla.organName}">
+                        </p>
+                        <p style="width: 29%;"><i>上</i><span th:text="${cla.sknum}?${cla.sknum}:'0.0'"></span></p>
+                        <!--<p ><i>假</i><span th:text="${cla.qjnum}?${cla.qjnum}:'0.0'"></span></p>-->
+                        <!--<p><i>旷</i>0</p>
+                        <p><i>补</i>0</p>-->
+                        <p style="width: 10%;"><a th:href="@{'/recordClassWechat/accordingStudentRecord?classId='+${cla.classId}+'&recordTime='+${cla.recordTime}}"
+                        style="width: 77px;color: #2f90f3;height: 26px;font-weight: 600;
+                        margin-bottom: 2px;font-size: 15px;">修改</a></p>
+                        <p style="width: 10%;"><a th:onclick="|deleteRecord('${cla.classId}','${#dates.format(cla.recordTime, 'yyyy-MM-dd HH:mm:ss')}')|"
+                               style="width: 77px;color:#de0e0e;height: 26px;font-weight: 600;
+                        margin-bottom: 2px;font-size: 15px;cursor: pointer;"
+                        >删除</a></p>
+                    </li>
+                    <li  style="border-bottom: solid 1px #cfd6dc;border-top: solid 0 #fff;">
+                        <p style="width: 22%;"></p>
+                        <p class="class-list" style="width: 43%;text-align: center;" th:text="${cla.courseTypeNname}+${cla.employeeName}+${cla.className}"  ">
+                        </p>
+                        <p style="width: 20%;"></p>
+                        <!--<p ><i>假</i><span th:text="${cla.qjnum}?${cla.qjnum}:'0.0'"></span></p>-->
+                        <!--<p><i>旷</i>0</p>
+                        <p><i>补</i>0</p>-->
+                        <p style="width: 10%;"></p>
+                        <p style="width: 10%;"></p>
+                    </li>
+                </ul>
+            </th:block>
+        </div>
+        <div id="pullUp" style="font-size: 15px;">
+            <span class="pullUpIcon"></span><span class="pullUpLabel">下拉加载...</span>
+        </div>
+    </div>
+    <div class="back" style="z-index:1000;bottom: 23%;">
+        <a th:href="@{'/wechatLogin/toindex'}"><span class="glyphicon glyphicon-arrow-left"></span>返回课程表</a>
+    </div>
 </div>
-<div class="back">
-    <a th:href="@{'/wechatLogin/toindex'}"><span class="glyphicon glyphicon-arrow-left"></span>返回课程表</a>
-</div>
+
 <script type="text/javascript" th:inline="javascript">
     var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/ ;
 
@@ -93,6 +110,128 @@
             });
         })
     }
+</script>
+<script type="text/javascript" th:inline="javascript">
+    var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/;
+
+    var myScroll,
+        pullDownEl,
+        pullDownOffset,
+        pullUpEl,
+        pullUpOffset,
+        generatedCount = 0;
+
+    function pullDownAction () {
+        setTimeout(function () {	// <-- Simulate network congestion, remove setTimeout from production!
+            /*var el, li, i;
+            el = document.getElementById('thelist');
+
+            for (i=0; i<5; i++) {
+                li = document.createElement('li');
+                li.innerText = 'Generated row ' + (++generatedCount);
+                el.insertBefore(li, el.childNodes[0]);
+            }
+            document.getElementById("pullUp").style.display="";*/
+            myScroll.refresh();
+        }, 1000);
+    }
+
+    function pullUpAction () {
+        setTimeout(function () {
+            var page = parseInt($("#page").val())+1;
+            console.log(page)
+            $.ajax({
+                url: basePath+ '/recordClassWechat/getRecordClassRecordListByClassReloding?sort=recordTime,DESC&page='+page,
+                type: 'get',
+                contentType: 'application/json',
+                async: true,
+                success: function(data) {
+                    console.log("查询排课回调成功");
+                    $("#page").val(page);
+                    $("#classRecord_tbodyid").append(data);
+                    myScroll.refresh();
+                },
+                error:function(){
+                    myScroll.refresh();
+                    console.log("查询排课回调失败")
+                }
+            });
+        }, 1000);
+    }
+
+    function loaded() {
+        pullDownEl = document.getElementById('pullDown');
+        pullDownOffset = pullDownEl.offsetHeight;
+        pullUpEl = document.getElementById('pullUp');
+        pullUpOffset = 10;
+        //pullUpOffset = pullUpEl.offsetHeight;
+        myScroll = new iScroll('wrapper', {
+            useTransition: true,
+            topOffset: pullDownOffset,
+            onRefresh: function () {
+                //that.maxScrollY = that.wrapperH - that.scrollerH + that.minScrollY;
+                //that.minScrollY = -that.options.topOffset || 0;
+                //alert(this.wrapperH);
+                //alert(this.scrollerH);
+                if (pullDownEl.className.match('loading')) {
+                    pullDownEl.className = '';
+                    pullDownEl.querySelector('.pullDownLabel').innerHTML = 'Pull down to refresh...';}
+                if (pullUpEl.className.match('loading')) {
+                    pullUpEl.className = '';
+                    pullUpEl.querySelector('.pullUpLabel').innerHTML = 'Pull up to load more...';
+                }
+
+                document.getElementById("pullUp").style.display="none";
+                document.getElementById("show").innerHTML="onRefresh: up["+pullUpEl.className+"],down["+pullDownEl.className+"],Y["+this.y+"],maxScrollY["+this.maxScrollY+"],minScrollY["+this.minScrollY+"],scrollerH["+this.scrollerH+"],wrapperH["+this.wrapperH+"]";
+            },
+            onScrollMove: function () {
+                document.getElementById("show").innerHTML="onScrollMove: up["+pullUpEl.className+"],down["+pullDownEl.className+"],Y["+this.y+"],maxScrollY["+this.maxScrollY+"],minScrollY["+this.minScrollY+"],scrollerH["+this.scrollerH+"],wrapperH["+this.wrapperH+"]";
+                if (this.y > 0) {
+                    pullDownEl.className = 'flip';
+                    pullDownEl.querySelector('.pullDownLabel').innerHTML = 'Release to refresh...';
+                    this.minScrollY = 0;
+                }
+                if (this.y < 0 && pullDownEl.className.match('flip')) {
+                    pullDownEl.className = '';
+                    pullDownEl.querySelector('.pullDownLabel').innerHTML = 'Pull down to refresh...';
+                    this.minScrollY = -pullDownOffset;
+                }
+
+                if ( this.scrollerH < this.wrapperH && this.y < (this.minScrollY-pullUpOffset) || this.scrollerH > this.wrapperH && this.y < (this.maxScrollY - pullUpOffset) ) {
+                    document.getElementById("pullUp").style.display="";
+                    pullUpEl.className = 'flip';
+                    pullUpEl.querySelector('.pullUpLabel').innerHTML = 'Release to refresh...';
+                }
+                if (this.scrollerH < this.wrapperH && this.y > (this.minScrollY-pullUpOffset) && pullUpEl.className.match('flip') || this.scrollerH > this.wrapperH && this.y > (this.maxScrollY - pullUpOffset) && pullUpEl.className.match('flip')) {
+                    document.getElementById("pullUp").style.display="none";
+                    pullUpEl.className = '';
+                    pullUpEl.querySelector('.pullUpLabel').innerHTML = 'Pull up to load more...';
+                }
+            },
+            onScrollEnd: function () {
+                document.getElementById("show").innerHTML="onScrollEnd: up["+pullUpEl.className+"],down["+pullDownEl.className+"],Y["+this.y+"],maxScrollY["+this.maxScrollY+"],minScrollY["+this.minScrollY+"],scrollerH["+this.scrollerH+"],wrapperH["+this.wrapperH+"]";
+                if (pullDownEl.className.match('flip')) {
+                    pullDownEl.className = 'loading';
+                    pullDownEl.querySelector('.pullDownLabel').innerHTML = 'Loading...';
+                    pullDownAction();	// Execute custom function (ajax call?)
+                }
+                if (pullUpEl.className.match('flip')) {
+                    pullUpEl.className = 'loading';
+                    pullUpEl.querySelector('.pullUpLabel').innerHTML = 'Loading...';
+                    pullUpAction();	// Execute custom function (ajax call?)
+                }
+            }
+        });
+
+        //setTimeout(function () { document.getElementById('wrapper').style.left = '0'; }, 800);
+    }
+
+    document.addEventListener('touchmove', function (e) {
+            e.preventDefault();
+        }, false
+    );
+
+    document.addEventListener('DOMContentLoaded', function () { setTimeout(loaded, 200); }, false);
 </script>
 </body>
 </html>

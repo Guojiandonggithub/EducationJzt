@@ -146,20 +146,22 @@ public class WechatRecordClassActivity {
 	 * @return
 	 */
 	@RequestMapping("/toTimeTable")
-	public String toTimeTable(ModelMap model,Pageable pageable){
+	public String toTimeTable(ModelMap model,@PageableDefault(value = 20) Pageable pageable){
 		Map<String,Object> searhMap = new HashMap<>();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		String dda = sdf.format(new Date());
 		searhMap.put("EQ_startDateTime",dda);//周日历
 		Page<XbAttendClass> xbAttendList = xbAttendClassService.findXbAttendClassPageAll(pageable,searhMap);
 		model.addAttribute("xbAttendList",xbAttendList);
+		model.addAttribute("dda",dda);
 		return "wechat_timetable";
 	}
 	/**
 	 * 查询所有的排课信息
 	 */
 	@RequestMapping("/findXbAttendClassPageListAll")
-	public String findXbAttendClassPageListAll(@RequestParam String dda,HttpServletResponse resp,ModelMap model,Pageable pageable,String data) throws ParseException {
+	public String findXbAttendClassPageListAll(@RequestParam String dda,HttpServletResponse resp,
+											   ModelMap model,@PageableDefault(value = 20) Pageable pageable,String data) throws ParseException {
 		Map<String,Object> resultMap = new HashMap<>();
 		/*if(null!=data){
 			resultMap = com.alibaba.fastjson.JSONObject.parseObject(data,resultMap.getClass());
@@ -179,6 +181,7 @@ public class WechatRecordClassActivity {
 			xbattendclass.sdstudentnum = xbAttendClassService.getSdstudentnum(xbattendclass.classId,xbattendclass.startDateTime);
 		}*/
 		model.addAttribute("xbAttendList",xbAttendList);
+		model.addAttribute("dda",dda);
 		return "wechat_timetable::xbAttendListFra";
 		//model.addAttribute("xbAttendListsize",xbAttendList.getSize());
 	}
@@ -284,45 +287,10 @@ public class WechatRecordClassActivity {
 	 */
 	@RequestMapping("/getRecordClassRecordListByClass")
 	public String getRecordClassRecordListByClass(@RequestParam(required = false) String data, ModelMap model,
-											@PageableDefault Pageable pageable){
+											@PageableDefault(value = 20) Pageable pageable){
 		Map<String,Object> resultMap = new HashMap<>();
 		Map<String,Object> searhMap = new HashMap<>();
-		/*if(null!=data){
-			resultMap = com.alibaba.fastjson.JSONObject.parseObject(data,Map.class);
-		}
-		String classesName  = (String)resultMap.get("classesName");
-		String organclaId = (String)resultMap.get("organclaId");
-		if(null==organclaId){
-			organclaId = "0";
-		}else if(!organclaId.equals("0")){
-			searhMap.put("EQ_orgid",organclaId);
-		}
-		//教师名称
-		String TeacherNameCla = (String)resultMap.get("TeacherNameCla");
-		if(StringUtils.isNotEmpty(TeacherNameCla)){
-			searhMap.put("LIKE_employeeName",TeacherNameCla);
-		}
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		String startDateTimeBegin = (String)resultMap.get("startclaDateTimeBegin");
-		//开课结束日期
-		String startDateTimeEnd = (String)resultMap.get("startclaDateTimeEnd");
-		try {
-			Date date = new Date();
-			if(StringUtils.isEmpty(startDateTimeBegin)){
-				startDateTimeBegin = DateUtil.weekDateFirstDay();
-				searhMap.put("GTE_recordTime",DateUtil.weekDateTimeFirstDayDA());
-			}else{
-				searhMap.put("GTE_recordTime",sdf.parse(startDateTimeBegin+" 00:00:00"));
-			}
-			if(StringUtils.isEmpty(startDateTimeEnd)){
-				startDateTimeEnd = DateUtil.weekDateLastDay();
-				searhMap.put("LTE_recordTime",DateUtil.weekDateTimeLastDayDA());
-			}else{
-				searhMap.put("LTE_recordTime",sdf.parse(startDateTimeEnd+" 23:59:59"));
-			}
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}*/
+
 		Page<XbRecordClassView> recordLists = studentService.getXbRecordClassdViewtoList(pageable,searhMap);
 		for (int i = 0; i < recordLists.getContent().size(); i++) {
 			XbRecordClassView xrcv = recordLists.getContent().get(i);
@@ -350,27 +318,20 @@ public class WechatRecordClassActivity {
 		}
 		totalPages = totalPages + 1;
 		model.addAttribute("recordLists",recordLists);
-		model.addAttribute("recordcurrentzise",size);
-		model.addAttribute("number",number);
-		model.addAttribute("totalPages",totalPages);
-		model.addAttribute("totalElements",totalElements);
-		//查询所有校区
-		Map<String,Object> sorgsearmap = new HashMap<>();
-		List<SysOrgans> sorganList = organsService.getOrgansListAll(sorgsearmap);
-		model.addAttribute("sorganList",sorganList);
-		/*model.addAttribute("organclaId",organclaId);
-		model.addAttribute("startclaDateTimeBegin",startDateTimeBegin);
-		model.addAttribute("startclaDateTimeEnd",startDateTimeEnd);
-		model.addAttribute("TeacherNameCla",TeacherNameCla);*/
 
+		return "wechat_classRecord";
+	}
+	@RequestMapping("/getRecordClassRecordListByClassReloding")
+	public String getRecordClassRecordListByClassReloding(@RequestParam(required = false) String data, ModelMap model,
+												  @PageableDefault(value = 10) Pageable pageable){
+		Map<String,Object> resultMap = new HashMap<>();
+		Map<String,Object> searhMap = new HashMap<>();
 
-		List<XbRecordClassView> recordList = studentService.getXbRecordClassdViewtoList(searhMap);
-		BigDecimal totalPeriodnum = new BigDecimal("0");
-		BigDecimal totalReceivables = new BigDecimal("0");
-		for (int i = 0; i < recordList.size(); i++) {
-			BigDecimal periodnum = recordList.get(i).periodnum;
-			totalPeriodnum = totalPeriodnum.add(periodnum);
-			String classesId = recordList.get(i).classId;
+		Page<XbRecordClassView> recordLists = studentService.getXbRecordClassdViewtoList(pageable,searhMap);
+		for (int i = 0; i < recordLists.getContent().size(); i++) {
+			XbRecordClassView xrcv = recordLists.getContent().get(i);
+			BigDecimal periodnum = xrcv.periodnum;
+			String classesId = xrcv.classId;
 			Map<String, Object> searhMaps = new HashMap<>();
 			searhMaps.put("EQ_classId", classesId);
 			searhMaps.put("GTE_periodNum", new BigDecimal("0"));
@@ -379,20 +340,28 @@ public class WechatRecordClassActivity {
 			if (classPage.getContent().size() > 0) {
 				BigDecimal totalPeriodNum = classPage.getContent().get(0).totalPeriodNum;
 				BigDecimal totalReceivable = classPage.getContent().get(0).totalReceivable;
-				BigDecimal receivable = totalReceivable.divide(totalPeriodNum,4,RoundingMode.HALF_UP).multiply(recordList.get(i).periodnum);
-				totalReceivables = totalReceivables.add(receivable);
+				BigDecimal periodnums = recordLists.getContent().get(i).periodnum;
+				BigDecimal receivable = totalReceivable.divide(totalPeriodNum,4,RoundingMode.HALF_UP).multiply(periodnums);
+				recordLists.getContent().get(i).totalReceivable =receivable;
 			}
 		}
-		model.addAttribute("totalPeriodnum",totalPeriodnum);
-		model.addAttribute("totalReceivables",totalReceivables);
-		return "wechat_classRecord";
+		int totalElements = studentService.findRecordTotalCount();
+		int size = pageable.getPageSize();
+		int number = pageable.getPageNumber();
+		int totalPages = totalElements/size;
+		if(totalPages==0){
+			number = 1;
+		}
+		totalPages = totalPages + 1;
+		model.addAttribute("recordLists",recordLists);
+		return "wechat_classRecord::classRecordFra";
 	}
 	/*
 	 * 跳转到记上课
 	 * @return
 	 */
 	@RequestMapping("/classEdit")
-	public String classEdit(@RequestParam(required = false) String classesId, ModelMap model, Pageable pageable){
+	public String classEdit(@RequestParam(required = false) String classesId, ModelMap model,@PageableDefault(value = 1000) Pageable pageable){
 		Map<String,Object> searhMap = new HashMap<>();
 		if(null!=classesId){
 			searhMap.put("LIKE_classId",classesId);
