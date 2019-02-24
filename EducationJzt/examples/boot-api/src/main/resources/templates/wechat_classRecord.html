@@ -36,7 +36,7 @@
                         <p class="date" th:text="${#dates.format(cla.recordTime, 'yyyy-MM-dd')}" style="width: 28%;text-align: right;">上课时间</p>
                         <p class="class-list" style="width: 35%;text-align: center;" th:text="${cla.organName}">
                         </p>
-                        <p style="width: 29%;"><i>上</i><span th:text="${cla.sknum}?${cla.sknum}:'0.0'"></span></p>
+                        <p style="width: 29%;"><span th:text="${cla.sknum}?${#numbers.formatDecimal(cla.sknum, 1, 0)}+'课时/上':'0.0'"></span></p>
                         <!--<p ><i>假</i><span th:text="${cla.qjnum}?${cla.qjnum}:'0.0'"></span></p>-->
                         <!--<p><i>旷</i>0</p>
                         <p><i>补</i>0</p>-->
@@ -49,10 +49,10 @@
                         >删除</a></p>
                     </li>
                     <li  style="border-bottom: solid 1px #cfd6dc;border-top: solid 0 #fff;">
-                        <p style="width: 22%;"></p>
-                        <p class="class-list" style="width: 43%;text-align: center;" th:text="${cla.courseTypeNname}+${cla.employeeName}+${cla.className}"  ">
+                        <p style="width: 22%;" ></p>
+                        <p class="class-list" style="width: 32%;text-align: center;" th:text="${cla.courseTypeNname}+${cla.employeeName}+${cla.className}"  ">
                         </p>
-                        <p style="width: 20%;"></p>
+                        <p style="width: 20%;"><span th:text="${#numbers.formatDecimal(cla.totalReceivable, 1, 2)}+'元'"></span></p>
                         <!--<p ><i>假</i><span th:text="${cla.qjnum}?${cla.qjnum}:'0.0'"></span></p>-->
                         <!--<p><i>旷</i>0</p>
                         <p><i>补</i>0</p>-->
