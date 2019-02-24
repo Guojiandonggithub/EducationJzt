@@ -35,7 +35,7 @@
         <div class="main-content">
             <div class="breadcrumbs" id="breadcrumbs">
                 <img src="../static/pages/img/line1.png">
-                <span>转班</span>
+                <span>复课</span>
                 <img src="../static/pages/img/line.png">
             </div>
             <div class="enrollCon" id="changeClassId">
@@ -78,6 +78,12 @@
                                 <span th:text="${balanceamount}"></span>
                                 <input type="hidden" name="balanceamount" th:value="${balanceamount}"/>
                             </div>
+                            <div class="form-group">
+                                <label>剩余课时:</label>
+                                <span>
+                                    <input type="text" name="periodNum" id="periodNum" th:value="${periodNum}"/>
+                                </span>
+                            </div>
                         </div>
                         <div>
                             <!--<button class="choiceStu" type="button" href="#modal-table1" data-toggle="modal" id="chooseid" onclick="getCourseLists()"
@@ -86,12 +92,12 @@
                                 <label>选择课程:</label>
                                 <span id="courseName"></span>
                             </div>-->
-                            <div class="form-group" style="margin-bottom:0 !important">
+                            <!--<div class="form-group" style="margin-bottom:0 !important">
                                 <label>复课班级</label>
                                 <select name="toClassId" id="toClassId">
                                     <option th:each="cla:${xbClassList}" th:selected="${cla.id}eq ${classId}" th:value="${cla.id}" th:text="${cla.sysOrgans.organName}+${cla.xbCourse.courseName}+${cla.employeeName}+${cla.className}"></option>
                                 </select>
-                            </div>
+                            </div>-->
                         </div>
                     </div>
                 </th:block>
@@ -414,7 +420,7 @@
                     //给option的text赋值,这就是你点开下拉框能够看到的东西
                     $(option).text(data.data.xbClassList[i].teacherName+data.data.xbClassList[i].className);
                     //获取select 下拉框对象,并将option添加进select
-                    $('#toClassId').append(option);
+                   /* $('#toClassId').append(option);*/
                 }
             },
             error(){

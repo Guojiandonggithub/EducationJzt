@@ -28,7 +28,7 @@
 <div class="main-container" id="main-container">
     <div th:replace="layout::left('12','')">
     </div>
-    <div class="main-content" id="main-content">
+    <div class="main-content" id="main-content" th:if="${session.roleName!='教师'&&session.roleName!='运营助理'}">
         <div class="breadcrumbs" id="breadcrumbs">
             <img src="../static/pages/img/line1.png">
             <span>办理中心</span>
@@ -42,8 +42,8 @@
                         <p>报名/续费</p>
                     </a>
                 </li>
-                <li>
-                    <a href="/feeRelated/changeClass">
+                <li >
+                    <a href="/feeRelated/changeClass" th:if="${session.roleName!='前台助理'}">
                         <span><img src="../static/pages/img/fk.png"></span>
                         <p>转班</p>
                     </a>
@@ -143,8 +143,8 @@
                         <td><span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span></td>
                         <td>
                             <div class="btn-group open" >
-                                <a  class="down"
-                                    th:onclick="|editManage('${ment.registratioFee}','${ment.surplusMoney}','${ment.paymentMoney}')|"
+                                <a  class="down"  href="#modal-table" data-toggle="modal"
+                                    th:onclick="|editManage('${ment.id}','${ment.registratioFee}','${ment.surplusMoney}','${ment.xbStudent.studentName}')|"
                                     style="border: solid 1px;border-radius: 10px;width: 77px;color: #f0f1f3;
                                                background: #8d05e0;height: 26px;font-weight: 900;margin-bottom: 2px;">
                                     编辑
@@ -227,7 +227,51 @@
             
         </div>
     </div>
-</div> 
+</div>
+
+<!-- 修改报名弹窗 -->
+<form id="iformAttendClass"  >
+    <div id="modal-table" class="modal fade in pk" tabindex="-1" aria-hidden="false">
+        <div class="modal-dialog">
+            <div class="modal-content" id="modal-content">
+                <div class="modal-header no-padding">
+                    <div id="newdayattend" class="table-header">修改报名信息</div>
+                </div>
+                <input id="id" name="id" type="hidden" value="" />
+                <div class="modal-body no-padding">
+                    <div id="classl" class="tab-pane fade in active" style="margin-left:10px;">
+                        <div class="grounInline">
+                            <div class="form-group">
+                                <label><i></i>学员姓名</label>
+                                <input id="studentName" name="studentName"  type="text"/>
+                                <input id="feeId" name="feeId"  type="hidden"/>
+                            </div>
+                            <div class="form-group">
+                                <label for="">报名费&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                                <input id="registratioFee" name="registratioFee" type="text">
+                            </div>
+                        </div>
+                        <div class="grounInline">
+                            <div class="form-group">
+                                <label><i></i>学费&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                                <input id="surplusMoney" name="surplusMoney"  type="text"/>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer no-margin-top">
+                            <button class="btn pull-left" data-dismiss="modal">
+                                取消
+                            </button>
+                            <button class="btn pull-right"  onclick="saveSupplementFee()" type="button">
+                                保存
+                            </button>
+                        </div>
+                        </th:block>
+                    </div>
+                </div>
+            </div>
+        </div>
+</form>
 
 <script>
 !function(){
@@ -259,18 +303,40 @@ $(".tag .close").click(function(){
         window.location.href = basePath + '/student/getManagementList?page=' + page + '&size=' + size+ '&userName=' + userName;
     }
 
-    function editManage(registratioFee,surplusMoney,paymentMoney){
-        var userName = $("#userName").val();
+    function editManage(feeId,registratioFee,surplusMoney,studentName){
+        var studentName = $("#studentName").val(studentName);
+        var surplusMoney = $("#surplusMoney").val(surplusMoney);
+        var registratioFee = $("#registratioFee").val(registratioFee);
+        var feeId = $("#feeId").val(feeId);
+     }
+
+    function saveSupplementFee(){
+        var studentName = $("#studentName").val();
+        var surplusMoney = $("#surplusMoney").val();
+        var registratioFee = $("#registratioFee").val();
+        var feeId = $("#feeId").val();
         var load = new Loading();
         load.init({
             target: "#main-content"
         });
         load.start();
-        var size = $('#size option:selected').val(); //选中的值
-        /*if (page) {
-            page = page - 1;
-        }*/
-        window.location.href = basePath + '/student/getManagementList?page=' + page + '&size=' + size+ '&userName=' + userName;
+        $.ajax({
+            type: 'get',
+            dataType: 'json',
+            url: basePath + '/student/updateManagement',
+            data: {studentName:studentName,surplusMoney:surplusMoney,registratioFee:registratioFee,feeId:feeId},
+            contentType: "application/json;charset=UTF-8",
+            cache: false,
+            async: true,
+            success: function (data) {
+                load.stop();
+                var status = data.status;
+                var msg = data.msg;
+                $.kd.kdAlert("编辑成功！",function () {
+                    window.location.href = basePath + '/student/getManagementList';
+                },"提示");
+            }
+        });
     }
 </script>
 <style>

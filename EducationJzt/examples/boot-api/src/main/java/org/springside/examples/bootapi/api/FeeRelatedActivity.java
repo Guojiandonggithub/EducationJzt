@@ -348,6 +348,7 @@ public class FeeRelatedActivity {
 		model.addAttribute("xbStudentRelationId",xbStudentRelation.id);
 		model.addAttribute("totalReceivable",xbStudentRelation.totalReceivable);
 		model.addAttribute("receivable",xbStudentRelation.receivable);
+		model.addAttribute("periodNum",xbStudentRelation.periodNum);
 		model.addAttribute("balanceamount",balanceamount);
 		return "repeat::changeClassFragment";
 	}
@@ -544,6 +545,8 @@ public class FeeRelatedActivity {
 			XbStudentRelationViewNew xbStudentRelations = studentService.getXbStudentRelationView(studentRelationId);
 			XbStudentRelation xbStudentRelation = studentService.getXbStudentRelation(studentRelationId);
 			xbStudentRelation.studentStart = 0;//在读
+			xbStudentRelation.classId= "";
+            xbStudentRelation.periodNum = new BigDecimal(xbSupplementFee.periodNum);
 			xbSupplementFee.remarks = "对"+xbStudentRelations.sysOrgans.organName+xbStudentRelations.xbCourse.xbcoursetype.courseTypeName+xbStudentRelations.xbCourse.courseName+xbStudentRelations.className+"进行复课";
 			HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
 			SysEmployee sysEmployee = (SysEmployee)request.getSession().getAttribute("sysEmployee");

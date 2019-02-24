@@ -95,23 +95,23 @@
                         <div class="infoMid">
                             <div class="infoForm" style="margin-bottom:22px;" >
                                 <div class="form-group" th:if="${stu.xbStudentRelation.studentStart==0}">
-                                    <input type="radio" th:attr="checked=${stu.xbStudentRelation.studentStart == 0?true:false}" th:name="'state'+${stuindex.index}" value="0" class="ace"><span
+                                    <input type="radio" th:onchange="|javascript:change(this,'${stuindex.index}')|" th:attr="checked=${stu.state == '0'?true:false}" th:name="'state'+${stuindex.index}" value="0" class="ace"><span
                                         class="lbl">上课</span>
-                                    <input type="radio" th:attr="checked=${stu.xbStudentRelation.studentStart == 1?true:false}" th:name="'state'+${stuindex.index}" value="1" class="ace"><span
+                                    <input type="radio" th:onchange="|javascript:change(this,'${stuindex.index}')|" th:attr="checked=${stu.state == '1'?true:false}" th:name="'state'+${stuindex.index}" value="1" class="ace"><span
                                         class="lbl">请假</span>
-                                    <input type="radio" th:attr="checked=${stu.xbStudentRelation.studentStart == 2?true:false}" th:name="'state'+${stuindex.index}" value="2" class="ace"><span
+                                    <input type="radio" th:onchange="|javascript:change(this,'${stuindex.index}')|" th:attr="checked=${stu.state == '2'?true:false}" th:name="'state'+${stuindex.index}" value="2" class="ace"><span
                                         class="lbl">旷课</span>
-                                    <input type="radio" th:attr="checked=${stu.xbStudentRelation.studentStart == 3?true:false}" th:name="'state'+${stuindex.index}" value="3" class="ace"><span
+                                    <input type="radio" th:onchange="|javascript:change(this,'${stuindex.index}')|" th:attr="checked=${stu.state == '3'?true:false}" th:name="'state'+${stuindex.index}" value="3" class="ace"><span
                                         class="lbl">补课</span>
-                                    <input type="radio" th:attr="checked=${stu.xbStudentRelation.studentStart == 4?true:false}" th:name="'state'+${stuindex.index}" value="4" class="ace"><span
+                                    <input type="radio" th:onchange="|javascript:change(this,'${stuindex.index}')|" th:attr="checked=${stu.state == '4'?true:false}" th:name="'state'+${stuindex.index}" value="4" class="ace"><span
                                         class="lbl">不记课</span>
                                 </div>
                                 <div class="form-group" th:if="${stu.xbStudentRelation.studentStart==0}">
                                     <label>扣除课时</label>
-                                    <input type="text" name="deductPeriod" th:value="${stu.deductPeriod}">
+                                    <input type="text" name="deductPeriod" th:value="${stu.deductPeriod}" th:id="'redordIds'+${stuindex.index}">
                                     <input type="hidden" name="id" th:value="${stu.id}">
                                 </div>
-                                <p>剩余<span th:text="${stu.xbStudentRelation.periodNum}"></span>课时</p>
+                                <p>剩余<span th:text="${stu.xbStudentRelation.periodNum}"></span>课时;总课时<span th:text="${stu.xbStudentRelation.totalPeriodNum}"></span></p>
                                 <th:block style="color:#e46054" th:if="${stu.xbStudentRelation.studentStart} eq 1">（已停课）</th:block>
                                 <th:block style="color:#e46054" th:if="${stu.xbStudentRelation.studentStart} eq 4">（已结课）</th:block>
                                 <th:block style="color:#e46054" th:if="${stu.xbStudentRelation.studentStart} eq 3">（已退费）</th:block>
@@ -309,6 +309,16 @@
             });
             return o;
         };
+
+        function change(obj,index){
+            if(obj.value==1||obj.value==2){
+                $("#redordIds"+index).val("0");
+            }else{
+                $("#redordIds"+index).val("1");
+            }
+
+        }
+
     </script>
 </body>
 

@@ -81,6 +81,54 @@ public class ExcelActivity {
 		ExportExcelUtils.exportExcel(response,"记上课.xlsx",datas);
 	}
 
+	@RequestMapping(value = "/studentRecordExcel", method = RequestMethod.GET)
+	public void studentRecordExcel(HttpServletResponse response,@RequestParam(required = false) String data) throws Exception {
+		ExcelData datas = new ExcelData();
+		datas.setName("学员记录");
+		List<String> titles = new ArrayList();
+		titles.add("姓名");
+		titles.add("手机号");
+		titles.add("所属校区");
+		titles.add("所属关系");
+		titles.add("余额");
+		titles.add("欠费");
+		titles.add("报读课程");
+		titles.add("教师");
+		titles.add("班级");
+		titles.add("剩余课时");
+		titles.add("报名时间");
+		datas.setTitles(titles);
+		List<List<Object>> rows = new ArrayList();
+		List<XbStudentRelationViewNew> xbStudentRelationViewNewList = getStudentList(data);
+		for (int i = 0; i < xbStudentRelationViewNewList.size(); i++) {
+			List<Object> xbRecordClassViewList1 = new ArrayList();
+			xbRecordClassViewList1.add(xbStudentRelationViewNewList.get(i).xbStudent.studentName);
+			xbRecordClassViewList1.add(xbStudentRelationViewNewList.get(i).xbStudent.contactPhone);
+			xbRecordClassViewList1.add(xbStudentRelationViewNewList.get(i).sysOrgans.organName);
+			xbRecordClassViewList1.add(xbStudentRelationViewNewList.get(i).xbStudent.contactRelation);
+			xbRecordClassViewList1.add(xbStudentRelationViewNewList.get(i).xbStudent.surplusMoney);
+			xbRecordClassViewList1.add(xbStudentRelationViewNewList.get(i).xbStudent.paymentMoney);
+			xbRecordClassViewList1.add(xbStudentRelationViewNewList.get(i).xbCourse.courseName);
+			xbRecordClassViewList1.add(xbStudentRelationViewNewList.get(i).employeeName);
+			xbRecordClassViewList1.add(xbStudentRelationViewNewList.get(i).className);
+			xbRecordClassViewList1.add(xbStudentRelationViewNewList.get(i).periodNum);
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			String enrollDate="";
+			if(xbStudentRelationViewNewList.get(i).enrollDate!=null){
+				enrollDate = xbStudentRelationViewNewList.get(i).enrollDate.toString().substring(0,10);
+			}
+			xbRecordClassViewList1.add(enrollDate);
+			rows.add(xbRecordClassViewList1);
+		}
+		datas.setRows(rows);
+		//生成本地
+        /*File f = new File("c:/test.xlsx");
+        FileOutputStream out = new FileOutputStream(f);
+        ExportExcelUtils.exportExcel(data, out);
+        out.close();*/
+		ExportExcelUtils.exportExcel(response,"学员信息.xlsx",datas);
+	}
+
 	/*
 	 * 查询上课记录按班级
 	 * @return
@@ -126,4 +174,71 @@ public class ExcelActivity {
 		List<XbRecordClassView> recordLists = studentService.getXbRecordClassdViewtoList(searhMap);
 		return recordLists;
 	}
+
+	/*
+	 * 查询学员信息（到期学员模块导出）
+	 * @return
+	 */
+	private List<XbStudentRelationViewNew> getStudentList(String data){
+		Map<String,Object> resultMap = new HashMap<>();
+		Map<String,Object> searhMap = new HashMap<>();
+		if(null!=data){
+			resultMap = com.alibaba.fastjson.JSONObject.parseObject(data,searhMap.getClass());
+		}
+		String organId = (String)resultMap.get("organIdDQ");
+		String type = (String)resultMap.get("type");
+		//课程类别
+		String typeId = (String)resultMap.get("typeId");
+		if(null==typeId){
+			typeId = "0";
+		}else if(!typeId.equals("0")){
+			searhMap.put("EQ_xbCourse.xbcoursetype.id",typeId);
+		}
+		String nameormobile = (String)resultMap.get("nameormobile");
+		if(null==organId){
+			organId = "0";
+		}else if(!organId.equals("0")){
+			searhMap.put("EQ_organId",organId);
+		}
+		if(null==type){
+			type = "AZ";
+		}
+		if(null!=nameormobile&&!nameormobile.equals("")){
+			if(type.equals("AZ")){
+				searhMap.put("LIKE_xbStudent.studentName",nameormobile);
+			}else{
+				searhMap.put("LIKE_xbStudent.contactPhone",nameormobile);
+			}
+		}
+		//教师名称
+		String TeacherNameCla = (String)resultMap.get("TeacherNameCla");
+		if(StringUtils.isNotEmpty(TeacherNameCla)){
+			searhMap.put("LIKE_employeeName",TeacherNameCla);
+		}
+		//教师名称
+		String studentStart = (String)resultMap.get("studentStart");
+		if(StringUtils.isEmpty(studentStart) || studentStart.equals("10")){
+			studentStart = "10";
+		}else {
+			searhMap.put("EQ_studentStart",Integer.parseInt(studentStart));
+		}
+		String totalPeriodNumStart = (String)resultMap.get("totalPeriodNumStart");
+		String totalPeriodNumEnd = (String)resultMap.get("totalPeriodNumEnd");
+		if(StringUtils.isNotEmpty(totalPeriodNumStart)){
+			searhMap.put("GTE_periodNum",Integer.parseInt(totalPeriodNumStart));
+		}else{
+			searhMap.put("EQ_periodNum","0");
+			totalPeriodNumStart = "0";
+		}
+		if(StringUtils.isNotEmpty(totalPeriodNumEnd)){
+			searhMap.put("LTE_periodNum",Integer.parseInt(totalPeriodNumEnd));
+		}else{
+			searhMap.put("EQ_periodNum","0");
+			totalPeriodNumEnd = "0";
+		}
+		List<XbStudentRelationViewNew> xbStudentPage = studentService.getXbRelationList(searhMap);
+
+		return xbStudentPage;
+	}
+
 }

@@ -244,6 +244,7 @@ public class StudentActivity {
 				searchParamsview.put("LIKE_contactPhone",nameormobile);
 			}
 		}
+		searhMap.put("EQ_xbStudent.deleteStatus","1");
 		String enrollDateSearch = (String)resultMap.get("enrollDateSearch");
 		String enrollDateSearchEnd = (String)resultMap.get("enrollDateSearchEnd");
 		Date startdate = new Date();
@@ -549,7 +550,7 @@ public class StudentActivity {
 				xbclass.preRecruitNum = 1;//预招人数
 				xbclass.establishNum = 1;//成班人数
 				xbclass.recruitState = "1";//招生状态 1-停止招生
-				xbclass.isEnd = "0";//结班
+				xbclass.isEnd = "1";//0结班
 				xbclass.studentNum = 1;
 				xbclass.teacherNum = 1;
 				xbclass.teacherId = teacherId;
@@ -1008,7 +1009,9 @@ public class StudentActivity {
 				XbCourse xbCourse = xbCourseService.findById(studentRelation.courseId);
 				content = content+xbCourse.courseName +",";
 				studentRelation.totalPeriodNum = studentRelation.periodNum;
-				studentRelation.totalReceivable = studentRelation.receivable;
+				//studentRelation.totalReceivable = studentRelation.receivable;
+				studentRelation.receivable = xbSupplementFee.surplusMoney;
+				studentRelation.totalReceivable = xbSupplementFee.surplusMoney;
 				studentRelation.studentStart = 0;//在读
 				studentService.saveXbStudentRelation(studentRelation);
 			}
@@ -1276,6 +1279,13 @@ public class StudentActivity {
 		}
 		String organId = (String)resultMap.get("organIdDQ");
 		String type = (String)resultMap.get("type");
+        //课程类别
+        String typeId = (String)resultMap.get("typeId");
+        if(null==typeId){
+            typeId = "0";
+        }else if(!typeId.equals("0")){
+            searhMap.put("EQ_xbCourse.xbcoursetype.id",typeId);
+        }
 		String nameormobile = (String)resultMap.get("nameormobile");
 		if(null==organId){
 			organId = "0";
@@ -1295,7 +1305,7 @@ public class StudentActivity {
 		//教师名称
 		String TeacherNameCla = (String)resultMap.get("TeacherNameCla");
 		if(StringUtils.isNotEmpty(TeacherNameCla)){
-			searhMap.put("LIKE_xbClass.teacher.employeeName",TeacherNameCla);
+			searhMap.put("LIKE_employeeName",TeacherNameCla);
 		}
 		//教师名称
 		String studentStart = (String)resultMap.get("studentStart");
@@ -1319,6 +1329,10 @@ public class StudentActivity {
 			searhMap.put("EQ_periodNum","0");
 			totalPeriodNumEnd = "0";
 		}
+        model.addAttribute("typeId",typeId);
+        Map<String,Object> searhtypeMap = new HashMap<>();
+        List<XbCourseType> coursetypelist = xbCourseTypeService.findXbCourseTypeList(searhtypeMap);
+        model.addAttribute("coursetypelist",coursetypelist);
 		Page<XbStudentRelationViewNew> xbStudentPage = studentService.getXbStudentRelationViewNewList(pageable,searhMap);
 		model.addAttribute("expiryStuPage",xbStudentPage);
 		model.addAttribute("organIdDQ",organId);
@@ -1499,6 +1513,88 @@ public class StudentActivity {
 		model.addAttribute("enrollDateSearch",enrollDateSearch);
 		model.addAttribute("enrollDateSearchEnd",enrollDateSearchEnd);
 		return "cancel";
+	}
+
+	/**
+	 * 编辑办理中心
+	 * @return
+	 */
+	@RequestMapping("/updateManagement")
+	public void updateManagement(
+			@RequestParam(required = false) String studentName,
+			@RequestParam(required = false) String surplusMoney,
+			@RequestParam(required = false) String registratioFee,
+			@RequestParam(required = false) String feeId,
+		    HttpServletResponse resp){
+		JSONObject jsonObject = new JSONObject();
+		try {
+			XbSupplementFee xbSupplementFee = studentService.getXbSupplementFee(feeId);
+			BigDecimal surplusMoneyB = xbSupplementFee.surplusMoney;
+			BigDecimal registratioFeeB = xbSupplementFee.registratioFee;
+			xbSupplementFee.surplusMoney = new BigDecimal(surplusMoney);
+			xbSupplementFee.registratioFee = new BigDecimal(registratioFee);
+			String studentId = xbSupplementFee.studentId;
+			XbStudent xbStudent = studentService.getXbStudent(studentId);
+			xbStudent.registratioFee = xbStudent.registratioFee.add(new BigDecimal(registratioFee).subtract(registratioFeeB));
+			BigDecimal su = new BigDecimal(surplusMoney).subtract(surplusMoneyB);
+			int r=su.compareTo(BigDecimal.ZERO); //和0，Zero比较
+			if(r==-1){//小于
+				xbStudent.surplusMoney = xbStudent.surplusMoney.add(su);
+			}else{
+				xbStudent.paymentMoney = xbStudent.paymentMoney.add(new BigDecimal(registratioFee).subtract(su));
+			}
+			xbStudent.studentName = studentName;
+			studentService.saveXbStudent(xbStudent);
+			studentService.saveXbSupplementFee(xbSupplementFee);
+			jsonObject.put("msg", "修改成功");
+			jsonObject.put("status", "0");
+			resp.setContentType("text/html;charset=UTF-8");
+			resp.getWriter().println(jsonObject.toJSONString());
+			resp.getWriter().close();
+		} catch (IOException e) {
+			logger.info(e.toString());
+		}
+	}
+
+	@RequestMapping("/editStudent")
+	public void editStudent(@RequestParam String studentEntity,HttpServletResponse resp) {
+		Map<String, Object> map  =  new HashMap<>();
+		try {
+			XbStudent xbStudent = com.alibaba.fastjson.JSONObject.parseObject(studentEntity,XbStudent.class);
+			XbStudent xbStudent_new = studentService.getXbStudent(xbStudent.id);
+			xbStudent_new.studentName = xbStudent.studentName;
+			xbStudent_new.contactPhone = xbStudent.contactPhone;
+			xbStudent_new.contactRelation = xbStudent.contactRelation;
+			xbStudent_new.sex = xbStudent.sex;
+			xbStudent_new.advisoryChannel = xbStudent.advisoryChannel;
+			studentService.saveXbStudent(xbStudent_new);
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("status","1");
+			jsonObject.put("msg", "编辑成功");
+			logger.info("编辑机构返回json参数="+jsonObject.toString());
+			resp.setContentType("text/html;charset=UTF-8");
+			resp.getWriter().println(jsonObject.toJSONString());
+			resp.getWriter().close();
+		} catch (IOException e) {
+			logger.info(e.toString());
+		}
+	}
+
+	@RequestMapping("/deleteStudent")
+	public void deleteStudent(@RequestParam String id,HttpServletResponse resp) {
+		Map<String, Object> map  =  new HashMap<>();
+		try {
+			studentService.deleteXbStudent(id);
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("status","1");
+			jsonObject.put("msg", "编辑成功");
+			logger.info("编辑机构返回json参数="+jsonObject.toString());
+			resp.setContentType("text/html;charset=UTF-8");
+			resp.getWriter().println(jsonObject.toJSONString());
+			resp.getWriter().close();
+		} catch (IOException e) {
+			logger.info(e.toString());
+		}
 	}
 
 }

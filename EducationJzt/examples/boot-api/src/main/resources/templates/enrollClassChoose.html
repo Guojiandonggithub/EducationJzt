@@ -564,7 +564,7 @@
         $("#enrollCon").hide();
         var organName = $("#kechengorgan").find("option:selected").text();
         $("#organName").html(organName);
-        var courseIds = $("input:checkbox[name='checkboxname']:checked").map(function(index,elem) {
+        var courseIds = $("input:radio[name='checkboxname']:checked").map(function(index,elem) {
             return $(elem).val();
         }).get().join(',');
         var load = new Loading();

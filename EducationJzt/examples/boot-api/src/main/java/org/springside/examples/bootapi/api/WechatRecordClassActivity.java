@@ -22,7 +22,6 @@ import org.springside.examples.bootapi.service.*;
 import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -382,18 +381,23 @@ public class WechatRecordClassActivity {
 	 */
 	@RequestMapping("/accordingStudentRecord")
 	public String accordingStudentRecord(@RequestParam(required = false) String classId,
-							@RequestParam(required = false) String recordTime, ModelMap model, Pageable pageable) throws ParseException {
-		Map<String,Object> searhMap = new HashMap<>();
-		/*if(null!=classId){
-			searhMap.put("LIKE_classId",classId);
-		}*/
-		XbClass classes = studentService.getXbClass(classId);
-		searhMap.put("EQ_attendId",classId);
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		searhMap.put("EQ_recordTime",sdf.parse(recordTime));
-		Page<XbRecordClass> classPage = studentService.getRecordClassPage(pageable,searhMap);
-		model.addAttribute("classPage",classPage);
-		model.addAttribute("classes",classes);
+							@RequestParam(required = false) String recordTime, ModelMap model, Pageable pageable) {
+		try {
+			Map<String,Object> searhMap = new HashMap<>();
+			/*if(null!=classId){
+				searhMap.put("LIKE_classId",classId);
+			}*/
+			XbClass classes = studentService.getXbClass(classId);
+			searhMap.put("EQ_attendId",classId);
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			searhMap.put("EQ_recordTime",sdf.parse(recordTime));
+			Page<XbRecordClass> classPage = studentService.getRecordClassPage(pageable,searhMap);
+			model.addAttribute("classPage",classPage);
+			model.addAttribute("classes",classes);
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.info(e.toString());
+		}
 		return "wechat_accordingStudent_record";
 	}
 	@PostMapping("/save/recordClass")

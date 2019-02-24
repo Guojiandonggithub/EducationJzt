@@ -19,6 +19,8 @@
 
     <script src="../static/pages/js/jquery.min.js"></script>
     <script src="../static/pages/js/bootstrap.min.js"> </script>
+    <script src="../static/pages/js/ace.min.js"> </script>
+    <script src="../static/pages/js/ace-elements.min.js"></script>
     <script src="../static/pages/laydate/laydate.js"></script>
     <script src="../static/pages/js/kd.ui.plugin.js"></script>
     <script src="../static/pages/js/loading.js"></script>
@@ -29,7 +31,7 @@
 <body>
 <div th:replace="layout::top"></div>
 <div class="main-container" id="main-container">
-    <div th:replace="layout::left('13','31')">
+    <div th:replace="layout::left('13','38')">
     </div>
     <div class="main-content" id="main-content">
         <div class="breadcrumbs" id="breadcrumbs">
@@ -42,7 +44,7 @@
                 <li class="active">
                     <a data-toggle="tab" href="#studentList" >学员列表</a>
                 </li>
-                <li>
+                <!--<li>
                     <a data-toggle="tab" href="#divideList" onclick="getDividelist('');">学员分班列表</a>
                 </li>
                 <li>
@@ -50,7 +52,7 @@
                 </li>
                 <li>
                     <a data-toggle="tab" href="#arrearList" onclick="getqianfeilist('');">课程欠费学员</a>
-                </li>
+                </li>-->
             </ul>
             <div class="tab-content student">
                 <!-- 学员列表 -->

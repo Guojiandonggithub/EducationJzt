@@ -332,7 +332,8 @@
                     <th:block th:if="${xbCoursePage}" th:fragment="courselist">
                     <tr  th:each="couse : ${xbCoursePage.content}" >
                         <td>
-                            <input name="form-field-checkbox" name="checkboxname" type="checkbox" th:value="${couse.id}" onchange="kechengbox();">
+                            <!--<input name="form-field-checkbox" name="checkboxname" type="checkbox" th:value="${couse.id}" onchange="kechengbox();">-->
+                            <input name="form-field-checkbox" name="checkboxname" type="radio" th:value="${couse.id}" onchange="kechengbox();">
                         </td>
                         <td th:text="${couse.xbCourse.courseName}"><img src="../static/pages/img/man.png"></td>
                         <td th:text="${couse.xbCourse.xbcoursetype.courseTypeName}"></td>
@@ -819,7 +820,7 @@
         $("#enrollCon").hide();
         var organName = $("#kechengorgan").find("option:selected").text();
         $("#organName").html(organName);
-        var courseIds = $("input:checkbox[name='checkboxname']:checked").map(function(index,elem) {
+        var courseIds = $("input:radio[name='checkboxname']:checked").map(function(index,elem) {
             return $(elem).val();
         }).get().join(',');
         var load = new Loading();

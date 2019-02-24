@@ -36,8 +36,8 @@
 <!--<div th:replace="layout::top"></div>
 <div th:replace="layout::left('13','31')">
 </div>-->
-<div class="user-infor-position clearfix">
-    <div class=" user-infor-l ">
+<div class="user-infor-position clearfix" id="userinforId">
+    <div class=" user-infor-l " >
         <span class="user-inner">
             <span class="img-com">
                 <img src="../static/pages/img/headpic.png">
@@ -47,15 +47,15 @@
             <th:block th:if="${xbStudent.sex} eq 0"><img src="../static/pages/img/boy.png"></th:block>
             <th:block th:if="${xbStudent.sex} eq 1"><img src="../static/pages/img/girl.png.png"></th:block>
         </p>
-        <!--<a class="td_edit" href="#modal-table" role="button" data-toggle="modal"><img src="../static/pages/img/edit.png">编辑</a>
-        <a class="td_delete"><img src="../static/pages/img/del.png">删除</a>-->
+        <a class="td_edit" href="#modal-table" role="button" data-toggle="modal"><img src="../static/pages/img/edit.png">编辑</a>
+        <a class="td_delete" onclick="deleteStuinfo();"><img src="../static/pages/img/del.png">删除</a>
     </div>
     <div class=" user-infor-r">
         <div class="user-inf or-r-con">
             <div class="user-infor-list">
                 <ul class="user-infor-ul clearfix">
                     <div class="block-box-title" style="position: relative;top: 8px;">基本信息</div>
-                    <input type="hidden" name="id" id="id" th:value="${xbStudent.id}"/>
+                    <input type="hidden" id="id" th:value="${xbStudent.id}">
                     <div style="padding-left:15px;">
                         <li>
                             <span class="text-tips">联系电话（<span th:text="${xbStudent.contactRelation}"></span>）：</span><th:block th:text="${xbStudent.contactPhone}"></th:block>
@@ -93,7 +93,7 @@
                         <li class="li-block">
                             <span class="text-tips">其他信息：</span>
                         </li>
-                    </div>                    
+                    </div>
                 </ul>
             </div>
         </div>
@@ -117,7 +117,7 @@
             </li>
         </ul>
         <div class="tab-content student">
-           
+
             <!-- 课程表 -->
             <div id="array" class="tab-pane fade in active">
                 <div class="tab-pane fade in active" id="calendarTime">
@@ -129,7 +129,7 @@
                             <p class="state4"><span></span>冲突日程</p>
                         </div>
                     </div>
-                </div>                
+                </div>
             </div>
              <!-- 订单 -->
              <div id="order" class="tab-pane fade">
@@ -372,7 +372,8 @@
 <!-- 编辑 -->
 <div id="modal-table" class="modal fade in pk" tabindex="-1" aria-hidden="false">
     <div class="modal-dialog">
-        <div class="modal-content">
+        <form id="editForm">
+            <div class="modal-content">
             <div class="modal-header no-padding">
                 <div class="table-header">编辑信息</div>
             </div>
@@ -387,6 +388,7 @@
                     <div class="form-group">
                         <label>姓名</label>
                         <input type="text" name="studentName" th:value="${xbStudent.studentName}">
+                        <input type="hidden" id="stuinfoId" name="id" th:value="${xbStudent.id}">
                     </div>
                     <div class="form-group">
                         <label>联系电话</label>
@@ -405,6 +407,13 @@
                         <input name="form-field-radio" th:attr="checked=${xbStudent.sex == '2'?true:false}" value="2" name="sex" type="radio" class="ace"><span class="lbl">未知</span>
                     </div>
                     <div class="form-group">
+                        <label>咨询渠道</label>
+                        <input name="form-field-radio" th:attr="checked=${xbStudent.advisoryChannel == '家长转介绍'?true:false}" value="家长转介绍" name="advisoryChannel" type="radio" class="ace"><span class="lbl">家长转介绍</span>
+                        <input name="form-field-radio" th:attr="checked=${xbStudent.advisoryChannel == '科目转换'?true:false}" value="科目转换" name="advisoryChannel" type="radio" class="ace"><span class="lbl">科目转换</span>
+                        <input name="form-field-radio" th:attr="checked=${xbStudent.advisoryChannel == '上门咨询'?true:false}" value="上门咨询" name="advisoryChannel" type="radio" class="ace"><span class="lbl">上门咨询</span>
+                        <input name="form-field-radio" th:attr="checked=${xbStudent.advisoryChannel == '电话咨询'?true:false}" value="电话咨询" name="advisoryChannel" type="radio" class="ace"><span class="lbl">电话咨询</span>
+                    </div>
+                    <!--<div class="form-group">
                         <label>微信号</label>
                         <input type="text" value="">
                     </div>
@@ -427,19 +436,20 @@
                     <div class="form-group">
                         <label>其他地区</label>
                         <textarea name="" id="" cols="50" rows="1"></textarea>
-                    </div>
+                    </div>-->
                 </div>
-            
+
 
             <div class="modal-footer no-margin-top">
-                <button class="btn pull-left" data-dismiss="modal">
+                <button class="btn pull-left" data-dismiss="modal" >
                     取消
                 </button>
-                <button class="btn pull-right" data-dismiss="modal">
+                <button class="btn pull-right" data-dismiss="modal" type="button" onclick="editStuinfo()">
                     保存
                 </button>
             </div>
         </div>
+        </form>
     </div>
 </div>
 
@@ -589,7 +599,7 @@
     });
 
 
-    $(function () {
+   /* $(function () {
 
     var date = new Date();
     var d = date.getDate();
@@ -600,7 +610,7 @@
         header: {
             center: 'prev,title,next,today',
         },
-        
+
         defaultView:'agendaWeek',
 
 
@@ -654,118 +664,118 @@
         ],
 
     });
-    });
+    });*/
 
 
 
     $(function () {
 
-    var date = new Date();
-    var d = date.getDate();
-    var m = date.getMonth();
-    var y = date.getFullYear();
+        var date = new Date();
+        var d = date.getDate();
+        var m = date.getMonth();
+        var y = date.getFullYear();
 
-    $('#calendarTeacher #calendar').fullCalendar({
-        header: {
-            center: 'prev,title,next,today',
-        },
-        
-        defaultView:'agendaWeek',
+        $('#calendarTeacher #calendar').fullCalendar({
+            header: {
+                center: 'prev,title,next,today',
+            },
+
+            defaultView:'agendaWeek',
 
 
-        firstDay: 1,
-        editable: true,
-        timeFormat: 'H:mm',
-        axisFormat: 'H:mm',
-        events: [{
-                title: '科源校区诶诶我惹人\r\n张三\n5号教室',
-                start: new Date(y, m, 1),
-                backgroundColor: '#33a299;'
-            },
-            {
-                title: '科源校区诶诶我惹人\r\n张三\n5号教室',
-                start: new Date(y, m, d - 5),
-                end: new Date(y, m, d - 2),
-                backgroundColor: '#6aa8f1;'
+            firstDay: 1,
+            editable: true,
+            timeFormat: 'H:mm',
+            axisFormat: 'H:mm',
+            events: [{
+                    title: '科源校区诶诶我惹人\r\n张三\n5号教室',
+                    start: new Date(y, m, 1),
+                    backgroundColor: '#33a299;'
+                },
+                {
+                    title: '科源校区诶诶我惹人\r\n张三\n5号教室',
+                    start: new Date(y, m, d - 5),
+                    end: new Date(y, m, d - 2),
+                    backgroundColor: '#6aa8f1;'
 
-            },
-            {
-                title: '科源校区诶诶我惹人\r\n张三\n5号教室',
-                start: new Date(y, m, d - 5),
-                end: new Date(y, m, d - 2),
-                backgroundColor: '#6aa8f1;'
+                },
+                {
+                    title: '科源校区诶诶我惹人\r\n张三\n5号教室',
+                    start: new Date(y, m, d - 5),
+                    end: new Date(y, m, d - 2),
+                    backgroundColor: '#6aa8f1;'
 
-            },
-            {
-                title: '科源校区诶诶我惹人\r\n张三\n5号教室',
-                start: new Date(y, m, 28),
-                end: new Date(y, m, 29),
-                backgroundColor: '#fc8038'
-            },
-            {
-                title: '科源校区诶诶我惹人\r\n张三\n5号教室',
-                start: new Date(y, m, d + 1, 19, 0),
-                end: new Date(y, m, d + 1, 22, 30),
-                backgroundColor: '#3967a3;'
-            },
-            {
-                title: '科源校区诶诶我惹人\r\n张三\n5号教室',
-                start: new Date(y, m, 28),
-                end: new Date(y, m, 29),
-                backgroundColor: '#fc8038'
-            },
-            {
-                title: '科源校区诶诶我惹人\r\n张三\n5号教室',
-                start: new Date(y, m, d + 1, 19, 0),
-                end: new Date(y, m, d + 1, 22, 30),
-                backgroundColor: '#3967a3;'
-            },
-        ],
+                },
+                {
+                    title: '科源校区诶诶我惹人\r\n张三\n5号教室',
+                    start: new Date(y, m, 28),
+                    end: new Date(y, m, 29),
+                    backgroundColor: '#fc8038'
+                },
+                {
+                    title: '科源校区诶诶我惹人\r\n张三\n5号教室',
+                    start: new Date(y, m, d + 1, 19, 0),
+                    end: new Date(y, m, d + 1, 22, 30),
+                    backgroundColor: '#3967a3;'
+                },
+                {
+                    title: '科源校区诶诶我惹人\r\n张三\n5号教室',
+                    start: new Date(y, m, 28),
+                    end: new Date(y, m, 29),
+                    backgroundColor: '#fc8038'
+                },
+                {
+                    title: '科源校区诶诶我惹人\r\n张三\n5号教室',
+                    start: new Date(y, m, d + 1, 19, 0),
+                    end: new Date(y, m, d + 1, 22, 30),
+                    backgroundColor: '#3967a3;'
+                },
+            ],
 
-    });
+        });
     });
 </script>
 
 <script>
 //获取上传按钮
-var input1 = document.getElementById("upload"); 
-    
-if(typeof FileReader==='undefined'){ 
-        
-        input1.setAttribute('disabled','disabled'); 
-}else{ 
-        input1.addEventListener('change',readFile,false); 
-        
+var input1 = document.getElementById("upload");
+
+if(typeof FileReader==='undefined'){
+
+        input1.setAttribute('disabled','disabled');
+}else{
+        input1.addEventListener('change',readFile,false);
+
 }
-function readFile(){ 
+function readFile(){
     var file = this.files[0];//获取上传文件列表中第一个文件
     if(!/image\/\w+/.test(file.type)){
     //图片文件的type值为image/png或image/jpg
         alert("文件必须为图片！");
-        return false; 
-    } 
+        return false;
+    }
     // console.log(file);
     var reader = new FileReader();//实例一个文件对象
     reader.readAsDataURL(file);//把上传的文件转换成url
     //当文件读取成功便可以调取上传的接口
-    reader.onload = function(e){ 
+    reader.onload = function(e){
         var image = new Image();
-        // 设置src属性 
+        // 设置src属性
         image.src = e.target.result;
         var max=200;
         // 绑定load事件处理器，加载完成后执行，避免同步问题
-        image.onload = function(){ 
-            // 获取 canvas DOM 对象 
-            var canvas = document.getElementById("cvs"); 
-            // 如果高度超标 宽度等比例缩放 *= 
+        image.onload = function(){
+            // 获取 canvas DOM 对象
+            var canvas = document.getElementById("cvs");
+            // 如果高度超标 宽度等比例缩放 *=
             /*if(image.height > max) {
-                image.width *= max / image.height; 
+                image.width *= max / image.height;
                 image.height = max;
             } */
-            // 获取 canvas的 2d 环境对象, 
-            var ctx = canvas.getContext("2d"); 
-            // canvas清屏 
-            ctx.clearRect(0, 0, canvas.width, canvas.height); 
+            // 获取 canvas的 2d 环境对象,
+            var ctx = canvas.getContext("2d");
+            // canvas清屏
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
             // 重置canvas宽高
             /*canvas.width = image.width;
             canvas.height = image.height;
@@ -774,9 +784,92 @@ function readFile(){
             // ctx.drawImage(image, 0, 0, image.width, image.height);
             ctx.drawImage(image, 0, 0, 200, 200);
             // 注意，此时image没有加入到dom之中
-        };  
+        };
     }
 };
+
+</script>
+<script type="text/javascript" th:inline="javascript">
+  var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/;
+function editStuinfo(){
+   var infoId = $("#stuinfoId").val;
+   var data= serializeObject("#editForm");
+   console.log(data);
+   var load = new Loading();
+   load.init({
+       target: "#modal-table"
+   });
+   load.start();
+   $.ajax({
+       type: 'get',
+       dataType: 'json',
+       url: basePath + '/student/editStudent',
+       data: {studentEntity:JSON.stringify(data)},
+       contentType:"application/json;charset=UTF-8",
+       cache: false,
+       async: true,
+       success: function (data) {
+           //load.stop();
+           var status = data.status;
+           var msg = data.msg;
+           $.kd.kdAlert("编辑成功！",function () {
+               window.location.href = basePath + '/student/studentDetail?studentId='+infoId;
+           },"提示");
+       },
+       error(){
+           load.stop();
+       }
+   });
+}
+
+  //删除学员
+  function deleteStuinfo() {
+      var infoId = $("#id").val();
+      var load = new Loading();
+      load.init({
+          target: "#userinforId"
+      });
+      $.kd.kdConfirm("确定要删除该学员?",function(){
+          load.start();
+          $.ajax({
+              url: basePath + '/student/deleteStudent',
+              type: 'get',
+              contentType: 'application/json',
+              data: {id: infoId},
+              async: true,
+              success: function (data) {
+                  load.stop();
+                  console.log("回调成功")
+                  $.kd.kdAlert("删除成功",function(){
+                      window.location.href = basePath + '/student/getXbStudentList';
+                  })
+
+              },
+              error: function () {
+                  load.stop();
+                  console.log("回调失败")
+              }
+          });
+      })
+
+  };
+
+  function serializeObject(form)
+  {
+      var o = {};
+      var a = $(form).serializeArray();
+      $.each(a, function() {
+          if (o[this.name]) {
+              if (!o[this.name].push) {
+                  o[this.name] = [o[this.name]];
+              }
+              o[this.name].push(this.value || '');
+          } else {
+              o[this.name] = this.value || '';
+          }
+      });
+      return o;
+  };
 </script>
 </body>
 </html>

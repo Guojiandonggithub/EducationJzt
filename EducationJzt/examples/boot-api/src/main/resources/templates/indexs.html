@@ -35,7 +35,7 @@
 <div class="main-container" id="main-container">
     <div th:replace="layout::left('11','')">
     </div>
-    <div class="main-content" th:if="${session.roleName}!='教师'">
+    <div class="main-content" th:if="${session.roleName!='教师'&&session.roleName!='运营助理'&&session.roleName!='总校教务'}">
         <div class="breadcrumbs" id="breadcrumb">
             <img src="../static/pages/img/line1.png"/>
             <span>初始化设置</span>
@@ -164,6 +164,9 @@
                         当前结果：学员共计<span th:text="${studentlistsize}"></span>名，
                         报读课程数总计：<span th:text="${xbStudentPage.getTotalElements()}"></span>条
                         课时剩余总金额：<span th:text="${#numbers.formatDecimal(totalMoney, 1, 2)}"></span>
+                        学费：<span th:text="${#numbers.formatDecimal(surplusMoney, 1, 2)}"></span>
+                        报名费：<span th:text="${#numbers.formatDecimal(registratiofee, 1, 2)}"></span>
+                        退费金额：<span th:text="${#numbers.formatDecimal(tuifeifee, 1, 2)}"></span>
                     </div>
                     <div class="orderTable">
                         <table class="table table-hover">

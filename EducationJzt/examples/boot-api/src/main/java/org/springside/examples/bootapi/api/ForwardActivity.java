@@ -54,6 +54,7 @@ public class ForwardActivity {
 		Map<String,Object> resultMap = new HashMap<>();
 		Map<String,Object> searhMap = new HashMap<>();
 		Map<String,Object> searchParamsview = new HashMap<>();
+		Map<String,Object> searchXbSupplementFee = new HashMap<>();
 		if(null!=data){
 			resultMap = com.alibaba.fastjson.JSONObject.parseObject(data,searhMap.getClass());
 		}
@@ -64,6 +65,7 @@ public class ForwardActivity {
 			organId = "0";
 		}else if(!organId.equals("0")){
 			searhMap.put("EQ_organId",organId);
+			searchXbSupplementFee.put("EQ_xbStudent.organId",organId);
 			searchParamsview.put("EQ_organId",organId);
 		}
 		if(null==type){
@@ -80,19 +82,22 @@ public class ForwardActivity {
 		}
 		String enrollDateSearch = (String)resultMap.get("enrollDateSearch");
 		String enrollDateSearchEnd = (String)resultMap.get("enrollDateSearchEnd");
-		Date date = new Date();
+		Date date  = null;
 		try {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			if(StringUtils.isNotEmpty(enrollDateSearch)){
 				date = sdf.parse(enrollDateSearch);
 				searhMap.put("EQ_enrollDate",date);
 				searchParamsview.put("EQ_enrollDate",date);
+				searchXbSupplementFee.put("EQ_paymentDate",date);
 			}
 			if(null==enrollDateSearch){
-				date = sdf.parse(DateUtil.getDateStr(new Date()));
 				enrollDateSearch = DateUtil.getDateStr(new Date());
+				String dates = DateUtil.getDateStr(new Date());
+				date = sdf.parse(dates);
 				searhMap.put("EQ_enrollDate",date);
 				searchParamsview.put("EQ_enrollDate",date);
+				searchXbSupplementFee.put("EQ_paymentDate",sdf.parse(dates.substring(0,10)));
 			}
 		} catch (ParseException e) {
 			e.printStackTrace();
@@ -111,15 +116,31 @@ public class ForwardActivity {
 			searhMap.put("EQ_studentStart",Integer.parseInt(studentStart));
 			searchParamsview.put("EQ_studentStart",Integer.parseInt(studentStart));
 		}
+		List<XbSupplementFee> xbSupplementFeeList = studentService.getXbSupplementFeeList(searchXbSupplementFee);
 		List<XbStudentRelationView> studentlist = studentService.getxbStudentRelationViewList(searchParamsview);
 		Iterable<SysOrgans> organsList = organsService.getOrgansList();
 		Page<XbStudentRelationViewNew> xbStudentPage = studentService.getXbStudentRelationViewNewList(pageable,searhMap);
 		Map<String,Object> studentMap = new HashMap<>();
 		BigDecimal totalMoney = new BigDecimal(0.00);
+		BigDecimal surplusMoney = new BigDecimal(0.00);
+		BigDecimal registratiofee = new BigDecimal(0.00);
+		BigDecimal tuifeifee = new BigDecimal(0.00);
 		BigDecimal zeroMoney = new BigDecimal(0.00);
 		for(XbStudentRelationView xsrvn:studentlist){
 			totalMoney = totalMoney.add(xsrvn.receivable==null?zeroMoney:xsrvn.receivable);
+	}
+		for(XbSupplementFee xsrvnf:xbSupplementFeeList){
+		if(xsrvnf.type.equals("0")){
+			surplusMoney = surplusMoney.add(xsrvnf.surplusMoney==null?zeroMoney:xsrvnf.surplusMoney);
 		}
+		registratiofee = registratiofee.add(xsrvnf.registratioFee==null?zeroMoney:xsrvnf.registratioFee);
+		if(xsrvnf.type.equals("5")){
+			tuifeifee = tuifeifee.add(xsrvnf.paymentMoney==null?zeroMoney:xsrvnf.paymentMoney);
+		}
+	}
+		model.addAttribute("surplusMoney",surplusMoney);
+		model.addAttribute("registratiofee",registratiofee);
+		model.addAttribute("tuifeifee",new BigDecimal(0.00).subtract(tuifeifee));
 		model.addAttribute("studentStart",studentStart);
 		model.addAttribute("totalMoney",totalMoney.toString());
 		model.addAttribute("xbStudentPage",xbStudentPage);

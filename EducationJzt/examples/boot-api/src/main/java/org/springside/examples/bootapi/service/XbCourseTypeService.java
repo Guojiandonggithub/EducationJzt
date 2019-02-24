@@ -61,6 +61,9 @@ public class XbCourseTypeService {
 				filters.values(), XbCourseType.class);
 		return xbCourseTypeDao.findAll(spec,page);
 	}
+    public XbCourseType saveXbCourseType(XbCourseType xbcoursetype){
+         return xbCourseTypeDao.save(xbcoursetype);
+    }
 	public List<XbCourseType> findXbCourseTypeList(Map<String, Object> searchParams){
 
 		searchParams.put("EQ_deleteStatus","1");
@@ -69,9 +72,6 @@ public class XbCourseTypeService {
 				filters.values(), XbCourseType.class);
 		return xbCourseTypeDao.findAll(spec);
 	}
-    public XbCourseType saveXbCourseType(XbCourseType xbcoursetype){
-         return xbCourseTypeDao.save(xbcoursetype);
-    }
 	public XbCourseType checkTypeLayorder(int layorder){
 		return xbCourseTypeDao.findByLayOrderAndDeleteStatus(layorder,"1");
 	}
