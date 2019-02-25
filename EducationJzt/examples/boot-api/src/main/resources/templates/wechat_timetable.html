@@ -22,10 +22,10 @@
 </div>
 <div  style="max-width: 500px;margin:0 auto;border: solid 1px #ccc;">
     <div class="bd_w jcalendar_week" id="jcalendar_week"></div>
-    <div class="pop_bd" id="pop">
+    <div class="pop_bd" id="pop" style="z-index: 1000;">
         <div class="pop_con">
             <span class="pop_close" onClick="$('#pop').hide();">&times;</span>
-            <h5>选择年份1：</h5>
+            <h5>选择年份：</h5>
             <div class="flex_i control">
                 <button onClick="$(this).next().val(parseInt($(this).next().val())-1)"><</button>
                 <input class="flex_auto control_val" type="text" id="setyear" value="- -" />
