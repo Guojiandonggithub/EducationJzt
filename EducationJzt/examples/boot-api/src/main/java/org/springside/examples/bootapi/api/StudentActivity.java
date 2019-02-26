@@ -562,16 +562,16 @@ public class StudentActivity {
 				if(StringUtils.isEmpty(newclass.id)){
 					return UtilTools.makerErsResults("一对一排课新建班级失败");
 				}
-				XbStudentRelation xbsr = studentService.getXbStudentRelation(id);
-				xbsr.classId = newclass.id;
-				XbStudentRelation rsxbsr = studentService.saveXbStudentRelation(xbsr);
-				if(StringUtils.isEmpty(rsxbsr.id)){
-					return UtilTools.makerErsResults("一对一排课新建排课,更新学员班表失败");
-				}
 			} catch (ParseException e) {
 				e.printStackTrace();
 				return UtilTools.makerErsResults("一对一排课新建班级异常");
 			}
+		}
+		XbStudentRelation xbsr = studentService.getXbStudentRelation(id);
+		xbsr.classId = newclass.id;
+		XbStudentRelation rsxbsr = studentService.saveXbStudentRelation(xbsr);
+		if(StringUtils.isEmpty(rsxbsr.id)){
+			return UtilTools.makerErsResults("一对一排课新建排课,更新学员班表失败");
 		}
 		Map map = new HashMap();
 		map.put("id",newclass.id);
