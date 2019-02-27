@@ -501,10 +501,8 @@ public class StudentActivity {
 			if(null!=data){
 				resultMap = com.alibaba.fastjson.JSONObject.parseObject(data,Map.class);
 			}
-			IResult check = check(resultMap);
-			if(check.isSuccessful()){
-
-
+			/*IResult check = check(resultMap);
+			if(check.isSuccessful()){*/
 				IResult saveclassrs = saveOneToOneClass(resultMap);
 				if(!saveclassrs.isSuccessful()){
 					jsonObject.put("status",saveclassrs.isSuccessful()?"00":"11");
@@ -514,10 +512,10 @@ public class StudentActivity {
 					jsonObject.put("status",saveclassrs.isSuccessful()?"00":"11");
 					jsonObject.put("msg",saveclassrs.getErrorMessage());
 				}
-			}else{
+			/*}else{
 				jsonObject.put("status",check.isSuccessful()?"00":"11");
 				jsonObject.put("msg",check.getErrorMessage());
-			}
+			}*/
 
 		HttpServletUtil.reponseWriter(jsonObject,resp);
 		} catch (Exception e) {
