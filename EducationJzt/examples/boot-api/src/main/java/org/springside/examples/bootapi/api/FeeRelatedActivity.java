@@ -275,7 +275,7 @@ public class FeeRelatedActivity {
 		XbStudent xbStudent = studentService.getXbStudent(studentId);
 		Map<String,Object> studentMap = new HashMap<>();
 		studentMap.put("EQ_studentId",studentId);
-		studentMap.put("EQ_deleteStatus","1");
+		//studentMap.put("EQ_deleteStatus","1");
 		if(null!=classId&&!classId.equals("")){
 			studentMap.put("EQ_id",classId);
 		}
@@ -311,7 +311,7 @@ public class FeeRelatedActivity {
 		XbStudent xbStudent = studentService.getXbStudent(studentId);
 		Map<String,Object> studentMap = new HashMap<>();
 		studentMap.put("EQ_studentId",studentId);
-		studentMap.put("EQ_deleteStatus","1");
+		//studentMap.put("EQ_deleteStatus","1");
 		if(null!=classId&&!classId.equals("")){
 			studentMap.put("EQ_id",classId);
 		}
@@ -330,7 +330,7 @@ public class FeeRelatedActivity {
 		XbStudent xbStudent = studentService.getXbStudent(studentId);
 		Map<String,Object> studentMap = new HashMap<>();
 		studentMap.put("EQ_studentId",studentId);
-		studentMap.put("EQ_deleteStatus","1");
+		//studentMap.put("EQ_deleteStatus","1");
 		studentMap.put("EQ_studentStart","1");
 		XbStudentRelationViewNew xbStudentRelation = new XbStudentRelationViewNew();
 		List<XbStudentRelationViewNew> xbStudentPage = studentService.getXbRelationList(studentMap);
@@ -383,7 +383,7 @@ public class FeeRelatedActivity {
 		model.addAttribute("periodNum",xbStudentRelation.periodNum);
 		model.addAttribute("classId",classId);
 		model.addAttribute("balanceamount",balanceamount);
-		return "changeClass::changeClassFragment";
+		return "cancelClass::changeClassFragment";
 	}
 
 	/**
@@ -710,7 +710,7 @@ public class FeeRelatedActivity {
 			resultMap.put("EQ_xbCourse.courseTypeId",studentService.getXbClass(classId).xbCourse.courseTypeId);
 		}
 		if(null!=studentName&&!studentName.equals("")){
-			resultMap.put("EQ_xbStudent.studentName",studentName);
+			resultMap.put("LIKE_xbStudent.studentName",studentName);
 		}
 		resultMap.put("EQ_classId","");
 		List<XbStudentRelationViewNew> xbStudentsList = studentService.getXbRelationList(resultMap);
@@ -817,7 +817,11 @@ public class FeeRelatedActivity {
 			String id = xbStudent.id;
 			XbStudentRelation xbStudentRelation = studentService.getXbStudentRelation(xbSupplementFee.studentRelationId);
 			if(null!=id&&!"".equals(id)){
-				xbStudent.totalPeriodNum = xbStudentRelation.periodNum.add(xbStudent.totalPeriodNum);
+				BigDecimal totalPeriodNum = BigDecimal.ZERO;
+				if(xbStudent.totalPeriodNum!=null){
+					totalPeriodNum = xbStudent.totalPeriodNum;
+				}
+				xbStudent.totalPeriodNum = xbStudentRelation.periodNum.add(totalPeriodNum);
 			}
 			xbStudent.deleteStatus = "1";
 			xbStudent = studentService.saveXbStudent(xbStudent);
@@ -908,7 +912,7 @@ public class FeeRelatedActivity {
 		XbStudent xbStudent = studentService.getXbStudent(studentId);
 		Map<String,Object> studentMap = new HashMap<>();
 		studentMap.put("EQ_studentId",studentId);
-		studentMap.put("EQ_deleteStatus","1");
+		//studentMap.put("EQ_deleteStatus","1");
 		if(null!=classId&&!classId.equals("")){
 			studentMap.put("EQ_id",classId);
 		}

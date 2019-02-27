@@ -49,7 +49,7 @@ public class XbStudentService {
 	public Page<XbSupplementFee>  getXbSupplementFeeList(Pageable pageable, Map<String, Object> searchParams) {
 		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
 		SysEmployee sysEmployee = (SysEmployee)request.getSession().getAttribute("sysEmployee");
-		if("管理员".equals(sysEmployee.sysRole.roleName)||"教师".equals(sysEmployee.sysRole.roleName)){
+		if(!"超级管理员".equals(sysEmployee.sysRole.roleName)){
 			searchParams.put("EQ_xbStudent.organId",sysEmployee.organId);
 		}
 		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
@@ -62,7 +62,7 @@ public class XbStudentService {
 	public List<XbSupplementFee>  getXbSupplementFeeList(Map<String, Object> searchParams) {
 		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
 		SysEmployee sysEmployee = (SysEmployee)request.getSession().getAttribute("sysEmployee");
-		if("管理员".equals(sysEmployee.sysRole.roleName)||"教师".equals(sysEmployee.sysRole.roleName)){
+		if(!"超级管理员".equals(sysEmployee.sysRole.roleName)){
 			searchParams.put("EQ_xbStudent.organId",sysEmployee.organId);
 		}
 		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
@@ -130,11 +130,10 @@ public class XbStudentService {
 	public Page<XbStudentRelationViewNew>  getXbStudentRelationViewNewList(Pageable pageable, Map<String, Object> searchParams) {
 		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
 		SysEmployee sysEmployee = (SysEmployee)request.getSession().getAttribute("sysEmployee");
-		if("管理员".equals(sysEmployee.sysRole.roleName)){
+		if(!"超级管理员".equals(sysEmployee.sysRole.roleName)){
 			searchParams.put("EQ_organId",sysEmployee.organId);
 		}
 		if("教师".equals(sysEmployee.sysRole.roleName)){
-			searchParams.put("EQ_organId",sysEmployee.organId);
 			searchParams.put("EQ_teacherId",sysEmployee.id);
 		}
 		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
@@ -156,11 +155,10 @@ public class XbStudentService {
 	public List<XbStudentRelationViewNew>  getXbRelationList(Map<String, Object> searchParams) {
 		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
 		SysEmployee sysEmployee = (SysEmployee)request.getSession().getAttribute("sysEmployee");
-		if("管理员".equals(sysEmployee.sysRole.roleName)){
+		if(!"超级管理员".equals(sysEmployee.sysRole.roleName)){
 			searchParams.put("EQ_organId",sysEmployee.organId);
 		}
 		if("教师".equals(sysEmployee.sysRole.roleName)){
-			searchParams.put("EQ_organId",sysEmployee.organId);
 			searchParams.put("EQ_teacherId",sysEmployee.id);
 		}
 		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
@@ -239,11 +237,10 @@ public class XbStudentService {
 	public List<XbClass> findXbClassListAll(Map<String, Object> searchParams){
 		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
 		SysEmployee sysEmployee = (SysEmployee)request.getSession().getAttribute("sysEmployee");
-		if("管理员".equals(sysEmployee.sysRole.roleName)){
+		if(!"超级管理员".equals(sysEmployee.sysRole.roleName)){
 			searchParams.put("EQ_organId",sysEmployee.organId);
 		}
 		if("教师".equals(sysEmployee.sysRole.roleName)){
-			searchParams.put("EQ_organId",sysEmployee.organId);
 			searchParams.put("EQ_teacher.id",sysEmployee.id);
 		}
 		searchParams.put("EQ_deleteStatus","1");

@@ -144,7 +144,7 @@
                         <td>
                             <div class="btn-group open" >
                                 <a  class="down"  href="#modal-table" data-toggle="modal"
-                                    th:onclick="|editManage('${ment.id}','${ment.registratioFee}','${ment.surplusMoney}','${ment.xbStudent.studentName}')|"
+                                    th:onclick="|editManage('${ment.id}','${ment.registratioFee}','${ment.paymentMoney}','${ment.xbStudent.studentName}')|"
                                     style="border: solid 1px;border-radius: 10px;width: 77px;color: #f0f1f3;
                                                background: #8d05e0;height: 26px;font-weight: 900;margin-bottom: 2px;">
                                     编辑
@@ -312,7 +312,7 @@ $(".tag .close").click(function(){
 
     function saveSupplementFee(){
         var studentName = $("#studentName").val();
-        var surplusMoney = $("#surplusMoney").val();
+        var paymentMoney = $("#surplusMoney").val();
         var registratioFee = $("#registratioFee").val();
         var feeId = $("#feeId").val();
         var load = new Loading();
@@ -324,7 +324,7 @@ $(".tag .close").click(function(){
             type: 'get',
             dataType: 'json',
             url: basePath + '/student/updateManagement',
-            data: {studentName:studentName,surplusMoney:surplusMoney,registratioFee:registratioFee,feeId:feeId},
+            data: {studentName:studentName,paymentMoney:paymentMoney,registratioFee:registratioFee,feeId:feeId},
             contentType: "application/json;charset=UTF-8",
             cache: false,
             async: true,

@@ -43,6 +43,9 @@ public class XbStudentRelationView {
     @JoinColumn(name="organId",referencedColumnName = "id",insertable = false,updatable = false)
     public SysOrgans sysOrgans;
 
+    @OneToOne()
+    @JoinColumn(name="studentId",referencedColumnName = "id",insertable = false,updatable = false)
+    public XbStudent xbStudent;
 
     @OneToOne()
     @JoinColumn(name="courseId",referencedColumnName = "id",insertable = false,updatable = false)

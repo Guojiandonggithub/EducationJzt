@@ -268,7 +268,7 @@
     </div>
     <div class="form-group">
         <label class="col-sm-1">经办日期</label>
-        <input class="laydate-icon" name="handleDate" id="demo" >
+        <input class="laydate-icon" name="handleDate" id="demo" th:value="${#dates.format(new java.util.Date().getTime(), 'yyyy-MM-dd')}">
     </div>
     <div class="form-group">
         <label class="col-sm-1">经办人</label>
@@ -558,7 +558,7 @@
                 },
                 paymentMoney : {
                     required:true,
-                    digits:true
+                    number:true
                 },
                 adds : {
                     required:true,
@@ -580,7 +580,7 @@
                     },
                     paymentMoney: {
                         required: "请输入实收金额",
-                        digits: "必须输入数字"
+                        number: "必须输入数字"
                     }
                 },
                 errorPlacement: function(error, element) {

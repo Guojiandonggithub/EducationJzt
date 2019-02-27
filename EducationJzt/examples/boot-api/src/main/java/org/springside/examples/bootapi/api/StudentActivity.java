@@ -375,6 +375,11 @@ public class StudentActivity {
 		if(StringUtils.isNotEmpty(TeacherNameCla)){
 			searhMap.put("LIKE_employeeName",TeacherNameCla);
 		}
+		//教师名称
+		String studentName = (String)resultMap.get("studentName");
+		if(StringUtils.isNotEmpty(studentName)){
+			searhMap.put("LIKE_xbStudent.studentName",studentName);
+		}
 		//课程类别
 		String typeId = (String)resultMap.get("typeId");
 		if(null==typeId){
@@ -402,6 +407,7 @@ public class StudentActivity {
 		model.addAttribute("studentStart",studentStart);
 		model.addAttribute("typeId",typeId);
 		model.addAttribute("TeacherNameCla",TeacherNameCla);
+		model.addAttribute("studentName",studentName);
 		Map<String,Object> searhtypeMap = new HashMap<>();
 		List<XbCourseType> coursetypelist = xbCourseTypeService.findXbCourseTypeList(searhtypeMap);
 		model.addAttribute("coursetypelist",coursetypelist);
@@ -1023,7 +1029,7 @@ public class StudentActivity {
 			HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
 			SysEmployee sysEmployee = (SysEmployee)request.getSession().getAttribute("sysEmployee");
 			xbSupplementFee.handlePerson = sysEmployee.employeeName;
-			xbSupplementFee.paymentMoney = xbSupplementFee.paymentMoney.add(xbStudent.registratioFee);
+			//xbSupplementFee.paymentMoney = xbSupplementFee.paymentMoney;
 			studentService.saveXbSupplementFee(xbSupplementFee);
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put("status","1");
@@ -1522,26 +1528,39 @@ public class StudentActivity {
 	@RequestMapping("/updateManagement")
 	public void updateManagement(
 			@RequestParam(required = false) String studentName,
-			@RequestParam(required = false) String surplusMoney,
+			@RequestParam(required = false) String paymentMoney,
 			@RequestParam(required = false) String registratioFee,
 			@RequestParam(required = false) String feeId,
 		    HttpServletResponse resp){
 		JSONObject jsonObject = new JSONObject();
 		try {
 			XbSupplementFee xbSupplementFee = studentService.getXbSupplementFee(feeId);
-			BigDecimal surplusMoneyB = xbSupplementFee.surplusMoney;
-			BigDecimal registratioFeeB = xbSupplementFee.registratioFee;
-			xbSupplementFee.surplusMoney = new BigDecimal(surplusMoney);
+			BigDecimal surplusMoneyB = xbSupplementFee.paymentMoney;
+			BigDecimal registratioFeeB = new BigDecimal("0");
+			xbSupplementFee.paymentMoney = new BigDecimal(paymentMoney);
 			xbSupplementFee.registratioFee = new BigDecimal(registratioFee);
 			String studentId = xbSupplementFee.studentId;
 			XbStudent xbStudent = studentService.getXbStudent(studentId);
-			xbStudent.registratioFee = xbStudent.registratioFee.add(new BigDecimal(registratioFee).subtract(registratioFeeB));
-			BigDecimal su = new BigDecimal(surplusMoney).subtract(surplusMoneyB);
+            BigDecimal registratioFe = new BigDecimal("0");
+            if(xbStudent.registratioFee!=null){
+                registratioFe = xbStudent.registratioFee;
+            }
+			if(xbSupplementFee.registratioFee!=null){
+				registratioFeeB = xbSupplementFee.registratioFee;
+			}
+			xbStudent.registratioFee = registratioFe.add(new BigDecimal(registratioFee).subtract(registratioFeeB));
+			BigDecimal su = new BigDecimal(paymentMoney).subtract(surplusMoneyB);
 			int r=su.compareTo(BigDecimal.ZERO); //和0，Zero比较
 			if(r==-1){//小于
-				xbStudent.surplusMoney = xbStudent.surplusMoney.add(su);
+                xbStudent.paymentMoney = xbStudent.paymentMoney.subtract(su);
 			}else{
-				xbStudent.paymentMoney = xbStudent.paymentMoney.add(new BigDecimal(registratioFee).subtract(su));
+				BigDecimal chae = xbStudent.paymentMoney.subtract(su);
+				if(chae.compareTo(BigDecimal.ZERO)==-1){
+					xbStudent.paymentMoney = BigDecimal.ZERO;
+					xbStudent.surplusMoney = xbStudent.surplusMoney.add(chae);
+				}else{
+					xbStudent.paymentMoney = xbStudent.paymentMoney.subtract(su);
+				}
 			}
 			xbStudent.studentName = studentName;
 			studentService.saveXbStudent(xbStudent);

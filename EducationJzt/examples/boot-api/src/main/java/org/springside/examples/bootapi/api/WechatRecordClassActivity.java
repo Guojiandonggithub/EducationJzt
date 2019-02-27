@@ -161,7 +161,7 @@ public class WechatRecordClassActivity {
 	 */
 	@RequestMapping("/findXbAttendClassPageListAll")
 	public String findXbAttendClassPageListAll(@RequestParam String dda,HttpServletResponse resp,
-											   ModelMap model,@PageableDefault(value = 20) Pageable pageable,String data) throws ParseException {
+											   ModelMap model,@PageableDefault(value = 20) Pageable pageable,String data) throws Exception {
 		Map<String,Object> resultMap = new HashMap<>();
 		/*if(null!=data){
 			resultMap = com.alibaba.fastjson.JSONObject.parseObject(data,resultMap.getClass());

@@ -115,6 +115,9 @@
                             <label class="control-label">教师姓名</label>
                             <input id="TeacherNameCla" name="TeacherNameCla" type="text" th:value="${TeacherNameCla}" class="ace"
                                    style="padding: 3px;border-radius: 5px !important;margin-top: 13px;width: 82px;color: #3c546c">
+                            <label class="control-label">学员姓名</label>
+                            <input id="studentName" name="studentName" type="text" th:value="${studentName}" class="ace"
+                                   style="padding: 3px;border-radius: 5px !important;margin-top: 13px;width: 82px;color: #3c546c">
                             <div class="form-group" style="display: inline;">
                                 <button type="button" th:onclick="'javascript:getStudentListPage(\'\')'">搜索</button>
                                 <button type="button" onclick="$('input[type=text],#TeacherNameCla').val('')">清空</button>

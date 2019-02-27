@@ -19,7 +19,6 @@ import org.springside.examples.bootapi.ToolUtils.common.modules.persistence.Sear
 import org.springside.examples.bootapi.domain.SysEmployee;
 import org.springside.examples.bootapi.domain.XbAttendClass;
 import org.springside.examples.bootapi.domain.XbAttendClassRicheng;
-import org.springside.examples.bootapi.domain.XbClass;
 import org.springside.examples.bootapi.repository.XbAttendClassDao;
 import org.springside.examples.bootapi.repository.XbAttendClassRichengDao;
 
@@ -55,7 +54,7 @@ public class XbAttendClassService {
 	public List<XbAttendClass> findXbAttendClassAll(Map<String, Object> searchParams){
 		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
 		SysEmployee sysEmployee = (SysEmployee)request.getSession().getAttribute("sysEmployee");
-		if("管理员".equals(sysEmployee.sysRole.roleName)||"教师".equals(sysEmployee.sysRole.roleName)){
+		if(!"超级管理员".equals(sysEmployee.sysRole.roleName)){
 			searchParams.put("EQ_xbclass.organId",sysEmployee.organId);
 		}
 		searchParams.put("EQ_deleteStatus","1");
@@ -69,7 +68,7 @@ public class XbAttendClassService {
 	public Page<XbAttendClass> findXbAttendClassPageAll( Pageable pageable,Map<String, Object> searchParams){
 		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
 		SysEmployee sysEmployee = (SysEmployee)request.getSession().getAttribute("sysEmployee");
-		if("管理员".equals(sysEmployee.sysRole.roleName)||"教师".equals(sysEmployee.sysRole.roleName)){
+		if(!"超级管理员".equals(sysEmployee.sysRole.roleName)){
 			searchParams.put("EQ_xbclass.organId",sysEmployee.organId);
 
 		}
@@ -123,11 +122,10 @@ public class XbAttendClassService {
 	public List findXbAttendRiChengListAll(Map<String, Object> searchParams) {
 		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
 		SysEmployee sysEmployee = (SysEmployee)request.getSession().getAttribute("sysEmployee");
-		if("管理员".equals(sysEmployee.sysRole.roleName)||"教师".equals(sysEmployee.sysRole.roleName)){
+		if(!"超级管理员".equals(sysEmployee.sysRole.roleName)){
 			searchParams.put("EQ_organId",sysEmployee.organId);
 		}
 		if("教师".equals(sysEmployee.sysRole.roleName)){
-			searchParams.put("EQ_organId",sysEmployee.organId);
 			searchParams.put("EQ_employeeName",sysEmployee.employeeName);
 		}
 		searchParams.put("EQ_deleteStatus","1");
