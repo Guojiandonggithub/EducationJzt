@@ -18,7 +18,7 @@
 </div>
 <p class="all" th:text="'共'+${classPage.getTotalElements()+'个'}">共16个</p>
   <!--<p class="all" th:text="'第'+${classPage.getNumber()+1}+'页'">第几页</p>-->
-  <input th:id="page" th:value="${classPage.getNumber()+1}" type="hidden">
+  <input th:id="page" th:value="${classPage.getNumber()}" type="hidden">
 <body>
 <p id="show"></p>
 <div id="wrapper">
