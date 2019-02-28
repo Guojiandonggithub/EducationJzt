@@ -207,7 +207,7 @@ public class RecordClassActivity {
 		try {
 			for (XbRecordClass xbRecordClass : xbRecordClassList) {
 				if(null!=xbRecordClass.state&&!xbRecordClass.state.equals("4")&&null!=xbRecordClass.deductPeriod){
-					if(!xbRecordClass.state.equals("0")&&xbRecordClass.deductPeriod.compareTo(new BigDecimal("0"))==0){
+					if(!(xbRecordClass.state.equals("0")&&xbRecordClass.deductPeriod.compareTo(new BigDecimal("0"))==0)){
 						BigDecimal deductPeriod = xbRecordClass.deductPeriod;
 						String studentRelationId = xbRecordClass.studentRelationId;
 						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
