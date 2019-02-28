@@ -229,6 +229,7 @@ public class RecordClassActivity {
 						}
 						xbStudentRelation.periodNum = bigDecimal;
 						xbStudentRelation.receivable = receivable;
+						xbRecordClass.deductMoney = money;
 						studentService.saveXbRecordClass(xbRecordClass);
 						studentService.saveXbStudentRelation(xbStudentRelation);
 					}

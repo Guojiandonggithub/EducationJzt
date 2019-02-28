@@ -383,7 +383,7 @@ public class FeeRelatedActivity {
 		model.addAttribute("periodNum",xbStudentRelation.periodNum);
 		model.addAttribute("classId",classId);
 		model.addAttribute("balanceamount",balanceamount);
-		return "cancelClass::changeClassFragment";
+		return "changeClass::changeClassFragment";
 	}
 
 	/**
@@ -913,24 +913,29 @@ public class FeeRelatedActivity {
 		Map<String,Object> studentMap = new HashMap<>();
 		studentMap.put("EQ_studentId",studentId);
 		//studentMap.put("EQ_deleteStatus","1");
-		if(null!=classId&&!classId.equals("")){
-			studentMap.put("EQ_id",classId);
-		}
 		XbStudentRelationViewNew xbStudentRelation = new XbStudentRelationViewNew();
 		List<XbStudentRelationViewNew> xbStudentPage = studentService.getXbRelationList(studentMap);
 		String balanceamount = "0.00";
 		if(xbStudentPage.size()>0){
-			xbStudentRelation = xbStudentPage.get(0);
+			if(null!=classId&&!classId.equals("")){
+				for (int i = 0; i < xbStudentPage.size(); i++) {
+					if(xbStudentPage.get(i).id.equals(classId)){
+						xbStudentRelation = xbStudentPage.get(i);
+					}
+				}
+			}else{
+				xbStudentRelation = xbStudentPage.get(0);
+			}
 			BigDecimal receivable = xbStudentRelation.receivable;
 			BigDecimal paymentMoney = xbStudent.paymentMoney;
 			BigDecimal su = receivable.subtract(paymentMoney);
 			balanceamount = su.toString();
 		}
-		List<XbStudentRelation> xbClassPage = new ArrayList<>();
+		//List<XbStudentRelation> xbClassPage = new ArrayList<>();
 		model.addAttribute("xbStudent",xbStudent);
 		model.addAttribute("xbClassList",xbStudentPage);
-		model.addAttribute("xbQbClassList",xbClassPage);
-		model.addAttribute("classId","");
+		//model.addAttribute("xbQbClassList",xbClassPage);
+		model.addAttribute("classId",classId);
 		model.addAttribute("xbStudentRelationId",xbStudentRelation.id);
 		model.addAttribute("totalReceivable",xbStudentRelation.totalReceivable);
 		model.addAttribute("receivable",xbStudentRelation.receivable);

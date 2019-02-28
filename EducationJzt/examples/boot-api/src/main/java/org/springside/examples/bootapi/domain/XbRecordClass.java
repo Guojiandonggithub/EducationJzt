@@ -41,6 +41,7 @@ public class XbRecordClass {
     public String discipline;
     public String actives;
     public BigDecimal deductPeriod;
+    public BigDecimal deductMoney;
     public String teacherLeave;
     public String studentPhoto;
     public String studentRelationId;
