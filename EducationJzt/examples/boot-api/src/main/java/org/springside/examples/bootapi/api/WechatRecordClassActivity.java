@@ -287,7 +287,7 @@ public class WechatRecordClassActivity {
 	 */
 	@RequestMapping("/getRecordClassRecordListByClass")
 	public String getRecordClassRecordListByClass(@RequestParam(required = false) String data, ModelMap model,
-											@PageableDefault(value = 20) Pageable pageable){
+											@PageableDefault(value = 10) Pageable pageable){
 		Map<String,Object> resultMap = new HashMap<>();
 		Map<String,Object> searhMap = new HashMap<>();
 
@@ -305,8 +305,9 @@ public class WechatRecordClassActivity {
 				BigDecimal totalPeriodNum = classPage.getContent().get(0).totalPeriodNum;
 				BigDecimal totalReceivable = classPage.getContent().get(0).totalReceivable;
 				BigDecimal periodnums = recordLists.getContent().get(i).periodnum;
-				BigDecimal receivable = totalReceivable.divide(totalPeriodNum,4,RoundingMode.HALF_UP).multiply(periodnums);
-				recordLists.getContent().get(i).totalReceivable =receivable;
+				BigDecimal receivable = totalReceivable.divide(totalPeriodNum,2,RoundingMode.HALF_UP).multiply(periodnums);
+				BigDecimal setScale = receivable.setScale(2,BigDecimal.ROUND_HALF_UP);
+				recordLists.getContent().get(i).totalReceivable =setScale;
 			}
 		}
 		int totalElements = studentService.findRecordTotalCount();
@@ -341,8 +342,9 @@ public class WechatRecordClassActivity {
 				BigDecimal totalPeriodNum = classPage.getContent().get(0).totalPeriodNum;
 				BigDecimal totalReceivable = classPage.getContent().get(0).totalReceivable;
 				BigDecimal periodnums = recordLists.getContent().get(i).periodnum;
-				BigDecimal receivable = totalReceivable.divide(totalPeriodNum,4,RoundingMode.HALF_UP).multiply(periodnums);
-				recordLists.getContent().get(i).totalReceivable =receivable;
+				BigDecimal receivable = totalReceivable.divide(totalPeriodNum,2,RoundingMode.HALF_UP).multiply(periodnums);
+				BigDecimal setScale = receivable.setScale(2,BigDecimal.ROUND_HALF_UP);
+				recordLists.getContent().get(i).totalReceivable =setScale;
 			}
 		}
 		int totalElements = studentService.findRecordTotalCount();
@@ -401,7 +403,7 @@ public class WechatRecordClassActivity {
 		}
 		return "wechat_accordingStudent_record";
 	}
-	@PostMapping("/save/recordClass")
+	/*@PostMapping("/save/recordClass")
 	public void recordClass(@RequestBody List<XbRecordClass> xbRecordClassList, HttpServletResponse resp, Pageable pageable) {
 		try {
 			for (XbRecordClass xbRecordClass : xbRecordClassList) {
@@ -448,6 +450,51 @@ public class WechatRecordClassActivity {
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put("status","1");
 			jsonObject.put("msg", "编辑成功");
+			logger.info("编辑机构返回json参数="+jsonObject.toString());
+			resp.setContentType("text/html;charset=UTF-8");
+			resp.getWriter().println(jsonObject.toJSONString());
+			resp.getWriter().close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.info(e.toString());
+		}
+	}*/
+	@PostMapping("/save/recordClass")
+	public void recordClass(@RequestBody List<XbRecordClass> xbRecordClassList, HttpServletResponse resp, Pageable pageable) {
+		try {
+			for (XbRecordClass xbRecordClass : xbRecordClassList) {
+				if(null!=xbRecordClass.state&&!xbRecordClass.state.equals("4")&&null!=xbRecordClass.deductPeriod){
+					BigDecimal deductPeriod = xbRecordClass.deductPeriod;
+					String studentRelationId = xbRecordClass.studentRelationId;
+					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+					xbRecordClass.recordTime = sdf.parse(xbRecordClass.recordTimeTemp);
+					XbStudentRelation xbStudentRelation = studentService.getXbStudentRelation(studentRelationId);
+					BigDecimal bigDecimal = xbStudentRelation.periodNum;
+					BigDecimal totalPeriodNum = xbStudentRelation.totalPeriodNum;
+					BigDecimal totalReceivable = xbStudentRelation.totalReceivable;
+					if(bigDecimal.compareTo(new BigDecimal("0"))!=0){
+						BigDecimal receivable = xbStudentRelation.receivable;
+						BigDecimal money = totalReceivable.divide(totalPeriodNum,2,RoundingMode.HALF_UP).multiply(deductPeriod);
+						receivable = receivable.subtract(money);
+						bigDecimal = bigDecimal.subtract(deductPeriod);
+						//xbStudentRelation.periodNum = Integer.parseInt(bigDecimal.toString());
+						if(bigDecimal.compareTo(new BigDecimal("0"))<0){
+							bigDecimal = new BigDecimal("0");
+						}
+						if(receivable.compareTo(new BigDecimal("0"))<0){
+							receivable = new BigDecimal("0");
+						}
+						xbStudentRelation.periodNum = bigDecimal;
+						xbStudentRelation.receivable = receivable;
+						studentService.saveXbRecordClass(xbRecordClass);
+						studentService.saveXbStudentRelation(xbStudentRelation);
+					}
+
+				}
+			}
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("status","1");
+			jsonObject.put("msg", "记上课成功");
 			logger.info("编辑机构返回json参数="+jsonObject.toString());
 			resp.setContentType("text/html;charset=UTF-8");
 			resp.getWriter().println(jsonObject.toJSONString());
