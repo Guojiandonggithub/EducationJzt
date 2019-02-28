@@ -207,33 +207,34 @@ public class RecordClassActivity {
 		try {
 			for (XbRecordClass xbRecordClass : xbRecordClassList) {
 				if(null!=xbRecordClass.state&&!xbRecordClass.state.equals("4")&&null!=xbRecordClass.deductPeriod){
-					BigDecimal deductPeriod = xbRecordClass.deductPeriod;
-					String studentRelationId = xbRecordClass.studentRelationId;
-					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-					xbRecordClass.recordTime = sdf.parse(xbRecordClass.recordTimeTemp);
-					XbStudentRelation xbStudentRelation = studentService.getXbStudentRelation(studentRelationId);
-					BigDecimal bigDecimal = xbStudentRelation.periodNum;
-					BigDecimal totalPeriodNum = xbStudentRelation.totalPeriodNum;
-					BigDecimal totalReceivable = xbStudentRelation.totalReceivable;
-					if(bigDecimal.compareTo(new BigDecimal("0"))!=0){
-						BigDecimal receivable = xbStudentRelation.receivable;
-						BigDecimal money = totalReceivable.divide(totalPeriodNum,2,RoundingMode.HALF_UP).multiply(deductPeriod);
-						receivable = receivable.subtract(money);
-						bigDecimal = bigDecimal.subtract(deductPeriod);
-						//xbStudentRelation.periodNum = Integer.parseInt(bigDecimal.toString());
-						if(bigDecimal.compareTo(new BigDecimal("0"))<0){
-							bigDecimal = new BigDecimal("0");
+					if(!xbRecordClass.state.equals("0")&&xbRecordClass.deductPeriod.compareTo(new BigDecimal("0"))==0){
+						BigDecimal deductPeriod = xbRecordClass.deductPeriod;
+						String studentRelationId = xbRecordClass.studentRelationId;
+						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+						xbRecordClass.recordTime = sdf.parse(xbRecordClass.recordTimeTemp);
+						XbStudentRelation xbStudentRelation = studentService.getXbStudentRelation(studentRelationId);
+						BigDecimal bigDecimal = xbStudentRelation.periodNum;
+						BigDecimal totalPeriodNum = xbStudentRelation.totalPeriodNum;
+						BigDecimal totalReceivable = xbStudentRelation.totalReceivable;
+						if(bigDecimal.compareTo(new BigDecimal("0"))!=0){
+							BigDecimal receivable = xbStudentRelation.receivable;
+							BigDecimal money = totalReceivable.divide(totalPeriodNum,2,RoundingMode.HALF_UP).multiply(deductPeriod);
+							receivable = receivable.subtract(money);
+							bigDecimal = bigDecimal.subtract(deductPeriod);
+							//xbStudentRelation.periodNum = Integer.parseInt(bigDecimal.toString());
+							if(bigDecimal.compareTo(new BigDecimal("0"))<0){
+								bigDecimal = new BigDecimal("0");
+							}
+							if(receivable.compareTo(new BigDecimal("0"))<0){
+								receivable = new BigDecimal("0");
+							}
+							xbStudentRelation.periodNum = bigDecimal;
+							xbStudentRelation.receivable = receivable;
+							xbRecordClass.deductMoney = money;
+							studentService.saveXbRecordClass(xbRecordClass);
+							studentService.saveXbStudentRelation(xbStudentRelation);
 						}
-						if(receivable.compareTo(new BigDecimal("0"))<0){
-							receivable = new BigDecimal("0");
-						}
-						xbStudentRelation.periodNum = bigDecimal;
-						xbStudentRelation.receivable = receivable;
-						xbRecordClass.deductMoney = money;
-						studentService.saveXbRecordClass(xbRecordClass);
-						studentService.saveXbStudentRelation(xbStudentRelation);
 					}
-
 				}
 			}
 			JSONObject jsonObject = new JSONObject();
