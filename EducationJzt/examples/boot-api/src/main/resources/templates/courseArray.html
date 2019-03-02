@@ -52,10 +52,10 @@
             <div class="tabbable">
                 <ul class="nav nav-tabs" id="myTab">
                     <li class="active">
-                        <a data-toggle="tab" href="#schedule" class="schedule">日程列表</a>
+                        <a data-toggle="tab" href="#schedule" class="schedule" onclick="getOrgansListPage('0')">日程列表</a>
                     </li>
                     <li>
-                        <a data-toggle="tab" href="#conflict"  class="conflict">日程冲突</a>
+                        <a data-toggle="tab" href="#conflict"  class="conflict" onclick="getxbAttendConflicListPage('0')">日程冲突</a>
                         <!--<a data-toggle="tab" href="@{/jw_center_arranging_course/findXbAttendConflicList}"  class="conflict">日程冲突</a>-->
                     </li>
                 </ul>
@@ -304,128 +304,127 @@
                     </form>
                     <!-- 日程冲突 -->
                     <div id="conflict" class="tab-pane fade conflict" style="display: none">
-                        <div class="screen">
-                        </div>
-                        <div class="orderCon ">
-                            <div class="orderTable rcct">
-                                <table class="table table-hover">
-                                    <tr>
-                                        <th>序号</th>
-                                        <th>上课时间</th>
-                                        <th>班级/一对一</th>
-                                        <th>课程</th>
-                                        <th>教师</th>
-                                        <th>教室</th>
-                                        <th>操作</th>
-                                    </tr>
-                                    <tbody id="xbAttendConflicList_tbodyid">
-                                        <th:block th:if="${xbAttendConflicList}!= null" th:fragment="xbAttendConflicListFra">
-                                            <tr th:each="conf,confSte:${xbAttendConflicList.content}" id="choose">
-                                                <input th:id="${conf.id}+'_ct'"  type="hidden">
-                                                <td th:text="${confSte.count}+${xbAttendConflicList.getNumber()*10}">序号</td>
-                                                <td th:text="${conf.startDateTime} +' '+${conf.timeInterval}">上课时间</td>
-                                                <td th:switch="${conf.wayOfTeaching}">
-                                                    <span th:case="1" th:text="${conf.xbclass.sysOrgans.organName}+
-                                                                                ${conf.xbclass.xbCourse.xbcoursetype.courseTypeName}+
-                                                                                ${conf.xbclass.teacher.employeeName}+
-                                                                                ${conf.xbclass.className}+'(一对一)'"></span>
-                                                    <span th:case="0" th:text="${conf.xbclass.sysOrgans.organName}+
-                                                                                ${conf.xbclass.xbCourse.xbcoursetype.courseTypeName}+
-                                                                                ${conf.xbclass.teacher.employeeName}+
-                                                                                ${conf.xbclass.className}+'(班课)'"></span>
-                                                </td>
-                                                <td  th:text="${conf.xbclass.xbCourse.courseName}">课程</td>
-                                                <td  th:text="${conf.sysemployee.employeeName}">教师</td>
-                                                <td  th:text="${conf.xbclassroom.classroomName}">教室</td>
-                                                <td>
-                                                    <a href="#modal-table" role="button" data-toggle="modal"
-                                                       th:onclick="|javascript:attendClassEdit('${conf.id}',
-                                                                   '${conf.xbclass.id}','${conf.wayOfTeaching}','${conf.scheduleMode}',
-                                                                   '${conf.startDateTime}','${conf.endDateTime}','${conf.timeInterval}',
-                                                                   '${conf.teacherId}','${conf.tutorId}','${conf.classRoomId}',
-                                                                   '${conf.subjectId}','${conf.classTheme}')|"
-                                                    ><img src="../static/pages/img/edit.png">编辑</a>
-                                                    <a  style="cursor:pointer" th:onclick="|javascript:attendClassConflicRemove('${conf.id}','2')|">
-                                                        <img src="../static/pages/img/del.png">删除</a>
-                                                </td>
+                        <tbody id="xbAttendConflicList_tbodyid">
+                            <th:block th:if="${xbAttendConflicList}!= null" th:fragment="xbAttendConflicListFra">
+                                <div class="screen"></div>
+                                <div class="orderCon ">
+                                    <div class="orderTable rcct">
+                                        <table class="table table-hover">
+                                            <tr>
+                                                <th>序号</th>
+                                                <th>上课时间</th>
+                                                <th>班级/一对一</th>
+                                                <th>课程</th>
+                                                <th>教师</th>
+                                                <th>教室</th>
+                                                <th>操作</th>
                                             </tr>
-                                        </th:block>
-                                    </tbody>
-                                </table>
-                                <div class="orderPage">
-                                    <div class="page">
-                                        单页显示：
-                                        <select id="conflicsize" name="conflicsize" onchange="getxbAttendConflicListPage('')">
-                                            <option value="5">5条/页</option>
-                                            <option value="20">20条/页</option>
-                                            <option value="10">10条/页</option>
-                                            <option value="15">15条/页</option>
-                                        </select>
-                                        <input type="hidden" id="xbAttendConflicListsize" th:value="${xbAttendConflicListsize}"/>
+                                                    <tr th:each="conf,confSte:${xbAttendConflicList.content}" id="choose">
+                                                        <input th:id="${conf.id}+'_ct'"  type="hidden">
+                                                        <td th:text="${confSte.count}+${xbAttendConflicList.getNumber()*10}">序号</td>
+                                                        <td th:text="${conf.startDateTime} +' '+${conf.timeInterval}">上课时间</td>
+                                                        <td th:switch="${conf.wayOfTeaching}">
+                                                            <span th:case="1" th:text="${conf.xbclass.sysOrgans.organName}+
+                                                                                        ${conf.xbclass.xbCourse.xbcoursetype.courseTypeName}+
+                                                                                        ${conf.xbclass.teacher.employeeName}+
+                                                                                        ${conf.xbclass.className}+'(一对一)'"></span>
+                                                            <span th:case="0" th:text="${conf.xbclass.sysOrgans.organName}+
+                                                                                        ${conf.xbclass.xbCourse.xbcoursetype.courseTypeName}+
+                                                                                        ${conf.xbclass.teacher.employeeName}+
+                                                                                        ${conf.xbclass.className}+'(班课)'"></span>
+                                                        </td>
+                                                        <td  th:text="${conf.xbclass.xbCourse.courseName}">课程</td>
+                                                        <td  th:text="${conf.sysemployee.employeeName}">教师</td>
+                                                        <td  th:text="${conf.xbclassroom.classroomName}">教室</td>
+                                                        <td>
+                                                            <a href="#modal-table" role="button" data-toggle="modal"
+                                                               th:onclick="|javascript:attendClassEdit('${conf.id}',
+                                                                           '${conf.xbclass.id}','${conf.wayOfTeaching}','${conf.scheduleMode}',
+                                                                           '${conf.startDateTime}','${conf.endDateTime}','${conf.timeInterval}',
+                                                                           '${conf.teacherId}','${conf.tutorId}','${conf.classRoomId}',
+                                                                           '${conf.subjectId}','${conf.classTheme}')|"
+                                                            ><img src="../static/pages/img/edit.png">编辑</a>
+                                                            <a  style="cursor:pointer" th:onclick="|javascript:attendClassConflicRemove('${conf.id}','2')|">
+                                                                <img src="../static/pages/img/del.png">删除</a>
+                                                        </td>
+                                                    </tr>
+
+                                        </table>
+                                        <div class="orderPage">
+                                            <div class="page">
+                                                单页显示：
+                                                <select id="conflicsize" name="conflicsize" onchange="getxbAttendConflicListPage('')">
+                                                    <option value="5">5条/页</option>
+                                                    <option value="20">20条/页</option>
+                                                    <option value="10">10条/页</option>
+                                                    <option value="15">15条/页</option>
+                                                </select>
+                                                <input type="hidden" id="xbAttendConflicListsize" th:value="${xbAttendConflicListsize}"/>
+                                            </div>
+                                            <ul class="pagination" th:if="${xbAttendConflicList}">
+                                                <!-- 上一页 -->
+                                                <li th:if="${xbAttendConflicList.getNumber()+1 == 1}"><span>上一页</span></li>
+                                                <li th:if="${xbAttendConflicList.getNumber()+1 > 1}">
+                                                    <a  th:onclick="'javascript:getxbAttendConflicListPage(\''+${xbAttendConflicList.getNumber()-1}+'\')'">
+                                                        <i class="ace-icon fa ">上一页</i>
+                                                    </a>
+                                                </li>
+                                                <!-- 首页 -->
+                                                <li th:if="${xbAttendConflicList.getNumber()+1 == 1}" class="active"><span>1</span></li>
+                                                <li th:if="${xbAttendConflicList.getNumber()+1 > 1}">
+                                                    <a  th:onclick="'javascript:getxbAttendConflicListPage(\''+${0}+'\')'">1</a>
+                                                </li>
+                                                <th:block th:if="${xbAttendConflicList.getTotalPages()>2 && xbAttendConflicList.getTotalPages()<=10}">
+                                                    <th:block th:each="i:${#numbers.sequence(2,xbAttendConflicList.getTotalPages()-1)}">
+                                                        <li th:if="${xbAttendConflicList.getNumber()+1 == i}"  class="active"><span th:text="${i}">页码</span></li>
+                                                        <li th:if="${xbAttendConflicList.getNumber()+1 != i}"><a  th:onclick="'javascript:getxbAttendConflicListPage(\''+${i-1}+'\')'" th:text="${i}"></a></li>
+                                                    </th:block>
+                                                </th:block>
+                                                <th:block th:if="${xbAttendConflicList.getTotalPages() > 10}">
+                                                    <th:block th:if="${(xbAttendConflicList.getNumber()+1-(5/2)) <= 2}" th:each="i:${#numbers.sequence(2,2+5-1)}">
+                                                        <li th:if="${xbAttendConflicList.getNumber()+1 == i}"  class="active"><span th:text="${i}">页码</span></li>
+                                                        <li th:if="${xbAttendConflicList.getNumber()+1 != i}"><a  th:onclick="'javascript:getxbAttendConflicListPage(\''+${i-1}+'\')'" th:text="${i}"></a></li>
+                                                    </th:block>
+                                                    <!-- ... -->
+                                                    <li th:if="${(xbAttendConflicList.getNumber()+1-(5/2))>2}"><span>...</span></li>
+
+                                                    <th:block th:if="${((xbAttendConflicList.getNumber()+1-(5/2))>2) && ((xbAttendConflicList.getNumber()+1+(5/2)-(5%2==0?1:0)) < (xbAttendConflicList.getTotalPages()-1))}"
+                                                              th:each="i:${#numbers.sequence(xbAttendConflicList.getNumber()+1-(5/2),xbAttendConflicList.getNumber()+1+(5/2)-(5%2==0?1:0))}">
+                                                        <li th:if="${xbAttendConflicList.getNumber()+1 == i}"  class="active"><span th:text="${i}">页码</span></li>
+                                                        <li th:if="${xbAttendConflicList.getNumber()+1 != i}"><a  th:onclick="'javascript:getxbAttendConflicListPage(\''+${i-1}+'\')'" th:text="${i}"></a></li>
+                                                    </th:block>
+
+                                                    <!-- ... -->
+                                                    <li th:if="${(xbAttendConflicList.getNumber()+1+(5/2)-(5%2==0?1:0)) < (xbAttendConflicList.getTotalPages()-1)}"><span>...</span></li>
+                                                    <th:block th:if="${(xbAttendConflicList.getNumber()+1+(5/2)-(5%2==0?1:0)) >= (xbAttendConflicList.getTotalPages()-1)}" th:each="i:${#numbers.sequence(xbAttendConflicList.getTotalPages()-5,xbAttendConflicList.getTotalPages()-1)}">
+                                                        <li th:if="${xbAttendConflicList.getNumber()+1 == i}"  class="active"><span th:text="${i}">页码</span></li>
+                                                        <li th:if="${xbAttendConflicList.getNumber()+1 != i}"><a  th:onclick="'javascript:getxbAttendConflicListPage(\''+${i-1}+'\')'" th:text="${i}"></a></li>
+                                                    </th:block>
+                                                </th:block>
+                                                <!-- 最后一页 -->
+                                                <li th:if="${xbAttendConflicList.getTotalPages()>1 && xbAttendConflicList.getNumber()+1 == xbAttendConflicList.getTotalPages()}" class="active"><span th:text="${xbAttendConflicList.getTotalPages()}">页码</span></li>
+                                                <li th:if="${xbAttendConflicList.getTotalPages()>1 && xbAttendConflicList.getNumber()+1 != xbAttendConflicList.getTotalPages()}">
+
+                                                    <a href="#" th:onclick="'javascript:getxbAttendConflicListPage(\''+${xbAttendConflicList.getTotalPages()-1}+'\')'"
+                                                       th:text="${xbAttendConflicList.getTotalPages()}"></a>
+                                                </li>
+                                                <!-- 下一页 -->
+                                                <li th:if="${xbAttendConflicList.getNumber()+1 >= xbAttendConflicList.getTotalPages()}"><span>下一页</span></li>
+                                                <li th:if="${xbAttendConflicList.getNumber()+1 < xbAttendConflicList.getTotalPages()}">
+                                                    <a th:onclick="'javascript:getxbAttendConflicListPage(\''+${xbAttendConflicList.getNumber()+1}+'\')'">
+                                                        <i class="ace-icon fa ">下一页</i>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <span style="color: #020202;" th:text="'共'+${xbAttendConflicList.getTotalPages()}+'页/'+${xbAttendConflicList.getTotalElements()}+'条记录'"></span>
+                                                </li>
+                                            </ul>
+                                        </div>
                                     </div>
-                                    <ul class="pagination" th:if="${xbAttendConflicList}">
-                                        <!-- 上一页 -->
-                                        <li th:if="${xbAttendConflicList.getNumber()+1 == 1}"><span>上一页</span></li>
-                                        <li th:if="${xbAttendConflicList.getNumber()+1 > 1}">
-                                            <a  th:onclick="'javascript:getxbAttendConflicListPage(\''+${xbAttendConflicList.getNumber()-1}+'\')'">
-                                                <i class="ace-icon fa ">上一页</i>
-                                            </a>
-                                        </li>
-                                        <!-- 首页 -->
-                                        <li th:if="${xbAttendConflicList.getNumber()+1 == 1}" class="active"><span>1</span></li>
-                                        <li th:if="${xbAttendConflicList.getNumber()+1 > 1}">
-                                            <a  th:onclick="'javascript:getxbAttendConflicListPage(\''+${0}+'\')'">1</a>
-                                        </li>
-                                        <th:block th:if="${xbAttendConflicList.getTotalPages()>2 && xbAttendConflicList.getTotalPages()<=10}">
-                                            <th:block th:each="i:${#numbers.sequence(2,xbAttendConflicList.getTotalPages()-1)}">
-                                                <li th:if="${xbAttendConflicList.getNumber()+1 == i}"  class="active"><span th:text="${i}">页码</span></li>
-                                                <li th:if="${xbAttendConflicList.getNumber()+1 != i}"><a  th:onclick="'javascript:getxbAttendConflicListPage(\''+${i-1}+'\')'" th:text="${i}"></a></li>
-                                            </th:block>
-                                        </th:block>
-                                        <th:block th:if="${xbAttendConflicList.getTotalPages() > 10}">
-                                            <th:block th:if="${(xbAttendConflicList.getNumber()+1-(5/2)) <= 2}" th:each="i:${#numbers.sequence(2,2+5-1)}">
-                                                <li th:if="${xbAttendConflicList.getNumber()+1 == i}"  class="active"><span th:text="${i}">页码</span></li>
-                                                <li th:if="${xbAttendConflicList.getNumber()+1 != i}"><a  th:onclick="'javascript:getxbAttendConflicListPage(\''+${i-1}+'\')'" th:text="${i}"></a></li>
-                                            </th:block>
-                                            <!-- ... -->
-                                            <li th:if="${(xbAttendConflicList.getNumber()+1-(5/2))>2}"><span>...</span></li>
-
-                                            <th:block th:if="${((xbAttendConflicList.getNumber()+1-(5/2))>2) && ((xbAttendConflicList.getNumber()+1+(5/2)-(5%2==0?1:0)) < (xbAttendConflicList.getTotalPages()-1))}"
-                                                      th:each="i:${#numbers.sequence(xbAttendConflicList.getNumber()+1-(5/2),xbAttendConflicList.getNumber()+1+(5/2)-(5%2==0?1:0))}">
-                                                <li th:if="${xbAttendConflicList.getNumber()+1 == i}"  class="active"><span th:text="${i}">页码</span></li>
-                                                <li th:if="${xbAttendConflicList.getNumber()+1 != i}"><a  th:onclick="'javascript:getxbAttendConflicListPage(\''+${i-1}+'\')'" th:text="${i}"></a></li>
-                                            </th:block>
-
-                                            <!-- ... -->
-                                            <li th:if="${(xbAttendConflicList.getNumber()+1+(5/2)-(5%2==0?1:0)) < (xbAttendConflicList.getTotalPages()-1)}"><span>...</span></li>
-                                            <th:block th:if="${(xbAttendConflicList.getNumber()+1+(5/2)-(5%2==0?1:0)) >= (xbAttendConflicList.getTotalPages()-1)}" th:each="i:${#numbers.sequence(xbAttendConflicList.getTotalPages()-5,xbAttendConflicList.getTotalPages()-1)}">
-                                                <li th:if="${xbAttendConflicList.getNumber()+1 == i}"  class="active"><span th:text="${i}">页码</span></li>
-                                                <li th:if="${xbAttendConflicList.getNumber()+1 != i}"><a  th:onclick="'javascript:getxbAttendConflicListPage(\''+${i-1}+'\')'" th:text="${i}"></a></li>
-                                            </th:block>
-                                        </th:block>
-                                        <!-- 最后一页 -->
-                                        <li th:if="${xbAttendConflicList.getTotalPages()>1 && xbAttendConflicList.getNumber()+1 == xbAttendConflicList.getTotalPages()}" class="active"><span th:text="${xbAttendConflicList.getTotalPages()}">页码</span></li>
-                                        <li th:if="${xbAttendConflicList.getTotalPages()>1 && xbAttendConflicList.getNumber()+1 != xbAttendConflicList.getTotalPages()}">
-
-                                            <a href="#" th:onclick="'javascript:getxbAttendConflicListPage(\''+${xbAttendConflicList.getTotalPages()-1}+'\')'"
-                                               th:text="${xbAttendConflicList.getTotalPages()}"></a>
-                                        </li>
-                                        <!-- 下一页 -->
-                                        <li th:if="${xbAttendConflicList.getNumber()+1 >= xbAttendConflicList.getTotalPages()}"><span>下一页</span></li>
-                                        <li th:if="${xbAttendConflicList.getNumber()+1 < xbAttendConflicList.getTotalPages()}">
-                                            <a th:onclick="'javascript:getxbAttendConflicListPage(\''+${xbAttendConflicList.getNumber()+1}+'\')'">
-                                                <i class="ace-icon fa ">下一页</i>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <span style="color: #020202;" th:text="'共'+${xbAttendConflicList.getTotalPages()}+'页/'+${xbAttendConflicList.getTotalElements()}+'条记录'"></span>
-                                        </li>
-                                    </ul>
                                 </div>
-                            </div>
-                        </div>
+                            </th:block>
+                        </tbody>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -908,7 +907,7 @@
     function attendClassConflicRemove(id,type){
         var load = new Loading();
         load.init({
-            target: "#content_student"
+            target: "body"
         });
         //if(confirm("确定要删除这条排课冲突?")) {
         $.kd.kdConfirm("确定要删除这条排课冲突?",function(){
@@ -939,7 +938,7 @@
     function classToFindAll(type){
         var load = new Loading();
         load.init({
-            target: "#modal-content"
+            target: "body"
         });
         load.start();
         var id = "";
@@ -972,7 +971,7 @@
     function getxbAttendConflicListPage(page){
         var load = new Loading();
         load.init({
-            target: "#main-container"
+            target: "body"
         });
         load.start();
         var size = $('#conflicsize option:selected').val();//选中的值
@@ -994,8 +993,10 @@
                 load.stop();
                 console.log("查询排课冲突回调成功")
                 //$.kd.kdAlert("查询排课冲突成功");
-                $("#xbAttendConflicList_tbodyid").html("");
-                $("#xbAttendConflicList_tbodyid").append(data);
+                $("#conflict").html("");
+                $("#conflict").append(data);
+               /* $("#xbAttendConflicList_tbodyid").html("");
+                $("#xbAttendConflicList_tbodyid").append(data);*/
             },
             error:function(){
                 load.stop();
@@ -1007,7 +1008,7 @@
     function getOrgansListPage(page){
         var load = new Loading();
         load.init({
-            target: "#main-container"
+            target: "body"
         });
         load.start();
         var data= serializeObject("#searchform");

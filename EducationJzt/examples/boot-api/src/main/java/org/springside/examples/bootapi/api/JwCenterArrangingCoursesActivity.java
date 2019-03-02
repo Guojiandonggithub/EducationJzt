@@ -160,7 +160,7 @@ public class JwCenterArrangingCoursesActivity {
                                     @PageableDefault(value = 10) Pageable pageable){
         logger.info("跳转到排课");
         findXbAttendClassPageListAll(model,pageable,data);
-        findXbAttendConflicListi(model);
+        //findXbAttendConflicListi(model);
         model.addAttribute("xbSubjectList",xbSubjectService.findSubjectAll());
         Map<String, Object> searchParams = new HashMap<>();
         model.addAttribute("xbCourseTypeList",xbCourseTypeService.findXbCourseTypeList(searchParams));
