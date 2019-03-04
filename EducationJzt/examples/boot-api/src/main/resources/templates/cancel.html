@@ -884,7 +884,7 @@ function getOrgansListPage(page){
    /* if(page){
         page = page -1;
     }*/
-    window.location.href = basePath + '/student/getXbStudentList?page='+page+'&size='+size+'&room=0'+'&data='+JSON.stringify(data);
+    window.location.href = basePath + '/student/getCancelList?page='+page+'&size='+size+'&room=0'+'&data='+JSON.stringify(data);
 }
 
 function serializeObject(form)
@@ -976,7 +976,7 @@ function getDividelist(page){
     $.ajax({
         type: 'get',
         //dataType: 'json',
-        url: basePath + '/student/getDividelist?page='+page+'&size='+size+'&room=0'+'&data='+JSON.stringify(data),
+        url: basePath + '/student/getCancelList?page='+page+'&size='+size+'&room=0'+'&data='+JSON.stringify(data),
         data: {},
         contentType:"application/json;charset=UTF-8",
         cache: false,

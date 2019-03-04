@@ -185,7 +185,7 @@
 </div>-->
             <div class="classInfo">
                 <button class="save" type="button" onclick="saveRecordClass();">保存</button>
-                <button class="save" type="button" onclick="javascript:history.go(-1)" style="margin-right:22px;">返回</button>
+                <button class="save" type="button" onclick="getRecordClassListByClass()" style="margin-right:22px;">返回</button>
             </div>
 
 
@@ -317,6 +317,32 @@
                 $("#redordIds"+index).val("1");
             }
 
+        }
+
+        function getRecordClassListByClass(){
+            //var data= serializeObject("#accordingClassform");
+            //var size = $('#recordsize option:selected').val();//选中的值
+            var load = new Loading();
+            load.init({
+                target: "#main-container"
+            });
+            load.start();
+            window.location.href = basePath + '/recordClass/getRecordClassListByClass?page='+0;
+            /*$.ajax({
+                type: 'get',
+                //dataType: 'json',
+                url: basePath + '/recordClass/getRecordClassListByClass?page='+0+'&size='+size, //+'&data='+JSON.stringify(data),
+                data: {data:JSON.stringify(data)},
+                contentType:"application/json;charset=UTF-8",
+                cache: false,
+                async: true,
+                success: function (data) {
+                    load.stop();
+                    console.log(data);
+                    $("#classAbo").html("");
+                    $('#classAbo').html(data);
+                }
+            });*/
         }
 
     </script>

@@ -4,7 +4,6 @@ package org.springside.examples.bootapi.repository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
-import org.springside.examples.bootapi.domain.XbCourse;
 import org.springside.examples.bootapi.domain.XbStudentRelation;
 
 import java.util.Date;
@@ -26,4 +25,7 @@ public interface XbStudentRelationDao extends PagingAndSortingRepository<XbStude
     List findAllStudentListStartAndEnd(Date enrollStart,Date enrollEnd);
     @Query(value="SELECT * FROM xb_student_relation o  GROUP BY o.student_id",nativeQuery = true)
     List findAllStudentListNoDate();
+
+    List<XbStudentRelation> findByStudentId(String studentId);
+
 }

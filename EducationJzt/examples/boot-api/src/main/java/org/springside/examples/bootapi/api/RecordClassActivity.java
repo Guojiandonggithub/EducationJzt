@@ -133,6 +133,7 @@ public class RecordClassActivity {
 	 * @return
 	 */
 	@RequestMapping("/getRecordClassList")
+	@SystemControllerLog(descrption = "查询记上课列表",actionType = "4")
 	public String getRecordClassList(@RequestParam(required = false) String data, ModelMap model, Pageable pageable){
 		Map<String,Object> resultMap = new HashMap<>();
 		Map<String,Object> searhMap = new HashMap<>();
@@ -189,11 +190,13 @@ public class RecordClassActivity {
 	 * @return
 	 */
 	@RequestMapping("/classEdit")
+	@SystemControllerLog(descrption = "查询记上课记录",actionType = "4")
 	public String classEdit(@RequestParam(required = false) String classesId, ModelMap model, Pageable pageable){
 		Map<String,Object> searhMap = new HashMap<>();
 		if(null!=classesId){
 			searhMap.put("LIKE_classId",classesId);
 		}
+		searhMap.put("NEQ_studentStart",4);
 		XbClass classes = studentService.getXbClass(classesId);
 		List<XbStudentRelationViewNew> classPage = studentService.getXbRelationList(searhMap);
 		model.addAttribute("classPage",classPage);
@@ -203,6 +206,7 @@ public class RecordClassActivity {
 	}
 
 	@PostMapping("/save/recordClass")
+	@SystemControllerLog(descrption = "保存上课记录",actionType = "1")
 	public void recordClass(@RequestBody List<XbRecordClass> xbRecordClassList, HttpServletResponse resp, Pageable pageable) {
 		try {
 			for (XbRecordClass xbRecordClass : xbRecordClassList) {
@@ -394,6 +398,7 @@ public class RecordClassActivity {
 	}
 
 	@RequestMapping("/delete/recrodClass")
+	@SystemControllerLog(descrption = "删除上课记录",actionType = "3")
 	public void deleteRecordClass(@RequestParam(required = false) String classId,@RequestParam(required = false) String recordTime,HttpServletResponse resp,Pageable pageable) {
 		try {
 			Map<String, Object> searchParams = new HashMap<>();
@@ -453,19 +458,20 @@ public class RecordClassActivity {
 	}
 
 	@PostMapping("/update/recordClass")
-						public void updateRecordClass(@RequestBody List<XbRecordClass> xbRecordClassList, HttpServletResponse resp, Pageable pageable) {
-							try {
-								for (XbRecordClass xbRecordClass : xbRecordClassList) {
-									if(null!=xbRecordClass.state&&!xbRecordClass.state.equals("4")&&null!=xbRecordClass.deductPeriod){
-										BigDecimal deductPeriod = xbRecordClass.deductPeriod;
-										XbRecordClass xbRecordClasses = studentService.getxbRecordClass(xbRecordClass.id);
-										xbRecordClasses.state = xbRecordClass.state;
-										String studentRelationId = xbRecordClass.studentRelationId;
-										XbStudentRelation xbStudentRelation = studentService.getXbStudentRelation(studentRelationId);
-										BigDecimal bigDecimal = xbStudentRelation.periodNum;
-										BigDecimal totalPeriodNum = xbStudentRelation.totalPeriodNum;
-										BigDecimal totalReceivable = xbStudentRelation.totalReceivable;
-										if(bigDecimal.compareTo(new BigDecimal("0"))!=0){
+	@SystemControllerLog(descrption = "修改记上课",actionType = "2")
+	public void updateRecordClass(@RequestBody List<XbRecordClass> xbRecordClassList, HttpServletResponse resp, Pageable pageable) {
+		try {
+			for (XbRecordClass xbRecordClass : xbRecordClassList) {
+				if(null!=xbRecordClass.state&&!xbRecordClass.state.equals("4")&&null!=xbRecordClass.deductPeriod){
+					BigDecimal deductPeriod = xbRecordClass.deductPeriod;
+					XbRecordClass xbRecordClasses = studentService.getxbRecordClass(xbRecordClass.id);
+					xbRecordClasses.state = xbRecordClass.state;
+					String studentRelationId = xbRecordClass.studentRelationId;
+					XbStudentRelation xbStudentRelation = studentService.getXbStudentRelation(studentRelationId);
+					BigDecimal bigDecimal = xbStudentRelation.periodNum;
+					BigDecimal totalPeriodNum = xbStudentRelation.totalPeriodNum;
+					BigDecimal totalReceivable = xbStudentRelation.totalReceivable;
+					//if(bigDecimal.compareTo(new BigDecimal("0"))!=0){
 						BigDecimal receivable = xbStudentRelation.receivable;
 						BigDecimal money = totalReceivable.divide(totalPeriodNum,2,RoundingMode.HALF_UP).multiply(xbRecordClasses.deductPeriod.subtract(deductPeriod));
 						receivable = receivable.add(money);
@@ -481,8 +487,9 @@ public class RecordClassActivity {
 						xbStudentRelation.receivable = receivable;
 						studentService.saveXbStudentRelation(xbStudentRelation);
 						xbRecordClasses.deductPeriod = deductPeriod;
+						xbRecordClasses.deductMoney = xbRecordClasses.deductMoney.subtract(money);
 						studentService.saveXbRecordClass(xbRecordClasses);
-					}
+					//}
 				}
 				if(xbRecordClass.state.equals("4")){
 					XbRecordClass xbRecordClasses = studentService.getxbRecordClass(xbRecordClass.id);

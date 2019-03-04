@@ -88,6 +88,7 @@
                     <div class="form-group">
                         <label>使用账户余额：</label>
                         <input type="text" name="subsidyMoney" id="subsidyMoney" th:value="0.00"/>元 （当前可用<label th:text="${xbStudent.surplusMoney}"></label>元）
+                        <input type="hidden" id="xbStudentSurplusMoney" th:value="${xbStudent.surplusMoney}"/>
                     </div>
                 </div>
             </th:block>
@@ -275,6 +276,18 @@ $(".more").click(function(){
 
     function saveSubsidy(){
         var studentId = $('#studentId').val();
+        var surplusMoney = $('#surplusMoney').val();
+        var paymentMoney = $('#paymentMoney').val();
+        var subsidyMoney = $('#subsidyMoney').val();
+        var xbStudentSurplusMoney = $('#xbStudentSurplusMoney').val();
+        if(Number(xbStudentSurplusMoney)<Number(subsidyMoney)){
+            $.kd.kdAlert("当前可用金额不足！");
+            return;
+        }
+        if((Number(subsidyMoney)+Number(paymentMoney))>Number(surplusMoney)){
+            $.kd.kdAlert("补费金额不能大于应收总计！");
+            return;
+        }
         if (studentId) {
             var data= serializeObject("#subsidyForm");
             console.log(data);

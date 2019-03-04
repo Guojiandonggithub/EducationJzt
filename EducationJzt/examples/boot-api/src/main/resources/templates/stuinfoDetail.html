@@ -795,7 +795,7 @@ function readFile(){
 <script type="text/javascript" th:inline="javascript">
   var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/;
 function editStuinfo(){
-   var infoId = $("#stuinfoId").val;
+   var infoId = $("#stuinfoId").val();
    var data= serializeObject("#editForm");
    console.log(data);
    var load = new Loading();

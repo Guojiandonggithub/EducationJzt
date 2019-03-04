@@ -38,4 +38,6 @@ public interface XbRecordClassDao extends PagingAndSortingRepository<XbRecordCla
 
     @Query(value = " select count(*) from (select x.attend_id  from xb_record_class x   GROUP BY x.attend_id,x.record_time)as a ",nativeQuery = true)
     int findRecordTotalCount();
+
+    List<XbRecordClass> findByStudentId(String studentId);
 }

@@ -124,7 +124,9 @@ public class StudentActivity {
             String code = "1000";
 			XbStudent xbStudent = studentService.checkStudentName(name,phone);
             if(null!=xbStudent){
-                code = "1001";
+            	if("1".equals(xbStudent.deleteStatus)){
+					code = "1001";
+				}
             }
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put("status","1");
@@ -277,20 +279,11 @@ public class StudentActivity {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		/*List studentlist = new ArrayList<>();
-		if(StringUtils.isEmpty(enrollDateSearch)){
-			studentlist =	studentService.getAllStudentListNoDate();
-		}else{
-			studentlist =	studentService.getAllStudentListStartAndEnd(startdate,enddate);
-		}*/
 		List<XbStudentRelationView> studentlist = studentService.getxbStudentRelationViewList(searchParamsview);
 		Iterable<SysOrgans> organsList = organsService.getOrgansList();
 		Page<XbStudentRelationViewNew> xbStudentPage = studentService.getXbStudentRelationViewNewList(pageable,searhMap);
-		Map<String,Object> studentMap = new HashMap<>();
-		/*Page<XbStudent> xbStudentsPage = studentService.getXbStudentList(pageable,studentMap);*/
 		model.addAttribute("studentlistsize",studentlist.size());
 		model.addAttribute("xbStudentPage",xbStudentPage);
-		/*model.addAttribute("xbStudentsPage",xbStudentsPage);*/
 		model.addAttribute("organId",organId);
 		model.addAttribute("organsList",organsList);
 		model.addAttribute("studentcurrentzise",xbStudentPage.getSize());
@@ -1009,6 +1002,14 @@ public class StudentActivity {
 			xbSupplementFee.studentId = xbStudent.id;
 			String content = "";
 			for (XbStudentRelation studentRelation : xbStudentRelationList) {
+				Map<String, Object> StudentRelationMap  =  new HashMap<>();
+				StudentRelationMap.put("EQ_studentId",xbStudent.id);
+				StudentRelationMap.put("EQ_courseId",studentRelation.courseId);
+				List<XbStudentRelationView> xbStudentRelationViewList = studentService.getxbStudentRelationViewList(StudentRelationMap);
+				if(xbStudentRelationViewList.size()>0){
+					XbStudentRelationView xbStudentRelationView = xbStudentRelationViewList.get(0);
+					studentRelation.classId = xbStudentRelationView.classId;
+				}
 				studentRelation.studentId = xbStudent.id;
 				XbCourse xbCourse = xbCourseService.findById(studentRelation.courseId);
 				content = content+xbCourse.courseName +",";
@@ -1404,6 +1405,7 @@ public class StudentActivity {
 		Page<XbStudentRelationViewNew> xbStudentRelationPage = studentService.getXbStudentRelationViewNewList(pageable,searchParams);
 		model.addAttribute("xbClass",xbClass);
 		model.addAttribute("xbStudentRelationPage",xbStudentRelationPage);
+		model.addAttribute("currentzise",xbStudentRelationPage.getSize());
 		return "manageClass";
 	}
 
@@ -1524,6 +1526,7 @@ public class StudentActivity {
 	 * @return
 	 */
 	@RequestMapping("/updateManagement")
+	@SystemControllerLog(descrption = "编辑办理中心",actionType = "2")
 	public void updateManagement(
 			@RequestParam(required = false) String studentName,
 			@RequestParam(required = false) String paymentMoney,
@@ -1536,6 +1539,9 @@ public class StudentActivity {
 			BigDecimal surplusMoneyB = xbSupplementFee.paymentMoney;
 			BigDecimal registratioFeeB = new BigDecimal("0");
 			xbSupplementFee.paymentMoney = new BigDecimal(paymentMoney);
+			if(registratioFee.equals("null")||registratioFee.equals("")){
+				registratioFee = "0";
+			}
 			xbSupplementFee.registratioFee = new BigDecimal(registratioFee);
 			String studentId = xbSupplementFee.studentId;
 			XbStudent xbStudent = studentService.getXbStudent(studentId);
@@ -1555,7 +1561,7 @@ public class StudentActivity {
 				BigDecimal chae = xbStudent.paymentMoney.subtract(su);
 				if(chae.compareTo(BigDecimal.ZERO)==-1){
 					xbStudent.paymentMoney = BigDecimal.ZERO;
-					xbStudent.surplusMoney = xbStudent.surplusMoney.add(chae);
+					xbStudent.surplusMoney = xbStudent.surplusMoney.subtract(chae);
 				}else{
 					xbStudent.paymentMoney = xbStudent.paymentMoney.subtract(su);
 				}

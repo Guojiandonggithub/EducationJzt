@@ -491,6 +491,7 @@ public class FeeRelatedActivity {
 	 * @param resp
 	 */
 	@RequestMapping("/changeClassSave")
+	@SystemControllerLog(descrption = "转班",actionType = "1")
 	public void changeClassSave(@RequestParam String studentEntity, HttpServletResponse resp) {
 		try {
 			XbSupplementFee xbSupplementFee = com.alibaba.fastjson.JSONObject.parseObject(studentEntity,XbSupplementFee.class);
@@ -503,25 +504,31 @@ public class FeeRelatedActivity {
 			String choosecourseId = xbSupplementFee.choosecourseId;
 			XbStudentRelation xbStudentRelations = studentService.getXbStudentRelation(classId);
 			xbStudentRelations.periodNum = new BigDecimal(periodNum);
-			String className = studentService.getXbClass(xbStudentRelations.classId).className;
-			xbStudentRelations.studentStart = 2;
-			XbCoursePreset xbCoursePreset = xbCoursePresetService.getXbCoursePreset(choosecourseId);
-			xbStudentRelations.classId = toClassId;
-			XbClass xbClass = studentService.getXbClass(toClassId);
-			xbStudentRelations.organId = xbClass.organId;
-			xbStudentRelations.courseId = xbClass.courseId;
-			xbStudentRelations.studentId = studentId;
-			xbSupplementFee.remarks = className+"转到"+xbClass.className;
-			xbSupplementFee.surplusMoney = xbStudentRelations.receivable;//应收金额
-			xbSupplementFee.paymentMoney = xbStudentRelations.receivable;//实收金额
-			studentService.saveXbStudentRelation(xbStudentRelations);
-			HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
-			SysEmployee sysEmployee = (SysEmployee)request.getSession().getAttribute("sysEmployee");
-			xbSupplementFee.handlePerson = sysEmployee.employeeName;
-			studentService.saveXbSupplementFee(xbSupplementFee);
+			String classIdStr = xbStudentRelations.classId;
 			JSONObject jsonObject = new JSONObject();
-			jsonObject.put("status","1");
-			jsonObject.put("msg", "编辑成功");
+			if(null!=classIdStr&&!"".equals(classIdStr)){
+				String className = studentService.getXbClass(xbStudentRelations.classId).className;
+				xbStudentRelations.studentStart = 2;
+				XbCoursePreset xbCoursePreset = xbCoursePresetService.getXbCoursePreset(choosecourseId);
+				xbStudentRelations.classId = toClassId;
+				XbClass xbClass = studentService.getXbClass(toClassId);
+				xbStudentRelations.organId = xbClass.organId;
+				xbStudentRelations.courseId = xbClass.courseId;
+				xbStudentRelations.studentId = studentId;
+				xbSupplementFee.remarks = className+"转到"+xbClass.className;
+				xbSupplementFee.surplusMoney = xbStudentRelations.receivable;//应收金额
+				xbSupplementFee.paymentMoney = xbStudentRelations.receivable;//实收金额
+				studentService.saveXbStudentRelation(xbStudentRelations);
+				HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
+				SysEmployee sysEmployee = (SysEmployee)request.getSession().getAttribute("sysEmployee");
+				xbSupplementFee.handlePerson = sysEmployee.employeeName;
+				studentService.saveXbSupplementFee(xbSupplementFee);
+				jsonObject.put("msg", "转班成功!");
+				jsonObject.put("status","1");
+			}else{
+				jsonObject.put("status","0");
+				jsonObject.put("msg", "该学员还没有分班!");
+			}
 			logger.info("编辑机构返回json参数="+jsonObject.toString());
 			resp.setContentType("text/html;charset=UTF-8");
 			resp.getWriter().println(jsonObject.toJSONString());
@@ -537,6 +544,7 @@ public class FeeRelatedActivity {
 	 * @param resp
 	 */
 	@RequestMapping("/rePeatClassSave")
+	@SystemControllerLog(descrption = "复课",actionType = "1")
 	public void rePeatClassSave(@RequestParam String studentEntity, HttpServletResponse resp) {
 		try {
 			XbSupplementFee xbSupplementFee = com.alibaba.fastjson.JSONObject.parseObject(studentEntity,XbSupplementFee.class);
@@ -574,6 +582,7 @@ public class FeeRelatedActivity {
 	 * @param resp
 	 */
 	@RequestMapping("/saveSubsidy")
+	@SystemControllerLog(descrption = "补费",actionType = "1")
 	public void saveSubsidy(@RequestParam String studentEntity, HttpServletResponse resp) {
 		try {
 			XbSupplementFee xbSupplementFee = com.alibaba.fastjson.JSONObject.parseObject(studentEntity,XbSupplementFee.class);
@@ -646,6 +655,7 @@ public class FeeRelatedActivity {
 	 * @param resp
 	 */
 	@RequestMapping("/saveStopClass")
+	@SystemControllerLog(descrption = "停课",actionType = "1")
 	public void saveStopClass(@RequestParam String studentEntity, HttpServletResponse resp) {
 		try {
 			XbSupplementFee xbSupplementFee = com.alibaba.fastjson.JSONObject.parseObject(studentEntity,XbSupplementFee.class);
@@ -795,6 +805,7 @@ public class FeeRelatedActivity {
 
 
 	@RequestMapping("/save/enroll")
+	@SystemControllerLog(descrption = "报名",actionType = "1")
 	public void saveOrgans(@RequestParam String studentEntity,HttpServletResponse resp) {
 		Map<String, Object> map  =  new HashMap<>();
 		try {
@@ -950,6 +961,7 @@ public class FeeRelatedActivity {
 	 * @param resp
 	 */
 	@RequestMapping("/cancelClassSave")
+	@SystemControllerLog(descrption = "退费",actionType = "1")
 	public void cancelClassSave(@RequestParam String studentEntity, HttpServletResponse resp) {
 		try {
 			XbSupplementFee xbSupplementFee = com.alibaba.fastjson.JSONObject.parseObject(studentEntity,XbSupplementFee.class);

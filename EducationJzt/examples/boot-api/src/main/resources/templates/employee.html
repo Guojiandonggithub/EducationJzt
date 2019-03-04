@@ -357,12 +357,12 @@
         var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/ ;
 
         function saveEmployee() {
-            var load = new Loading();
-            load.init({
-                target: "#main-content"
-            });
-            load.start();
             if ($("#iform").valid()) {
+                var load = new Loading();
+                load.init({
+                    target: "#main-content"
+                });
+                load.start();
                 var data = serializeObject("#iform");
                 $.ajax({
                     type: 'get',

@@ -197,6 +197,12 @@ public class XbStudentService {
 	public void deleteXbStudent(String id) {
         XbStudent xbStudent = studentDao.findOne(id);
         xbStudent.deleteStatus = "0";
+		List<XbSupplementFee> xbSupplementFeeList = xbSupplementFeeDao.findByStudentId(id);
+		xbSupplementFeeDao.delete(xbSupplementFeeList);
+		List<XbStudentRelation> xbStudentRelationList = xbStudentRelationDao.findByStudentId(id);
+		xbStudentRelationDao.delete(xbStudentRelationList);
+		List<XbRecordClass> xbRecordClassList = xbRecordClassDao.findByStudentId(id);
+		xbRecordClassDao.delete(xbRecordClassList);
 		studentDao.save(xbStudent);
 	}
 

@@ -499,8 +499,10 @@
                     success: function (data) {
                         var status = data.status;
                         var msg = data.msg;
-                        $.kd.kdAlert("转班成功！",function () {
-                            window.location.href = basePath + '/student/getManagementList';
+                        $.kd.kdAlert(msg,function () {
+                            if(status=='1'){
+                                window.location.href = basePath + '/student/getManagementList';
+                            }
                         });
                     }
                 });

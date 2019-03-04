@@ -22,7 +22,6 @@ import org.springside.examples.bootapi.service.*;
 import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -368,6 +367,7 @@ public class WechatRecordClassActivity {
 		if(null!=classesId){
 			searhMap.put("LIKE_classId",classesId);
 		}
+		searhMap.put("NEQ_studentStart",4);
 		XbClass classes = studentService.getXbClass(classesId);
 		Page<XbStudentRelationViewNew> classPage = studentService.getXbStudentRelationViewNewList(pageable,searhMap);
 		model.addAttribute("classPage",classPage);
@@ -460,6 +460,7 @@ public class WechatRecordClassActivity {
 		}
 	}*/
 	@PostMapping("/save/recordClass")
+	@SystemControllerLog(descrption = "保存记上课",actionType = "1")
 	public void recordClass(@RequestBody List<XbRecordClass> xbRecordClassList, HttpServletResponse resp, Pageable pageable) {
 		try {
 			for (XbRecordClass xbRecordClass : xbRecordClassList) {
