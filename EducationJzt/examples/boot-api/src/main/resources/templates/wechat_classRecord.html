@@ -26,6 +26,7 @@
 <div id="wrapper" style="height: 93%;">
     <div id="scroller">
         <input th:id="page" th:value="${recordLists.getNumber()}" type="hidden">
+        <input th:id="totalpage" th:value="${recordLists.getTotalPages()}" type="hidden">
         <div id="pullDown" >
             <span class="pullDownIcon" style="width: 0px;float:initial"></span><span class="pullDownLabel"></span>
         </div>
@@ -138,8 +139,14 @@
     }
 
     function pullUpAction () {
+        var load = new Loading();
+        load.init({
+            target: "#wrapper"
+        });
+        load.start();
         setTimeout(function () {
             var page = parseInt($("#page").val())+1;
+            var totalpage = parseInt($("#totalpage").val())-1;
             console.log(page)
             $.ajax({
                 url: basePath+ '/recordClassWechat/getRecordClassRecordListByClassReloding?sort=recordTime,DESC&page='+page,
@@ -147,12 +154,20 @@
                 contentType: 'application/json',
                 async: true,
                 success: function(data) {
+                    load.stop();
                     console.log("查询排课回调成功");
-                    $("#page").val(page);
-                    $("#classRecord_tbodyid").append(data);
+                    if(data!=""){
+                        $("#classRecord_tbodyid").append(data);
+                        $("#page").val(page);
+                    }
+                    if(page>=totalpage){
+                        $("#page").val(totalpage);
+                        $.kd.kdMsg("到底了");
+                    }
                     myScroll.refresh();
                 },
                 error:function(){
+                    load.stop();
                     myScroll.refresh();
                     console.log("查询排课回调失败")
                 }

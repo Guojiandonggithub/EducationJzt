@@ -8,10 +8,14 @@
     <link href="../static/pages/wechat_css/bootstrap.min.css" rel="stylesheet">
     <link href="../static/pages/wechat_css/timetable.css" rel="stylesheet">
     <link href="../static/pages/wechat_css/iscroll.css" rel="stylesheet">
-
+      <link rel="stylesheet" href="../static/pages/css/kd.ui.plugin.css" />
+      <link rel="stylesheet" href="../static/pages/css/loading.css" />
+      
       <script src="../static/pages/wechat_js/jquery.min.js"></script>
     <script src="../static/pages/wechat_js/bootstrap.min.js"></script>
     <script src="../static/pages/wechat_js/iscroll.js"></script>
+      <script src="../static/pages/js/loading.js"></script>
+      <script src="../static/pages/js/kd.ui.plugin.js"></script>
   </head>
 <div class="add" style="background: #2778ca;color: white;margin-bottom: 0px;font-size: 21px;line-height: 38px;">
     <p style="margin: 0 0 2px;">记上课</p>
@@ -19,6 +23,7 @@
 <p class="all" th:text="'共'+${classPage.getTotalElements()+'个'}">共16个</p>
   <!--<p class="all" th:text="'第'+${classPage.getNumber()+1}+'页'">第几页</p>-->
   <input th:id="page" th:value="${classPage.getNumber()}" type="hidden">
+  <input th:id="totalpage" th:value="${classPage.getTotalPages()}" type="hidden">
 <body>
 <p id="show"></p>
 <div id="wrapper">
@@ -75,21 +80,35 @@
       }
 
       function pullUpAction () {
+          var load = new Loading();
+          load.init({
+              target: "#wrapper"
+          });
+          load.start();
           setTimeout(function () {
               var page = parseInt($("#page").val())+1;
+              var totalpage = parseInt($("#totalpage").val())-1;
               $.ajax({
                   url: basePath+ '/recordClassWechat/getRecordClassList_reloading?page='+page,
                   type: 'get',
                   contentType: 'application/json',
                   async: true,
                   success: function(data) {
+                      load.stop();
                       console.log("查询排课回调成功");
                       //$("#wechat_recordclasslist_spanid").html("");
-                      $("#page").val(page);
-                      $("#wechat_recordclasslist_spanid").append(data);
+                      if(data!=""){
+                          $("#page").val(page);
+                          $("#wechat_recordclasslist_spanid").append(data);
+                      }
+                      if(page>=totalpage){
+                          $("#page").val(totalpage);
+                          $.kd.kdMsg("到底了");
+                      }
                       myScroll.refresh();
                   },
                   error:function(){
+                      load.stop();
                       myScroll.refresh();
                       console.log("查询排课回调失败")
                   }

@@ -9,11 +9,13 @@
       <link href="../static/pages/wechat_css/timetable.css" rel="stylesheet">
       <link href="../static/pages/wechat_css/iscroll.css" rel="stylesheet">
       <link href="../static/pages/wechat_css/style.css" rel="stylesheet">
+      <link rel="stylesheet" href="../static/pages/css/kd.ui.plugin.css" />
       <link rel="stylesheet" href="../static/pages/css/loading.css" />
       <script src="../static/pages/wechat_js/jquery.min.js"></script>
       <script src="../static/pages/wechat_js/bootstrap.min.js"></script>
       <script src="../static/pages/wechat_js/script.js"></script>
       <script src="../static/pages/js/loading.js"></script>
+      <script src="../static/pages/js/kd.ui.plugin.js"></script>
       <script src="../static/pages/wechat_js/iscroll.js"></script>
   </head>
 <body>
@@ -54,6 +56,7 @@
             <th:block th:if="${xbAttendList.content}" th:fragment="xbAttendListFra">
                 <input th:id="dda"  th:value="${dda}" type="hidden">
                 <input th:id="page" th:value="${xbAttendList.getNumber()}" type="hidden">
+                <input th:id="totalpage" th:value="${xbAttendList.getTotalPages()}" type="hidden">
                 <div class="con-box" id="xbattendlist_id" th:each="less,lessSta:${xbAttendList.content}" style="margin-top: 0px;">
                     <div class="con-list" style="border-bottom: solid 1px #b3b5c3;">
                         <p class="class-list" style="width: 30%;" >
@@ -163,8 +166,14 @@
     }
 
     function pullUpAction () {
+        var load = new Loading();
+        load.init({
+            target: "#wrapper"
+        });
+        load.start();
         setTimeout(function () {
             var page = parseInt($("#page").val())+1;
+            var totalpage = parseInt($("#totalpage").val())-1;
             console.log(page)
             var dda = $("#dda").val();
             console.log(dda)
@@ -175,12 +184,20 @@
                 data: {dda:dda},
                 async: true,
                 success: function(data) {
+                    load.stop();
                     console.log("查询排课回调成功");
-                    $("#page").val(page);
-                    $("#xbAttendList_tbodyid").append(data);
+                    if(data!=""){
+                        $("#page").val(page);
+                        $("#xbAttendList_tbodyid").append(data);
+                    }
+                    if(page>=totalpage){
+                        $("#page").val(totalpage);
+                        $.kd.kdMsg("到底了");
+                    }
                     myScroll.refresh();
                 },
                 error:function(){
+                    load.stop();
                     myScroll.refresh();
                     console.log("查询排课回调失败")
                 }
