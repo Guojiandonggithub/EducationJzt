@@ -43,6 +43,10 @@
             <span class="pullDownIcon" style="width: 0px;float:initial"></span><span class="pullDownLabel"></span>
         </div>
         <div class="record" id="classRecord_tbodyid" style="margin-bottom: 0px;" th:fragment="classRecordFra">
+            <div class="result" name="aaa">
+                当前结果：共计<span  th:text="${totalPeriodnum}"></span>课时<span th:text="${totalReceivables}"></span>金额
+            </div>
+            <div class="record" id="classRecord_tbodyid_2" style="margin-bottom: 0px;" th:fragment="classRecordFra2">
             <script>
                 laydate.render({
                     elem: '#startDateTimeBegin'
@@ -51,9 +55,6 @@
                     elem: '#startDateTimeEnd'
                 });
             </script>
-            <div class="result" name="aaa">
-                当前结果：共计<span  th:text="${totalPeriodnum}"></span>课时<span th:text="${totalReceivables}"></span>金额
-            </div>
             <th:block th:if="${recordLists.content}" >
                 <ul th:each="cla:${recordLists.content}" style="padding-top:10px;">
                     <li  style="border-bottom: solid 0 #fff;border-top: solid 10px #fff;height: 23px;padding: 0px 5px;  ">
@@ -86,6 +87,7 @@
                     </li>
                 </ul>
             </th:block>
+            </div>
         </div>
         <div id="pullUp" style="font-size: 15px;">
             <span class="pullUpIcon"></span><span class="pullUpLabel">下拉加载...</span>
@@ -180,7 +182,7 @@
             $("#aaa").hide();
             console.log(page)
             $.ajax({
-                url: basePath+ '/recordClassWechat/getRecordClassRecordListByClassReloding?sort=recordTime,DESC&page='+page+'&startDateTimeBegin='+startDateTimeBegin+'&startDateTimeEnd='+startDateTimeEnd,
+                url: basePath+ '/recordClassWechat/getRecordClassRecordListByClassReloding2?sort=recordTime,DESC&page='+page+'&startDateTimeBegin='+startDateTimeBegin+'&startDateTimeEnd='+startDateTimeEnd,
                 type: 'get',
                 contentType: 'application/json',
                 async: true,
@@ -188,7 +190,7 @@
                     load.stop();
                     console.log("查询上课记录回调成功");
                     if(data!=""){
-                        $("#classRecord_tbodyid").append(data);
+                        $("#classRecord_tbodyid_2").append(data);
                         $("#page").val(page);
                     }
                     if(page>=totalpage){
@@ -286,7 +288,8 @@
             target: "#wrapper"
         });
         load.start();
-        var page = parseInt($("#page").val());
+        //var page = parseInt($("#page").val());
+        var page = 0;
         var startDateTimeBegin = $("#startDateTimeBegin").val();
         var startDateTimeEnd = $("#startDateTimeEnd").val();
         if(!startDateTimeBegin){
@@ -308,6 +311,7 @@
                 $("#classRecord_tbodyid").empty();
                 $("#classRecord_tbodyid").append(data);
                 $("#page").val(page);
+                myScroll.refresh();
             }
         });
     }
