@@ -90,9 +90,9 @@ public class SystemLogAspect {
             result = "indexs";
         }
 
-        Object[] params = joinPoint.getArgs() ;
+        Object[] params = joinPoint.getArgs();
         StringBuilder returnStr = new StringBuilder();
-        for ( int i = 0; i < joinPoint.getArgs().length; i++) {
+        for ( int i = 0; i < 2; i++) {
             //if(joinPoint.getArgs()[i].getClass() == PartnerLogisticsBean.class){
                 //returnStr.append(joinPoint.getArgs()[i].toString()).append(";");
             //}else{

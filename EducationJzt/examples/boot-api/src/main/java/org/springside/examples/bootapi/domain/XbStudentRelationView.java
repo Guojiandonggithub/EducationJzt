@@ -10,8 +10,8 @@ import java.util.Date;
  * Created by ZhangLei on 2019/1/24 0024
  */
 @Entity
-//@Table(name="XB_STUDENT_RELATION_VIEW")
-//@NamedQuery(name="XbStudentRelationView.findAll",query = "SELECT t FROM XbStudentRelationView t")
+@Table(name="XB_STUDENT_RELATION_VIEW")
+@NamedQuery(name="XbStudentRelationView.findAll",query = "SELECT t FROM XbStudentRelationView t")
 public class XbStudentRelationView {
     @Id
    // @Column(name="id")

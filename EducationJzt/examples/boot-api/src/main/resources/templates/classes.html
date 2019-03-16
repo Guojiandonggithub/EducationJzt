@@ -80,6 +80,7 @@
                                 <div class="form-group" style="display: inline;">
                                     <button type="button" th:onclick="'javascript:getClassListPage(\'\')'">搜索</button>
                                     <button type="button" onclick="$('input[type=text],#TeacherNameCla').val('')">清空</button>
+                                    <button type="button" th:onclick="'javascript:expRecord()'" >导出当前结果</button>
                                 </div>
                             </div>
                             <div class="orderCon" id="donghua">
@@ -103,7 +104,7 @@
 
                                             <th>序号</th>
                                             <th>班级名称</th>
-                                            <th>人数
+                                            <th>实际/开班人数
                                                 <div class="sort">
                                                     <span class="glyphicon glyphicon-triangle-top"></span>
                                                     <span class="glyphicon glyphicon-triangle-bottom"></span>
@@ -136,7 +137,7 @@
                                                 style="text-align: center !important;"
                                                 class="className studentName" th:onclick="'javascript:classDetail(\''+${xbclass.id}+'\')'"><img src="../static/pages/img/ban.png">
                                             </td>
-                                            <td class="prog" th:text="${xbclass.enrollNum}">
+                                            <td class="prog" th:text="${xbclass.enrollNum} + '/' +${xbclass.preRecruitNum}">
                                                 <div class="progress progress-small progress-striped active">
                                                     <!--<div class="progress-bar progress-bar-warning" style="width: 0%;"></div>
                                                     <span th:text="${xbclass.establishNum}"></span>-->
@@ -622,6 +623,17 @@
                 });
             })
         }
+
+        function expRecord(){
+            var TeacherNameCla = $("#TeacherNameCla").val();
+            if(!TeacherNameCla){
+                $.kd.kdAlert("请先输入教师姓名");
+                return false;
+            }
+            var data= serializeObject("#xbcalssForm");
+            window.location.href= basePath + '/excel/classRecordExcel' +'?data='+JSON.stringify(data);
+        }
+
         function serializeObject(form)
         {
             var o = {};

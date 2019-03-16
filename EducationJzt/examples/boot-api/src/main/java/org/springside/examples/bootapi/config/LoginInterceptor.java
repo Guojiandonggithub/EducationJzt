@@ -68,7 +68,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
             if(requestType!=null && requestType.equals("XMLHttpRequest")){
         response.setHeader("sessionstatus","timeout");
 //				response.setHeader("basePath",request.getContextPath());
-        response.getWriter().print("LoginTimeout");
+        response.getWriter().print("请重新登录!");
         return false;
     } else {
         if(path.indexOf("/recordClassWechat/")!=-1 || path.indexOf("/wechatLogin/")!=-1 ){

@@ -1,6 +1,7 @@
 package org.springside.examples.bootapi.api;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -12,13 +13,15 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springside.examples.bootapi.ToolUtils.DateUtil;
 import org.springside.examples.bootapi.ToolUtils.ExcelData;
 import org.springside.examples.bootapi.ToolUtils.ExportExcelUtils;
+import org.springside.examples.bootapi.domain.XbClass;
 import org.springside.examples.bootapi.domain.XbRecordClassView;
 import org.springside.examples.bootapi.domain.XbStudentRelationViewNew;
 import org.springside.examples.bootapi.service.XbStudentService;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.OutputStream;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
+import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -56,20 +59,13 @@ public class ExcelActivity {
 			String classesId = xbRecordClassViewList.get(i).classId;
 			Map<String,Object> searhMap = new HashMap<>();
 			searhMap.put("EQ_classId",classesId);
-			//searhMap.put("GTE_periodNum",new BigDecimal("0"));
+			searhMap.put("GTE_periodNum", new BigDecimal("0"));
 			Pageable pageable = new PageRequest(0, 1, null);
 			Page<XbStudentRelationViewNew> classPage = studentService.getXbStudentRelationViewNewList(pageable,searhMap);
 			xbRecordClassViewList1.add(classPage.getTotalElements());
 			xbRecordClassViewList1.add(xbRecordClassViewList.get(i).studentCount);
 			xbRecordClassViewList1.add(xbRecordClassViewList.get(i).periodnum);
-			if(classPage.getContent().size()>0){
-				BigDecimal totalPeriodNum = classPage.getContent().get(0).totalPeriodNum;
-				BigDecimal totalReceivable = classPage.getContent().get(0).totalReceivable;
-				BigDecimal receivable = totalReceivable.divide(totalPeriodNum,2,RoundingMode.HALF_UP).multiply(xbRecordClassViewList.get(i).periodnum);
-				xbRecordClassViewList1.add(receivable);
-			}else{
-				xbRecordClassViewList1.add("");
-			}
+			xbRecordClassViewList1.add(xbRecordClassViewList.get(i).totalReceivable);
 			rows.add(xbRecordClassViewList1);
 		}
 		datas.setRows(rows);
@@ -127,6 +123,112 @@ public class ExcelActivity {
         ExportExcelUtils.exportExcel(data, out);
         out.close();*/
 		ExportExcelUtils.exportExcel(response,"学员信息.xlsx",datas);
+	}
+
+	@RequestMapping(value = "/ontTooneRecordExcel", method = RequestMethod.GET)
+	public void ontTooneRecordExcel(HttpServletResponse response,@RequestParam(required = false) String data) throws Exception {
+		ExcelData datas = new ExcelData();
+		datas.setName("一对一教师学员信息");
+		List<String> titles = new ArrayList();
+		titles.add("所属校区");
+		titles.add("教师姓名");
+		titles.add("学员姓名");
+		titles.add("所属课程");
+		titles.add("剩余课时");
+		titles.add("剩余金额");
+		titles.add("学员状态");
+		datas.setTitles(titles);
+		List<List<Object>> rows = new ArrayList();
+		String reportName = "";
+		List<XbStudentRelationViewNew> xbStudentRelationViewNewList = getStudentListByOneToOne(data);
+		for (int i = 0; i < xbStudentRelationViewNewList.size(); i++) {
+			List<Object> xbRecordClassViewList1 = new ArrayList();
+			reportName = xbStudentRelationViewNewList.get(i).sysOrgans.organName+xbStudentRelationViewNewList.get(i).employeeName;
+			xbRecordClassViewList1.add(xbStudentRelationViewNewList.get(i).sysOrgans.organName);
+			xbRecordClassViewList1.add(xbStudentRelationViewNewList.get(i).employeeName);
+			xbRecordClassViewList1.add(xbStudentRelationViewNewList.get(i).xbStudent.studentName);
+			xbRecordClassViewList1.add(xbStudentRelationViewNewList.get(i).xbCourse.courseName);
+			xbRecordClassViewList1.add(xbStudentRelationViewNewList.get(i).periodNum);
+			xbRecordClassViewList1.add(xbStudentRelationViewNewList.get(i).receivable);
+			Integer studentStart = xbStudentRelationViewNewList.get(i).studentStart;
+			String status = "";
+			if(studentStart==0){
+				status = "在读";
+			}else if(studentStart==1){
+				status = "停课";
+			}else if(studentStart==2){
+				status = "转班";
+			}else if(studentStart==3){
+				status = "退费";
+			}else if(studentStart==4){
+				status = "结课";
+			}
+			xbRecordClassViewList1.add(status);
+			rows.add(xbRecordClassViewList1);
+		}
+		datas.setRows(rows);
+		ExportExcelUtils.exportExcel(response,reportName,datas);
+	}
+
+	@RequestMapping(value = "/classRecordExcel", method = RequestMethod.GET)
+	public void classRecordExcel(HttpServletResponse response,@RequestParam(required = false) String data) throws Exception {
+		ExcelData datas = new ExcelData();
+		datas.setName("班级学员信息");
+		List<String> titles = new ArrayList();
+		titles.add("所属校区");
+		titles.add("教师姓名");
+		titles.add("学员姓名");
+		titles.add("所属课程");
+		titles.add("剩余课时");
+		titles.add("剩余金额");
+		titles.add("学员状态");
+		String reportName = "";
+		List<List<XbStudentRelationViewNew>> xbStudentRelationViewNewList = getStudentListByclass(data);
+		HSSFWorkbook workbook = new HSSFWorkbook();
+		/*ExportExcelUtils.exportExcel(response,reportName,datas);*/
+		OutputStream out;
+		try {
+			for (int j = 0; j < xbStudentRelationViewNewList.size(); j++) {
+				List<List<Object>> rows = new ArrayList();
+				List<XbStudentRelationViewNew> list = xbStudentRelationViewNewList.get(j);
+				if(list.size()>0){
+					reportName = list.get(0).sysOrgans.organName+list.get(0).employeeName;
+
+					for (int i = 0; i < xbStudentRelationViewNewList.get(j).size(); i++) {
+						List<Object> xbRecordClassViewList1 = new ArrayList();
+						xbRecordClassViewList1.add(xbStudentRelationViewNewList.get(j).get(i).sysOrgans.organName);
+						xbRecordClassViewList1.add(xbStudentRelationViewNewList.get(j).get(i).employeeName);
+						xbRecordClassViewList1.add(xbStudentRelationViewNewList.get(j).get(i).xbStudent.studentName);
+						xbRecordClassViewList1.add(xbStudentRelationViewNewList.get(j).get(i).xbCourse.courseName);
+						xbRecordClassViewList1.add(xbStudentRelationViewNewList.get(j).get(i).periodNum);
+						xbRecordClassViewList1.add(xbStudentRelationViewNewList.get(j).get(i).receivable);
+						Integer studentStart = xbStudentRelationViewNewList.get(j).get(i).studentStart;
+						String status = "";
+						if(studentStart==0){
+							status = "在读";
+						}else if(studentStart==1){
+							status = "停课";
+						}else if(studentStart==2){
+							status = "转班";
+						}else if(studentStart==3){
+							status = "退费";
+						}else if(studentStart==4){
+							status = "结课";
+						}
+						xbRecordClassViewList1.add(status);
+						rows.add(xbRecordClassViewList1);
+					}
+					ExportExcelUtils.exportExcel(workbook, j, xbStudentRelationViewNewList.get(j).get(0).className, titles, rows);
+				}
+			}
+			response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(reportName + ".xls"));
+			response.setHeader("content-Type", "application/vnd.ms-excel");
+			out = response.getOutputStream();
+			workbook.write(out);
+			out.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/*
@@ -239,6 +341,53 @@ public class ExcelActivity {
 		List<XbStudentRelationViewNew> xbStudentPage = studentService.getXbRelationList(searhMap);
 
 		return xbStudentPage;
+	}
+
+	/*
+	 * 查询学员信息（一对一模块导出）
+	 * @return
+	 */
+	private List<XbStudentRelationViewNew> getStudentListByOneToOne(String data){
+		Map<String,Object> resultMap = new HashMap<>();
+		Map<String,Object> searhMap = new HashMap<>();
+		if(null!=data){
+			resultMap = com.alibaba.fastjson.JSONObject.parseObject(data,searhMap.getClass());
+		}
+		//教师名称
+		String TeacherNameCla = (String)resultMap.get("TeacherNameCla");
+		if(StringUtils.isNotEmpty(TeacherNameCla)){
+			searhMap.put("LIKE_employeeName",TeacherNameCla);
+		}
+		List<XbStudentRelationViewNew> xbStudentPage = studentService.getXbRelationList(searhMap);
+
+		return xbStudentPage;
+	}
+
+	/*
+	 * 查询学员信息（班级模块导出）
+	 * @return
+	 */
+	private List<List<XbStudentRelationViewNew>> getStudentListByclass(String data){
+		Map<String,Object> resultMap = new HashMap<>();
+		Map<String,Object> searhMap = new HashMap<>();
+		Map<String,Object> searhXbStudentRelationMap = new HashMap<>();
+		List<List<XbStudentRelationViewNew>> list = new ArrayList<>();
+		if(null!=data){
+			resultMap = com.alibaba.fastjson.JSONObject.parseObject(data,searhMap.getClass());
+		}
+		//教师名称
+		String TeacherNameCla = (String)resultMap.get("TeacherNameCla");
+		if(StringUtils.isNotEmpty(TeacherNameCla)){
+			searhMap.put("EQ_teacher.employeeName",TeacherNameCla);
+		}
+		List<XbClass> xbClassList = studentService.findXbClassListAll(searhMap);
+		for (int i = 0; i <xbClassList.size() ; i++) {
+			String classId = xbClassList.get(i).id;
+			searhXbStudentRelationMap.put("EQ_classId",classId);
+			List<XbStudentRelationViewNew> xbStudentPage = studentService.getXbRelationList(searhXbStudentRelationMap);
+			list.add(xbStudentPage);
+		}
+		return list;
 	}
 
 }

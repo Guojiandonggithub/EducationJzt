@@ -122,11 +122,9 @@ public class StudentActivity {
         Map<String, Object> map  =  new HashMap<>();
         try {
             String code = "1000";
-			XbStudent xbStudent = studentService.checkStudentName(name,phone);
-            if(null!=xbStudent){
-            	if("1".equals(xbStudent.deleteStatus)){
-					code = "1001";
-				}
+			List<XbStudent> xbStudent = studentService.checkStudentName(name,phone);
+            if(xbStudent.size()>0){
+				code = "1001";
             }
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put("status","1");
@@ -162,6 +160,7 @@ public class StudentActivity {
     }
 
 	@PostMapping("/save/classroom")
+	@SystemControllerLog(descrption = "添加教室",actionType = "1")
 	public void saveclassroom(@RequestBody XbClassroom classroom, HttpServletResponse resp) {
 		Map<String, Object> map  =  new HashMap<>();
 		try {
@@ -196,6 +195,7 @@ public class StudentActivity {
 	}
 
 	@PostMapping("/save/xbclass")
+	@SystemControllerLog(descrption = "添加班级",actionType = "1")
 	public void savexbclass(@RequestBody XbClass xbclass, HttpServletResponse resp) {
 		Map<String, Object> map  =  new HashMap<>();
 		try {
@@ -382,11 +382,16 @@ public class StudentActivity {
 		}
 		//学员状态
 		String studentStart = (String)resultMap.get("studentStart");
-		if(StringUtils.isEmpty(studentStart)){
+		/*if(StringUtils.isEmpty(studentStart)){
 			studentStart = "100";
 		}else if(!studentStart.equals("100")){
 			searhMap.put("EQ_studentStart",Integer.parseInt(studentStart));
-		}
+		}*/
+		List<Integer> studentStartList = new ArrayList();
+		studentStartList.add(1);
+		studentStartList.add(4);
+		studentStartList.add(3);
+		searhMap.put("NEQINT_studentStart",studentStartList);
 		Page<XbStudentRelationViewNew> xbStudentPage = studentService.getXbStudentRelationViewNewList(pageable,searhMap);
 		List<XbStudentRelationView> studentlist = studentService.getxbStudentRelationViewList(searhMap);
 		model.addAttribute("studentlistsize",studentlist.size());
@@ -886,6 +891,7 @@ public class StudentActivity {
 	}
 
 	@RequestMapping("/delete/classroom/{id}")
+	@SystemControllerLog(descrption = "删除教室",actionType = "3")
 	public void deleteclassroom(@PathVariable String id, HttpServletResponse resp){
 
 		Map<String, Object> map  =  new HashMap<>();
@@ -904,12 +910,18 @@ public class StudentActivity {
 	}
 
 	@RequestMapping("/delete/class/{id}")
+	@SystemControllerLog(descrption = "删除班级",actionType = "3")
 	public void deleteclass(@PathVariable String id, HttpServletResponse resp,Pageable pageable){
 
 		Map<String, Object> map  =  new HashMap<>();
 		try {
             Map<String,Object> xbClassearhMap = new HashMap<>();
             xbClassearhMap.put("EQ_classId",id);
+			List<Integer> studentStartList = new ArrayList();
+			studentStartList.add(1);
+			studentStartList.add(4);
+			studentStartList.add(3);
+			xbClassearhMap.put("NEQINT_studentStart",studentStartList);
             JSONObject jsonObject = new JSONObject();
             Page<XbStudentRelationViewNew> xbStudentRelationPage = studentService.getXbStudentRelationViewNewList(pageable,xbClassearhMap);
             if(xbStudentRelationPage.getContent().size()>0){
@@ -963,6 +975,7 @@ public class StudentActivity {
 		}
 	}
 	@RequestMapping("/save/enroll")
+	@SystemControllerLog(descrption = "报名-续费",actionType = "1")
 	public void saveOrgans(@RequestParam String studentEntity,@RequestParam String xbStudentRelation, HttpServletResponse resp) {
 		Map<String, Object> map  =  new HashMap<>();
 		try {
@@ -1005,9 +1018,10 @@ public class StudentActivity {
 				Map<String, Object> StudentRelationMap  =  new HashMap<>();
 				StudentRelationMap.put("EQ_studentId",xbStudent.id);
 				StudentRelationMap.put("EQ_courseId",studentRelation.courseId);
-				List<XbStudentRelationView> xbStudentRelationViewList = studentService.getxbStudentRelationViewList(StudentRelationMap);
+				StudentRelationMap.put("NEQ_classId","");
+				List<XbStudentRelation> xbStudentRelationViewList = studentService.getxbStudentRelationList(StudentRelationMap);
 				if(xbStudentRelationViewList.size()>0){
-					XbStudentRelationView xbStudentRelationView = xbStudentRelationViewList.get(0);
+					XbStudentRelation xbStudentRelationView = xbStudentRelationViewList.get(0);
 					studentRelation.classId = xbStudentRelationView.classId;
 				}
 				studentRelation.studentId = xbStudent.id;
@@ -1018,7 +1032,8 @@ public class StudentActivity {
 				studentRelation.receivable = xbSupplementFee.surplusMoney;
 				studentRelation.totalReceivable = xbSupplementFee.surplusMoney;
 				studentRelation.studentStart = 0;//在读
-				studentService.saveXbStudentRelation(studentRelation);
+				XbStudentRelation xbStudentRelation1 = studentService.saveXbStudentRelation(studentRelation);
+				xbSupplementFee.studentRelationId = xbStudentRelation1.id;
 			}
 			if(content.endsWith(",")){
 				content = content.substring(0,content.length()-1);
@@ -1402,6 +1417,11 @@ public class StudentActivity {
 		XbClass xbClass = studentService.getXbClass(classId);
 		Map<String, Object> searchParams = new HashMap<>();
 		searchParams.put("EQ_classId",classId);
+        List<Integer> studentStartList = new ArrayList();
+        studentStartList.add(1);
+        studentStartList.add(4);
+        studentStartList.add(3);
+        searchParams.put("NEQINT_studentStart",studentStartList);
 		Page<XbStudentRelationViewNew> xbStudentRelationPage = studentService.getXbStudentRelationViewNewList(pageable,searchParams);
 		model.addAttribute("xbClass",xbClass);
 		model.addAttribute("xbStudentRelationPage",xbStudentRelationPage);
@@ -1497,12 +1517,9 @@ public class StudentActivity {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		/*List studentlist = new ArrayList<>();
-		if(StringUtils.isEmpty(enrollDateSearch)){
-			studentlist =	studentService.getAllStudentListNoDate();
-		}else{
-			studentlist =	studentService.getAllStudentListStartAndEnd(startdate,enddate);
-		}*/
+
+		searchParamsview.put("EQ_studentStart",3);
+		searhMap.put("EQ_studentStart",3);
 		List<XbStudentRelationView> studentlist = studentService.getxbStudentRelationViewList(searchParamsview);
 		Iterable<SysOrgans> organsList = organsService.getOrgansList();
 		Page<XbStudentRelationViewNew> xbStudentPage = studentService.getXbStudentRelationViewNewList(pageable,searhMap);
@@ -1604,6 +1621,7 @@ public class StudentActivity {
 	}
 
 	@RequestMapping("/deleteStudent")
+	@SystemControllerLog(descrption = "删除学员",actionType = "3")
 	public void deleteStudent(@RequestParam String id,HttpServletResponse resp) {
 		Map<String, Object> map  =  new HashMap<>();
 		try {

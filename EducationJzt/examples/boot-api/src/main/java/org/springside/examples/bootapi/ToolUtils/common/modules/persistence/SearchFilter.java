@@ -14,7 +14,7 @@ import java.util.Map.Entry;
 public class SearchFilter {
 
 	public enum Operator {
-		EQ,NEQ ,LIKE, GT, LT, GTE, LTE,IN,OR,INOR,LIKEOR
+		EQ,NEQ ,LIKE, GT, LT, GTE, LTE,IN,OR,INOR,LIKEOR,NEQINT
 	}
 
 	public String fieldName;

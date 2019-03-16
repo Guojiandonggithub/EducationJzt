@@ -14,6 +14,8 @@ public class XbRecordClassView {
     @Id
     @Column(name="id")
     public String id;
+    @Column(name="studentRelationId")
+    public String studentRelationId;
     @Column(name="orgid")
     public String orgid;
     @Column(name="organ_name")
@@ -42,6 +44,5 @@ public class XbRecordClassView {
     public String classId;
     public long studentCount;
     public Date recordTime;
-    @Transient
-    public BigDecimal totalReceivable;
+    public String totalReceivable;
 }

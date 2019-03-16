@@ -17,7 +17,7 @@ import java.util.List;
  * Spring Data JPA 还会解释新增方法名生成新方法的实现.
  */
 public interface XbStudentRelationDao extends PagingAndSortingRepository<XbStudentRelation, String>,JpaSpecificationExecutor<XbStudentRelation> {
-    @Query(value = " select count(*) from xb_student_relation r where r.class_id = ?1 ",nativeQuery = true)
+    @Query(value = " select count(*) from xb_student_relation r where r.class_id = ?1 and r.student_start!=1 and r.student_start!=3 and r.student_start!=4 ",nativeQuery = true)
     public Long findAllDataByClassCount(String classId);
     @Query(value="SELECT * FROM xb_student_relation o WHERE o.enroll_date = ?1 GROUP BY o.student_id",nativeQuery = true)
     List findAllStudentList(Date enroll_date);

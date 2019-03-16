@@ -35,7 +35,7 @@
 <div class="main-container" id="main-container">
     <div th:replace="layout::left('11','')">
     </div>
-    <div class="main-content" th:if="${session.roleName!='教师'&&session.roleName!='运营助理'&&session.roleName!='总校教务'}">
+    <div class="main-content" th:if="${session.roleName!='教师'&&session.roleName!='运营助理'}">
         <div class="breadcrumbs" id="breadcrumb">
             <img src="../static/pages/img/line1.png"/>
             <span>初始化设置</span>

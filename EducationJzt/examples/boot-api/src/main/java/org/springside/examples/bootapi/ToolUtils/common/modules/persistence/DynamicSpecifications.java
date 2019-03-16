@@ -66,6 +66,12 @@ public class DynamicSpecifications {
 						case LIKEOR:
 							predicat.add(builder.like(expression, "%" + filter.value + "%"));
 							break;
+						case NEQINT:
+							List<Integer> tranfer=(ArrayList)filter.value;
+							for (int i = 0; i < tranfer.size(); i++) {
+								predicates.add(builder.notEqual(expression,tranfer.get(i)));
+							}
+							break;
 						}
 					}
 

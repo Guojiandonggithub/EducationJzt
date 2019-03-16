@@ -6,7 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
@@ -23,10 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /***
  * 记上课
@@ -291,24 +287,6 @@ public class WechatRecordClassActivity {
 		Map<String,Object> searhMap = new HashMap<>();
 
 		Page<XbRecordClassView> recordLists = studentService.getXbRecordClassdViewtoList(pageable,searhMap);
-		for (int i = 0; i < recordLists.getContent().size(); i++) {
-			XbRecordClassView xrcv = recordLists.getContent().get(i);
-			BigDecimal periodnum = xrcv.periodnum;
-			String classesId = xrcv.classId;
-			Map<String, Object> searhMaps = new HashMap<>();
-			searhMaps.put("EQ_classId", classesId);
-			searhMaps.put("GTE_periodNum", new BigDecimal("0"));
-			Pageable pageables = new PageRequest(0, 1, null);
-			Page<XbStudentRelationViewNew> classPage = studentService.getXbStudentRelationViewNewList(pageables, searhMaps);
-			if (classPage.getContent().size() > 0) {
-				BigDecimal totalPeriodNum = classPage.getContent().get(0).totalPeriodNum;
-				BigDecimal totalReceivable = classPage.getContent().get(0).totalReceivable;
-				BigDecimal periodnums = recordLists.getContent().get(i).periodnum;
-				BigDecimal receivable = totalReceivable.divide(totalPeriodNum,2,RoundingMode.HALF_UP).multiply(periodnums);
-				BigDecimal setScale = receivable.setScale(2,BigDecimal.ROUND_HALF_UP);
-				recordLists.getContent().get(i).totalReceivable =setScale;
-			}
-		}
 		int totalElements = studentService.findRecordTotalCount();
 		int size = pageable.getPageSize();
 		int number = pageable.getPageNumber();
@@ -318,45 +296,63 @@ public class WechatRecordClassActivity {
 		}
 		totalPages = totalPages + 1;
 		model.addAttribute("recordLists",recordLists);
-
+        List<XbRecordClassView> recordList = studentService.getXbRecordClassdViewtoList(searhMap);
+        BigDecimal totalPeriodnum = new BigDecimal("0");
+        BigDecimal totalReceivables = new BigDecimal("0");
+        for (int i = 0; i < recordList.size(); i++) {
+            BigDecimal periodnum = recordList.get(i).periodnum;
+            totalPeriodnum = totalPeriodnum.add(periodnum);
+            String rece = recordList.get(i).totalReceivable;
+            rece = rece.replaceAll(",","");
+            totalReceivables = totalReceivables.add(new BigDecimal(rece));
+        }
+        model.addAttribute("totalPeriodnum",totalPeriodnum);
+        model.addAttribute("totalReceivables",totalReceivables);
 		return "wechat_classRecord";
 	}
 	@RequestMapping("/getRecordClassRecordListByClassReloding")
-	public String getRecordClassRecordListByClassReloding(@RequestParam(required = false) String data, ModelMap model,
+	public String getRecordClassRecordListByClassReloding(@RequestParam(required = false) String startDateTimeBegin,@RequestParam(required = false) String startDateTimeEnd, ModelMap model,
 												  @PageableDefault(value = 10) Pageable pageable){
 		Map<String,Object> resultMap = new HashMap<>();
 		Map<String,Object> searhMap = new HashMap<>();
-
-		Page<XbRecordClassView> recordLists = studentService.getXbRecordClassdViewtoList(pageable,searhMap);
-		for (int i = 0; i < recordLists.getContent().size(); i++) {
-			XbRecordClassView xrcv = recordLists.getContent().get(i);
-			BigDecimal periodnum = xrcv.periodnum;
-			String classesId = xrcv.classId;
-			Map<String, Object> searhMaps = new HashMap<>();
-			searhMaps.put("EQ_classId", classesId);
-			searhMaps.put("GTE_periodNum", new BigDecimal("0"));
-			Pageable pageables = new PageRequest(0, 1, null);
-			Page<XbStudentRelationViewNew> classPage = studentService.getXbStudentRelationViewNewList(pageables, searhMaps);
-			if (classPage.getContent().size() > 0) {
-				BigDecimal totalPeriodNum = classPage.getContent().get(0).totalPeriodNum;
-				BigDecimal totalReceivable = classPage.getContent().get(0).totalReceivable;
-				BigDecimal periodnums = recordLists.getContent().get(i).periodnum;
-				BigDecimal receivable = totalReceivable.divide(totalPeriodNum,2,RoundingMode.HALF_UP).multiply(periodnums);
-				BigDecimal setScale = receivable.setScale(2,BigDecimal.ROUND_HALF_UP);
-				recordLists.getContent().get(i).totalReceivable =setScale;
-			}
-		}
-		int totalElements = studentService.findRecordTotalCount();
-		int size = pageable.getPageSize();
-		int number = pageable.getPageNumber();
-		int totalPages = totalElements/size;
-		if(totalPages==0){
-			number = 1;
-		}
-		totalPages = totalPages + 1;
-		model.addAttribute("recordLists",recordLists);
-		return "wechat_classRecord::classRecordFra";
-	}
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try {
+            if(null!=startDateTimeBegin&&!startDateTimeBegin.equals("")){
+                startDateTimeBegin = startDateTimeBegin+" 00:00:00";
+                searhMap.put("GTE_recordTime",sdf.parse(startDateTimeBegin));
+            }
+            if(null!=startDateTimeEnd&&!startDateTimeEnd.equals("")){
+                startDateTimeEnd = startDateTimeEnd+" 23:59:59";
+                searhMap.put("LTE_recordTime",sdf.parse(startDateTimeEnd));
+            }
+            Page<XbRecordClassView> recordLists = studentService.getXbRecordClassdViewtoList(pageable,searhMap);
+            int totalElements = studentService.findRecordTotalCount();
+            int size = pageable.getPageSize();
+            int number = pageable.getPageNumber();
+            int totalPages = totalElements/size;
+            if(totalPages==0){
+                number = 1;
+            }
+            totalPages = totalPages + 1;
+            model.addAttribute("recordLists",recordLists);
+            List<XbRecordClassView> recordList = studentService.getXbRecordClassdViewtoList(searhMap);
+            BigDecimal totalPeriodnum = new BigDecimal("0");
+            BigDecimal totalReceivables = new BigDecimal("0");
+            for (int i = 0; i < recordList.size(); i++) {
+                BigDecimal periodnum = recordList.get(i).periodnum;
+                totalPeriodnum = totalPeriodnum.add(periodnum);
+                String rece = recordList.get(i).totalReceivable;
+                rece = rece.replaceAll(",","");
+                totalReceivables = totalReceivables.add(new BigDecimal(rece));
+            }
+            model.addAttribute("totalPeriodnum",totalPeriodnum);
+            model.addAttribute("totalReceivables",totalReceivables);
+        }catch (Exception e) {
+            e.printStackTrace();
+            logger.info(e.toString());
+        }
+        return "wechat_classRecord::classRecordFra";
+    }
 	/*
 	 * 跳转到记上课
 	 * @return
@@ -367,7 +363,11 @@ public class WechatRecordClassActivity {
 		if(null!=classesId){
 			searhMap.put("LIKE_classId",classesId);
 		}
-		searhMap.put("NEQ_studentStart",4);
+		List<Integer> studentStartList = new ArrayList();
+		studentStartList.add(1);
+		studentStartList.add(4);
+		studentStartList.add(3);
+		searhMap.put("NEQINT_studentStart",studentStartList);
 		XbClass classes = studentService.getXbClass(classesId);
 		Page<XbStudentRelationViewNew> classPage = studentService.getXbStudentRelationViewNewList(pageable,searhMap);
 		model.addAttribute("classPage",classPage);

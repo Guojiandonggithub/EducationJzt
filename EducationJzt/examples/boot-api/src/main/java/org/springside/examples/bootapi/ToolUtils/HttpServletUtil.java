@@ -36,7 +36,7 @@ public class HttpServletUtil {
     public static Map<String,Object> getRoleDate(Map<String,Object> searchParams){
         HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
         SysEmployee sysEmployee = (SysEmployee)request.getSession().getAttribute("sysEmployee");
-        if(!"超级管理员".equals(sysEmployee.sysRole.roleName)){
+        if(!"超级管理员".equals(sysEmployee.sysRole.roleName)&&!"总校教务".equals(sysEmployee.sysRole.roleName)){
             searchParams.put("EQ_organId",sysEmployee.organId);
         }
         if("教师".equals(sysEmployee.sysRole.roleName)){
@@ -51,7 +51,7 @@ public class HttpServletUtil {
     public static Map<String,Object> getRoleDateForXbRecordClassdView(Map<String,Object> searchParams){
         HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
         SysEmployee sysEmployee = (SysEmployee)request.getSession().getAttribute("sysEmployee");
-        if(!"超级管理员".equals(sysEmployee.sysRole.roleName)){
+        if(!"超级管理员".equals(sysEmployee.sysRole.roleName)&&!"总校教务".equals(sysEmployee.sysRole.roleName)){
             searchParams.put("EQ_orgid",sysEmployee.organId);
         }
         if("教师".equals(sysEmployee.sysRole.roleName)){

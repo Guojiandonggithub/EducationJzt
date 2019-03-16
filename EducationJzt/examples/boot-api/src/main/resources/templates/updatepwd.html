@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    
+    <link rel="stylesheet" href="../static/pages/css/ace.min.css" id="main-ace-style" />
+    <link rel="stylesheet" href="../static/pages/css/index.css">
+    <link rel="stylesheet" href="../static/pages/css/enroll.css">
+    <link rel="stylesheet" href="../static/pages/css/madal.css">
+    <link rel="stylesheet" href="../static/pages/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/pages/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="../static/pages/css/kd.ui.plugin.css" />
+    <link rel="stylesheet" href="../static/pages/css/loading.css" />
+
+
+    <script src="../static/pages/js/jquery.min.js"></script>
+    <script src="../static/pages/js/bootstrap.min.js"> </script>
+    <script src="../static/pages/js/ace.min.js"> </script>
+    <script src="../static/pages/js/ace-elements.min.js"></script>
+    <script src="../static/pages/laydate/laydate.js"></script>
+    <script src="../static/pages/js/jquery.validate17.min.js"></script>
+    <script src="../static/pages/js/additiona17l-methods.min.js"></script>
+    <script src="../static/pages/js/messages_zh.min.js"></script>
+    <script src="../static/pages/js/kd.ui.plugin.js"></script>
+    <script src="../static/pages/js/loading.js"></script>
+</head>
+<body>
+<div th:replace="layout::top"></div>
+<form id="roomform">
+    <div class="main-container" id="main-container">
+        <div th:replace="layout::left('13','32')">
+        </div>
+        <div class="main-content" id="main-content">
+            <div class="breadcrumbs" id="breadcrumbs">
+                <img src="../static/pages/img/line1.png">
+                <span>修改密码</span>
+                <img src="../static/pages/img/line.png">
+            </div>
+            <div class="enrollCon">
+                <div class="stopClass newClass">
+                    <div class="form-group" style="display: block;">
+                        <label for="classroomName"><span>*</span>原密码</label>
+                        <input type="text" id="oldpassword" th:name="oldpassword" placeholder="原密码" class="remark">
+                    </div>
+                    <div class="form-group" style="display: block;">
+                        <label for="classroomName"><span>*</span>"新密码</label>
+                        <input type="text" id="password" th:name="passowrd" placeholder="新密码" class="remark">
+                    </div>
+                    <div class="form-group" style="display: block;">
+                        <label for="classroomName"><span>*再输一次</span></label>
+                        <input type="text" id="p_password" th:name="p_passowrd" placeholder="再输一次" class="remark">
+                    </div>
+                </div>
+            </div>
+            <div class="enrollCon">
+                <button class="save" type="button" onclick="updatepwd();">修改</button>
+                <button class="save" type="button" style="margin-right:22px;" onclick="javascript:history.go(-1)">返回</button>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script>
+!function(){
+laydate.render({elem: '#demo'});//绑定元素
+}();
+</script>
+<script type="text/javascript" th:inline="javascript">
+var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/;
+function updatepwd(){
+    var oldpassword = $("#oldpassword").val();
+    if(!oldpassword){
+        $.kd.kdAlert("请输入原密码！");
+        return false;
+    }
+    var password = $("#password").val();
+    if(!password){
+        $.kd.kdAlert("请输入新密码！");
+        return false;
+    }
+    var p_password = $("#p_password").val();
+    if(password!=p_password){
+        $.kd.kdAlert("两次密码输入不一致！");
+        return false;
+    }else{
+        $.kd.kdAlert("验证通过！");
+    }
+    $.ajax({
+        type: 'get',
+        dataType: 'json',
+        url: basePath + '/accounts/updatepwd',
+        data: {oldpassword:oldpassword,password:password},
+        cache: false,
+        async: true,
+        success: function (data) {
+            $.kd.kdAlert(data.msg,function(){
+                if(data.status=="1"){
+                    window.location.href= basePath + '/accounts/loginOut';
+                }
+            })
+        }
+    });
+}
+</script>
+</body>
+</html>

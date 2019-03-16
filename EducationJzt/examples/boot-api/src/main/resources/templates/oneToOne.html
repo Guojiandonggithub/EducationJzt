@@ -121,6 +121,7 @@
                             <div class="form-group" style="display: inline;">
                                 <button type="button" th:onclick="'javascript:getStudentListPage(\'\')'">搜索</button>
                                 <button type="button" onclick="$('input[type=text],#TeacherNameCla').val('')">清空</button>
+                                <button type="button" th:onclick="'javascript:expRecord()'" >导出当前结果</button>
                             </div>
                         </div>
                         <div class="result">
@@ -989,6 +990,17 @@ function editTeacherSave() {
     });
 
 }
+
+function expRecord(){
+    var TeacherNameCla = $("#TeacherNameCla").val();
+    if(!TeacherNameCla){
+        $.kd.kdAlert("请先输入教师姓名");
+        return false;
+    }
+    var data= serializeObject("#accordingClassform");
+    window.location.href= basePath + '/excel/ontTooneRecordExcel' +'?data='+JSON.stringify(data);
+}
+
 function serializeObject(form) {
     var o = {};
     var a = $(form).serializeArray();

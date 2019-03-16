@@ -8,6 +8,8 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springside.examples.bootapi.api.AccountActivity;
+import org.springside.modules.utils.text.EncodeUtil;
+import org.springside.modules.utils.text.HashUtil;
 
 import java.io.*;
 import java.math.BigDecimal;
@@ -736,6 +738,10 @@ public class UtilTools {
         obj = objectInputStream.readObject();
         objectInputStream.close();
         return (T) obj;
+    }
+
+    public static String hashPassword(String password) {
+        return EncodeUtil.encodeBase64(HashUtil.sha1(password));
     }
 
 }

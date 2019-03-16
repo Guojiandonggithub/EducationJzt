@@ -34,6 +34,7 @@ public class XbSupplementFee {
     public String orderNumber;
     public String type;
     public String operationAssistant;
+    public String studentRelationId;
     public BigDecimal registratioFee;
 
     @Transient
@@ -52,9 +53,6 @@ public class XbSupplementFee {
     public String shengyu;
     @Transient
     public String periodNum;
-
-    @Transient
-    public String studentRelationId;
 
     public XbSupplementFee() {
 

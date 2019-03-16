@@ -130,6 +130,7 @@
                                         </div> -->
                                     </th>
                                     <th>联系电话</th>
+                                    <th>其他联系电话</th>
                                     <th>所属关系</th>
                                     <th>账户余额</th>
                                     <th>欠费</th>
@@ -148,6 +149,7 @@
                                     <td><input type="checkbox"></td>
                                     <td class="studentName" th:text="${studentrelation.xbStudent.studentName}" th:onclick="'javascript:studentDetail(\''+${studentrelation.xbStudent.id}+'\')'"><a href="#"><img src="../static/pages/img/boy.png"></a></td>
                                     <td th:text="${studentrelation.xbStudent.contactPhone}"></td>
+                                    <td th:text="${studentrelation.xbStudent.otherPhone}"></td>
                                     <td th:text="${studentrelation.xbStudent.contactRelation}"></td>
                                     <td th:text="${studentrelation.xbStudent.surplusMoney}"></td>
                                     <td th:text="${studentrelation.xbStudent.paymentMoney}"><a href="#">补费</a></td>
@@ -431,11 +433,11 @@
                                 <div class="control-group" sytle="float: left;display: inline-block;">
                                     <div class="form-group"
                                         <label class="control-label" style="width:100px;">学费到期查询：</label>
-                                        <select class="selectName" name="organId" style="border-radius: 5px !important;">
+                                        <select class="selectName" name="organIdDQ" style="border-radius: 5px !important;">
                                             <option th:value="0" th:text="全部" th:selected="${organId eq 0}"></option>
                                             <option th:each="org:${sorganList}" th:value="${org.id}"
                                                     th:text="${org.organName}"
-                                                    th:selected="${organId eq org.id}"></option>
+                                                    th:selected="${organIdDQ eq org.id}"></option>
                                         </select>
                                         <label class="control-label" style="width: 39px;">剩余:</label>
                                         <input type="text" name="totalPeriodNumStart" value="0"
@@ -466,7 +468,7 @@
                                         <select class="selectName" name="studentStart" >
                                             <option  th:value="10" th:text="请选择" th:selected="${studentStart eq '10'}"></option>
                                             <option  th:value="0" th:text="在读" th:selected="${studentStart eq '0'}"></option>
-                                            <option  th:value="1" th:text="结课" th:selected="${studentStart eq '1'}"></option>
+                                            <option  th:value="1" th:text="停课" th:selected="${studentStart eq '1'}"></option>
                                             <option  th:value="2" th:text="转班" th:selected="${studentStart eq '2'}"></option>
                                             <option  th:value="3" th:text="退费" th:selected="${studentStart eq '3'}"></option>
                                             <option  th:value="4" th:text="结课" th:selected="${studentStart eq '4'}"></option>
@@ -1027,7 +1029,8 @@ function studentDetail(id) {
                     var status = data.status;
                     var msg = data.msg;
                     $.kd.kdAlert(msg,function () {
-                        window.location.href = basePath + '/student/getXbStudentList';
+                        getexpiryStulist('');
+                        //window.location.href = basePath + '/student/getXbStudentList';
                     });
                 },
                 error: function () {

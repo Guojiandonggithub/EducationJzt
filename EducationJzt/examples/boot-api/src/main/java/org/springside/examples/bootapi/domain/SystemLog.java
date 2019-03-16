@@ -47,7 +47,7 @@ public class SystemLog {
     private String actionmethod ;//请求方法
 
     @Lob
-    @Basic(fetch = FetchType.LAZY) @Column(columnDefinition = "text")
+    @Basic(fetch = FetchType.LAZY)
     private String params;//请求参数
 
     public String getId() {

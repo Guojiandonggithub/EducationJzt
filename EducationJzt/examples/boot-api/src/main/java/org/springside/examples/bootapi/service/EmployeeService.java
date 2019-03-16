@@ -17,6 +17,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springside.examples.bootapi.ToolUtils.HttpServletUtil;
 import org.springside.examples.bootapi.ToolUtils.common.modules.persistence.DynamicSpecifications;
 import org.springside.examples.bootapi.ToolUtils.common.modules.persistence.SearchFilter;
+import org.springside.examples.bootapi.ToolUtils.common.util.UtilTools;
 import org.springside.examples.bootapi.domain.SysEmployee;
 import org.springside.examples.bootapi.domain.SysEmployeeSub;
 import org.springside.examples.bootapi.repository.EmployeeDao;
@@ -72,8 +73,8 @@ public class EmployeeService {
 			//throw new ServiceException("用户不存在", ErrorCode.UNAUTHORIZED);
 		}
 		SysEmployee employee  = sysEmployeeList.get(0);
-		if (!employee.password.equals(hashPassword(password))) {
-			System.out.println(hashPassword(password));
+		if (!employee.password.equals(UtilTools.hashPassword(password))) {
+			System.out.println(UtilTools.hashPassword(password));
 			//throw new ServiceException("密码错误", ErrorCode.UNAUTHORIZED);
 			return "密码错误";
 		}
@@ -118,10 +119,10 @@ public class EmployeeService {
 		if(null!=sysEmployee.id&&!"".equals(sysEmployee.id)){
 			SysEmployee sysEmployees = employeeDao.findOne(sysEmployee.id);
 			if(!sysEmployees.password.equals(sysEmployee.password)){
-				sysEmployee.password = hashPassword(sysEmployee.password);
+				sysEmployee.password = UtilTools.hashPassword(sysEmployee.password);
 			}
 		}else{
-			sysEmployee.password = hashPassword(sysEmployee.password);
+			sysEmployee.password = UtilTools.hashPassword(sysEmployee.password);
 		}
 		sysEmployee.deleteStatus = "1";
 		return employeeDao.save(sysEmployee);
@@ -179,11 +180,16 @@ public class EmployeeService {
 		}
 	}
 
-	protected static String hashPassword(String password) {
-		return EncodeUtil.encodeBase64(HashUtil.sha1(password));
-	}
 	@Transactional
 	public SysEmployee getSysEmployeeById(String id){
 		return employeeDao.getById(id);
 	}
+
+	@Transactional
+	public void updatepwd(String id,String password) {
+		SysEmployee sysEmployee = employeeDao.findOne(id);
+		sysEmployee.password = UtilTools.hashPassword(password);
+		employeeDao.save(sysEmployee);
+	}
+
 }

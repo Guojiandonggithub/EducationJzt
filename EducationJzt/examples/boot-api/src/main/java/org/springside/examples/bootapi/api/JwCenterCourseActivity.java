@@ -181,6 +181,7 @@ public class JwCenterCourseActivity {
      * @param resp
      */
     @RequestMapping("/savecourse")
+    @SystemControllerLog(descrption = "新建课程",actionType = "1")
     public void saveCourse(@RequestParam String dataentity,
                            @RequestParam String typename,
                            HttpServletResponse resp){
@@ -370,6 +371,7 @@ public class JwCenterCourseActivity {
             return collection;
     }
     @PostMapping("/savecoursetype")
+    @SystemControllerLog(descrption = "新建课程类别",actionType = "1")
     public void saveCourseType(@RequestBody XbCourseType xbcoursetype,HttpServletResponse resp){
         logger.info("新建课程");
         xbcoursetype.deleteStatus = "1";
@@ -388,6 +390,7 @@ public class JwCenterCourseActivity {
         logger.info("新建课程结束");
     }
     @PostMapping("/savesubject")
+    @SystemControllerLog(descrption = "新建课程科目",actionType = "1")
     public void saveSubject(@RequestBody XbSubject xbsubject,HttpServletResponse resp){
         logger.info("新建课程");
         xbsubject.setState("0");
@@ -417,6 +420,7 @@ public class JwCenterCourseActivity {
      * @param resp
      */
     @RequestMapping("/removecourse")
+    @SystemControllerLog(descrption = "删除课程",actionType = "3")
     public String removeCourse(@RequestParam(required=false) String id,HttpServletResponse resp,ModelMap model,
                                @PageableDefault(sort = {"xbCourse.createDate","xbCourse.createTime"},
                                        direction = Sort.Direction.DESC) Pageable pageable){
@@ -479,6 +483,7 @@ public class JwCenterCourseActivity {
      * @return
      */
     @RequestMapping("/removecoursetype")
+    @SystemControllerLog(descrption = "删除课程类别",actionType = "3")
     public String removeCourseType(@RequestParam String id,HttpServletResponse resp,ModelMap model){
         logger.info("删除课程类别");
         XbCourseType xbt = xbCourseTypeService.findXbCourseTypeById(id);
@@ -498,6 +503,7 @@ public class JwCenterCourseActivity {
      * @return
      */
     @RequestMapping("/removesubject")
+    @SystemControllerLog(descrption = "删除课程科目",actionType = "3")
     public String removeSubject(@RequestParam String id,HttpServletResponse resp,ModelMap model){
        XbSubject xbs =  xbSubjectService.findById(id);
        xbs.deleteStatus = "0";

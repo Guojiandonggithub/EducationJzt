@@ -64,7 +64,7 @@ public class XbCoursePresetService {
 	public Page<XbCoursePreset> getXbCoursePresetList(Pageable pageable, Map<String, Object> searchParams) {
 		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
 		SysEmployee sysEmployee = (SysEmployee)request.getSession().getAttribute("sysEmployee");
-		if(!"超级管理员".equals(sysEmployee.sysRole.roleName)){
+		if(!"超级管理员".equals(sysEmployee.sysRole.roleName)&&!"总校教务".equals(sysEmployee.sysRole.roleName)){
 			searchParams.put("EQ_organIds",sysEmployee.organId);
 		}
 		searchParams.put("EQ_xbCourse.deleteStatus","1");
@@ -78,7 +78,7 @@ public class XbCoursePresetService {
 	public List<XbCoursePreset> getXbCoursePresets(Map<String, Object> searchParams) {
 		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
 		SysEmployee sysEmployee = (SysEmployee)request.getSession().getAttribute("sysEmployee");
-		if(!"超级管理员".equals(sysEmployee.sysRole.roleName)){
+		if(!"超级管理员".equals(sysEmployee.sysRole.roleName)&&!"总校教务".equals(sysEmployee.sysRole.roleName)){
 			searchParams.put("EQ_organIds",sysEmployee.organId);
 		}
 		searchParams.put("EQ_xbCourse.deleteStatus","1");

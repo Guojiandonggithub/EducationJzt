@@ -11,6 +11,9 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springside.examples.bootapi.ToolUtils.common.util.UtilTools;
 import org.springside.examples.bootapi.domain.SysEmployee;
 import org.springside.examples.bootapi.domain.SysEmployeeSub;
 import org.springside.examples.bootapi.domain.SysOrgans;
@@ -74,10 +77,15 @@ public class AccountActivity {
 		return "organization";
 	}
 
-	@RequestMapping("/hello")
-	public String hello() {
-		return "login";
+	@RequestMapping("/forwardupdatepwd")
+	public String forwardupdatepwd() {
+		return "updatepwd";
 	}
+
+    @RequestMapping("/hello")
+    public String hello() {
+        return "login";
+    }
 
 	@RequestMapping("/loginOut")
 	public String loginOut(HttpServletRequest request) {
@@ -92,6 +100,35 @@ public class AccountActivity {
 			String msg = accountService.login(userName,password,request);
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put("msg",msg);
+			resp.setContentType("text/html;charset=UTF-8");
+			resp.getWriter().println(jsonObject.toJSONString());
+			resp.getWriter().close();
+		} catch (IOException e) {
+			logger.info(e.toString());
+		}
+	}
+
+	@RequestMapping("/updatepwd")
+	public void updatepwd(@RequestParam String oldpassword, @RequestParam String password, HttpServletResponse resp) {
+		Map<String, Object> map  =  new HashMap<>();
+		try {
+			JSONObject jsonObject = new JSONObject();
+			HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
+			SysEmployee sysEmployee = (SysEmployee)request.getSession().getAttribute("sysEmployee");
+			if(null!=sysEmployee){
+				String passwordStr = sysEmployee.password;
+				if(UtilTools.hashPassword(oldpassword).equals(passwordStr)){
+					accountService.updatepwd(sysEmployee.id,password);
+					jsonObject.put("msg","修改成功!");
+					jsonObject.put("status","1");
+				}else{
+					jsonObject.put("msg","原密码不正确!");
+					jsonObject.put("status","0");
+				}
+			}else{
+				jsonObject.put("msg","请重新登录!");
+				jsonObject.put("status","0");
+			}
 			resp.setContentType("text/html;charset=UTF-8");
 			resp.getWriter().println(jsonObject.toJSONString());
 			resp.getWriter().close();

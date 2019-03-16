@@ -94,7 +94,7 @@
                         </div>
                         <div class="infoMid">
                             <div class="infoForm" style="margin-bottom:22px;" >
-                                <div class="form-group" th:if="${stu.xbStudentRelation.studentStart==0}">
+                                <div class="form-group" th:if="${stu.xbStudentRelation.studentStart==0||stu.xbStudentRelation.studentStart==2}">
                                     <input type="radio" th:onchange="|javascript:change(this,'${stuindex.index}')|" th:attr="checked=${stu.state == '0'?true:false}" th:name="'state'+${stuindex.index}" value="0" class="ace"><span
                                         class="lbl">上课</span>
                                     <input type="radio" th:onchange="|javascript:change(this,'${stuindex.index}')|" th:attr="checked=${stu.state == '1'?true:false}" th:name="'state'+${stuindex.index}" value="1" class="ace"><span
@@ -106,16 +106,16 @@
                                     <input type="radio" th:onchange="|javascript:change(this,'${stuindex.index}')|" th:attr="checked=${stu.state == '4'?true:false}" th:name="'state'+${stuindex.index}" value="4" class="ace"><span
                                         class="lbl">不记课</span>
                                 </div>
-                                <div class="form-group" th:if="${stu.xbStudentRelation.studentStart==0}">
+                                <div class="form-group" th:if="${stu.xbStudentRelation.studentStart==0||stu.xbStudentRelation.studentStart==2}">
                                     <label>扣除课时</label>
                                     <input type="text" name="deductPeriod" th:value="${stu.deductPeriod}" th:id="'redordIds'+${stuindex.index}">
                                     <input type="hidden" name="id" th:value="${stu.id}">
                                 </div>
-                                <p>剩余<span th:text="${stu.xbStudentRelation.periodNum}"></span>课时;总课时<span th:text="${stu.xbStudentRelation.totalPeriodNum}"></span></p>
+                                <p>剩余<span th:text="${stu.xbStudentRelation.periodNum}"></span>课时;总课时<span th:text="${stu.xbStudentRelation.totalPeriodNum}"></span>;单课时金额<span th:text="${stu.xbStudentRelation.totalReceivable/stu.xbStudentRelation.totalPeriodNum}"></span></p>
                                 <th:block style="color:#e46054" th:if="${stu.xbStudentRelation.studentStart} eq 1">（已停课）</th:block>
                                 <th:block style="color:#e46054" th:if="${stu.xbStudentRelation.studentStart} eq 4">（已结课）</th:block>
                                 <th:block style="color:#e46054" th:if="${stu.xbStudentRelation.studentStart} eq 3">（已退费）</th:block>
-                                <th:block style="color:#e46054" th:if="${stu.xbStudentRelation.studentStart} eq 2">（已转班）</th:block>
+                                <!--<th:block style="color:#e46054" th:if="${stu.xbStudentRelation.studentStart} eq 2">（已转班）</th:block>-->
                             </div>
                             <!--<div class="star">
                             <p>
@@ -327,7 +327,7 @@
                 target: "#main-container"
             });
             load.start();
-            window.location.href = basePath + '/recordClass/getRecordClassListByClass?page='+0;
+            window.location.href = basePath + '/recordClass/getRecordClassList?record=1'
             /*$.ajax({
                 type: 'get',
                 //dataType: 'json',

@@ -54,7 +54,7 @@ public class OrgansService {
 		Map<String, Object> searchParams = new HashMap<>();
 		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
 		SysEmployee sysEmployee = (SysEmployee)request.getSession().getAttribute("sysEmployee");
-		if(!"超级管理员".equals(sysEmployee.sysRole.roleName)){
+		if(!"超级管理员".equals(sysEmployee.sysRole.roleName)&&!"总校教务".equals(sysEmployee.sysRole.roleName)){
 			searchParams.put("EQ_id",sysEmployee.organId);
 		}
 		searchParams.put("EQ_parentId","1");
@@ -70,8 +70,8 @@ public class OrgansService {
 	public List<SysOrgans> getOrgansList() {
 		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
 		SysEmployee sysEmployee = (SysEmployee)request.getSession().getAttribute("sysEmployee");
-		/*if(!"超级管理员".equals(sysEmployee.sysRole.roleName)){*/
-		if(!"超级管理员".equals(sysEmployee.sysRole.roleName)){
+		/*if(!"超级管理员".equals(sysEmployee.sysRole.roleName)&&!"总校教务".equals(sysEmployee.sysRole.roleName)){*/
+		if(!"超级管理员".equals(sysEmployee.sysRole.roleName)&&!"总校教务".equals(sysEmployee.sysRole.roleName)){
 			return organsDao.findSysOrgansListById("1",sysEmployee.organId);
 		}
 		return organsDao.findSysOrgansList("1");
@@ -82,7 +82,7 @@ public class OrgansService {
 		searchParams.put("EQ_parentId","1");
 		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
 		SysEmployee sysEmployee = (SysEmployee)request.getSession().getAttribute("sysEmployee");
-		if(!"超级管理员".equals(sysEmployee.sysRole.roleName)){
+		if(!"超级管理员".equals(sysEmployee.sysRole.roleName)&&!"总校教务".equals(sysEmployee.sysRole.roleName)){
 			searchParams.put("EQ_id",sysEmployee.organId);
 		}
 		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);

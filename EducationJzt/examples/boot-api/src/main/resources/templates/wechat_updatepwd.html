@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+    <title></title>
+    <link rel="stylesheet" href="../static/pages/wechat_css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/pages/css/login.css" id="main-ace-style" />
+    <link rel="stylesheet" href="../static/pages/wechat_css/login.css">
+    <link rel="stylesheet" href="../static/pages/wechat_css/global.css">
+    <link rel="stylesheet" href="../static/pages/css/kd.ui.plugin.css" />
+    <script src="../static/pages/js/jquery.min.js"></script>
+    <script src="../static/pages/js/kd.ui.plugin.js"></script>
+</head>
+<body>
+<div class="login">
+    <div class="login-title"><p>修改密码</p>
+        <i></i>
+    </div>
+    <form method="post" action="success.html">
+        <div class="login-bar">
+            <ul>
+                <li><img src="../static/pages/img/login_user.png"><input type="text" class="text" id="oldpassword" th:name="oldpassword" placeholder="原密码"/></li>
+                <li><img src="../static/pages/img/login_pwd.png"><input type="text" class="text" id="password" th:name="passowrd" placeholder="新密码"/></li>
+                <li><img src="../static/pages/img/login_pwd.png"><input type="text" class="text" id="p_password" th:name="p_passowrd" placeholder="再输一次"/></li>
+            </ul>
+        </div>
+        <div class="login-btn">
+            <button class="submit" type="button" onclick="updatepwd();">修改</button>
+            <span id="idMsg"></span>
+            <!--<a href="">忘记密码</a>-->
+        </div>
+    </form>
+</div>
+<script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+
+    var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/;
+
+    function updatepwd(){
+        var oldpassword = $("#oldpassword").val();
+        if(!oldpassword){
+            $.kd.kdAlert("请输入原密码！");
+            return false;
+        }
+        var password = $("#password").val();
+        if(!password){
+            $.kd.kdAlert("请输入新密码！");
+            return false;
+        }
+        var p_password = $("#p_password").val();
+        if(password!=p_password){
+            $.kd.kdAlert("两次密码输入不一致！");
+            return false;
+        }else{
+            $.kd.kdAlert("验证通过！");
+        }
+        $.ajax({
+            type: 'get',
+            dataType: 'json',
+            url: basePath + '/accounts/updatepwd',
+            data: {oldpassword:oldpassword,password:password},
+            cache: false,
+            async: true,
+            success: function (data) {
+                $.kd.kdAlert(data.msg,function(){
+                    if(data.status=="1"){
+                        window.location.href= basePath + '/wechatLogin/wechathello';
+                   }
+                })
+            }
+        });
+    }
+    /*]]>*/
+</script>
+</body>
+</html>

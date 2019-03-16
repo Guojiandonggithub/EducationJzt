@@ -18,6 +18,7 @@
             </div>
             <div class="pull-right eduName">
                 <span th:text="${session.userName} + [+${session.organName}+]"></span>
+                <span><a href="/accounts/forwardupdatepwd" style="color: #ffffff">修改密码</a></span>
                 <span><a href="/accounts/loginOut" style="color: #ffffff">退出</a></span>
                 <!--<span>机构中心</span>-->
             </div>
@@ -25,7 +26,7 @@
         <div class="main-container" id="main-container">
             <div id="sidebar" class="sidebar responsive" th:fragment="left(tab1,tab2)">
                 <ul class="nav nav-list" style="top: 0px;" id="zhu">
-                    <li th:class="${tab1=='11'}? 'active'" th:if="${session.roleName!='教师'&&session.roleName!='运营助理'&&session.roleName!='前台助理'&&session.roleName!='总校教务'}">
+                    <li th:class="${tab1=='11'}? 'active'" th:if="${session.roleName!='教师'&&session.roleName!='运营助理'&&session.roleName!='前台助理'}">
                         <a href="/forward/index"><span class="menu-text"> 工作台 </span></a>
                         <b class="arrow"></b>
                     </li>
@@ -53,11 +54,11 @@
                                     <i class="menu-icon fa fa-caret-right"></i>一对一</a>
                                 <b class="arrow"></b>
                             </li>
-                            <li th:class="${tab2=='34'}? 'active'" th:if="${session.roleName!='教师'&&session.roleName!='运营助理'&&session.roleName!='前台助理'&&session.roleName!='总校教务'}">
+                            <li th:class="${tab2=='34'}? 'active'" th:if="${session.roleName!='教师'&&session.roleName!='运营助理'&&session.roleName!='前台助理'}">
                                 <a href="/jw_center_arranging_course/to_arranging_course?sort=createDate,DESC&sort=createTime,DESC"><i class="menu-icon fa fa-caret-right"></i>排课</a>
                                 <b class="arrow"></b>
                             </li>
-                            <li th:class="${tab2=='35'}? 'active'" th:if="${session.roleName != '运营助理'&&session.roleName!='前台助理'&&session.roleName!='总校教务'}">
+                            <li th:class="${tab2=='35'}? 'active'" th:if="${session.roleName != '运营助理'&&session.roleName!='前台助理'}">
                                 <a href="/lessonTable/toLessonTable"><i class="menu-icon fa fa-caret-right"></i>课程表</a>
                                 <b class="arrow"></b>
                             </li>
@@ -65,11 +66,11 @@
                                 <a href="/recordClass/getRecordClassList"><i class="menu-icon fa fa-caret-right"></i>记上课</a>
                                 <b class="arrow"></b>
                             </li>
-                            <li th:class="${tab2=='37'}? 'active'" th:if="${session.roleName!='教师'&&session.roleName!='运营助理'&&session.roleName!='前台助理'&&session.roleName!='总校教务'}">
+                            <li th:class="${tab2=='37'}? 'active'" th:if="${session.roleName!='教师'&&session.roleName!='运营助理'&&session.roleName!='前台助理'}">
                                 <a href="/jwcentercourse/tocourse"><i class="menu-icon fa fa-caret-right"></i>课程</a>
                                 <b class="arrow"></b>
                             </li>
-                            <li th:class="${tab2=='38'}? 'active'" th:if="${session.roleName!='教师'&&session.roleName!='运营助理'&&session.roleName!='前台助理'&&session.roleName!='总校教务'}">
+                            <li th:class="${tab2=='38'}? 'active'" th:if="${session.roleName!='教师'&&session.roleName!='运营助理'&&session.roleName!='前台助理'}">
                                 <a href="/student/getCancelList"><i class="menu-icon fa fa-caret-right"></i>退费管理</a>
                                 <b class="arrow"></b>
                             </li>
@@ -100,39 +101,5 @@
             </div>
             <!--<div class="container" layout:fragment="content"></div>-->
         </div>
-        <!--页码-->
-        <!--<div class="orderPage" style="margin-top:30px;" th:fragment="left(currentzise,entityPage)">
-            <div class="page">
-                单页显示：
-                <select id="size" name="size" onchange="getOrgansListPage('');">
-                    <option value="20">20条/页</option>
-                    <option value="5">5条/页</option>
-                    <option value="10">10条/页</option>
-                    <option value="15">15条/页</option>
-                </select>
-                <input type="hidden" id="currentzise" th:value="${currentzise}"/>
-            </div>
-            <ul class="pagination" th:if="${entityPage.getTotalPages() gt 0}" >
-                <li class="disabled">
-                    <a href="#" th:onclick="'javascript:getOrgansListPage(\''+0+'\')'">首页</a>
-                </li>
-                <li class="disabled" th:if="${entityPage.getNumber()-1} ge 0">
-                    <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${entityPage.getNumber()-1}+'\')'">
-                        <i class="ace-icon fa fa-angle-double-left"></i>
-                    </a>
-                </li>
-                <li class="active" th:each="i:${#numbers.sequence(1,entityPage.getTotalPages())}">
-                    <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${i}+'\')'" th:text="${i}"></a>
-                </li>
-                <li th:if="${entityPage.getTotalPages()} ge ${entityPage.getNumber()+2} ">
-                    <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${entityPage.getNumber()+2}+'\')'">
-                        <i class="ace-icon fa fa-angle-double-right"></i>
-                    </a>
-                </li>
-                &lt;!&ndash; <li class="">
-                     <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${currentnumber}+'\')'">尾页</a>
-                 </li>&ndash;&gt;
-            </ul>
-        </div>-->
     </body>
 </html>

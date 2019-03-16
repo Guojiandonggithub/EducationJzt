@@ -94,7 +94,7 @@
                     </div>
                     <div class="infoMid">
                         <div class="infoForm" style="margin-bottom:22px;" >
-                            <div class="form-group" th:if="${stu.studentStart==0}">
+                            <div class="form-group" th:if="${stu.studentStart==0||stu.studentStart==2}">
                                 <input type="radio" th:onchange="|javascript:change(this,'${stuindex.index}')|" checked th:name="'state'+${stuindex.index}" value="0" class="ace"><span
                                     class="lbl">上课</span>
                                 <input type="radio" th:onchange="|javascript:change(this,'${stuindex.index}')|" th:name="'state'+${stuindex.index}" value="1" class="ace"><span
@@ -106,15 +106,15 @@
                                 <input type="radio" th:onchange="|javascript:change(this,'${stuindex.index}')|" th:name="'state'+${stuindex.index}" value="4" class="ace"><span
                                     class="lbl">不记课</span>
                             </div>
-                            <div class="form-group" th:if="${stu.studentStart==0}">
+                            <div class="form-group" th:if="${stu.studentStart==0||stu.studentStart==2}">
                                 <label>扣除课时</label>
                                 <input type="text" value="1" name="deductPeriod" th:id="'redordIds'+${stuindex.index}">
                             </div>
-                            <p>剩余<span th:text="${stu.periodNum}"></span>课时;总课时<span th:text="${stu.totalPeriodNum}"></span></p>
+                            <p>剩余<span th:text="${stu.periodNum}"></span>课时;总课时<span th:text="${stu.totalPeriodNum}"></span>;单课时金额<span th:text="${stu.totalReceivable/stu.totalPeriodNum}"></span></p>
                             <th:block style="color:#e46054" th:if="${stu.studentStart} eq 1">（已停课）</th:block>
                             <th:block style="color:#e46054" th:if="${stu.studentStart} eq 4">（已结课）</th:block>
                             <th:block style="color:#e46054" th:if="${stu.studentStart} eq 3">（已退费）</th:block>
-                            <th:block style="color:#e46054" th:if="${stu.studentStart} eq 2">（已转班）</th:block>
+                            <!--<th:block style="color:#e46054" th:if="${stu.studentStart} eq 2">（已转班）</th:block>-->
                         </div>
                         <!--<div class="star">
                         <p>
@@ -238,19 +238,7 @@
                 organId:"",
                 attendId:""
             };
-            if (data.studentId.length == 32) {
-                aa.studentId = data.studentId;
-                aa.studentRelationId = data.studentRelationId;
-                aa.state = data.state0;
-                aa.deductPeriod = data.deductPeriod;
-                aa.teacherLeave = data.teacherLeave
-                aa.recordTimeTemp = $("#demo").val();
-                aa.classId = classId;
-                aa.courseId = courseId;
-                aa.organId = organId;
-                aa.attendId = attendId;
-                list.push(aa);
-            } else {
+            if(isArrayFn(data.studentId)) {
                 for (var i = 0; i < data.studentId.length; i++) {
                     aa = {};
                     aa.studentId = data.studentId[i];
@@ -267,8 +255,19 @@
                     aa.attendId = attendId;
                     list.push(aa);
                 }
+            }else{
+                aa.studentId = data.studentId;
+                aa.studentRelationId = data.studentRelationId;
+                aa.state = data.state0;
+                aa.deductPeriod = data.deductPeriod;
+                aa.teacherLeave = data.teacherLeave
+                aa.recordTimeTemp = $("#demo").val();
+                aa.classId = classId;
+                aa.courseId = courseId;
+                aa.organId = organId;
+                aa.attendId = attendId;
+                list.push(aa);
             }
-            console.log(list);
             load.start();
             $.ajax({
                 type: 'post',
@@ -287,6 +286,14 @@
                     },"提示");
                 }
             });
+        }
+    }
+
+    function isArrayFn(value){
+        if (typeof Array.isArray === "function") {
+            return Array.isArray(value);
+        }else{
+            return Object.prototype.toString.call(value) === "[object Array]";
         }
     }
 

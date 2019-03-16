@@ -350,6 +350,7 @@ public class JwCenterArrangingCoursesActivity {
      * @return,
      */
     @PostMapping("/save_xbAttend_class")
+    @SystemControllerLog(descrption = "保存排课",actionType = "1")
     public void saveXbAttendClass(@RequestBody XbAttendClass xbAttendClass,HttpServletResponse resp,Model model){
         logger.info("保存排课");
         String msg = "";
@@ -548,6 +549,7 @@ public class JwCenterArrangingCoursesActivity {
         //return "courseArray";
     }
     @RequestMapping("/remove_xbAttend_class")
+    @SystemControllerLog(descrption = "删除排课",actionType = "3")
     public String removeCourse(@RequestParam String id, HttpServletResponse resp,ModelMap model,@PageableDefault(value=10) Pageable pageable){
         logger.info("删除排课开始");
         XbAttendClass xbac = xbAttendClassService.findById(id);
@@ -565,6 +567,7 @@ public class JwCenterArrangingCoursesActivity {
     }
 
     @RequestMapping("/remove_xbAttendconfilic_class")
+    @SystemControllerLog(descrption = "删除冲突日程",actionType = "3")
     public String removeXbAttendConfilic(@RequestParam String id, HttpServletResponse resp,ModelMap model,@PageableDefault(value=10) Pageable pageable){
         logger.info("删除排课冲突开始");
         XbAttendClass xbac = xbAttendClassService.findById(id);

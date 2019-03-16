@@ -36,7 +36,7 @@
     <div class="main-content" id="main-content">
         <div class="breadcrumbs" id="breadcrumbs">
             <img src="../static/pages/img/line1.png">
-            <span>学员</span>
+            <span>退费管理</span>
             <img src="../static/pages/img/line.png">
         </div> 
         <div class="tabbable">
@@ -59,8 +59,7 @@
                 <div id="studentList" class="tab-pane fade in active">
                     <form id="searchform">
                     <div class="screen">
-                        <a class="stdEnroll" href="/student/getStudent">新生报名</a>
-                        <div class="screenTop">  
+                        <div class="screenTop">
                             <select class="selectName" name="type">
                                 <option th:selected="${type eq 'AZ'}" value="AZ">学员姓名</option>
                                 <option th:selected="${type eq 'AL'}" value="AL">手机尾号</option>
@@ -111,11 +110,8 @@
                     </div>
                     </form>
                     <div class="orderCon">
-                        <div class="export">
-                            <button type="button" class="btn btn-primary">批量删除学员</button>
-                        </div> 
                         <div class="result">
-                            当前结果：学员共计<span th:text="${studentlistsize}"></span>名，报读课程数总计：<span th:text="${xbStudentPage.getTotalElements()}"></span>条
+                            当前结果：学员共计<span th:text="${studentlistsize}"></span>名，退费课程数总计：<span th:text="${xbStudentPage.getTotalElements()}"></span>条
                         </div>
                         <div class="orderTable">
                             <table class="table table-hover">

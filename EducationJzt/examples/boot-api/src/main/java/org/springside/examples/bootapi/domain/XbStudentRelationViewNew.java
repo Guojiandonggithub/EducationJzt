@@ -14,12 +14,12 @@ import java.util.Date;
  * 学员课程班级
  */
 @Entity
+@Table(name="XB_STUDENT_RELATION_VIEW_NEW")
+@NamedQuery(name="XbStudentRelationViewNew.findAll",query = "SELECT t FROM XbStudentRelationViewNew t")
 public class XbStudentRelationViewNew {
 
     // JPA 主键标识, 策略为由数据库生成主键
     @Id
-    @GenericGenerator(name="idGenerator", strategy="uuid") //这个是hibernate的注解/生成32位UUID
-    @GeneratedValue(generator="idGenerator")
     public String id;
     @NotNull(message="用户不能为空")
     public String studentId;

@@ -70,7 +70,7 @@
         <div class="per-list">
                 <div class="per-top">
                 <p class="name" th:text="${stu.xbStudent.studentName}"><img src="../static/pages/wechat_img/per.png">姓名</p>
-                <i th:text="'剩余'+${stu.periodNum}+'课时;总课时'+${stu.totalPeriodNum}"></i>
+                <i th:text="'剩余'+${stu.periodNum}+'课时;总课时'+${stu.totalPeriodNum}+',单课时金额'+${stu.totalReceivable/stu.totalPeriodNum}"></i>
             </div>
             <div class="per-bot">
                 <ul>
@@ -134,19 +134,7 @@
                 organId:"",
                 attendId:""
             };
-            if (data.studentId.length == 32) {
-                aa.studentId = data.studentId;
-                aa.studentRelationId = data.studentRelationId;
-                aa.state = $('#state option:selected').val();
-                aa.deductPeriod = data.deductPeriod;
-                aa.teacherLeave = "";
-                aa.recordTimeTemp = $("#demo").val();
-                aa.classId = classId;
-                aa.courseId = courseId;
-                aa.organId = organId;
-                aa.attendId = attendId;
-                list.push(aa);
-            } else {
+            if(isArrayFn(data.studentId)) {
                 for (var i = 0; i < data.studentId.length; i++) {
                     aa = {};
                     aa.studentId = data.studentId[i];
@@ -161,8 +149,19 @@
                     aa.attendId = attendId;
                     list.push(aa);
                 }
+            } else {
+                aa.studentId = data.studentId;
+                aa.studentRelationId = data.studentRelationId;
+                aa.state = $('#state option:selected').val();
+                aa.deductPeriod = data.deductPeriod;
+                aa.teacherLeave = "";
+                aa.recordTimeTemp = $("#demo").val();
+                aa.classId = classId;
+                aa.courseId = courseId;
+                aa.organId = organId;
+                aa.attendId = attendId;
+                list.push(aa);
             }
-            console.log(list);
             load.start();
             $.ajax({
                 type: 'post',
@@ -188,6 +187,15 @@
             });
         }
     }
+
+    function isArrayFn(value){
+        if (typeof Array.isArray === "function") {
+            return Array.isArray(value);
+        }else{
+            return Object.prototype.toString.call(value) === "[object Array]";
+        }
+    }
+
     function serializeObject(form) {
         var o = {};
         var a = $(form).serializeArray();

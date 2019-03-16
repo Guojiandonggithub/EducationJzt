@@ -49,7 +49,7 @@ public class XbStudentService {
 	public Page<XbSupplementFee>  getXbSupplementFeeList(Pageable pageable, Map<String, Object> searchParams) {
 		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
 		SysEmployee sysEmployee = (SysEmployee)request.getSession().getAttribute("sysEmployee");
-		if(!"超级管理员".equals(sysEmployee.sysRole.roleName)){
+		if(!"超级管理员".equals(sysEmployee.sysRole.roleName)&&!"总校教务".equals(sysEmployee.sysRole.roleName)){
 			searchParams.put("EQ_xbStudent.organId",sysEmployee.organId);
 		}
 		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
@@ -62,7 +62,7 @@ public class XbStudentService {
 	public List<XbSupplementFee>  getXbSupplementFeeList(Map<String, Object> searchParams) {
 		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
 		SysEmployee sysEmployee = (SysEmployee)request.getSession().getAttribute("sysEmployee");
-		if(!"超级管理员".equals(sysEmployee.sysRole.roleName)){
+		if(!"超级管理员".equals(sysEmployee.sysRole.roleName)&&!"总校教务".equals(sysEmployee.sysRole.roleName)){
 			searchParams.put("EQ_xbStudent.organId",sysEmployee.organId);
 		}
 		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
@@ -76,8 +76,17 @@ public class XbStudentService {
 		return xbSupplementFeeDao.findOne(id);
 	}
 
+    public List<XbStudentRelation> getxbStudentRelationList(Map<String, Object> searchParams){
+        Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
+        searchParams.put("EQ_xbStudent.deleteStatus","1");
+        Specification<XbStudentRelation> spec = DynamicSpecifications.bySearchFilter(
+                filters.values(), XbStudentRelation.class);
+        return xbStudentRelationDao.findAll(spec);
+    }
+
 	public List<XbStudentRelationView> getxbStudentRelationViewList(Map<String, Object> searchParams){
 		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
+		searchParams.put("EQ_xbStudent.deleteStatus","1");
 		Specification<XbStudentRelationView> spec = DynamicSpecifications.bySearchFilter(
 				filters.values(), XbStudentRelationView.class);
 		return xbStudentRelationViewDao.findAll(spec);
@@ -102,40 +111,24 @@ public class XbStudentService {
 	@Transactional
 	public Page<XbStudent>  getXbStudentList(Pageable pageable, Map<String, Object> searchParams) {
 		searchParams = HttpServletUtil.getRoleDate(searchParams);
+		searchParams.put("EQ_deleteStatus","1");
 		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
 		Specification<XbStudent> spec = DynamicSpecifications.bySearchFilter(
 				filters.values(), XbStudent.class);
 		return studentDao.findAll(spec,pageable);
 	}
 
-
-	/*@Transactional
-	public Page<XbStudentRelation>  getXbStudentRelationList(Pageable pageable, Map<String, Object> searchParams) {
-        HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
-        SysEmployee sysEmployee = (SysEmployee)request.getSession().getAttribute("sysEmployee");
-        if("管理员".equals(sysEmployee.sysRole.roleName)){
-            searchParams.put("EQ_organId",sysEmployee.organId);
-        }
-        if("教师".equals(sysEmployee.sysRole.roleName)){
-            searchParams.put("EQ_organId",sysEmployee.organId);
-            searchParams.put("EQ_xbClass.teacherId",sysEmployee.id);
-        }
-		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
-		Specification<XbStudentRelation> spec = DynamicSpecifications.bySearchFilter(
-				filters.values(), XbStudentRelation.class);
-		return xbStudentRelationDao.findAll(spec,pageable);
-	}*/
-
 	@Transactional
 	public Page<XbStudentRelationViewNew>  getXbStudentRelationViewNewList(Pageable pageable, Map<String, Object> searchParams) {
 		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
 		SysEmployee sysEmployee = (SysEmployee)request.getSession().getAttribute("sysEmployee");
-		if(!"超级管理员".equals(sysEmployee.sysRole.roleName)){
+		if(!"超级管理员".equals(sysEmployee.sysRole.roleName)&&!"总校教务".equals(sysEmployee.sysRole.roleName)){
 			searchParams.put("EQ_organId",sysEmployee.organId);
 		}
 		if("教师".equals(sysEmployee.sysRole.roleName)){
 			searchParams.put("EQ_teacherId",sysEmployee.id);
 		}
+		searchParams.put("EQ_xbStudent.deleteStatus","1");
 		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
 		Specification<XbStudentRelationViewNew> spec = DynamicSpecifications.bySearchFilter(
 				filters.values(), XbStudentRelationViewNew.class);
@@ -143,6 +136,7 @@ public class XbStudentService {
 	}
 	public List<XbStudentRelationViewNew> getxbStudentRelationViewNewList(Map<String, Object> searchParams){
 		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
+		searchParams.put("EQ_xbStudent.deleteStatus","1");
 		Specification<XbStudentRelationViewNew> spec = DynamicSpecifications.bySearchFilter(
 				filters.values(), XbStudentRelationViewNew.class);
 		return xbStudentRelationViewNewDaoDao.findAll(spec);
@@ -155,12 +149,13 @@ public class XbStudentService {
 	public List<XbStudentRelationViewNew>  getXbRelationList(Map<String, Object> searchParams) {
 		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
 		SysEmployee sysEmployee = (SysEmployee)request.getSession().getAttribute("sysEmployee");
-		if(!"超级管理员".equals(sysEmployee.sysRole.roleName)){
+		if(!"超级管理员".equals(sysEmployee.sysRole.roleName)&&!"总校教务".equals(sysEmployee.sysRole.roleName)){
 			searchParams.put("EQ_organId",sysEmployee.organId);
 		}
 		if("教师".equals(sysEmployee.sysRole.roleName)){
 			searchParams.put("EQ_teacherId",sysEmployee.id);
 		}
+		searchParams.put("EQ_xbStudent.deleteStatus","1");
 		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
 		Specification<XbStudentRelationViewNew> spec = DynamicSpecifications.bySearchFilter(
 				filters.values(), XbStudentRelationViewNew.class);
@@ -243,7 +238,7 @@ public class XbStudentService {
 	public List<XbClass> findXbClassListAll(Map<String, Object> searchParams){
 		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
 		SysEmployee sysEmployee = (SysEmployee)request.getSession().getAttribute("sysEmployee");
-		if(!"超级管理员".equals(sysEmployee.sysRole.roleName)){
+		if(!"超级管理员".equals(sysEmployee.sysRole.roleName)&&!"总校教务".equals(sysEmployee.sysRole.roleName)){
 			searchParams.put("EQ_organId",sysEmployee.organId);
 		}
 		if("教师".equals(sysEmployee.sysRole.roleName)){
@@ -363,6 +358,10 @@ public class XbStudentService {
 	@Transactional
 	public XbRecordClass saveXbRecordClass(XbRecordClass xbRecordClass){
 		xbRecordClass.deleteStatus = "1";
+		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
+		SysEmployee sysEmployee = (SysEmployee)request.getSession().getAttribute("sysEmployee");
+		xbRecordClass.operationEmployee = sysEmployee.employeeName;
+		xbRecordClass.operationTime = new Date();
 		return xbRecordClassDao.save(xbRecordClass);
 	}
 
@@ -370,6 +369,10 @@ public class XbStudentService {
 	public XbRecordClass deleteXbRecordClass(String id){
 		XbRecordClass xbRecordClass = xbRecordClassDao.findOne(id);
 		xbRecordClass.deleteStatus = "0";
+		HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
+		SysEmployee sysEmployee = (SysEmployee)request.getSession().getAttribute("sysEmployee");
+		xbRecordClass.operationEmployee = sysEmployee.employeeName;
+		xbRecordClass.operationTime = new Date();
 		return xbRecordClassDao.save(xbRecordClass);
 	}
 
@@ -378,8 +381,8 @@ public class XbStudentService {
 		return xbClassroomDao.findAllByClassroomNameAndDeleteStatus(classroomName,"1");
 	}
 	@Transactional
-	public XbStudent checkStudentName(String name,String contactPhone){
-		return studentDao.findAllByStudentNameAndContactPhone(name,contactPhone);
+	public List<XbStudent> checkStudentName(String name,String contactPhone){
+		return studentDao.findAllByStudentNameAndContactPhoneAndDeleteStatus(name,contactPhone,"1");
 	}
 	@Transactional
 	public XbClass checkClassesName(String name,String organId,String courseId,String teacherId){
@@ -410,6 +413,7 @@ public class XbStudentService {
 
 	@Transactional
 	public List<XbRecordClassView> getXbRecordClassdViewtoList(Map<String, Object> searchParams){
+		searchParams = HttpServletUtil.getRoleDateForXbRecordClassdView(searchParams);
 		Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
 		Specification<XbRecordClassView> spec = DynamicSpecifications.bySearchFilter(
 				filters.values(), XbRecordClassView.class);
