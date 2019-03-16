@@ -37,8 +37,6 @@
 <p id="show"></p>
 <div id="wrapper" style="height: 93%;">
     <div id="scroller">
-        <input th:id="page" th:value="${recordLists.getNumber()}" type="hidden">
-        <input th:id="totalpage" th:value="${recordLists.getTotalPages()}" type="hidden">
         <div id="pullDown" >
             <span class="pullDownIcon" style="width: 0px;float:initial"></span><span class="pullDownLabel"></span>
         </div>
@@ -47,6 +45,8 @@
                 当前结果：共计<span  th:text="${totalPeriodnum}"></span>课时<span th:text="${totalReceivables}"></span>金额
             </div>
             <div class="record" id="classRecord_tbodyid_2" style="margin-bottom: 0px;" th:fragment="classRecordFra2">
+                <input th:id="page" th:value="${recordLists.getNumber()}" type="hidden">
+                <input th:id="totalpage" th:value="${recordLists.getTotalPages()}" type="hidden">
             <script>
                 laydate.render({
                     elem: '#startDateTimeBegin'
