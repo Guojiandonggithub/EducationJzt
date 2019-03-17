@@ -372,7 +372,7 @@ public class RecordClassActivity {
 	}
 
 	@RequestMapping("/delete/recrodClass")
-	@SystemControllerLog(descrption = "删除上课记录",actionType = "3")
+	@SystemControllerLog(descrption = "按班级删除上课记录",actionType = "3")
 	public void deleteRecordClass(@RequestParam(required = false) String classId,@RequestParam(required = false) String recordTime,HttpServletResponse resp,Pageable pageable) {
 		try {
 			Map<String, Object> searchParams = new HashMap<>();
@@ -392,6 +392,31 @@ public class RecordClassActivity {
 				studentService.saveXbStudentRelation(xbStudentRelation);
 				studentService.deleteXbRecordClass(id);
 			}
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("status","1");
+			jsonObject.put("msg", "删除成功");
+			logger.info("删除返回json参数="+jsonObject.toString());
+			resp.setContentType("text/html;charset=UTF-8");
+			resp.getWriter().println(jsonObject.toJSONString());
+			resp.getWriter().close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.info(e.toString());
+		}
+	}
+
+	@RequestMapping("/delete/recrodClassByStudent")
+	@SystemControllerLog(descrption = "按学员删除上课记录",actionType = "3")
+	public void recrodClassByStudent(@RequestParam(required = false) String recordId,HttpServletResponse resp) {
+		try {
+			XbRecordClass xbRecordClass = studentService.getxbRecordClass(recordId);
+			XbStudentRelation xbStudentRelation = studentService.getXbStudentRelation(xbRecordClass.studentRelationId);
+			BigDecimal deductPeriod = xbRecordClass.deductPeriod;
+			BigDecimal money = xbStudentRelation.totalReceivable.divide(xbStudentRelation.totalPeriodNum,2,RoundingMode.HALF_UP).multiply(deductPeriod);
+			xbStudentRelation.periodNum = xbStudentRelation.periodNum.add(deductPeriod);
+			xbStudentRelation.receivable = xbStudentRelation.receivable.add(money);
+			studentService.saveXbStudentRelation(xbStudentRelation);
+			studentService.deleteXbRecordClass(recordId);
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put("status","1");
 			jsonObject.put("msg", "删除成功");

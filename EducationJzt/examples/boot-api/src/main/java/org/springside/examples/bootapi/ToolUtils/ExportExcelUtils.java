@@ -1,6 +1,5 @@
 package org.springside.examples.bootapi.ToolUtils;
 
-import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
@@ -218,11 +217,15 @@ public class ExportExcelUtils {
      * @param result   （表格的数据）
      * @throws Exception
      */
-    public static void  exportExcel(HSSFWorkbook workbook, int sheetNum,
+    public static void  exportExcel(XSSFWorkbook workbook, int sheetNum,
                             String sheetTitle, List<String> headers, List<List<Object>> result) throws Exception {
+        int rowIndex=0;
         // 生成一个表格
-        HSSFSheet sheet = workbook.createSheet();
-        workbook.setSheetName(sheetNum, sheetTitle);
+        XSSFSheet sheet = workbook.createSheet(sheetTitle);
+        rowIndex = writeTitlesToExcel(workbook, sheet, headers);
+        rowIndex = writeRowsToExcel(workbook, sheet, result, rowIndex);
+        autoSizeColumns(sheet, rowIndex+1);
+        /*workbook.setSheetName(sheetNum, sheetTitle);
         // 设置表格默认列宽度为20个字节
         sheet.setDefaultColumnWidth((short) 20);
         // 生成一个样式
@@ -263,6 +266,6 @@ public class ExportExcelUtils {
                 }
                 index++;
             }
-        }
+        }*/
     }
 }

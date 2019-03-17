@@ -1,7 +1,7 @@
 package org.springside.examples.bootapi.api;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -184,7 +184,7 @@ public class ExcelActivity {
 		titles.add("学员状态");
 		String reportName = "";
 		List<List<XbStudentRelationViewNew>> xbStudentRelationViewNewList = getStudentListByclass(data);
-		HSSFWorkbook workbook = new HSSFWorkbook();
+		XSSFWorkbook workbook = new XSSFWorkbook();
 		/*ExportExcelUtils.exportExcel(response,reportName,datas);*/
 		OutputStream out;
 		try {
@@ -218,10 +218,10 @@ public class ExcelActivity {
 						xbRecordClassViewList1.add(status);
 						rows.add(xbRecordClassViewList1);
 					}
-					ExportExcelUtils.exportExcel(workbook, j, xbStudentRelationViewNewList.get(j).get(0).className, titles, rows);
+					ExportExcelUtils.exportExcel(workbook, j, xbStudentRelationViewNewList.get(j).get(0).employeeName+xbStudentRelationViewNewList.get(j).get(0).className, titles, rows);
 				}
 			}
-			response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(reportName + ".xls"));
+			response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(reportName + ".xlsx"));
 			response.setHeader("content-Type", "application/vnd.ms-excel");
 			out = response.getOutputStream();
 			workbook.write(out);

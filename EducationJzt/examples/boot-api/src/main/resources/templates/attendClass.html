@@ -542,8 +542,8 @@
                                                     <th>学员课时</th>
                                                     <th>教师</th>
                                                     <th>教师留言</th>
-                                                    <!--<th>操作</th>
-                                                    <th>
+                                                    <th>操作</th>
+                                                    <!--<th>
                                                         <span href="#modal-table" data-toggle="modal" class="glyphicon glyphicon-option-vertical"
                                                             aria-hidden="true"></span>
                                                     </th>-->
@@ -569,24 +569,19 @@
                                                     <td th:text="${record.deductPeriod}"></td>
                                                     <td th:text="${record.xbClass.teacher.employeeName}"></td>
                                                     <td th:text="${record.teacherLeave}"></td>
-
-                                                    <td></td><!--<td>
-                                                        <div class="btn-group open">
-                                                            <p data-toggle="dropdown" class="down" aria-expanded="true">
-                                                                操作
-                                                                <span class="ace-icon fa fa-caret-down icon-on-right" style="float: right;margin: 3px 0 0 3px;"></span>
-                                                            </p>
-                                                            <ul class="dropdown-menu dropdown-default" style="display:none;">
-                                                                <li>
-                                                                    <a href="classEdit.html">编辑</a>
-                                                                </li>
-                                                                <li>
-                                                                    <a href="#">删除班级</a>
-                                                                </li>
-                                                            </ul>
+                                                    <td class="classDel" >
+                                                        <div class="btn-group open" >
+                                                            <!--<a  class="down" href="#modal-table"  data-toggle="modal"-->
+                                                            <a data-toggle="dropdown" class="down" aria-expanded="true"
+                                                               th:onclick="'javascript:deleteRecordByStudent(\''+${record.id}+'\')'"
+                                                               style="border: solid 1px;border-radius: 10px;width: 77px;color: #ffffff;
+                                               background: #f50f0f;height: 26px;font-weight: 900;margin-bottom: 0px;">
+                                                                删除
+                                                            </a>
                                                         </div>
+
                                                     </td>
-                                                </tr>-->
+                                                </tr>
                                             </table>
                                             <div class="orderPage">
                                                 <div class="page">
@@ -1037,6 +1032,7 @@
             return o;
         };
 
+        //按班级删除
         function deleteRecord(classId,recordTime){
             $.kd.kdConfirm("确定要删除该上课记录?",function(){
                 var load = new Loading();
@@ -1065,6 +1061,39 @@
                 });
             })
         }
+
+
+        //按学员删除
+        function deleteRecordByStudent(recordId){
+            $.kd.kdConfirm("确定要删除该上课记录?",function(){
+                var load = new Loading();
+                load.init({
+                    target: "#main-container"
+                });
+                load.start();
+                $.ajax({
+                    url: basePath + '/recordClass/delete/recrodClassByStudent',
+                    type: 'get',
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    data: {recordId:recordId},
+                    async: true,
+                    success: function(data) {
+                        load.stop();
+                        var status = data.status;
+                        var msg = data.msg;
+                        $.kd.kdAlert("删除成功！",function () {
+                            getRecordClassListByClass("");
+                        });
+                    },
+                    error:function(){
+                        console.log("回调失败")
+                    }
+                });
+            })
+        }
+
+
     </script>
 <style>
     a{cursor:pointer}
