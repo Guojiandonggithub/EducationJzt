@@ -1,6 +1,7 @@
 package org.springside.examples.bootapi.api;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.util.StringUtil;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -75,50 +76,9 @@ public class WechatRecordClassActivity {
 									 @PageableDefault(value = 10) Pageable pageable){
 		Map<String,Object> resultMap = new HashMap<>();
 		Map<String,Object> searhMap = new HashMap<>();
-		/*if(null!=data){
-			resultMap = com.alibaba.fastjson.JSONObject.parseObject(data,Map.class);
-		}
-		String classesName  = (String)resultMap.get("classesName");
-		String type = (String)resultMap.get("type");
-		String chargingMode = (String)resultMap.get("chargingMode");
-		String organId = (String)resultMap.get("organId");
-		String conrseType = (String)resultMap.get("conrseType");
-		if(null==organId){
-			organId = "0";
-		}else if(!organId.equals("0")){
-			searhMap.put("EQ_organId",organId);
-		}
-		if(null!=classesName&&!classesName.equals("")){
-			searhMap.put("LIKE_className",classesName);
-		}
-		if(null==type){
-			type = "2";
-		}else if(!type.equals("2")){
-			searhMap.put("EQ_xbCourse.type",type);
-		}
-		if(null==chargingMode){
-			chargingMode = "3";
-		}else if(!chargingMode.equals("3")){
-			searhMap.put("EQ_xbCourse.chargingMode",chargingMode);
-		}
-		if(null==conrseType){
-			conrseType = "";
-		}else if(!conrseType.equals("")){
-			searhMap.put("EQ_xbCourse.xbcoursetype.id",conrseType);
-		}*/
-		//Iterable<SysOrgans> organsList = organsService.getOrgansList();
 		Page<XbClass> classPage = studentService.getXbClassList(pageable,searhMap);
 		Map<String,Object> searhtypeMap = new HashMap<>();
-		//List<XbCourseType> coursetypelist = xbCourseTypeService.findXbCourseTypeList(searhtypeMap);
 		model.addAttribute("classPage",classPage);
-		//model.addAttribute("classesName",classesName);
-		//model.addAttribute("currentzise",classPage.getSize());
-		//model.addAttribute("organId",organId);
-		//model.addAttribute("type",type);
-		//model.addAttribute("chargingMode",chargingMode);
-		//model.addAttribute("organsList",organsList);
-		//model.addAttribute("coursetypelist",coursetypelist);
-		//model.addAttribute("conrseType",conrseType);
 		return "wechat_timetableMore";
 	}
 	/*
@@ -126,15 +86,46 @@ public class WechatRecordClassActivity {
 	 * @return
 	 */
 	@RequestMapping("/getRecordClassList_reloading")
-	public String getRecordClassListReloading(@RequestParam(required = false) String data, ModelMap model,
+	public String getRecordClassListReloading(@RequestParam(required = false) String studentname, ModelMap model,
 									 @PageableDefault(value = 10) Pageable pageable){
 		Map<String,Object> resultMap = new HashMap<>();
 		Map<String,Object> searhMap = new HashMap<>();
+		if(StringUtils.isNotEmpty(studentname)){
+			List<String> classidlist =  studentService.getClassIdFindByStudentName(studentname);
+			if(classidlist.size()>0){
+				searhMap.put("IN_id",studentService.getClassIdFindByStudentName(studentname));
+			}else{
+				searhMap.put("IN_id","1111111111222222222333333333311");//表示空
+			}
+		}
 		Page<XbClass> classPage = studentService.getXbClassList(pageable,searhMap);
 		Map<String,Object> searhtypeMap = new HashMap<>();
-		//List<XbCourseType> coursetypelist = xbCourseTypeService.findXbCourseTypeList(searhtypeMap);
 		model.addAttribute("classPage",classPage);
+		model.addAttribute("studentname",studentname);
 		return "wechat_timetableMore::WECHAT_RECORDCLASSLIST_SPANID_FRAGMENT";
+	}
+	/*
+	 * 跳转到记上课列表下拉加载.....
+	 * @return
+	 */
+	@RequestMapping("/getRecordClassList_reloading_one")
+	public String getRecordClassListReloadingOne(@RequestParam(required = false) String studentname, ModelMap model,
+											  @PageableDefault(value = 10) Pageable pageable){
+		Map<String,Object> resultMap = new HashMap<>();
+		Map<String,Object> searhMap = new HashMap<>();
+		if(StringUtils.isNotEmpty(studentname)){
+			List<String> classidlist =  studentService.getClassIdFindByStudentName(studentname);
+			if(classidlist.size()>0){
+				searhMap.put("IN_id",studentService.getClassIdFindByStudentName(studentname));
+			}else{
+				searhMap.put("IN_id","1111111111222222222333333333311");//表示空
+			}
+		}
+		Page<XbClass> classPage = studentService.getXbClassList(pageable,searhMap);
+		Map<String,Object> searhtypeMap = new HashMap<>();
+		model.addAttribute("classPage",classPage);
+		model.addAttribute("studentname",studentname);
+		return "wechat_timetableMore::WECHAT_RECORDCLASSLIST_SPANID_FRAGMENT_one";
 	}
 	/**
 	 * 跳转到日程表

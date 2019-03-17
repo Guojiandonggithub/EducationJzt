@@ -20,11 +20,6 @@
 <div class="add" style="background: #2778ca;color: white;margin-bottom: 0px;font-size: 21px;line-height: 38px;">
     <p style="margin: 0 0 2px;">记上课</p>
 </div>
-<!--<div class="search">
-    <input type="text" placeholder="搜索学员">
-    <span class="glyphicon glyphicon-search"></span>
-    <button class="btn">搜索</button>
-</div>-->
 <div style="padding-bottom: 50px;">
     <div class="class-content" >
         <h2 th:text="${classes.sysOrgans.organName}+' '+${classes.className}+' '+${classes.xbCourse.courseName}"><img src="img/ban.png">校区+班级+课程</h2>
@@ -48,18 +43,6 @@
                     <span>教师课时</span>
                     <p th:text="${classes.teacherNum}"></p>
                 </li>
-
-                <!--<li>
-                    <span>上课状态(批量)</span>
-                    <p>
-                        <select style="color:#555;">
-                            <option value="0">上课</option>
-                            <option value="1">请假</option>
-                            <option value="2">旷课</option>
-                            <option value="3">补课</option>
-                        </select>
-                    </p>
-                </li>-->
             </ul>
         </div>
     </div>
@@ -211,6 +194,7 @@
         });
         return o;
     };
+
 </script>
 <script type="text/javascript">
 

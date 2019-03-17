@@ -76,6 +76,10 @@ public class XbStudentService {
 		return xbSupplementFeeDao.findOne(id);
 	}
 
+	public List<String> getClassIdFindByStudentName(String studentname){
+		return xbStudentRelationDao.findAllStudentListByStudentName(studentname);
+	}
+
     public List<XbStudentRelation> getxbStudentRelationList(Map<String, Object> searchParams){
         Map<String, SearchFilter> filters = SearchFilter.parse(searchParams);
         searchParams.put("EQ_xbStudent.deleteStatus","1");

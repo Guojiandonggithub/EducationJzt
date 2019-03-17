@@ -20,38 +20,47 @@
 <div class="add" style="background: #2778ca;color: white;margin-bottom: 0px;font-size: 21px;line-height: 38px;">
     <p style="margin: 0 0 2px;">记上课</p>
 </div>
-<p class="all" th:text="'共'+${classPage.getTotalElements()+'个'}">共16个</p>
-  <!--<p class="all" th:text="'第'+${classPage.getNumber()+1}+'页'">第几页</p>-->
-  <input th:id="page" th:value="${classPage.getNumber()}" type="hidden">
-  <input th:id="totalpage" th:value="${classPage.getTotalPages()}" type="hidden">
-<body>
-<p id="show"></p>
-<div id="wrapper">
-    <div id="scroller">
-        <div id="pullDown">
-            <span class="pullDownIcon"></span><span class="pullDownLabel"></span>
-        </div>
-        <div  class="con-box" style="margin-top:0;" id="wechat_recordclasslist_spanid">
-            <th:block th:if="${classPage}" th:fragment="WECHAT_RECORDCLASSLIST_SPANID_FRAGMENT" >
-                <div th:each="cls,clssta:${classPage}" class="con-list">
-                    <p  class="class-list more-list">
-                        <span th:text="${cls.sysOrgans.organName}+' '+${cls.xbClassroom.classroomName}+' '+${cls.className}">校区+教室+班级</span>
-                        <span th:text="'课程：'+${cls.xbCourse.courseName}+' 教师：'+${cls.teacher.employeeName}">课程+老师</span>
-                    </p>
-                    <input type="hidden" name="classid" th:value="${cls.id}">
-                    <a th:if="${cls.isEnd!='0'}" th:href="@{'/recordClassWechat/classEdit?classesId='+${cls.id}}">记上课<Span class="glyphicon glyphicon-menu-right"></Span></a>
-                    <a th:if="${cls.isEnd=='0'}" style="color: #919a9e;">已结课</a>
-                </div>
-            </th:block>
-        </div>
-        <div id="pullUp" style="font-size: 15px;">
-            <span class="pullUpIcon"></span><span class="pullUpLabel">下拉加载...</span>
-        </div>
-    </div>
-    <div class="back" style="z-index: 1000">
-        <a onclick="javascript:history.go(-1)"><span class="glyphicon glyphicon-arrow-left"></span>返回上一级</a>
-    </div>
+<div class="control-group">
+      <label class="control-label">学员</label>
+      <input id="studentname" name="studentname" type="text" th:value="${studentname}" class="ace"
+             style="padding: 3px;border-radius: 5px !important;margin-top: 13px;width: 82px;color: #3c546c">
+      <div class="form-group" style="display: inline;">
+          <button type="button" th:onclick="'javascript:getaccordingListPage(\'\')'">搜索</button>
+      </div>
 </div>
+<body>
+    <p id="show"></p>
+    <div id="wrapper">
+        <div id="scroller">
+            <div id="pullDown">
+                <span class="pullDownIcon"></span><span class="pullDownLabel"></span>
+            </div>
+            <div class="record" id="wechat_recordclasslist_spanid_one" style="margin-bottom: 0px;" th:fragment="WECHAT_RECORDCLASSLIST_SPANID_FRAGMENT_one">
+                    <p class="all" style="color:#f7f7f7" th:text="'共'+${classPage.getTotalElements()+'个'}">共16个</p>
+                <div  class="con-box" style="margin-top:0;" id="wechat_recordclasslist_spanid">
+                    <input th:id="page" th:value="${classPage.getNumber()}" type="hidden">
+                    <input th:id="totalpage" th:value="${classPage.getTotalPages()}" type="hidden">
+                    <th:block th:if="${classPage}" th:fragment="WECHAT_RECORDCLASSLIST_SPANID_FRAGMENT" >
+                        <div th:each="cls,clssta:${classPage}" class="con-list">
+                            <p  class="class-list more-list">
+                                <span th:text="${cls.sysOrgans.organName}+' '+${cls.xbClassroom.classroomName}+' '+${cls.className}">校区+教室+班级</span>
+                                <span th:text="'课程：'+${cls.xbCourse.courseName}+' 教师：'+${cls.teacher.employeeName}">课程+老师</span>
+                            </p>
+                            <input type="hidden" name="classid" th:value="${cls.id}">
+                            <a th:if="${cls.isEnd!='0'}" th:href="@{'/recordClassWechat/classEdit?classesId='+${cls.id}}">记上课<Span class="glyphicon glyphicon-menu-right"></Span></a>
+                            <a th:if="${cls.isEnd=='0'}" style="color: #919a9e;">已结课</a>
+                        </div>
+                    </th:block>
+                </div>
+            </div>
+            <div id="pullUp" style="font-size: 15px;">
+                <span class="pullUpIcon"></span><span class="pullUpLabel">下拉加载...</span>
+            </div>
+        </div>
+        <div class="back" style="z-index: 1000">
+            <a onclick="javascript:history.go(-1)"><span class="glyphicon glyphicon-arrow-left"></span>返回上一级</a>
+        </div>
+    </div>
 
 </body>
   <script type="text/javascript" th:inline="javascript">
@@ -88,8 +97,12 @@
           setTimeout(function () {
               var page = parseInt($("#page").val())+1;
               var totalpage = parseInt($("#totalpage").val())-1;
+              var studentname = $("#studentname").val();
+              if(!studentname){
+                  studentname = "";
+              }
               $.ajax({
-                  url: basePath+ '/recordClassWechat/getRecordClassList_reloading?page='+page,
+                  url: basePath+ '/recordClassWechat/getRecordClassList_reloading?page='+page+"&studentname="+studentname,
                   type: 'get',
                   contentType: 'application/json',
                   async: true,
@@ -190,5 +203,33 @@
       );
 
       document.addEventListener('DOMContentLoaded', function () { setTimeout(loaded, 200); }, false);
+
+      function getaccordingListPage(page){
+          var load = new Loading();
+          load.init({
+              target: "#wrapper"
+          });
+          load.start();
+          var studentname = $("#studentname").val();
+          if(!studentname){
+              studentname = "";
+          }
+          $.ajax({
+              type: 'get',
+              //dataType: 'json',
+              url: basePath + '/recordClassWechat/getRecordClassList_reloading_one?page=0&studentname='+studentname,
+              contentType:"application/json;charset=UTF-8",
+              cache: false,
+              async: true,
+              success: function (data) {
+                  load.stop();
+                  console.log(data);
+                  $("#wechat_recordclasslist_spanid_one").empty();
+                  $("#wechat_recordclasslist_spanid_one").append(data);
+                  $("#page").val(0);
+                  myScroll.refresh();
+              }
+          });
+      }
   </script>
       </html>

@@ -25,6 +25,8 @@ public interface XbStudentRelationDao extends PagingAndSortingRepository<XbStude
     List findAllStudentListStartAndEnd(Date enrollStart,Date enrollEnd);
     @Query(value="SELECT * FROM xb_student_relation o  GROUP BY o.student_id",nativeQuery = true)
     List findAllStudentListNoDate();
+    @Query(value="SELECT w.class_id FROM xb_student_relation_view w WHERE w.student_name LIKE %?1% AND w.class_id <> ''",nativeQuery = true)
+    List findAllStudentListByStudentName(String studentname);
 
     List<XbStudentRelation> findByStudentId(String studentId);
 
