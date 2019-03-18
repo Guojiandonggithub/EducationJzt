@@ -182,46 +182,51 @@ public class ExcelActivity {
 		titles.add("剩余课时");
 		titles.add("剩余金额");
 		titles.add("学员状态");
-		String reportName = "";
+		String reportName = "没有查到数据";
 		List<List<XbStudentRelationViewNew>> xbStudentRelationViewNewList = getStudentListByclass(data);
 		XSSFWorkbook workbook = new XSSFWorkbook();
 		/*ExportExcelUtils.exportExcel(response,reportName,datas);*/
 		OutputStream out;
 		try {
-			for (int j = 0; j < xbStudentRelationViewNewList.size(); j++) {
-				List<List<Object>> rows = new ArrayList();
-				List<XbStudentRelationViewNew> list = xbStudentRelationViewNewList.get(j);
-				if(list.size()>0){
-					reportName = list.get(0).sysOrgans.organName+list.get(0).employeeName;
+			if(xbStudentRelationViewNewList.size()>0){
+				for (int j = 0; j < xbStudentRelationViewNewList.size(); j++) {
+					List<List<Object>> rows = new ArrayList();
+					List<XbStudentRelationViewNew> list = xbStudentRelationViewNewList.get(j);
+					if(list.size()>0){
+						reportName = list.get(0).sysOrgans.organName+list.get(0).employeeName;
 
-					for (int i = 0; i < xbStudentRelationViewNewList.get(j).size(); i++) {
-						List<Object> xbRecordClassViewList1 = new ArrayList();
-						xbRecordClassViewList1.add(xbStudentRelationViewNewList.get(j).get(i).sysOrgans.organName);
-						xbRecordClassViewList1.add(xbStudentRelationViewNewList.get(j).get(i).employeeName);
-						xbRecordClassViewList1.add(xbStudentRelationViewNewList.get(j).get(i).xbStudent.studentName);
-						xbRecordClassViewList1.add(xbStudentRelationViewNewList.get(j).get(i).xbCourse.courseName);
-						xbRecordClassViewList1.add(xbStudentRelationViewNewList.get(j).get(i).periodNum);
-						xbRecordClassViewList1.add(xbStudentRelationViewNewList.get(j).get(i).receivable);
-						Integer studentStart = xbStudentRelationViewNewList.get(j).get(i).studentStart;
-						String status = "";
-						if(studentStart==0){
-							status = "在读";
-						}else if(studentStart==1){
-							status = "停课";
-						}else if(studentStart==2){
-							status = "转班";
-						}else if(studentStart==3){
-							status = "退费";
-						}else if(studentStart==4){
-							status = "结课";
+						for (int i = 0; i < xbStudentRelationViewNewList.get(j).size(); i++) {
+							List<Object> xbRecordClassViewList1 = new ArrayList();
+							xbRecordClassViewList1.add(xbStudentRelationViewNewList.get(j).get(i).sysOrgans.organName);
+							xbRecordClassViewList1.add(xbStudentRelationViewNewList.get(j).get(i).employeeName);
+							xbRecordClassViewList1.add(xbStudentRelationViewNewList.get(j).get(i).xbStudent.studentName);
+							xbRecordClassViewList1.add(xbStudentRelationViewNewList.get(j).get(i).xbCourse.courseName);
+							xbRecordClassViewList1.add(xbStudentRelationViewNewList.get(j).get(i).periodNum);
+							xbRecordClassViewList1.add(xbStudentRelationViewNewList.get(j).get(i).receivable);
+							Integer studentStart = xbStudentRelationViewNewList.get(j).get(i).studentStart;
+							String status = "";
+							if(studentStart==0){
+								status = "在读";
+							}else if(studentStart==1){
+								status = "停课";
+							}else if(studentStart==2){
+								status = "转班";
+							}else if(studentStart==3){
+								status = "退费";
+							}else if(studentStart==4){
+								status = "结课";
+							}
+							xbRecordClassViewList1.add(status);
+							rows.add(xbRecordClassViewList1);
 						}
-						xbRecordClassViewList1.add(status);
-						rows.add(xbRecordClassViewList1);
+						ExportExcelUtils.exportExcel(workbook, j, xbStudentRelationViewNewList.get(j).get(0).employeeName+xbStudentRelationViewNewList.get(j).get(0).className, titles, rows);
 					}
-					ExportExcelUtils.exportExcel(workbook, j, xbStudentRelationViewNewList.get(j).get(0).employeeName+xbStudentRelationViewNewList.get(j).get(0).className, titles, rows);
 				}
+			}else{
+				ExportExcelUtils.exportExcel(workbook, 0, "没有数据", titles, new ArrayList());
 			}
-			response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(reportName + ".xlsx"));
+			//response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(reportName + ".xlsx"));
+			response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(reportName + ".xlsx", "utf-8"));
 			response.setHeader("content-Type", "application/vnd.ms-excel");
 			out = response.getOutputStream();
 			workbook.write(out);
