@@ -441,14 +441,39 @@
                             <div class="modal-body no-padding">
                                 <div id="classl" class="tab-pane fade in active">
                                     <div class="grounInline">
-                                        <div class="form-group">
-                                            <label><i>*</i>班级</label>
-                                            <select id="classId" name="classId" "
-                                                    th:onchange="|javascript:classToFindAll('add')|">
-                                                <option th:each="cla,claSta:${xbClassList}" th:value="${cla.id}"
-                                                        th:text="${cla.sysOrgans.organName}+''+${cla.xbCourse.courseName}+''+${cla.teacher.employeeName}+''+${cla.className}">
-                                                </option>
-                                            </select>
+                                        <div class="form-group" style="width: 33%;margin-right: -40px;">
+                                            <label style="    width: 50px;"><i>*</i>校区</label>
+                                            <input id="sysorgId_combobox_new" name="sysorgId_combobox_new"  th:value="0"
+                                                   class="easyui-combobox"
+                                                   style="padding: 3px;border-radius: 5px !important;margin-top: 13px;width: 105px;color: #3c546c;">
+                                        </div>
+                                        <div class="form-group" style="width: 33%;margin-right: -40px;">
+                                            <label style="    width: 50px;"><i>*</i>教师</label>
+                                            <input id="courseId_combobox_new" name="courseId_combobox_new" type="text" th:value="0" class="ace"
+                                                   style="padding: 3px;border-radius: 5px !important;margin-top: 13px;width: 130px;color: #3c546c">
+                                        </div>
+                                        <div class="form-group" style="width: 33%;">
+                                            <label style="    width: 50px;"><i>*</i>班级</label>
+                                            <input id="classId_combobox_new" name="classId_combobox_new" type="text" th:value="0" class="ace"
+                                                   style="padding: 3px;border-radius: 5px !important;margin-top: 13px;width: 170px;color: #3c546c">
+                                        </div>
+                                        <div class="form-group" style="display: inline;">
+                                            <button type="button" th:onclick="'javascript:getclasslistcombox()'">搜索</button>
+                                        </div>
+                                    </div>
+                                    <div class="grounInline">
+                                        <div id="classfromgroupid">
+                                            <th:block  th:fragment="classFra">
+                                            <div class="form-group" >
+                                                <label><i>*</i>班级</label>
+                                                <select id="classId" name="classId" "
+                                                        th:onchange="|javascript:classToFindAll('add')|">
+                                                    <option th:each="cla,claSta:${xbClassList}" th:value="${cla.id}"
+                                                            th:text="${cla.sysOrgans.organName}+''+${cla.xbCourse.courseName}+''+${cla.teacher.employeeName}+''+${cla.className}">
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            </th:block>
                                         </div>
                                         <div class="form-group">
                                             <label>科目</label>
@@ -739,6 +764,10 @@
             $("#classTheme").val(classTheme);
             $("#classId").attr("disabled","disabled");
             $("#classId").css("color","#a29b9b");
+            getclasslistcomboxByclassid(xbclassid);
+            /*$("#classId_combobox_new").attr("disabled","disabled");
+            $("#courseId_combobox_new").attr("disabled","disabled");
+            $("#classId_combobox_new").attr("disabled","disabled");*/
             classToFindAll('edit');
     }
 
@@ -1002,6 +1031,53 @@
                 load.stop();
                 console.log("查询排课冲突失败")
             }
+        });
+    };
+    //搜索班级
+    function getclasslistcombox(){
+        var sysorgId_combobox_new = $("input[name='sysorgId_combobox_new']").val();
+        var courseId_combobox_new = $("input[name='courseId_combobox_new']").val();
+        var classId_combobox_new = $("input[name='classId_combobox_new']").val();
+        $.ajax({
+            url: basePath + '/jw_center_arranging_course/getclasslistcombox',
+            type: 'get',
+            contentType: 'application/json',
+            data: {sysorgId_combobox_new:sysorgId_combobox_new,courseId_combobox_new:courseId_combobox_new,classId_combobox_new:classId_combobox_new},
+            async: true,
+            success: function (data) {
+                //load.stop();
+                console.log("查询班级级联信息成功");
+                $("#classfromgroupid").html("");
+                $("#classfromgroupid").append(data);
+                classToFindAll('add');
+            },
+            error: function () {
+                //load.stop();
+                console.log("查询班级级联信息失败")
+            }
+
+        });
+    };
+    //搜索班级
+    function getclasslistcomboxByclassid(classId_combobox_new){
+        $.ajax({
+            url: basePath + '/jw_center_arranging_course/getclasslistcombox',
+            type: 'get',
+            contentType: 'application/json',
+            data: {classId_combobox_new:classId_combobox_new},
+            async: true,
+            success: function (data) {
+                //load.stop();
+                console.log("查询班级级联信息成功");
+                $("#classfromgroupid").html("");
+                $("#classfromgroupid").append(data);
+                classToFindAll('add');
+            },
+            error: function () {
+                //load.stop();
+                console.log("查询班级级联信息失败")
+            }
+
         });
     };
     //搜索

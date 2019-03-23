@@ -1,11 +1,12 @@
 
 
 $(function(){
-    comboboxSysorg();
+    comboboxSysorg("#sysorgId_combobox","#courseId_combobox","#classId_combobox");
+    comboboxSysorg("#sysorgId_combobox_new","#courseId_combobox_new","#classId_combobox_new");
 });
 
-function comboboxSysorg(){
-    var sysorgId_combobox = $("#sysorgId_combobox");
+function comboboxSysorg(a,b,c){
+    var sysorgId_combobox = $(a);
     sysorgId_combobox.combobox({
         url:basePath + "/jw_center_arranging_course/findSysOragList",
         valueField:'id',
@@ -14,8 +15,8 @@ function comboboxSysorg(){
         required:true,
         textField:'organName',
         onLoadSuccess:function(){
-            var orgid = $('#sysorgId_combobox').combobox('getValue');
-            $('#classId_combobox').combobox({
+            var orgid = $(a).combobox('getValue');
+            $(c).combobox({
                 url:basePath + "/jw_center_arranging_course/findClassListByorgid?orgid="+orgid,
                 valueField:'id',
                 addable:false,
@@ -24,7 +25,7 @@ function comboboxSysorg(){
                 textField:'className'
 
             });
-            $('#courseId_combobox').combobox({
+            $(b).combobox({
                 url:basePath + "/jw_center_arranging_course/findCourseByorgid?orgid="+orgid,
                 valueField:'id',
                 addable:false,
@@ -32,8 +33,8 @@ function comboboxSysorg(){
                 required:true,
                 textField:'employeeName',
                 onLoadSuccess:function(){
-                    var teacherid = $('#courseId_combobox').combobox('getValue');
-                    $('#classId_combobox').combobox({
+                    var teacherid = $(b).combobox('getValue');
+                    $(c).combobox({
                         url:basePath + "/jw_center_arranging_course/findClassListByorgid?teacherid="+teacherid,
                         valueField:'id',
                         addable:false,
@@ -43,12 +44,12 @@ function comboboxSysorg(){
 
                     });
                     if(teacherid=="0"){
-                        $("input[name='classId_combobox']").val("0");
+                        $("input[name=c]").val("0");
                     }
                 },
                 onChange:function(){
-                    var teacherid = $('#courseId_combobox').combobox('getValue');
-                    $('#classId_combobox').combobox({
+                    var teacherid = $(b).combobox('getValue');
+                    $(c).combobox({
                         url:basePath + "/jw_center_arranging_course/findClassListByorgid?teacherid="+teacherid,
                         valueField:'id',
                         addable:false,
@@ -57,14 +58,14 @@ function comboboxSysorg(){
                         textField:'className'
 
                     });
-                    $("input[name='classId_combobox']").val("0");
+                    $("input[name=c]").val("0");
                 }
 
             });
         },
         onChange:function(){
-            var orgid = $('#sysorgId_combobox').combobox('getValue');
-            $('#classId_combobox').combobox({
+            var orgid = $(a).combobox('getValue');
+            $(c).combobox({
                 url:basePath + "/jw_center_arranging_course/findClassListByorgid?orgid="+orgid,
                 valueField:'id',
                 addable:false,
@@ -73,7 +74,7 @@ function comboboxSysorg(){
                 textField:'className'
 
             });
-            $('#courseId_combobox').combobox({
+            $(b).combobox({
                 url:basePath + "/jw_center_arranging_course/findCourseByorgid?orgid="+orgid,
                 valueField:'id',
                 addable:false,
@@ -81,8 +82,8 @@ function comboboxSysorg(){
                 required:true,
                 textField:'employeeName',
                 onChange:function(){
-                    var teacherid = $('#courseId_combobox').combobox('getValue');
-                    $('#classId_combobox').combobox({
+                    var teacherid = $(b).combobox('getValue');
+                    $(c).combobox({
                         url:basePath + "/jw_center_arranging_course/findClassListByorgid?teacherid="+teacherid,
                         valueField:'id',
                         addable:false,
@@ -91,11 +92,11 @@ function comboboxSysorg(){
                         textField:'className'
 
                     });
-                    $("input[name='classId_combobox']").val("0");
+                    $("input[name=c]").val("0");
                 }
             });
-            $("input[name='courseId_combobox']").val("0");
-            $("input[name='classId_combobox']").val("0");
+            $("input[name=b]").val("0");
+            $("input[name=c]").val("0");
         },
     });
 }

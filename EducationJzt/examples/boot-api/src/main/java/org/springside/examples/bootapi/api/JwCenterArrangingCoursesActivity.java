@@ -79,6 +79,9 @@ public class JwCenterArrangingCoursesActivity {
         model.addAttribute("classId_combobox","0");
         model.addAttribute("courseId_combobox","0");
         model.addAttribute("sysorgId_combobox","0");
+        model.addAttribute("classId_combobox_new","0");
+        model.addAttribute("courseId_combobox_new","0");
+        model.addAttribute("sysorgId_combobox_new","0");
     }
     @RequestMapping("/findClassListByorgid")
     public void findClassListByorgid(@RequestParam(value="orgid",defaultValue = "") String orgid,
@@ -107,6 +110,9 @@ public class JwCenterArrangingCoursesActivity {
         model.addAttribute("classId_combobox","0");
         model.addAttribute("courseId_combobox","0");
         model.addAttribute("sysorgId_combobox","0");
+        model.addAttribute("classId_combobox_new","0");
+        model.addAttribute("courseId_combobox_new","0");
+        model.addAttribute("sysorgId_combobox_new","0");
     }
     @RequestMapping("/findSysOragList")
     public void findSysOragList(HttpServletResponse resp,ModelMap model){
@@ -127,6 +133,9 @@ public class JwCenterArrangingCoursesActivity {
         model.addAttribute("classId_combobox","0");
         model.addAttribute("courseId_combobox","0");
         model.addAttribute("sysorgId_combobox","0");
+        model.addAttribute("classId_combobox_new","0");
+        model.addAttribute("courseId_combobox_new","0");
+        model.addAttribute("sysorgId_combobox_new","0");
     }
     /**
      * 点击班级级联查询
@@ -169,6 +178,37 @@ public class JwCenterArrangingCoursesActivity {
         model.addAttribute("xbClassroomList",xbStudentService.findXbClassRoomListAll());
         model.addAttribute("sysEmployeeList",employeeService.findSysEmployeeListAll());
         return "courseArray";
+    }
+
+    /**
+     * 动态查询班级
+     * @param model
+     * @param data
+     * @param pageable
+     * @return
+     */
+    @RequestMapping("/getclasslistcombox")
+    public String getclasslistcombox(ModelMap model, @RequestParam(required=false) String sysorgId_combobox_new,
+                                     @RequestParam(required=false) String courseId_combobox_new,
+                                     @RequestParam(required=false) String classId_combobox_new,
+                                    @PageableDefault(value = 10) Pageable pageable){
+        logger.info("跳转到排课");
+        Map<String,Object> searmap = new HashMap<>();
+        if(!sysorgId_combobox_new.equals("0") && StringUtils.isNotEmpty(sysorgId_combobox_new)){
+            searmap.put("EQ_organId",sysorgId_combobox_new);
+        }
+        if(!courseId_combobox_new.equals("0")&& StringUtils.isNotEmpty(courseId_combobox_new)){
+            searmap.put("EQ_teacherId",courseId_combobox_new);
+        }
+        if(!classId_combobox_new.equals("0")&& StringUtils.isNotEmpty(classId_combobox_new)){
+            searmap.put("EQ_id",classId_combobox_new);
+        }
+        List<XbClass> list = xbStudentService.findXbClassListAll(searmap);
+        model.addAttribute("sysorgId_combobox_new",sysorgId_combobox_new);
+        model.addAttribute("courseId_combobox_new",courseId_combobox_new);
+        model.addAttribute("classId_combobox_new",classId_combobox_new);
+        model.addAttribute("xbClassList",list);
+        return "courseArray::classFra";
     }
     public void findXbAttendConflicListi(ModelMap model){
         Sort sort = new Sort(Sort.Direction.DESC, "startDateTime");
