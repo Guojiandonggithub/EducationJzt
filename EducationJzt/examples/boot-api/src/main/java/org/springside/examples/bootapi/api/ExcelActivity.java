@@ -133,6 +133,7 @@ public class ExcelActivity {
 		titles.add("所属校区");
 		titles.add("教师姓名");
 		titles.add("学员姓名");
+		titles.add("家长联系电话");
 		titles.add("所属课程");
 		titles.add("剩余课时");
 		titles.add("剩余金额");
@@ -147,6 +148,7 @@ public class ExcelActivity {
 			xbRecordClassViewList1.add(xbStudentRelationViewNewList.get(i).sysOrgans.organName);
 			xbRecordClassViewList1.add(xbStudentRelationViewNewList.get(i).employeeName);
 			xbRecordClassViewList1.add(xbStudentRelationViewNewList.get(i).xbStudent.studentName);
+			xbRecordClassViewList1.add(xbStudentRelationViewNewList.get(i).xbStudent.contactPhone);
 			xbRecordClassViewList1.add(xbStudentRelationViewNewList.get(i).xbCourse.courseName);
 			xbRecordClassViewList1.add(xbStudentRelationViewNewList.get(i).periodNum);
 			xbRecordClassViewList1.add(xbStudentRelationViewNewList.get(i).receivable);
@@ -178,6 +180,7 @@ public class ExcelActivity {
 		titles.add("所属校区");
 		titles.add("教师姓名");
 		titles.add("学员姓名");
+		titles.add("家长联系电话");
 		titles.add("所属课程");
 		titles.add("剩余课时");
 		titles.add("剩余金额");
@@ -200,6 +203,7 @@ public class ExcelActivity {
 							xbRecordClassViewList1.add(xbStudentRelationViewNewList.get(j).get(i).sysOrgans.organName);
 							xbRecordClassViewList1.add(xbStudentRelationViewNewList.get(j).get(i).employeeName);
 							xbRecordClassViewList1.add(xbStudentRelationViewNewList.get(j).get(i).xbStudent.studentName);
+							xbRecordClassViewList1.add(xbStudentRelationViewNewList.get(j).get(i).xbStudent.contactPhone);
 							xbRecordClassViewList1.add(xbStudentRelationViewNewList.get(j).get(i).xbCourse.courseName);
 							xbRecordClassViewList1.add(xbStudentRelationViewNewList.get(j).get(i).periodNum);
 							xbRecordClassViewList1.add(xbStudentRelationViewNewList.get(j).get(i).receivable);
@@ -363,6 +367,11 @@ public class ExcelActivity {
 		if(StringUtils.isNotEmpty(TeacherNameCla)){
 			searhMap.put("LIKE_employeeName",TeacherNameCla);
 		}
+		List<Integer> studentStartList = new ArrayList();
+		studentStartList.add(1);
+		studentStartList.add(4);
+		studentStartList.add(3);
+		searhMap.put("NEQINT_studentStart",studentStartList);
 		List<XbStudentRelationViewNew> xbStudentPage = studentService.getXbRelationList(searhMap);
 
 		return xbStudentPage;
@@ -389,6 +398,11 @@ public class ExcelActivity {
 		for (int i = 0; i <xbClassList.size() ; i++) {
 			String classId = xbClassList.get(i).id;
 			searhXbStudentRelationMap.put("EQ_classId",classId);
+			List<Integer> studentStartList = new ArrayList();
+			studentStartList.add(1);
+			studentStartList.add(4);
+			studentStartList.add(3);
+			searhXbStudentRelationMap.put("NEQINT_studentStart",studentStartList);
 			List<XbStudentRelationViewNew> xbStudentPage = studentService.getXbRelationList(searhXbStudentRelationMap);
 			list.add(xbStudentPage);
 		}
