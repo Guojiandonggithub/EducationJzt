@@ -1150,7 +1150,7 @@ public class StudentActivity {
 	 * @return
 	 */
 	@RequestMapping("/chooseCourse")
-	public String chooseCourse(@RequestParam(required = false) String classId,@RequestParam(required = false) String courseIds,ModelMap model, Pageable pageable){
+	public String chooseCourse(@RequestParam(required = false) String periodNum,@RequestParam(required = false) String classId,@RequestParam(required = false) String courseIds,ModelMap model, Pageable pageable){
 		List<XbCoursePreset> xbCourseList = new ArrayList<>();
 		BigDecimal moneys = new BigDecimal(0);
 		Integer num = 0;
@@ -1164,8 +1164,13 @@ public class StudentActivity {
 					Page<XbClass> classPage = studentService.getXbClassList(pageable,xbClasssearhMap);
 					xbCoursePreset.xbClassList = classPage.getContent();
 					BigDecimal totalmoney = xbCoursePreset.money;//每个课程总金额
-					if(xbCoursePreset.xbCourse.chargingMode.equals("0")){
+					if(null!=periodNum&&!periodNum.equals("")){
+						xbCoursePreset.periodNum = Integer.parseInt(periodNum);
 						totalmoney = xbCoursePreset.money.multiply(new BigDecimal(xbCoursePreset.periodNum));
+					}else{
+						if(xbCoursePreset.xbCourse.chargingMode.equals("0")){
+							totalmoney = xbCoursePreset.money.multiply(new BigDecimal(xbCoursePreset.periodNum));
+						}
 					}
 					xbCoursePreset.lsmoney = totalmoney;
 					moneys= moneys.add(totalmoney);
@@ -1523,6 +1528,14 @@ public class StudentActivity {
 		List<XbStudentRelationView> studentlist = studentService.getxbStudentRelationViewList(searchParamsview);
 		Iterable<SysOrgans> organsList = organsService.getOrgansList();
 		Page<XbStudentRelationViewNew> xbStudentPage = studentService.getXbStudentRelationViewNewList(pageable,searhMap);
+		BigDecimal poundage = BigDecimal.ZERO;
+		for (int i = 0; i < xbStudentPage.getContent().size(); i++) {
+			BigDecimal poundages = xbStudentPage.getContent().get(i).xbStudent.poundage;
+			if(null==poundages){
+				poundages = BigDecimal.ZERO;
+			}
+			poundage = poundage.add(poundages);
+		}
 		Map<String,Object> studentMap = new HashMap<>();
 		/*Page<XbStudent> xbStudentsPage = studentService.getXbStudentList(pageable,studentMap);*/
 		model.addAttribute("studentlistsize",studentlist.size());
@@ -1535,6 +1548,7 @@ public class StudentActivity {
 		model.addAttribute("type",type);
 		model.addAttribute("enrollDateSearch",enrollDateSearch);
 		model.addAttribute("enrollDateSearchEnd",enrollDateSearchEnd);
+		model.addAttribute("poundage",poundage);
 		return "cancel";
 	}
 

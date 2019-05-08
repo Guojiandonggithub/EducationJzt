@@ -745,6 +745,7 @@ public class FeeRelatedActivity {
 			jsonObject.put("msg", "选择成功");
 			logger.info("查询返回json参数="+jsonObject.toString());
 			resp.setContentType("application/json;charset=UTF-8");
+
 			resp.getWriter().println(jsonObject.toJSONString());
 			resp.getWriter().close();
 		} catch (IOException e) {

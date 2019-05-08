@@ -334,7 +334,7 @@
                     </tbody>
                     <tbody   th:id ="kechengchoose">
                     <th:block th:if="${xbCoursePage}" th:fragment="courselist">
-                    <tr  th:each="couse : ${xbCoursePage.content}" >
+                    <tr  th:each="couse,indexs : ${xbCoursePage.content}" >
                         <td>
                             <!--<input name="form-field-checkbox" name="checkboxname" type="checkbox" th:value="${couse.id}" onchange="kechengbox();">-->
                             <input name="form-field-checkbox" name="checkboxname" type="radio" th:value="${couse.id}" onchange="kechengbox();">
@@ -343,8 +343,18 @@
                         <td th:text="${couse.xbCourse.xbcoursetype.courseTypeName}"></td>
                         <td th:if="${couse.xbCourse.chargingMode}eq '0'" class="numberPer">按课时</td>
                         <td th:if="${couse.xbCourse.chargingMode}eq '2'" class="numberPer">按期</td>
-                        <td th:if="${couse.xbCourse.chargingMode}eq '0'" th:text="${couse.money*couse.periodNum}+'元('+${couse.periodNum}+'课时)'"></td>
-                        <td th:if="${couse.xbCourse.chargingMode}eq '2'" th:text="${couse.money}+'元/期('+${couse.periodNum}+'课时)'"></td>
+                        <td th:if="${couse.xbCourse.chargingMode}eq '0'" >
+                            <th:block  th:text="${couse.money*couse.periodNum}+'元('+${couse.periodNum}+'课时)'"></th:block>
+                            <th:block  th:if="${couse.periodNum}eq '1'">
+                                <input type="text" th:name="'periodNum'+${indexs.index}" style="width: 80px;" placeholder="报名课时"/>
+                            </th:block>
+                        </td>
+                        <td th:if="${couse.xbCourse.chargingMode}eq '2'" >
+                            <th:block  th:text="${couse.money}+'元/期('+${couse.periodNum}+'课时)'"></th:block>
+                            <th:block  th:if="${couse.periodNum}eq '1'">
+                                <input type="text" th:name="'periodNum'+${indexs.index}" style="width: 80px;" placeholder="报名课时"/>
+                            </th:block>
+                        </td>
                         <td th:if="${couse.xbCourse.type}eq '0'">班课</td>
                         <td th:if="${couse.xbCourse.type}eq '1'">一对一</td>
                     </tr>
@@ -827,6 +837,15 @@
         var courseIds = $("input:radio[name='checkboxname']:checked").map(function(index,elem) {
             return $(elem).val();
         }).get().join(',');
+        var index;
+        var aa = $("input:radio[name='checkboxname']");
+        for(var i=0;i<aa.length;i++){
+            if(aa[i].checked==true){
+                index = i;
+            }
+        }
+        var periodNum = 'periodNum'+index;
+        var periodNum = $("input[name='"+periodNum+"']").val();
         var load = new Loading();
         load.init({
             target: "#modal-content"
@@ -836,7 +855,7 @@
             type: 'get',
             //dataType: 'json',
         url: basePath + '/student/chooseCourse',
-            data: {courseIds:courseIds},
+            data: {courseIds:courseIds,periodNum:periodNum},
         contentType:"application/json;charset=UTF-8",
             cache: false,
             async: true,

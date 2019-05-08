@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+      ><!---->
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+    <title>Document</title>
+
+    <link rel="stylesheet" href="../static/pages/css/ace.min.css" id="main-ace-style" />
+    <link rel="stylesheet" href="../static/pages/css/index.css"/>
+    <link rel="stylesheet" href="../static/pages/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="../static/pages/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="../static/pages/css/kd.ui.plugin.css" />
+
+    <link rel="stylesheet" href="../static/pages/css/management.css">
+    <link rel="stylesheet" href="../static/pages/css/student.css">
+    <link rel="stylesheet" href="../static/pages/css/newstudent.css">
+    <link rel="stylesheet" href="../static/pages/css/madal.css">
+    <link rel="stylesheet" href="../static/pages/css/loading.css" />
+
+    <script src="../static/pages/js/jquery.min.js"></script>
+    <script src="../static/pages/js/ace.min.js"> </script>
+    <script src="../static/pages/js/bootstrap.min.js"> </script>
+    <script src="../static/pages/js/kd.ui.plugin.js"></script>
+
+    <script src="../static/pages/laydate/laydate.js"></script>
+    <script src="../static/pages/js/loading.js"></script>
+    <script src="../static/pages/js/laydate.js"></script>
+
+</head>
+<body>
+<div th:replace="layout::top"></div>
+<div class="main-container" id="main-container">
+    <div th:replace="layout::left('11','')">
+    </div>
+    <div class="main-content" th:if="${session.roleName!='教师'&&session.roleName!='运营助理'}">
+        <form id="searchform">
+            <input type="hidden" name="organId" th:value="${organId}"/>
+            <input type="hidden" name="enrollDateSearch" th:value="${enrollDateSearch}"/>
+            <input type="hidden" name="status" th:value="${status}"/>
+        </form>
+
+        <div class="tab-content student">
+            <!-- 学员列表 -->
+            <div id="studentList" class="tab-pane fade in active">
+                <div class="orderCon">
+                    <div class="orderTable">
+                        <table class="table table-hover">
+                            <tr>
+                                <th>
+                                    <input type="checkbox" id="sel_1" onchange="selectAll()">
+                                </th>
+                                <th>学员姓名
+                                </th>
+                                <th>联系电话</th>
+                                <th>所属关系</th>
+                                <th>账户余额</th>
+                                <th>欠费</th>
+                                <th>学费</th>
+                                <th>报名费</th>
+                                <th>报读课程</th>
+                                <!--<th>剩余课时/天数</th>
+                                <th>课时剩余总金额</th>-->
+                                <th>报名时间</th>
+                                <th>课程状态</th>
+                                <!--<th>操作</th>-->
+                                <th>
+                                    <span href="#modal-table"  data-toggle="modal" class="glyphicon glyphicon-option-vertical" aria-hidden="true"></span>
+                                </th>
+                            </tr>
+                            <tr id="chooses" th:each="studentrelation:${xbStudentPage.content}">
+                                <td><input type="checkbox"></td>
+                                <td class="studentName" th:text="${studentrelation.studentName}" th:onclick="'javascript:studentDetail(\''+${studentrelation.studentId}+'\')'"><a href="#"><img src="../static/pages/img/boy.png"></a></td>
+                                <td th:text="${studentrelation.contactPhone}"></td>
+                                <td th:text="${studentrelation.contactRelation}"></td>
+                                <td th:text="${studentrelation.surplusMoney}"></td>
+                                <td th:text="${studentrelation.paymentMoney}"></td>
+                                <td th:text="${studentrelation.feeMoney}"></td>
+                                <td th:text="${studentrelation.registratioFee}"></td>
+                                <td th:text="${studentrelation.courseName}"></td>
+                                <!--<td th:text="${studentrelation.periodNum}"></td>
+                                <td th:text="${studentrelation.receivable}"></td>-->
+                                <td th:if="${studentrelation.paymentDate!=null}" th:text="${#dates.format(studentrelation.paymentDate, 'yyyy-MM-dd')}"></td>
+                                <td th:if="${studentrelation.paymentDate==null}" th:text="${studentrelation.paymentDate}"></td>
+                                <td style="color:#7fbb57" th:if="${studentrelation.type} eq '0'">在读</td>
+                                <td style="color:#e46054" th:if="${studentrelation.type} eq '1'">转班</td>
+                                <td style="color:#548ee4" th:if="${studentrelation.type} eq '2'">补费</td>
+                                <td style="color:#b0b0b0" th:if="${studentrelation.type} eq '4'">复课</td>
+                                <td style="color:#548ee4" th:if="${studentrelation.type} eq '3'">停课</td>
+                                <td style="color:#548ee4" th:if="${studentrelation.type} eq '5'">退费</td>
+                                <!--<td class="classDel" >
+                                    <div class="btn-group open" th:if="${studentrelation.periodNum eq 0 && studentrelation.studentStart eq 0} ">
+                                        <p data-toggle="dropdown" class="down" aria-expanded="true" th:onclick="'javascript:finishCourse(\''+${studentrelation.id}+'\')'">
+                                            结课
+                                            <span class="ace-icon fa fa-caret-down icon-on-right"></span>
+                                        </p>
+                                    </div>
+                                </td>-->
+                                <td></td>
+                            </tr>
+                        </table>
+                        <div class="orderPage" style="margin-top:30px;">
+                            <div class="page">
+                                单页显示：
+                                <select id="size" name="size" onchange="getOrgansListPage('');">
+                                    <option th:selected="${studentcurrentzise eq 20}" value="20">20条/页</option>
+                                    <option th:selected="${studentcurrentzise eq 5}" value="5">5条/页</option>
+                                    <option th:selected="${studentcurrentzise eq 10}" value="10">10条/页</option>
+                                    <option th:selected="${studentcurrentzise eq 15}" value="15">15条/页</option>
+                                </select>
+                            </div>
+                            <ul class="pagination" th:if="${xbStudentPage.getTotalPages()>0}">
+                            <!-- 上一页 -->
+                            <li th:if="${xbStudentPage.getNumber()+1 == 1}"><span>上一页</span></li>
+                            <li th:if="${xbStudentPage.getNumber()+1 > 1}">
+                                <a  th:onclick="'javascript:getOrgansListPage(\''+${xbStudentPage.getNumber()-1}+'\')'">
+                                    <i class="ace-icon fa ">上一页</i>
+                                </a>
+                            </li>
+                            <!-- 首页 -->
+                            <li th:if="${xbStudentPage.getNumber()+1 == 1}" class="active"><span>1</span></li>
+                            <li th:if="${xbStudentPage.getNumber()+1 > 1}">
+                                <a  th:onclick="'javascript:getOrgansListPage(\''+${0}+'\')'">1</a>
+                            </li>
+
+                            <th:block th:if="${xbStudentPage.getTotalPages()>2 && xbStudentPage.getTotalPages()<=10}">
+                                <th:block th:each="i:${#numbers.sequence(2,xbStudentPage.getTotalPages()-1)}">
+                                    <li th:if="${xbStudentPage.getNumber()+1 == i}"  class="active"><span th:text="${i}">页码</span></li>
+                                    <li th:if="${xbStudentPage.getNumber()+1 != i}"><a  th:onclick="'javascript:getOrgansListPage(\''+${i-1}+'\')'" th:text="${i}"></a></li>
+                                </th:block>
+                            </th:block>
+                            <th:block th:if="${xbStudentPage.getTotalPages() > 10}">
+                                <th:block th:if="${(xbStudentPage.getNumber()+1-(5/2)) <= 2}" th:each="i:${#numbers.sequence(2,2+5-1)}">
+                                    <li th:if="${xbStudentPage.getNumber()+1 == i}"  class="active"><span th:text="${i}">页码</span></li>
+                                    <li th:if="${xbStudentPage.getNumber()+1 != i}"><a  th:onclick="'javascript:getOrgansListPage(\''+${i-1}+'\')'" th:text="${i}"></a></li>
+                                </th:block>
+                                <!-- ... -->
+                                <li th:if="${(xbStudentPage.getNumber()+1-(5/2))>2}"><span>...</span></li>
+
+                                <th:block th:if="${((xbStudentPage.getNumber()+1-(5/2))>2) && ((xbStudentPage.getNumber()+1+(5/2)-(5%2==0?1:0)) < (xbStudentPage.getTotalPages()-1))}"
+                                          th:each="i:${#numbers.sequence(xbStudentPage.getNumber()+1-(5/2),xbStudentPage.getNumber()+1+(5/2)-(5%2==0?1:0))}">
+                                    <li th:if="${xbStudentPage.getNumber()+1 == i}"  class="active"><span th:text="${i}">页码</span></li>
+                                    <li th:if="${xbStudentPage.getNumber()+1 != i}"><a  th:onclick="'javascript:getOrgansListPage(\''+${i-1}+'\')'" th:text="${i}"></a></li>
+                                </th:block>
+
+                                <!-- ... -->
+                                <li th:if="${(xbStudentPage.getNumber()+1+(5/2)-(5%2==0?1:0)) < (xbStudentPage.getTotalPages()-1)}"><span>...</span></li>
+                                <th:block th:if="${(xbStudentPage.getNumber()+1+(5/2)-(5%2==0?1:0)) >= (xbStudentPage.getTotalPages()-1)}" th:each="i:${#numbers.sequence(xbStudentPage.getTotalPages()-5,xbStudentPage.getTotalPages()-1)}">
+                                    <li th:if="${xbStudentPage.getNumber()+1 == i}"  class="active"><span th:text="${i}">页码</span></li>
+                                    <li th:if="${xbStudentPage.getNumber()+1 != i}"><a  th:onclick="'javascript:getOrgansListPage(\''+${i-1}+'\')'" th:text="${i}"></a></li>
+                                </th:block>
+                            </th:block>
+                            <!-- 最后一页 -->
+                            <li th:if="${xbStudentPage.getTotalPages()>1 && xbStudentPage.getNumber()+1 == xbStudentPage.getTotalPages()}" class="active"><span th:text="${xbStudentPage.getTotalPages()}">页码</span></li>
+                            <li th:if="${xbStudentPage.getTotalPages()>1 && xbStudentPage.getNumber()+1 != xbStudentPage.getTotalPages()}">
+
+                                <a href="#" th:onclick="'javascript:getOrgansListPage(\''+${xbStudentPage.getTotalPages()-1}+'\')'"
+                                   th:text="${xbStudentPage.getTotalPages()}"></a>
+                            </li>
+                            <!-- 下一页 -->
+                            <li th:if="${xbStudentPage.getNumber()+1 >= xbStudentPage.getTotalPages()}"><span>下一页</span></li>
+                            <li th:if="${xbStudentPage.getNumber()+1 < xbStudentPage.getTotalPages()}">
+                                <a th:onclick="'javascript:getOrgansListPage(\''+${xbStudentPage.getNumber()+1}+'\')'">
+                                    <i class="ace-icon fa ">下一页</i>
+                                </a>
+                            </li>
+                            <li>
+                                <span style="color: #020202;" th:text="'共'+${xbStudentPage.getTotalPages()}+'页/'+${xbStudentPage.getTotalElements()}+'条记录'"></span>
+                            </li>
+                        </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    !function(){
+        laydate.render({elem: '#enrollDateSearch'});//绑定元素
+        laydate.render({elem: '#enrollDateSearchEnd'});//绑定元素
+    }();
+</script>
+<script type="text/javascript" th:inline="javascript">
+    var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/;
+    //学员列表搜索studentList
+    function getOrgansListPage(page){
+        var load = new Loading();
+        load.init({
+            target: "#main-container"
+        });
+        load.start();
+        var data= serializeObject("#searchform");
+        var size = $('#size option:selected').val();//选中的值
+        /* if(page){
+             page = page -1;
+         }*/
+        window.location.href = basePath + '/forward/getDetailsTodayList?page='+page+'&size='+size+'&room=0'+'&data='+JSON.stringify(data);
+    }
+
+    function serializeObject(form)
+    {
+        var o = {};
+        var a = $(form).serializeArray();
+        $.each(a, function() {
+            if (o[this.name]) {
+                if (!o[this.name].push) {
+                    o[this.name] = [o[this.name]];
+                }
+                o[this.name].push(this.value || '');
+            } else {
+                o[this.name] = this.value || '';
+            }
+        });
+        return o;
+    };
+</script>
+</body>
+</html>

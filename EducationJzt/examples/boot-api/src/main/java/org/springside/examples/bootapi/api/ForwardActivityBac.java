@@ -22,14 +22,17 @@ import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 @Controller
-@RequestMapping(value = "/forward")
-public class ForwardActivity {
+@RequestMapping(value = "/forwardbak")
+public class ForwardActivityBac {
 
-	private static Logger logger = LoggerFactory.getLogger(ForwardActivity.class);
+	private static Logger logger = LoggerFactory.getLogger(ForwardActivityBac.class);
 	@Autowired
 	private EmployeeService accountService;
 	@Autowired
@@ -119,7 +122,8 @@ public class ForwardActivity {
 	public void getXbStudentList(@RequestParam(required = false) String data, ModelMap model, Pageable pageable){
 		Map<String,Object> resultMap = new HashMap<>();
 		Map<String,Object> searhMap = new HashMap<>();
-        Map<String,Object> searchXbSupplementFee = new HashMap<>();
+		Map<String,Object> searchParamsview = new HashMap<>();
+		Map<String,Object> searchXbSupplementFee = new HashMap<>();
 		if(null!=data){
 			resultMap = com.alibaba.fastjson.JSONObject.parseObject(data,searhMap.getClass());
 		}
@@ -130,16 +134,19 @@ public class ForwardActivity {
 			organId = "0";
 		}else if(!organId.equals("0")){
 			searhMap.put("EQ_organId",organId);
-            searchXbSupplementFee.put("EQ_organId",organId);
+			searchXbSupplementFee.put("EQ_xbStudent.organId",organId);
+			searchParamsview.put("EQ_organId",organId);
 		}
 		if(null==type){
 			type = "AZ";
 		}
 		if(null!=nameormobile&&!nameormobile.equals("")){
 			if(type.equals("AZ")){
-				searhMap.put("LIKE_studentName",nameormobile);
+				searhMap.put("LIKE_xbStudent.studentName",nameormobile);
+				searchParamsview.put("LIKE_studentName",nameormobile);
 			}else{
-				searhMap.put("LIKE_contactPhone",nameormobile);
+				searhMap.put("LIKE_xbStudent.contactPhone",nameormobile);
+				searchParamsview.put("LIKE_contactPhone",nameormobile);
 			}
 		}
 		String enrollDateSearch = (String)resultMap.get("enrollDateSearch");
@@ -153,35 +160,82 @@ public class ForwardActivity {
 				if(status.equals("today")){
 					enddate = sdf.parse(enrollDateSearch);
 					searhMap.put("EQ_enrollDate",enddate);
-                    searchXbSupplementFee.put("EQ_paymentDate",enddate);
+					searchParamsview.put("EQ_enrollDate",enddate);
+					searchXbSupplementFee.put("EQ_paymentDate",enddate);
 				}else{
 					String startTime = DateUtil.getFirstDayOfGivenMonth(enrollDateSearch);
 					String endTime = DateUtil.getLastDayOfMonth(enrollDateSearch);
 					date = sdf.parse(startTime);
 					enddate = sdf.parse(endTime);
 					searhMap.put("GTE_enrollDate",date);
+					searchParamsview.put("GTE_enrollDate",date);
+					searchXbSupplementFee.put("GTE_paymentDate",date);
 					searhMap.put("LTE_enrollDate",enddate);
-                    searchXbSupplementFee.put("GTE_paymentDate",date);
-                    searchXbSupplementFee.put("LTE_paymentDate",enddate);
+					searchParamsview.put("LTE_enrollDate",enddate);
+					searchXbSupplementFee.put("LTE_paymentDate",enddate);
 				}
 			}else{
 				enrollDateSearch = DateUtil.getDateStr(new Date());
 				String dates = DateUtil.getDateStr(new Date());
 				date = sdf.parse(dates);
 				searhMap.put("EQ_enrollDate",date);
+				searchParamsview.put("EQ_enrollDate",date);
+				searchXbSupplementFee.put("EQ_paymentDate",sdf.parse(dates.substring(0,10)));
 			}
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-        Page<XbSupplementFeeView> xbSupplementFeeList = studentService.getXbSupplementFeeViewList(pageable,searchXbSupplementFee);
-		//Page<XbStudentRelationViewNew> xbStudentPage = studentService.getXbStudentRelationViewNewList(pageable,searhMap);
-		model.addAttribute("xbStudentPage",xbSupplementFeeList);
+		/*List studentlist = new ArrayList<>();
+		if(StringUtils.isEmpty(enrollDateSearch)){
+			studentlist =	studentService.getAllStudentListNoDate();
+		}else{
+			studentlist =	studentService.getAllStudentList(date);
+		}*/
+		//学员状态
+		String studentStart = (String)resultMap.get("studentStart");
+		if(StringUtils.isEmpty(studentStart)){
+			studentStart = "100";
+		}else if(!studentStart.equals("100")){
+			searhMap.put("EQ_studentStart",Integer.parseInt(studentStart));
+			searchParamsview.put("EQ_studentStart",Integer.parseInt(studentStart));
+		}
+		List<XbSupplementFee> xbSupplementFeeList = studentService.getXbSupplementFeeList(searchXbSupplementFee);
+		List<XbStudentRelationView> studentlist = studentService.getxbStudentRelationViewList(searchParamsview);
+		Iterable<SysOrgans> organsList = organsService.getOrgansList();
+		Page<XbStudentRelationViewNew> xbStudentPage = studentService.getXbStudentRelationViewNewList(pageable,searhMap);
+		Map<String,Object> studentMap = new HashMap<>();
+		BigDecimal totalMoney = new BigDecimal(0.00);
+		BigDecimal surplusMoney = new BigDecimal(0.00);
+		BigDecimal registratiofee = new BigDecimal(0.00);
+		BigDecimal tuifeifee = new BigDecimal(0.00);
+		BigDecimal zeroMoney = new BigDecimal(0.00);
+		for(XbStudentRelationView xsrvn:studentlist){
+			totalMoney = totalMoney.add(xsrvn.receivable==null?zeroMoney:xsrvn.receivable);
+	}
+		for(XbSupplementFee xsrvnf:xbSupplementFeeList){
+			if(xsrvnf.type.equals("0")||xsrvnf.type.equals("2")){
+				surplusMoney = surplusMoney.add(xsrvnf.surplusMoney==null?zeroMoney:xsrvnf.surplusMoney);
+			}
+			registratiofee = registratiofee.add(xsrvnf.registratioFee==null?zeroMoney:xsrvnf.registratioFee);
+			if(xsrvnf.type.equals("5")){
+				tuifeifee = tuifeifee.add(xsrvnf.paymentMoney==null?zeroMoney:xsrvnf.paymentMoney);
+			}
+		}
+		model.addAttribute("surplusMoney",surplusMoney);
+		model.addAttribute("registratiofee",registratiofee);
+		model.addAttribute("indextotalMoney",surplusMoney.add(registratiofee));
+		model.addAttribute("tuifeifee",new BigDecimal(0.00).subtract(tuifeifee));
+		model.addAttribute("studentStart",studentStart);
+		model.addAttribute("totalMoney",totalMoney.toString());
+		model.addAttribute("xbStudentPage",xbStudentPage);
+		model.addAttribute("studentlistsize",studentlist.size());
 		model.addAttribute("organId",organId);
-		model.addAttribute("studentcurrentzise",xbSupplementFeeList.getSize());
+		model.addAttribute("organsList",organsList);
+		model.addAttribute("studentcurrentzise",xbStudentPage.getSize());
 		model.addAttribute("nameormobile",nameormobile);
-		model.addAttribute("status",status);
 		model.addAttribute("type",type);
 		model.addAttribute("enrollDateSearch",enrollDateSearch);
+		//model.addAttribute("enrollDateSearchEnd",enrollDateSearchEnd);
 	}
 	@RequestMapping("/organization")
 	public String organization(ModelMap model,Pageable pageable) {

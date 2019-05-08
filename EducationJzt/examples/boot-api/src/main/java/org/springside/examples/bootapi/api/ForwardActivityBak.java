@@ -22,14 +22,17 @@ import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 @Controller
-@RequestMapping(value = "/forward")
-public class ForwardActivity {
+@RequestMapping(value = "/forwardbaks")
+public class ForwardActivityBak {
 
-	private static Logger logger = LoggerFactory.getLogger(ForwardActivity.class);
+	private static Logger logger = LoggerFactory.getLogger(ForwardActivityBak.class);
 	@Autowired
 	private EmployeeService accountService;
 	@Autowired
@@ -119,7 +122,6 @@ public class ForwardActivity {
 	public void getXbStudentList(@RequestParam(required = false) String data, ModelMap model, Pageable pageable){
 		Map<String,Object> resultMap = new HashMap<>();
 		Map<String,Object> searhMap = new HashMap<>();
-        Map<String,Object> searchXbSupplementFee = new HashMap<>();
 		if(null!=data){
 			resultMap = com.alibaba.fastjson.JSONObject.parseObject(data,searhMap.getClass());
 		}
@@ -130,16 +132,15 @@ public class ForwardActivity {
 			organId = "0";
 		}else if(!organId.equals("0")){
 			searhMap.put("EQ_organId",organId);
-            searchXbSupplementFee.put("EQ_organId",organId);
 		}
 		if(null==type){
 			type = "AZ";
 		}
 		if(null!=nameormobile&&!nameormobile.equals("")){
 			if(type.equals("AZ")){
-				searhMap.put("LIKE_studentName",nameormobile);
+				searhMap.put("LIKE_xbStudent.studentName",nameormobile);
 			}else{
-				searhMap.put("LIKE_contactPhone",nameormobile);
+				searhMap.put("LIKE_xbStudent.contactPhone",nameormobile);
 			}
 		}
 		String enrollDateSearch = (String)resultMap.get("enrollDateSearch");
@@ -153,7 +154,6 @@ public class ForwardActivity {
 				if(status.equals("today")){
 					enddate = sdf.parse(enrollDateSearch);
 					searhMap.put("EQ_enrollDate",enddate);
-                    searchXbSupplementFee.put("EQ_paymentDate",enddate);
 				}else{
 					String startTime = DateUtil.getFirstDayOfGivenMonth(enrollDateSearch);
 					String endTime = DateUtil.getLastDayOfMonth(enrollDateSearch);
@@ -161,8 +161,6 @@ public class ForwardActivity {
 					enddate = sdf.parse(endTime);
 					searhMap.put("GTE_enrollDate",date);
 					searhMap.put("LTE_enrollDate",enddate);
-                    searchXbSupplementFee.put("GTE_paymentDate",date);
-                    searchXbSupplementFee.put("LTE_paymentDate",enddate);
 				}
 			}else{
 				enrollDateSearch = DateUtil.getDateStr(new Date());
@@ -173,11 +171,10 @@ public class ForwardActivity {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-        Page<XbSupplementFeeView> xbSupplementFeeList = studentService.getXbSupplementFeeViewList(pageable,searchXbSupplementFee);
-		//Page<XbStudentRelationViewNew> xbStudentPage = studentService.getXbStudentRelationViewNewList(pageable,searhMap);
-		model.addAttribute("xbStudentPage",xbSupplementFeeList);
+		Page<XbStudentRelationViewNew> xbStudentPage = studentService.getXbStudentRelationViewNewList(pageable,searhMap);
+		model.addAttribute("xbStudentPage",xbStudentPage);
 		model.addAttribute("organId",organId);
-		model.addAttribute("studentcurrentzise",xbSupplementFeeList.getSize());
+		model.addAttribute("studentcurrentzise",xbStudentPage.getSize());
 		model.addAttribute("nameormobile",nameormobile);
 		model.addAttribute("status",status);
 		model.addAttribute("type",type);

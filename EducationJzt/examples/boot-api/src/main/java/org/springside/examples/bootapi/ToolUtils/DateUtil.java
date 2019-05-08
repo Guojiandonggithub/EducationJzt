@@ -572,7 +572,68 @@ public class DateUtil {
         return (Date)currentDate.getTime().clone();
     }
 
+    /**
+     * 本周最后一天日期 Date类型
+     * @return
+     */
+    public static String monthDateTimeLastDayDA(){
+        //获取当前月最后一天
+        Calendar ca = Calendar.getInstance();
+        ca.set(Calendar.DAY_OF_MONTH, ca.getActualMaximum(Calendar.DAY_OF_MONTH));
+        String last = new SimpleDateFormat(DATE_FORMAT).format(ca.getTime());
+        System.out.println("===============last:"+last);
+        return last;
+    }
+
+    /**
+     * 获取指定日期当月的第一天
+     * @param dateStr
+     * @return
+     */
+    public static String getFirstDayOfGivenMonth(String dateStr){
+        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
+        try {
+            Date date = sdf.parse(dateStr);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            calendar.set(Calendar.DAY_OF_MONTH,1);
+            calendar.add(Calendar.MONTH, 0);
+            return sdf.format(calendar.getTime());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * 获取某月的最后一天
+     *
+     */
+    public static String getLastDayOfMonth(String dateStr)
+    {
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
+        try {
+            Date date = sdf.parse(dateStr);
+            cal.setTime(date);
+            cal.set(Calendar.DAY_OF_MONTH,1);
+            //获取某月最大天数
+            int lastDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+            //设置日历中月份的最大天数
+            cal.set(Calendar.DAY_OF_MONTH, lastDay);
+            //格式化日期
+            String lastDayOfMonth = sdf.format(cal.getTime());
+            return lastDayOfMonth;
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public static void main(String[] args) {
         System.out.println("first:"+DateUtil.weekDateFirstDay()+",lastday:"+DateUtil.weekDateLastDay());
+        System.out.println("first:"+DateUtil.getFirstDayOfGivenMonth("2019-02-14"));
+        System.out.println("first:"+DateUtil.getLastDayOfMonth("2019-02-14"));
     }
+
 }
