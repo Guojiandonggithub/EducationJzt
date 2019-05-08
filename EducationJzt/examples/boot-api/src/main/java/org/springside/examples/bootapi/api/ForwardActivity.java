@@ -100,7 +100,7 @@ public class ForwardActivity {
 		List<XbSupplementFee> xbSupplementFeeList = studentService.getXbSupplementFeeList(searchXbSupplementFee);
 		for(XbSupplementFee xsrvnf:xbSupplementFeeList){
 			if(xsrvnf.type.equals("0")||xsrvnf.type.equals("2")){
-				surplusMoney = surplusMoney.add(xsrvnf.surplusMoney==null?zeroMoney:xsrvnf.surplusMoney);
+				surplusMoney = surplusMoney.add(xsrvnf.paymentMoney==null?zeroMoney:xsrvnf.paymentMoney);
 			}
 			registratiofee = registratiofee.add(xsrvnf.registratioFee==null?zeroMoney:xsrvnf.registratioFee);
 			/*if(xsrvnf.type.equals("5")){
