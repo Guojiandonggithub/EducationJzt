@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <link rel="stylesheet" href="../static/pages/css/ace.min.css" id="main-ace-style" />
+    <link rel="stylesheet" href="../static/pages/css/index.css">
+    <link rel="stylesheet" href="../static/pages/css/enroll.css">
+    <link rel="stylesheet" href="../static/pages/css/madal.css">
+    <link rel="stylesheet" href="../static/pages/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../static/pages/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="../static/pages/css/kd.ui.plugin.css" />
+    <link rel="stylesheet" href="../static/pages/css/loading.css" />
+
+
+    <script src="../static/pages/js/jquery.min.js"></script>
+    <script src="../static/pages/js/bootstrap.min.js"> </script>
+    <script src="../static/pages/js/ace.min.js"> </script>
+    <script src="../static/pages/js/ace-elements.min.js"></script>
+    <script src="../static/pages/laydate/laydate.js"></script>
+    <script src="../static/pages/js/jquery.validate17.min.js"></script>
+    <script src="../static/pages/js/additiona17l-methods.min.js"></script>
+    <script src="../static/pages/js/messages_zh.min.js"></script>
+    <script src="../static/pages/js/kd.ui.plugin.js"></script>
+    <script src="../static/pages/js/loading.js"></script>
+</head>
+
+<body>
+<div th:replace="layout::top"></div>
+    <form id="classform">
+        <div class="main-container" id="main-container">
+            <div th:replace="layout::left('13','32')">
+            </div>
+            <div class="main-content" id="main-content" >
+                <div class="breadcrumbs" id="breadcrumbs">
+                    <img src="../static/pages/img/line1.png">
+                    <span>跟換教师</span>
+                    <img src="../static/pages/img/line.png">
+                </div>
+                <div class="enrollCon" id="donghua">
+                    <div class="stopClass newClass" id="jlfind">
+                        <!--<div class="form-group" style="display: block;">
+                            <label for="className"><span>*</span>班级名称</label>
+                            <input type="hidden" name="id" id="classId" th:value="${xbClass.id}">
+                            <input type="text" th:value="${xbClass.className}" name="className" placeholder="请输入班级名称"
+                                class="remark" style="width:514px !important;">
+                        </div>-->
+                        <div class="form-group" style="display:block; margin-top:20px !important">
+                            <label for="teacherId"><span>*</span>教师</label>
+                            <input type="hidden" name="id" id="classId" th:value="${xbClass.id}">
+                            <select name="teacherId" id="teacherId">
+                                <option th:each="employee:${employeeList}" th:selected="${xbClass.teacherId == employee.id}"
+                                        th:value="${employee.id}" th:text="${employee.employeeName}"></option>
+                            </select>
+                        </div>
+                       <!-- <div class="form-group" style="display: block;">
+                            <input type="hidden" name="id" id="id" th:value="${xbClass.id}">
+                        </div>-->
+                    </div>
+                </div>
+                <div class="enrollCon">
+                    <button class="save" type="button" onclick="saveClassT();">保存</button>
+                    <button class="save" type="button" onclick="javascript:history.go(-1)" style="margin-right:22px;">返回</button>
+                </div>
+            </div>
+        </div>
+    </form>
+    <script>
+        ! function () {
+            laydate.render({
+                elem: '#demo'
+            }); //绑定元素
+            laydate.render({
+                elem: '#demo2'
+            }); //绑定元素
+        }();
+
+        $(function(){
+            $("#classform").validate({
+                rules : {
+                    teacherId : {
+                        required:true
+                    },
+                    errorPlacement: function(error, element) {
+                        if ( element.is(":radio") )
+                            error.appendTo( element.parent().next().next() );
+                        else if ( element.is(":checkbox") )
+                            error.appendTo ( element.next() );
+                        else
+                            error.appendTo( element.parent().next() );
+                    }
+                }
+            });
+            jQuery.validator.addMethod('checkName', function (value, element) {
+                var id = $("#classId").val();
+                var teacherId = $("#teacherId").val();
+                if(id){
+                    return true;
+                }
+                var load = new Loading();
+                load.init({
+                    target: "#donghua"
+                });
+                load.start();
+                var msgcode=null;
+                $.ajax({
+                    url: basePath + "/student/checkClassesName",
+                    type: "get",
+                    dataType: 'json',
+                    async:false,
+                    contentType:"application/json;charset=UTF-8",
+                    data: {/*"name":value,"organId":organId,"courseId":courseId,*/"teacherId":teacherId},
+                    success: function(result){
+                        load.stop();
+                        msgcode= result.code;
+                    }
+                })
+                return true;
+            }, function(params, element) {
+                return $(element).data('error-msg');
+            });
+        });
+
+    </script>
+    <script type="text/javascript" th:inline="javascript">
+        var basePath = /*[[${#httpServletRequest.getScheme() + "://" + #httpServletRequest.getServerName() + ":" + #httpServletRequest.getServerPort() + #httpServletRequest.getContextPath()}]]*/ ;
+        function saveClassT() {
+            if ($("#classform").valid()) {
+                var data = serializeObject("#classform");
+                console.log(data)
+                var load = new Loading();
+                load.init({
+                    target: "#main-content"
+                });
+                load.start();
+                $.ajax({
+                    type: 'post',
+                    dataType: 'json',
+                    url: basePath + '/student/save/xbclassT',
+                    data: JSON.stringify(data),
+                    contentType: "application/json;charset=UTF-8",
+                    cache: false,
+                    async: true,
+                    success: function (data) {
+                        load.stop();
+                        //var status = data.status;
+                        var msg = data.msg;
+                        $.kd.kdAlert("跟換成功！",function () {
+                            window.location.href = basePath + '/student/getXbClassroomList?room=1';
+                        },"提示");
+                        /*if(status=="0"){
+                            if (confirm(msg)) {
+                                window.location.href(basePath + '/accounts/getOrgansList');
+                            }
+                        }else{
+
+                        }*/
+                    }
+                });
+            }
+        }
+        function serializeObject(form) {
+            var o = {};
+            var a = $(form).serializeArray();
+            $.each(a, function () {
+                if (o[this.name]) {
+                    if (!o[this.name].push) {
+                        o[this.name] = [o[this.name]];
+                    }
+                    o[this.name].push(this.value || '');
+                } else {
+                    o[this.name] = this.value || '';
+                }
+            });
+            return o;
+        };
+    </script>
+</body>
+
+</html>

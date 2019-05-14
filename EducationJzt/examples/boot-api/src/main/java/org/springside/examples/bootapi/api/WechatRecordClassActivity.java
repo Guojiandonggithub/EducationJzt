@@ -1,5 +1,6 @@
 package org.springside.examples.bootapi.api;
 
+import org.apache.commons.collections.ArrayStack;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.util.StringUtil;
 import org.json.simple.JSONObject;
@@ -276,7 +277,11 @@ public class WechatRecordClassActivity {
 											@PageableDefault(value = 10) Pageable pageable){
 		Map<String,Object> resultMap = new HashMap<>();
 		Map<String,Object> searhMap = new HashMap<>();
-
+		List<Integer> list = new ArrayList<Integer>();
+		list.add(1);
+		list.add(3);
+		list.add(4);
+		searhMap.put("NEQINT_studentStart",list);
 		Page<XbRecordClassView> recordLists = studentService.getXbRecordClassdViewtoList(pageable,searhMap);
 		int totalElements = studentService.findRecordTotalCount();
 		int size = pageable.getPageSize();
@@ -316,6 +321,11 @@ public class WechatRecordClassActivity {
                 startDateTimeEnd = startDateTimeEnd+" 23:59:59";
                 searhMap.put("LTE_recordTime",sdf.parse(startDateTimeEnd));
             }
+			List<Integer> list = new ArrayList<Integer>();
+			list.add(1);
+			list.add(3);
+			list.add(4);
+			searhMap.put("NEQINT_studentStart",list);
             Page<XbRecordClassView> recordLists = studentService.getXbRecordClassdViewtoList(pageable,searhMap);
             int totalElements = studentService.findRecordTotalCount();
             int size = pageable.getPageSize();
@@ -359,6 +369,11 @@ public class WechatRecordClassActivity {
 				startDateTimeEnd = startDateTimeEnd+" 23:59:59";
 				searhMap.put("LTE_recordTime",sdf.parse(startDateTimeEnd));
 			}
+			List<Integer> list = new ArrayList<Integer>();
+			list.add(1);
+			list.add(3);
+			list.add(4);
+			searhMap.put("NEQINT_studentStart",list);
 			Page<XbRecordClassView> recordLists = studentService.getXbRecordClassdViewtoList(pageable,searhMap);
 			int totalElements = studentService.findRecordTotalCount();
 			int size = pageable.getPageSize();

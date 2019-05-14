@@ -212,6 +212,72 @@ public class StudentActivity {
 			logger.info(e.toString());
 		}
 	}
+	public static String getUUID(){
+
+		UUID uuid=UUID.randomUUID();
+
+		String uuidStr=uuid.toString();
+
+		return uuidStr;
+
+	}
+	@PostMapping("/save/xbclassT")
+	@SystemControllerLog(descrption = "跟換教師",actionType = "1")
+	public void savexbclassT(@RequestBody XbClass xbclass, HttpServletResponse resp) {
+		Map<String, Object> map  =  new HashMap<>();
+		try {
+			//查詢之前的課程信息
+			String id = xbclass.id;
+			String teacherId = xbclass.teacherId;
+			XbClass xbClass = studentService.getXbClass(id);
+			//studentService.deleteClass(id);
+			//xbClass.id=getUUID();
+			xbClass.isEnd = "1";
+//			xbClass.teacherId = teacherId;
+
+			XbClass xbClasss = new XbClass();
+			xbClasss.className = xbClass.className;
+			xbClasss.organId =xbClass.organId;
+			xbClasss.organName = xbClass.organName;
+			xbClasss.courseId = xbClass.courseId;
+			xbClasss.courseName = xbClass.courseName;
+			xbClasss.classBeginDate = xbClass.classBeginDate;
+			xbClasss.classEndDate = xbClass.classEndDate;
+			xbClasss.preRecruitNum = xbClass.preRecruitNum;
+			xbClasss.establishNum = xbClass.establishNum;
+			xbClasss.isUndetermined = xbClass.isUndetermined;
+			xbClasss.recruitState = xbClass.recruitState;
+			xbClasss .isEnd = "1";
+			xbClasss.studentNum = xbClass.studentNum;
+			xbClasss.teacherNum = xbClass.teacherNum;
+			xbClasss.teacherId = teacherId;
+			xbClasss.teacherName = xbClass.teacherName;
+			xbClasss.tutorId = xbClass.tutorId;
+			xbClasss.tutorName=xbClass.tutorName;
+
+			xbClasss.classroomId = xbClass.classroomId;
+			xbClasss.classroomName = xbClass.classroomName;
+			xbClasss.remarks = xbClass.remarks;
+			xbClasss.sktime = xbClass.sktime;
+			xbClasss.enrollNum = xbClass.enrollNum;
+			xbClasss.wayOfTeaching = xbClass.wayOfTeaching;
+			xbClasss.xbStudentRalationId=xbClass.xbStudentRalationId;
+
+
+
+			XbClass class1 = studentService.saveXbClass(xbClasss);
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("status","1");
+			jsonObject.put("msg", "跟換成功");
+			System.out.println(1);
+			logger.info("编辑机构返回json参数="+jsonObject.toString());
+			resp.setContentType("text/html;charset=UTF-8");
+			resp.getWriter().println(jsonObject.toJSONString());
+			resp.getWriter().close();
+		} catch (IOException e) {
+			logger.info(e.toString());
+		}
+	}
 
 	/**
 	 * 跳转到查询学员
@@ -858,7 +924,40 @@ public class StudentActivity {
 		model.addAttribute("organsList",organsList);
 		return "newClass";
 	}
-
+	/*
+	 * 跳转到跟換教師
+	 * @return
+	 */
+	@RequestMapping("/getXbClassT")
+	public String getClassT(@RequestParam(required = false) String id, ModelMap model, Pageable pageable){
+		String organId = "";
+		XbClass xbClass = new XbClass();
+		List<SysOrgans> organsList = organsService.getOrgansList();
+		if(null!=id){
+			xbClass = studentService.getXbClass(id);
+			organId = xbClass.organId;
+		}else{
+			if(organsList.size()>0){
+				organId = organsList.get(0).id;
+			}
+		}
+		Map<String,Object> searhMap = new HashMap<>();
+		Map<String,Object> roomsearhMap = new HashMap<>();
+		searhMap.put("EQ_organIds",organId);
+		List<XbCourse> xbCoursePage = xbCourseService.findAllDataByOrganId(organId);
+		Map<String,Object> ygsearhMap = new HashMap<>();
+		ygsearhMap.put("EQ_isAttendClass","0");
+		ygsearhMap.put("EQ_organId",organId);
+		List<SysEmployee> employeeList = employeeService.getAccountAllList(ygsearhMap);
+		roomsearhMap.put("EQ_organId",organId);
+		List<XbClassroom> xbClassroomList = studentService.getXbClassroomList(pageable,roomsearhMap).getContent();
+		model.addAttribute("xbClass",xbClass);
+		model.addAttribute("xbClassroomList",xbClassroomList);
+		model.addAttribute("employeeList",employeeList);
+		model.addAttribute("xbCourseList",xbCoursePage);
+		model.addAttribute("organsList",organsList);
+		return "newClassTeacher";
+	}
 	/*
 	 * 跳转到班级
 	 * @return

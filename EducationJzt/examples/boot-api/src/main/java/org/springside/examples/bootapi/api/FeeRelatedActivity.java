@@ -722,7 +722,8 @@ public class FeeRelatedActivity {
 		if(null!=studentName&&!studentName.equals("")){
 			resultMap.put("LIKE_xbStudent.studentName",studentName);
 		}
-		resultMap.put("EQ_classId","");
+		//yxy
+		//resultMap.put("EQ_classId","");
 		List<XbStudentRelationViewNew> xbStudentsList = studentService.getXbRelationList(resultMap);
 		model.addAttribute("xbStudentsList",xbStudentsList);
 		return "enrollClassChoose::studentList";

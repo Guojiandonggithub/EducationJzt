@@ -23,7 +23,7 @@
         <!--滚动策略-->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!--路径-->
-            <fileNamePattern>C:\Program Files\education\log\info/info.%d.log</fileNamePattern>
+            <fileNamePattern>E:\Program Files\education\log\info/info.%d.log</fileNamePattern>
         </rollingPolicy>
     </appender>
 
@@ -40,7 +40,7 @@
         <!--滚动策略-->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!--路径-->
-            <fileNamePattern>C:\Program Files\education\log\error/error.%d.log</fileNamePattern>
+            <fileNamePattern>E:\Program Files\education\log\error/error.%d.log</fileNamePattern>
         </rollingPolicy>
     </appender>
 
@@ -58,7 +58,7 @@
         <!--滚动策略-->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!--路径-->
-            <fileNamePattern>C:\Program Files\education\log\sql/info.%d.log</fileNamePattern>
+            <fileNamePattern>E:\Program Files\education\log\sql/info.%d.log</fileNamePattern>
         </rollingPolicy>
     </appender>
 

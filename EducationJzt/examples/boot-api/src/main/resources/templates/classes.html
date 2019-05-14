@@ -180,6 +180,9 @@
                                                         <a th:href="@{'/student/getXbClass?id='+${xbclass.id}}">编辑</a>
                                                     </li>
                                                     <li>
+                                                        <a th:href="@{'/student/getXbClassT?id='+${xbclass.id}}">跟换教师</a>
+                                                    </li>
+                                                    <li>
                                                         <a href="#" th:onclick="'javascript:deleteClass(\''+${xbclass.id}+'\')'">删除班级</a>
                                                     </li>
                                                 </ul>

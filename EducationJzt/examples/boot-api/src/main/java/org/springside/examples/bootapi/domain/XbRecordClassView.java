@@ -45,4 +45,6 @@ public class XbRecordClassView {
     public long studentCount;
     public Date recordTime;
     public String totalReceivable;
+    //@Column(name="student_start")
+    public Integer studentStart;
 }
